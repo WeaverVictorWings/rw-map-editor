@@ -5,6 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,8 +34,10 @@ jobs:
 
       - name: 检查原生桥（排查用）
         run: |
-          ls -la www
-          grep -c "registerPlugin" android/app/src/main/assets/native-bridge.js || true
+          if [ -f www/capacitor.js ]; then echo "::notice title=capacitor.js::copied $(wc -c < www/capacitor.js) bytes"; else echo "::warning title=capacitor.js::missing"; fi
+          NB=android/app/src/main/assets/native-bridge.js
+          echo "::notice title=native-bridge::registerPlugin=$(grep -c registerPlugin $NB || true) Plugins=$(grep -c 'Plugins' $NB || true)"
+          if grep -rq SaveFilePlugin android/app/src/main/java; then echo "::notice title=plugin::SaveFilePlugin ok"; else echo "::warning title=plugin::SaveFilePlugin missing"; fi
 
       - name: 准备签名（如果配置了密钥）
         env:
@@ -61,11 +66,23 @@ jobs:
             ./gradlew assembleDebug --no-daemon
           fi
           mkdir -p ../out
-          find app/build/outputs/apk -name "*.apk" -exec cp {} ../out/ \;
-          ls -la ../out
+          f=$(find app/build/outputs/apk -name "*.apk" | head -1)
+          cp "$f" ../out/rw-map-editor.apk
+          echo "::notice title=APK::$(basename $f) $(wc -c < ../out/rw-map-editor.apk) bytes"
 
       - uses: actions/upload-artifact@v4
         with:
           name: rw-map-editor-android
-          path: out/*.apk
+          path: out/rw-map-editor.apk
           if-no-files-found: error
+
+      - name: 发布到 Releases（手机上直接下载）
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: 测试版 ${{ github.run_number }}
+          prerelease: true
+          body: |
+            自动构建（提交 ${{ github.sha }}）。下载 rw-map-editor.apk 安装。
+            调试版签名每次不同：装新版前先卸载旧版。
+          files: out/rw-map-editor.apk
