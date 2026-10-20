@@ -1,0 +1,10 @@
+{
+  "name": "铁锈地图编辑器",
+  "short_name": "铁锈地图",
+  "description": "非官方的铁锈战争（Rusted Warfare）地图编辑器",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#16181d",
+  "theme_color": "#16181d",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

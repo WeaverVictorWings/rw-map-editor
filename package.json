@@ -1,0 +1,18 @@
+{
+  "name": "rw-map-editor",
+  "version": "0.1.0",
+  "private": true,
+  "description": "非官方的铁锈战争（Rusted Warfare）地图编辑器",
+  "scripts": {
+    "serve": "python3 -m http.server 8765 --directory www",
+    "android:prepare": "npx cap add android && node scripts/patch-android.mjs && npx cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/app": "^7.0.0",
+    "@capacitor/core": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.0"
+  }
+}

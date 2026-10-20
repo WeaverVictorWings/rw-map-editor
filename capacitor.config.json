@@ -1,0 +1,6 @@
+{
+  "appId": "io.github.xingnuohan.rwmapeditor",
+  "appName": "铁锈地图编辑器",
+  "webDir": "www",
+  "android": { "allowMixedContent": false }
+}
