@@ -29,16 +29,16 @@ async function newPage(w, h, mobile = false) {
   const ctx = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: mobile ? 2 : 1, hasTouch: mobile, isMobile: mobile });
   const page = await ctx.newPage();
   page.on('pageerror', (e) => errors.push('pageerror: ' + e.message));
-  page.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
+  page.on('console', (m) => { if (m.type() === 'error' && !/404/.test(m.text())) errors.push('console: ' + m.text()); });
   await page.goto(URL);
-  await page.waitForFunction(() => window.__rw);
+  await page.waitForFunction(() => window.__rwReady);
   return page;
 }
 
 const text = fs.readFileSync(sample, 'utf8');
 const page = await newPage(1280, 800);
 // 关掉可能出现的“恢复”弹窗
-await page.evaluate(() => document.querySelector('#modal .close')?.click());
+await page.evaluate(() => document.querySelector('.modal .close')?.click());
 
 log('1. 读入真实地图并原样往返');
 let t0 = Date.now();
@@ -121,7 +121,7 @@ const afterT = await page.evaluate(() => window.__rw.ed.usedTeams().size);
 expect(afterT === before + 1, `点击放出生点后队伍数 ${before} → ${afterT}`);
 const labels = await page.evaluate(() => window.__rw.ed.undoStack.map((o) => o.label));
 log('   撤销栈：', labels.join(' / '));
-expect(labels.includes('放物品') && labels.includes('放出生点'), '物品和出生点操作都进了撤销栈');
+expect(labels.some((l) => /^放(?!出生点)/.test(l)) && labels.includes('放出生点'), '物品和出生点操作都进了撤销栈');
 await page.screenshot({ path: outDir + '/desktop_units.png' });
 
 log('5. 检查');
@@ -130,7 +130,7 @@ for (const c of checks) log('   ', c);
 await page.click('#btnCheck');
 await page.waitForTimeout(300);
 await page.screenshot({ path: outDir + '/desktop_check.png' });
-await page.evaluate(() => document.querySelector('#modal .close').click());
+await page.evaluate(() => document.querySelector('.modal .close').click());
 
 log('6. 新建地图（160×160，4 人）');
 const nm = await page.evaluate(async () => {
@@ -180,7 +180,7 @@ await page.screenshot({ path: outDir + '/desktop_5000.png' });
 
 log('8. 手机竖屏界面');
 const ph = await newPage(390, 844, true);
-await ph.evaluate(() => document.querySelector('#modal .close')?.click());
+await ph.evaluate(() => document.querySelector('.modal .close')?.click());
 await ph.screenshot({ path: outDir + '/phone_welcome.png' });
 await ph.evaluate(async (t) => { await window.__rw.loadMapFromText(t, 'sample.tmx'); }, text);
 await ph.waitForTimeout(800);

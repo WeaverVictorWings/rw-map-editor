@@ -29,6 +29,14 @@ let m = fs.readFileSync(manifest, 'utf8');
 if (!m.includes('android:largeHeap')) m = m.replace('<application', '<application\n        android:largeHeap="true"');
 fs.writeFileSync(manifest, m);
 
+// 版本号：versionName 取 package.json，versionCode 随构建号递增（同签名的新版可以直接覆盖安装）
+const ver = JSON.parse(fs.readFileSync('package.json', 'utf8')).version || '2.0.0';
+const run = +(process.env.GITHUB_RUN_NUMBER || 0);
+const gradle = path.join('android', 'app', 'build.gradle');
+let g = fs.readFileSync(gradle, 'utf8');
+g = g.replace(/versionCode\s+\d+/, `versionCode ${20000 + run}`).replace(/versionName\s+"[^"]*"/, `versionName "${ver}"`);
+fs.writeFileSync(gradle, g);
+
 // 不用打包工具时，把 Capacitor 的运行时脚本放进网页目录
 const core = path.join('node_modules', '@capacitor', 'core', 'dist', 'capacitor.js');
 if (fs.existsSync(core)) fs.copyFileSync(core, path.join('www', 'capacitor.js'));

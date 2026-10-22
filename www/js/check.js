@@ -1,8 +1,11 @@
-// “能玩吗？”检查、资源分布报告、预览图
+// “能玩吗？”检查、预览图、展示图
 import { objProp } from './tmx.js';
 import { teamColor } from './render.js';
+import { passability, BUILD, LAND } from './pathing.js';
+import { NONE } from './terrain.js';
 
 export const MAP_TYPES = ['skirmish', 'mission', 'challenge', 'survival', 'endless'];
+const WATERISH = /^(deep water|water|shallow water|lake|ice lake)$/i;
 
 export function sizeTier(w, h) {
   const s = Math.max(w, h);
@@ -12,28 +15,24 @@ export function sizeTier(w, h) {
   return { level: 'error', text: '超过 4000：仅供实验，没有找到能正常游玩的可靠证据' };
 }
 
-// 返回 [{level:'error'|'warn'|'ok'|'info', title, detail, goto?:{x,y}, fix?:{label, run}}]
-export function runChecks(ed) {
+// 返回 [{level, cat, title, detail, goto?, fix?:{label, run}}]
+export function runChecks(ed, opts = {}) {
   const m = ed.map, out = [];
-  const add = (level, title, detail = '', extra = {}) => out.push({ level, title, detail, ...extra });
+  const add = (level, cat, title, detail = '', extra = {}) => out.push({ level, cat, title, detail, ...extra });
+  const W = m.width, H = m.height;
 
-  if (m.tw !== 20 || m.th !== 20) add('error', '图块尺寸不是 20×20', `当前 ${m.tw}×${m.th}，游戏要求 20×20。`);
-
-  // map_info
+  // ---- 文件格式 ----
+  if (m.tw !== 20 || m.th !== 20) add('error', '格式', '图块尺寸不是 20×20', `当前 ${m.tw}×${m.th}，游戏要求 20×20。`);
   const mi = ed.mapInfo();
-  if (!mi) {
-    add('error', '缺少 map_info', '游戏需要 Triggers 层里有一个 map_info 对象（type=skirmish），否则对局结束可能没有结算。',
-      { fix: { label: '一键补上', run: () => ed.ensureMapInfo() } });
-  } else {
+  if (!mi) add('error', '格式', '缺少 map_info', '游戏需要 Triggers 层里有一个 map_info 对象（type=skirmish），否则对局结束可能没有结算。', { fix: { label: '一键补上', run: () => ed.ensureMapInfo() } });
+  else {
     const t = objProp(mi, 'type');
-    if (!t) add('error', 'map_info 没有 type 属性', '遭遇战地图应设为 skirmish。', { fix: { label: '设为 skirmish', run: () => ed.setMapInfoProp('type', 'skirmish') } });
-    else if (!MAP_TYPES.includes(t)) add('warn', `map_info 的 type 是「${t}」`, '常见取值：' + MAP_TYPES.join(' / ') + '（社区整理，非官方完整列表）');
-    else add('ok', `map_info 正常（type=${t}）`);
+    if (!t) add('error', '格式', 'map_info 没有 type 属性', '遭遇战地图应设为 skirmish。', { fix: { label: '设为 skirmish', run: () => ed.setMapInfoProp('type', 'skirmish') } });
+    else if (!MAP_TYPES.includes(t)) add('warn', '格式', `map_info 的 type 是「${t}」`, '常见取值：' + MAP_TYPES.join(' / ') + '（社区整理）');
+    else add('ok', '格式', `map_info 正常（type=${t}）`);
   }
-
-  // 地面层
   const G = m.ground;
-  if (!G) add('error', '没有 Ground 地面图层');
+  if (!G) add('error', '格式', '没有 Ground 地面图层');
   else {
     let empty = 0, first = -1;
     const d = G.data;
@@ -42,107 +41,126 @@ export function runChecks(ed) {
       const counts = new Map();
       for (let i = 0; i < d.length; i += 97) if (d[i]) counts.set(d[i], (counts.get(d[i]) || 0) + 1);
       const fillGid = [...counts].sort((a, b) => b[1] - a[1])[0]?.[0];
-      add('error', `地面有 ${empty.toLocaleString()} 个空格`, '游戏要求 Ground 层不能有空格。', {
-        goto: { x: first % m.width, y: (first / m.width) | 0 },
+      add('error', '格式', `地面有 ${empty.toLocaleString()} 个空格`, '游戏要求 Ground 层不能有空格。', {
+        goto: { x: first % W, y: (first / W) | 0 },
         fix: fillGid ? { label: '用最常见的地面填满', run: () => {
-          ed.begin('填满空格');
-          for (let i = 0; i < d.length; i++) if (!d[i]) ed.op.tile(G, i, 0, 0, fillGid, 0);
+          const op = ed.begin('填满空格');
+          if (empty > 100000) op.snapLayer(G);
+          for (let i = 0; i < d.length; i++) if (!d[i]) op.tile(G, i, 0, 0, fillGid, 0);
+          if (ed.engine) ed.engine.syncRect(op, 0, 0, W - 1, H - 1, true);
           ed.commit();
         } } : null,
       });
-    } else add('ok', '地面没有空格');
+    } else add('ok', '格式', '地面没有空格');
   }
-
-  // 无效 gid
   for (const L of m.layers) {
     let bad = 0, first = -1;
     const d = L.data;
     for (let i = 0; i < d.length; i++) { const g = d[i]; if (g && !m.tilesetOf(g)) { bad++; if (first < 0) first = i; } }
-    if (bad) add('error', `图层「${L.name}」有 ${bad.toLocaleString()} 个未定义图块`, '旧版本游戏遇到未定义图块会直接崩溃。', {
-      goto: { x: first % m.width, y: (first / m.width) | 0 },
+    if (bad) add('error', '格式', `图层「${L.name}」有 ${bad.toLocaleString()} 个未定义图块`, '旧版本游戏遇到未定义图块会直接崩溃。', {
+      goto: { x: first % W, y: (first / W) | 0 },
       fix: { label: '清除这些图块', run: () => {
-        ed.begin('清除未定义图块');
-        for (let i = 0; i < d.length; i++) if (d[i] && !m.tilesetOf(d[i])) ed.op.tile(L, i, d[i], L.flips.get(i) || 0, 0, 0);
+        const op = ed.begin('清除未定义图块');
+        for (let i = 0; i < d.length; i++) if (d[i] && !m.tilesetOf(d[i])) op.tile(L, i, d[i], L.flips.get(i) || 0, 0, 0);
         ed.commit();
       } },
     });
   }
+  let badFloat = 0;
+  for (const g of m.groups) for (const o of g.objects) for (const p of o.props) if (p.type === 'float' && !Number.isFinite(parseFloat(p.value))) badFloat++;
+  if (badFloat) add('error', '格式', `${badFloat} 个浮点属性的值不是数字`, '旧版本游戏遇到无效浮点属性会崩溃。');
 
-  // 图块集
+  // ---- 图块集 ----
   for (const ts of m.tilesets) {
-    if (ts.source) add('warn', `图块集「${ts.name || ts.source}」引用了外部文件`, '游戏和本编辑器都可能找不到它，建议用内嵌图片的图块集。');
-    else if (!ts.embeddedPng) add('warn', `图块集「${ts.name}」没有内嵌图片`, '它引用的是外部图片「' + (ts.imageSource || '') + '」，换设备后可能显示不出来。');
+    if (ts.source) add('warn', '图块集', `图块集「${ts.name || ts.source}」引用了外部文件`, '游戏和本编辑器都可能找不到它，建议用内嵌图片的图块集。');
+    else if (!ts.embeddedPng) add('warn', '图块集', `图块集「${ts.name}」没有内嵌图片`, '它引用的是外部图片「' + (ts.imageSource || '') + '」，换设备后可能显示不出来。');
   }
   const gts = ed.groundTs;
   if (gts) {
-    const hasWaterTerrain = gts.terrainNames.some((n) => /water|lake/i.test(n));
-    let waterProps = 0, badCase = 0;
-    for (const [, inf] of gts.tiles) {
-      for (const k of Object.keys(inf.props)) {
-        if (k === 'water') waterProps++;
-        if (k !== k.toLowerCase()) badCase++;
-      }
+    const names = gts.terrainNames;
+    const waterTiles = [];
+    let waterProps = 0;
+    const upper = [];
+    for (const [id, inf] of gts.tiles) {
+      for (const k of Object.keys(inf.props)) { if (k === 'water') waterProps++; if (k !== k.toLowerCase()) upper.push([id, k]); }
+      if (inf.terrain && inf.terrain.every((t) => t >= 0 && WATERISH.test(names[t] || '')) && !('water' in inf.props) && !('water-bridge' in inf.props)) waterTiles.push(id);
     }
-    if (hasWaterTerrain && !waterProps) add('error', '水面图块没有 water 属性', '没有这个属性，船不能在水上走，陆军反而能直接走过水面。');
-    if (badCase) add('warn', `${badCase} 个图块属性名含大写字母`, '游戏只认小写属性名（例如 water，而不是 Water）。');
+    if (waterTiles.length && (!waterProps || waterTiles.length > 3)) {
+      add(waterProps ? 'warn' : 'error', '图块集', `${waterTiles.length} 个水面图块没有 water 属性`, '没有这个属性，船不能在水上走，陆军反而能走过水面，还能在水上盖房。', {
+        fix: { label: '给这些图块补上 water', run: () => { for (const id of waterTiles) m.setTileProp(gts, id, 'water', ''); } },
+      });
+    }
+    if (upper.length) add('warn', '图块集', `${upper.length} 个图块属性名含大写字母`, '游戏只认小写属性名（例如 water，而不是 Water）。', {
+      fix: { label: '全部改成小写', run: () => { for (const [id, k] of upper) { const v = gts.tiles.get(id).props[k]; m.setTileProp(gts, id, k, null); m.setTileProp(gts, id, k.toLowerCase(), v); } } },
+    });
   }
 
-  // 浮点属性
-  let badFloat = 0;
-  for (const g of m.groups) for (const o of g.objects) for (const p of o.props) if (p.type === 'float' && !Number.isFinite(parseFloat(p.value))) badFloat++;
-  if (badFloat) add('error', `${badFloat} 个浮点属性的值不是数字`, '旧版本游戏遇到无效浮点属性会崩溃。');
-
-  // 队伍
-  const teams = new Map();
+  // ---- 队伍与出生点 ----
+  const sp = ed.spawns();
+  const teams = [...new Set(sp.map((s) => s.team).filter((t) => t >= 0))].sort((a, b) => a - b);
+  if (!sp.length) add('error', '出生点', '没有任何出生点', '每支队伍至少需要一个指挥中心。到“单位”里点“出生点”添加。');
+  else {
+    const gap = teams.some((t, i) => t !== i);
+    add(gap ? 'warn' : 'ok', '出生点', `${teams.length} 支队伍有出生点`, gap ? '队伍编号不连续：' + teams.slice(0, 30).map((t) => t + 1).join('、') + (teams.length > 30 ? '…' : '') : '',
+      gap ? { fix: { label: '重新编号为 1、2、3…', run: () => ed.renumberTeams() } } : {});
+    if (teams.length > 10) add('info', '出生点', `${teams.length} 支队伍`, opts.teamNote || '游戏默认房间只有 10 队（第 1~10 队），第 11 队以后的单位和触发器会被跳过。要玩满需要支持更多玩家的服务器房间（引擎上限 100 队）。');
+    if (teams.some((t) => t >= 100)) add('error', '出生点', '有队伍号超过 100', '游戏引擎最多支持 100 支队伍（第 1~100 队），超出的队伍无法使用。', { fix: { label: '重新编号', run: () => ed.renumberTeams() } });
+    const dup = sp.length - new Set(sp.map((s) => s.team)).size;
+    if (dup > 0) add('warn', '出生点', `${dup} 个指挥中心与别的指挥中心同队`, '同一队有多个指挥中心是允许的，但如果是误放，会让这队开局更强。');
+  }
+  const pass = opts.pass || passability(ed);
+  const ptile = (x, y) => (x >= 0 && y >= 0 && x < W && y < H) ? pass[y * W + x] : 0;
+  for (const s of sp) {
+    const tx = Math.floor(s.cx / 20), ty = Math.floor(s.cy / 20);
+    if (!(ptile(tx, ty) & BUILD)) add('warn', '出生点', `第 ${s.team + 1} 队的指挥中心压在水面、悬崖或障碍上`, '可能无法正常开局。', { goto: { x: tx, y: ty } });
+    if (tx < 2 || ty < 2 || tx > W - 3 || ty > H - 5) add('warn', '出生点', `第 ${s.team + 1} 队的出生点太靠近地图边缘`, '建造者可能被卡住。', { goto: { x: tx, y: ty } });
+  }
+  const close = [];
+  for (let a = 0; a < sp.length; a++) for (let b = a + 1; b < sp.length; b++) {
+    if (sp[a].team === sp[b].team) continue;
+    const d = Math.hypot(sp[a].cx - sp[b].cx, sp[a].cy - sp[b].cy) / 20;
+    if (d < 15) close.push([sp[a], sp[b], d]);
+  }
+  if (close.length) add('warn', '出生点', `${close.length} 对出生点相距不到 15 格`, close.slice(0, 4).map(([a, b, d]) => `第 ${a.team + 1} 队和第 ${b.team + 1} 队：${d.toFixed(0)} 格`).join('；'), { goto: { x: Math.floor(close[0][0].cx / 20), y: Math.floor(close[0][0].cy / 20) } });
   let outside = 0;
-  const pw = m.width * m.tw, ph = m.height * m.th;
   for (const g of m.groups) for (const o of g.objects) {
     const x = +(o.attrs.x || 0), y = +(o.attrs.y || 0);
-    if (o.attrs.gid && (x < 0 || y < 0 || x > pw || y > ph)) outside++;
-    if (objProp(o, 'unit') === 'commandCenter') {
-      const t = +objProp(o, 'team');
-      if (!teams.has(t)) teams.set(t, o);
-    }
+    if (o.attrs.gid && (x < 0 || y < 0 || x > W * 20 || y > H * 20)) outside++;
   }
-  if (!teams.size) add('error', '没有任何出生点', '每支队伍至少需要一个指挥中心。到“单位”里点“出生点”添加。');
-  else {
-    const ids = [...teams.keys()].filter((t) => t >= 0).sort((a, b) => a - b);
-    const gap = ids.some((t, i) => t !== i);
-    add(gap ? 'warn' : 'ok', `${ids.length} 支队伍有出生点`, gap ? '队伍编号不连续：' + ids.map((t) => t + 1).join('、') + '（游戏里显示为第几队）' : '');
-  }
-  if (outside) add('warn', `${outside} 个单位在地图范围外`);
+  if (outside) add('warn', '出生点', `${outside} 个单位在地图范围外`);
 
-  // 资源池
+  // ---- 资源池 ----
   const pools = ed.poolTiles();
-  if (!pools.length) add('warn', '地图上没有资源池', '到“物品”里选“资源池”放置。');
-  else add('info', `共有 ${pools.length} 个资源池`);
+  if (!pools.length) add('warn', '资源', '地图上没有资源池', '到“物品”里选“资源池”放置，或用印章库里的“标准基地”。');
+  else {
+    add('info', '资源', `共有 ${pools.length} 个资源池`);
+    const bad = pools.filter(([x, y]) => !(ptile(x, y) & LAND) || x < 1 || y < 1 || x > W - 2 || y > H - 2);
+    if (bad.length) add('warn', '资源', `${bad.length} 个资源池在水里、悬崖上或地图边缘`, '单位可能够不着。', { goto: { x: bad[0][0], y: bad[0][1] } });
+    // 资源池与单位之间留 1 格
+    const units = [];
+    for (const g of m.groups) for (const o of g.objects) if (o.attrs.gid) {
+      const x = +o.attrs.x, y = +o.attrs.y, w = +(o.attrs.width || 20), h = +(o.attrs.height || 20);
+      units.push([Math.floor(x / 20), Math.floor((y - h) / 20), Math.floor((x + w - 1) / 20), Math.floor((y - 1) / 20)]);
+    }
+    const tight = pools.filter(([px, py]) => units.some(([a, b, c, d]) => c >= px - 2 && a <= px + 2 && d >= py - 2 && b <= py + 2));
+    if (tight.length) add('warn', '资源', `${tight.length} 个资源池和单位挨得太近`, '社区经验：资源池和单位之间留 1 格空隙，否则可能显示异常。', { goto: { x: tight[0][0], y: tight[0][1] } });
+  }
 
-  const tier = sizeTier(m.width, m.height);
-  add(tier.level === 'ok' ? 'ok' : tier.level, `地图尺寸 ${m.width}×${m.height}`, tier.text);
+  // ---- 尺寸与体积 ----
+  const tier = sizeTier(W, H);
+  add(tier.level === 'ok' ? 'ok' : tier.level, '尺寸', `地图尺寸 ${W}×${H}`, tier.text);
+  const used = m.usedTilesets();
+  const unused = m.tilesets.filter((t) => !used.has(t) && !['ground', 'items', 'units'].includes(t.layerTag) && !/^export_(ground|items|units)$/.test(t.name));
+  if (unused.length) {
+    const kb = Math.round(unused.reduce((s, t) => s + (t.embeddedPng ? t.embeddedPng.length : 0), 0) / 1024);
+    add('info', '尺寸', `${unused.length} 个图块集没有用到（约 ${kb} KB）`, '联机时主机要把地图传给所有人，去掉它们可以让地图更小。', { fix: { label: '保存时去掉', run: () => { ed.pruneOnSave = true; } } });
+  }
+  if (opts.triggerIssues) for (const t of opts.triggerIssues) add(t.level, '触发器', t.title, t.detail || '', { goto: t.goto, fix: t.fix });
   return out;
 }
 
-// 资源分布（直线距离，近似）
-export function poolReport(ed, radius = 25) {
-  const pools = ed.poolTiles();
-  const rows = [];
-  for (const g of ed.map.groups) for (const o of g.objects) {
-    if (objProp(o, 'unit') !== 'commandCenter') continue;
-    const tx = (+o.attrs.x + 15) / 20, ty = (+o.attrs.y - 15) / 20;
-    let near = 0, nearest = Infinity;
-    for (const [x, y] of pools) {
-      const d = Math.hypot(x + 0.5 - tx, y + 0.5 - ty);
-      if (d <= radius) near++;
-      if (d < nearest) nearest = d;
-    }
-    rows.push({ team: +objProp(o, 'team'), near, nearest: Number.isFinite(nearest) ? Math.round(nearest) : null });
-  }
-  rows.sort((a, b) => a.team - b.team);
-  return rows;
-}
-
-// 预览图（每格取平均色），最长边不超过 maxSide 像素
-export function renderPreview(ed, rend, maxSide = 200) {
+// 预览图（每格平均色），最长边不超过 maxSide 像素
+export function renderPreview(ed, rend, maxSide = 200, opts = {}) {
   const m = ed.map, col = rend.colors;
   const k = Math.max(m.width, m.height) / maxSide;
   const w = Math.max(1, Math.round(m.width / k)), h = Math.max(1, Math.round(m.height / k));
@@ -171,17 +189,43 @@ export function renderPreview(ed, rend, maxSide = 200) {
   }
   c.putImageData(img, 0, 0);
   const sx = w / (m.width * m.tw), sy = h / (m.height * m.th);
-  const r = Math.max(3, Math.round(Math.min(w, h) / 40));
-  for (const g of m.groups) for (const o of g.objects) {
-    if (objProp(o, 'unit') !== 'commandCenter') continue;
-    const t = objProp(o, 'team');
-    const x = (+o.attrs.x + 15) * sx, y = (+o.attrs.y - 15) * sy;
+  if (opts.pools) {
+    c.fillStyle = '#ffd34d';
+    for (const [x, y] of ed.poolTiles()) { c.beginPath(); c.arc((x + 0.5) * m.tw * sx, (y + 0.5) * m.th * sy, Math.max(1.5, Math.min(w, h) / 120), 0, 7); c.fill(); }
+  }
+  const sp = ed.spawns();
+  const r = Math.max(3, Math.round(Math.min(w, h) / (sp.length > 20 ? 80 : 40)));
+  for (const s of sp) {
+    const x = s.cx * sx, y = s.cy * sy;
     c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2);
-    c.fillStyle = teamColor(t); c.fill(); c.lineWidth = 1; c.strokeStyle = '#000'; c.stroke();
+    c.fillStyle = teamColor(s.team); c.fill(); c.lineWidth = 1; c.strokeStyle = '#000'; c.stroke();
     if (r >= 5) {
       c.fillStyle = '#000'; c.font = `bold ${Math.round(r * 1.2)}px sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle';
-      c.fillText(String(+t + 1), x, y + 0.5);
+      c.fillText(String(s.team + 1), x, y + 0.5);
     }
   }
+  return cv;
+}
+
+// 展示图：带标题、尺寸、人数、图例的大图，方便发到群里或工坊
+export async function renderPoster(ed, rend, name, size = 1200) {
+  const pv = renderPreview(ed, rend, size - 80, { pools: true });
+  const pad = 40, head = 96, foot = 56;
+  const W = pv.width + pad * 2, H = pv.height + head + foot + pad;
+  const cv = new OffscreenCanvas(W, H);
+  const c = cv.getContext('2d');
+  c.fillStyle = '#16181d'; c.fillRect(0, 0, W, H);
+  c.fillStyle = '#e8eaee'; c.font = 'bold 34px system-ui, "PingFang SC", "Microsoft YaHei", sans-serif'; c.textBaseline = 'alphabetic';
+  c.fillText(name, pad, 56);
+  const m = ed.map, sp = ed.spawns();
+  c.fillStyle = '#9aa1ad'; c.font = '18px system-ui, "PingFang SC", "Microsoft YaHei", sans-serif';
+  c.fillText(`${m.width}×${m.height} 格 · ${new Set(sp.map((s) => s.team)).size} 支队伍 · ${ed.poolTiles().length} 个资源池`, pad, 84);
+  c.drawImage(pv, pad, head);
+  c.strokeStyle = '#323743'; c.strokeRect(pad - 0.5, head - 0.5, pv.width + 1, pv.height + 1);
+  c.fillStyle = '#ffd34d'; c.beginPath(); c.arc(pad + 8, H - pad + 2, 7, 0, 7); c.fill();
+  c.fillStyle = '#9aa1ad'; c.fillText('资源池', pad + 22, H - pad + 8);
+  c.fillStyle = '#36c25b'; c.beginPath(); c.arc(pad + 110, H - pad + 2, 8, 0, 7); c.fill();
+  c.fillStyle = '#9aa1ad'; c.fillText('出生点（数字为队伍号）', pad + 126, H - pad + 8);
+  c.textAlign = 'right'; c.fillText('铁锈地图编辑器', W - pad, H - pad + 8);
   return cv;
 }

@@ -209,6 +209,14 @@ export class RWMap {
   }
 
   buildGidIndex() {
+    // 图块数未知（外部 tsx、图片没加载）时，用下一个图块集的起始编号推算范围
+    this.tilesets.forEach((t, i) => {
+      if (!t.tilecount) {
+        const next = this.tilesets[i + 1];
+        t.tilecount = next ? Math.max(1, next.firstgid - t.firstgid) : 1;
+        t.countGuessed = true;
+      }
+    });
     let max = 0;
     for (const t of this.tilesets) max = Math.max(max, t.lastgid);
     this.maxGid = max;
@@ -239,6 +247,11 @@ export class RWMap {
   get items() { return this.layer('items'); }
   mapProps() { return propsOf(this.root); }
 
+  widenLayer(L) {
+    if (L.data instanceof Uint32Array) return;
+    const d = new Uint32Array(L.data.length); d.set(L.data); L.data = d;
+  }
+
   ensureGroup(name) {
     let g = this.group(name);
     if (g) return g;
@@ -268,33 +281,44 @@ export class RWMap {
   }
 
   // ---- 写出 ----
-  async serialize() {
+  // 生成 TMX 文本。所有数据先同步拍下快照，压缩期间继续编辑也不会写出半新半旧的内容。
+  // opts.prune：去掉地图里没用到的图块集（地面/物品/单位三个核心图块集始终保留）
+  async serialize(opts = {}) {
     const doc = this.doc;
     const root = this.root;
-    root.setAttribute('width', this.width);
-    root.setAttribute('height', this.height);
+    const W = this.width, H = this.height;
+    const jobs = [];
     for (const L of this.layers) {
-      L.el.setAttribute('width', this.width);
-      L.el.setAttribute('height', this.height);
       if (!L.dirty) continue;
-      const n = this.width * this.height;
-      const raw = new Uint32Array(n);
+      const raw = new Uint32Array(W * H);
       raw.set(L.data);
       for (const [i, f] of L.flips) raw[i] = (raw[i] | (f << 29)) >>> 0;
-      let bytes = new Uint8Array(raw.buffer);
-      bytes = await deflate(bytes, L.compression === 'gzip' ? 'gzip' : 'zlib');
+      jobs.push({ L, raw, ver: L.ver || 0 });
+    }
+    const objSnap = this.groups.map((G) => ({ G, objects: G.objects.map((o) => ({ attrs: { ...o.attrs }, props: o.props.map((p) => ({ ...p })), extra: o.extra })) }));
+    const encoded = [];
+    for (const j of jobs) {
+      const comp = j.L.compression === 'gzip' ? 'gzip' : 'zlib';
+      encoded.push({ ...j, comp, b64: bytesToB64(await deflate(new Uint8Array(j.raw.buffer), comp)) });
+    }
+    // 以下全部同步完成
+    root.setAttribute('width', W);
+    root.setAttribute('height', H);
+    for (const L of this.layers) { L.el.setAttribute('width', W); L.el.setAttribute('height', H); }
+    for (const e of encoded) {
+      const L = e.L;
       let dataEl = L.el.querySelector(':scope > data');
       if (!dataEl) { dataEl = doc.createElement('data'); L.el.appendChild(dataEl); }
       while (dataEl.firstChild) dataEl.removeChild(dataEl.firstChild);
       dataEl.setAttribute('encoding', 'base64');
-      dataEl.setAttribute('compression', L.compression === 'gzip' ? 'gzip' : 'zlib');
-      dataEl.appendChild(doc.createTextNode('\n' + bytesToB64(bytes) + '\n'));
-      L.dirty = false;
+      dataEl.setAttribute('compression', e.comp);
+      dataEl.appendChild(doc.createTextNode('\n' + e.b64 + '\n'));
+      if ((L.ver || 0) === e.ver) L.dirty = false; // 压缩期间又改过的图层，下次还要重新写
     }
     let maxId = 0;
-    for (const G of this.groups) {
+    for (const { G, objects } of objSnap) {
       for (const o of [...G.el.querySelectorAll(':scope > object')]) G.el.removeChild(o);
-      for (const o of G.objects) {
+      for (const o of objects) {
         const el = doc.createElement('object');
         for (const [k, v] of Object.entries(o.attrs)) if (v !== undefined && v !== null) el.setAttribute(k, v);
         if (o.attrs.id) maxId = Math.max(maxId, +o.attrs.id);
@@ -304,7 +328,9 @@ export class RWMap {
             const pe = doc.createElement('property');
             pe.setAttribute('name', p.name);
             if (p.type) pe.setAttribute('type', p.type);
-            pe.setAttribute('value', p.value);
+            // 多行文字（如 survivalWaves）按 Tiled 的写法放在元素内容里
+            if (String(p.value).includes('\n')) pe.appendChild(doc.createTextNode(String(p.value)));
+            else pe.setAttribute('value', p.value);
             ps.appendChild(pe);
           }
           el.appendChild(ps);
@@ -322,9 +348,63 @@ export class RWMap {
     const comments = [];
     while (walker.nextNode()) comments.push(walker.currentNode);
     for (const c of comments) c.parentNode.removeChild(c);
+    let pruned = [];
+    if (opts.prune) {
+      const used = this.usedTilesets();
+      for (const ts of this.tilesets) {
+        if (used.has(ts) || ['ground', 'items', 'units'].includes(ts.layerTag) || /^export_(ground|items|units)$/.test(ts.name)) continue;
+        if (ts.el.parentNode) { ts.el.parentNode.removeChild(ts.el); pruned.push(ts); }
+      }
+    }
     let out = new XMLSerializer().serializeToString(doc);
+    for (const ts of pruned) root.insertBefore(ts.el, root.querySelector(':scope > layer, :scope > objectgroup'));
     if (!out.startsWith('<?xml')) out = '<?xml version="1.0" encoding="UTF-8"?>\n' + out;
     return out;
+  }
+
+  // 整张地图的状态快照（改尺寸、等比缩放这类整体操作的撤销用）
+  snapshotState() {
+    return {
+      width: this.width, height: this.height,
+      layers: this.layers.map((L) => ({ L, data: L.data.slice(), flips: new Map(L.flips) })),
+      groups: this.groups.map((G) => ({ G, objects: G.objects.map((o) => ({ attrs: { ...o.attrs }, props: o.props.map((p) => ({ ...p })), extra: o.extra })) })),
+    };
+  }
+  restoreState(s) {
+    this.width = s.width; this.height = s.height;
+    for (const e of s.layers) { e.L.data = e.data.slice(); e.L.flips = new Map(e.flips); e.L.w = s.width; e.L.h = s.height; e.L.dirty = true; e.L.ver = (e.L.ver || 0) + 1; }
+    for (const e of s.groups) e.G.objects = e.objects.map((o) => ({ attrs: { ...o.attrs }, props: o.props.map((p) => ({ ...p })), extra: o.extra }));
+  }
+
+  usedTilesets() {
+    const used = new Set();
+    for (const L of this.layers) {
+      const seen = new Uint8Array(this.tilesets.length + 1);
+      const d = L.data;
+      for (let i = 0; i < d.length; i++) { const g = d[i]; if (g && g <= this.maxGid) seen[this.tsOf[g]] = 1; }
+      seen.forEach((v, k) => { if (v && k) used.add(this.tilesets[k - 1]); });
+    }
+    for (const G of this.groups) for (const o of G.objects) if (o.attrs.gid) { const t = this.tilesetOf(+o.attrs.gid & FLIP_MASK); if (t) used.add(t); }
+    return used;
+  }
+
+  // 修改图块集里某个图块的属性（例如给水面补 water），会写回 XML
+  setTileProp(ts, id, name, value) {
+    const doc = this.doc;
+    let te = [...ts.el.querySelectorAll(':scope > tile')].find((t) => +t.getAttribute('id') === id);
+    if (!te) {
+      te = doc.createElement('tile'); te.setAttribute('id', id);
+      const after = [...ts.el.querySelectorAll(':scope > tile')].find((t) => +t.getAttribute('id') > id);
+      ts.el.insertBefore(te, after || null);
+    }
+    let ps = te.querySelector(':scope > properties');
+    if (!ps) { ps = doc.createElement('properties'); te.insertBefore(ps, te.firstChild); }
+    let p = [...ps.querySelectorAll(':scope > property')].find((q) => q.getAttribute('name') === name);
+    if (value === null) { if (p) ps.removeChild(p); }
+    else { if (!p) { p = doc.createElement('property'); p.setAttribute('name', name); ps.appendChild(p); } p.setAttribute('value', value); }
+    const info = ts.tiles.get(id) || { terrain: null, props: {} };
+    if (value === null) delete info.props[name]; else info.props[name] = value;
+    ts.tiles.set(id, info);
   }
 
   // 改画布大小（ox, oy 为旧地图在新画布中的偏移）

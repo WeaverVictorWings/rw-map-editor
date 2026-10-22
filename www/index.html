@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>铁锈地图编辑器</title>
-<meta name="theme-color" content="#16181d">
+<meta name="theme-color" content="#15171c">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
@@ -12,30 +12,36 @@
 </head>
 <body>
 <header id="top">
-  <button id="btnMenu" class="ib" title="文件菜单" aria-label="文件菜单"></button>
-  <div id="title"><span id="mapName">铁锈地图编辑器</span><span id="mapSize"></span></div>
+  <button id="btnMenu" class="ib mobile-only" title="菜单" aria-label="菜单"></button>
+  <div class="brand desktop-only"><img class="logo" src="icon.svg" alt=""><span>铁锈地图编辑器</span></div>
+  <nav id="menubar" class="desktop-only" aria-label="菜单栏"></nav>
+  <div id="title"><span id="mapName" title="点击改名"></span><span id="mapSize"></span><span id="saveState"></span></div>
+  <button id="btnSearch" class="desktop-only" title="搜索功能 (Ctrl+K)"></button>
   <button id="btnUndo" class="ib" title="撤销 (Ctrl+Z)" aria-label="撤销"></button>
   <button id="btnRedo" class="ib" title="重做 (Ctrl+Y)" aria-label="重做"></button>
   <button id="btnCheck" class="pill" title="检查地图能不能在游戏里玩">能玩吗？</button>
-  <button id="btnSave" class="pill primary" title="保存 (Ctrl+S)">保存</button>
+  <div class="split"><button id="btnSave" class="pill primary" title="保存 (Ctrl+S)">保存</button><button id="btnSaveMore" class="pill primary caret" title="更多保存方式" aria-label="更多保存方式">▾</button></div>
 </header>
+<nav id="modebar" aria-label="编辑模式"></nav>
 <main id="main">
-  <nav id="modes" aria-label="编辑模式"></nav>
+  <aside id="toolbar" aria-label="工具"></aside>
   <div id="stage">
     <canvas id="cv"></canvas>
     <canvas id="mini" title="小地图：点击或拖动跳转"></canvas>
+    <div id="zoomctl"></div>
+    <div id="selbar" class="floatbar hidden"></div>
+    <div id="mstatus"></div>
     <div id="coach" class="hidden"></div>
-    <div id="status"></div>
     <div id="toast"></div>
     <div id="welcome" class="hidden"></div>
   </div>
-  <aside id="panel">
-    <button id="panelHandle" aria-label="展开/收起面板"><span></span></button>
-    <div id="panelBody"></div>
+  <aside id="dock">
+    <div id="dockTabs"><span id="dockHandle"></span></div>
+    <div id="dockBody"></div>
   </aside>
 </main>
-<div id="modal" class="hidden"><div class="box"><div class="mhead"><h2></h2><button class="ib close" aria-label="关闭">✕</button></div><div class="mbody"></div><div class="mfoot"></div></div></div>
-<div id="busy" class="hidden"><div class="spin"></div><div class="msg">处理中…</div></div>
+<footer id="statusbar"></footer>
+<div id="busy" class="hidden"><div><div class="spin"></div><div class="msg">处理中…</div></div></div>
 <input type="file" id="fileIn" hidden>
 <script type="module" src="js/app.js"></script>
 </body>

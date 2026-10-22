@@ -1,8 +1,9 @@
-// 编辑器核心：状态、撤销、工具、对称、物品、出生点
-import { Grow } from './util.js';
+// 编辑器核心：状态、撤销、笔刷、对称、物品、单位、出生点、map_info
 import { objProp, setObjProp } from './tmx.js';
 import { TerrainEngine, NONE } from './terrain.js';
+import { Op } from './history.js';
 
+export const MAX_TEAMS = 100; // 游戏引擎上限（setMaxTeamId 超过 100 会报错）
 export const ITEM_CN = {
   'Res Pool': '资源池', 'Trees': '树', 'Grass': '草丛', 'Stone': '碎石',
   'Holes': '弹坑', 'Mud': '泥坑', 'Cacti': '仙人掌', 'LargeRock': '大岩石',
@@ -11,73 +12,15 @@ export const UNIT_CN = {
   commandCenter: '指挥中心', builder: '建造者', extractorT1: '资源提取器', landFactory: '陆军工厂',
   airFactory: '空军工厂', seaFactory: '海军工厂', mechFactory: '机甲工厂', laboratory: '实验室',
   fabricatorT1: '制造厂', c_turret_t1: '炮塔', c_antiAirTurret: '防空炮塔', tree: '树',
-  creditsCrates: '资金箱', combatEngineer: '战斗工程师', mechEngineer: '机甲工程师',
+  creditsCrates: '资金箱', combatEngineer: '战斗工程师', mechEngineer: '机甲工程师', tank: '坦克',
+  c_tank: '坦克', hoverTank: '悬浮坦克', c_artillery: '火炮', gunShip: '武装直升机', c_helicopter: '直升机',
+  builderShip: '建造船', gunBoat: '炮艇', heavyTank: '重型坦克', c_mammothTank: '猛犸坦克', bomber: '轰炸机',
+  c_interceptor: '截击机', missileTank: '导弹坦克', experimentalSpider: '实验蜘蛛', dropship: '运输机',
+  heavyArtillery: '重型火炮', laserDefence: '激光防御', antiAirTurretFlak: '高射炮', nukeLauncherC: '核弹发射井',
+  antiNukeLauncherC: '反核发射井', mechGun: '机甲（机枪）', mechMissile: '机甲（导弹）', amphibiousJet: '两栖飞机',
 };
 
-// ---- 撤销记录 ----
-export class Op {
-  constructor(ed, label) {
-    this.ed = ed; this.label = label;
-    this.tL = new Grow(); this.tI = new Grow(); this.tO = new Grow(); this.tN = new Grow();
-    this.vI = new Grow(); this.vO = new Grow(); this.vN = new Grow();
-    this.objs = null; // [{group, before, after}]
-    this.box = null;
-    this.layerIdx = new Map();
-  }
-  li(layer) {
-    let k = this.layerIdx.get(layer);
-    if (k === undefined) { k = this.ed.map.layers.indexOf(layer); this.layerIdx.set(layer, k); }
-    return k;
-  }
-  grow(x, y) {
-    const r = this.recent;
-    if (!r) this.recent = { x0: x, y0: y, x1: x, y1: y };
-    else { if (x < r.x0) r.x0 = x; if (y < r.y0) r.y0 = y; if (x > r.x1) r.x1 = x; if (y > r.y1) r.y1 = y; }
-    const b = this.box;
-    if (!b) this.box = { x0: x, y0: y, x1: x, y1: y };
-    else { if (x < b.x0) b.x0 = x; if (y < b.y0) b.y0 = y; if (x > b.x1) b.x1 = x; if (y > b.y1) b.y1 = y; }
-  }
-  tile(layer, i, oldGid, oldFlip, newGid, newFlip) {
-    if (oldGid === newGid && oldFlip === newFlip) return;
-    this.tL.push(this.li(layer)); this.tI.push(i);
-    this.tO.push((oldGid | (oldFlip << 29)) | 0); this.tN.push((newGid | (newFlip << 29)) | 0);
-    layer.data[i] = newGid;
-    if (newFlip) layer.flips.set(i, newFlip); else if (layer.flips.size) layer.flips.delete(i);
-    layer.dirty = true;
-    const W = this.ed.map.width;
-    this.grow(i % W, (i / W) | 0);
-  }
-  vert(i, o, n) { this.vI.push(i); this.vO.push(o); this.vN.push(n); }
-  snapshotGroup(group) {
-    if (!this.objs) this.objs = [];
-    if (this.objs.some((e) => e.group === group)) return;
-    this.objs.push({ group, before: cloneObjs(group.objects), after: null });
-  }
-  finish() { if (this.objs) for (const e of this.objs) e.after = cloneObjs(e.group.objects); }
-  get size() { return this.tI.length + this.vI.length + (this.objs ? 1 : 0); }
-  apply(undo) {
-    const m = this.ed.map, eng = this.ed.engine;
-    const tL = this.tL.view(), tI = this.tI.view(), src = undo ? this.tO.view() : this.tN.view();
-    const n = tI.length;
-    for (let k = undo ? n - 1 : 0; undo ? k >= 0 : k < n; k += undo ? -1 : 1) {
-      const L = m.layers[tL[k]], i = tI[k], raw = src[k] >>> 0;
-      L.data[i] = raw & 0x1fffffff;
-      const f = raw >>> 29;
-      if (f) L.flips.set(i, f); else if (L.flips.size) L.flips.delete(i);
-      L.dirty = true;
-    }
-    if (eng) {
-      const vI = this.vI.view(), vs = undo ? this.vO.view() : this.vN.view();
-      const nv = vI.length;
-      for (let k = undo ? nv - 1 : 0; undo ? k >= 0 : k < nv; k += undo ? -1 : 1) eng.V[vI[k]] = vs[k];
-    }
-    if (this.objs) for (const e of this.objs) e.group.objects = cloneObjs(undo ? e.before : e.after);
-  }
-}
-
-function cloneObjs(arr) {
-  return arr.map((o) => ({ attrs: { ...o.attrs }, props: o.props.map((p) => ({ ...p })), extra: o.extra }));
-}
+export const SYM_MODES = ['none', 'lr', 'tb', 'rot', 'quad', 'diag'];
 
 export class Editor {
   constructor() {
@@ -85,53 +28,63 @@ export class Editor {
     this.engine = null;
     this.undoStack = []; this.redoStack = [];
     this.mode = 'terrain';
-    this.tool = { terrain: 'brush', items: 'stamp', units: 'spawn', triggers: 'select', tiles: 'brush' };
-    this.terrain = 0;
-    this.size = 3;
-    this.shape = 'circle';
+    this.tool = { terrain: 'brush', items: 'stamp', units: 'spawn', triggers: 'select', tiles: 'brush', select: 'rect' };
+    this.terrain = 0; this.terrain2 = 0;
+    this.size = 3; this.shape = 'circle';
+    this.onlyOver = null;        // 只覆盖这种地形（null 不限）
     this.itemKey = null;
+    this.randomMix = null;       // 随机笔刷：[{key, w}]
     this.unitName = 'commandCenter';
     this.team = 0;
     this.sym = 'none';
     this.selected = null;
-    this.rawGid = 0;
-    this.rawLayer = 'Ground';
+    this.rawGid = 0; this.rawLayer = 'Ground';
     this.showTriggers = false;
     this.dirty = false;
     this.listeners = new Set();
     this.op = null;
+    this.selection = null;       // {x0,y0,x1,y1} 或 {mask, box}
+    this.clipboard = null;
+    this.floating = null;        // 正在摆放的粘贴内容
   }
 
   on(fn) { this.listeners.add(fn); }
   emit(what) { for (const f of this.listeners) f(what); }
 
-  setMap(map) {
+  setMap(map, keepHistory = false) {
     this.map = map;
-    this.undoStack = []; this.redoStack = [];
-    this.selected = null;
-    this.dirty = false;
+    if (!keepHistory) { this.undoStack = []; this.redoStack = []; this.dirty = false; }
+    this.selected = null; this.selection = null; this.floating = null;
     this.groundTs = this.findTs('ground');
     this.itemsTs = this.findTs('items');
     this.unitsTs = this.findTs('units');
     const g = map.ground;
     this.engine = (this.groundTs && g && this.groundTs.terrainNames.length) ? new TerrainEngine(map, this.groundTs, g) : null;
-    if (this.engine) {
-      const grass = this.engine.names.indexOf('Grass');
-      this.terrain = grass >= 0 ? grass : this.engine.paintable[0];
+    if (this.engine && (!keepHistory || !this.engine.paintable.includes(this.terrain))) {
+      const pick = (n) => { const i = this.engine.index(n); return this.engine.paintable.includes(i) ? i : -1; };
+      this.terrain = [pick('Grass'), this.engine.paintable[0]].find((v) => v >= 0);
+      this.terrain2 = [pick('Sand'), pick('Dirt'), this.terrain].find((v) => v >= 0);
     }
     this.items = this.buildItems();
-    if (!this.itemKey && this.items.length) this.itemKey = this.items[0].key;
-    else if (this.itemKey && !this.items.find((i) => i.key === this.itemKey)) this.itemKey = this.items[0] && this.items[0].key;
+    if (!this.items.find((i) => i.key === this.itemKey)) this.itemKey = this.items[0] && this.items[0].key;
     this.unitIndex = this.buildUnitIndex();
     this.emit('map');
   }
+  // 地图尺寸变化后重建引擎（保留撤销历史）
+  rebuildEngine() {
+    if (this.engine) this.engine.rebuild();
+    this.emit('map');
+  }
+
+  // 等比缩放已经直接写好了角点，只需要通知界面
+  rebuildEngineAfterResize() { this.emit('map'); }
 
   findTs(tag) {
     const m = this.map;
     return m.tilesets.find((t) => t.layerTag === tag) || m.tilesets.find((t) => t.name === 'export_' + tag) || null;
   }
 
-  // 物品面板：根据物品图块集的地形标注自动生成
+  // ---- 物品：根据物品图块集的地形标注自动生成 ----
   buildItems() {
     const ts = this.itemsTs; if (!ts) return [];
     const out = [];
@@ -142,6 +95,9 @@ export class Editor {
       if (!byTuple.has(k)) byTuple.set(k, []);
       byTuple.get(k).push(id);
     }
+    this.itemTuple = new Map(); // gid -> tuple
+    for (const [k, ids] of byTuple) for (const id of ids) this.itemTuple.set(ts.firstgid + id, k.split(',').map(Number));
+    this.itemByTuple = new Map([...byTuple].map(([k, ids]) => [k, ts.firstgid + ids[0]]));
     ts.terrainNames.forEach((name, t) => {
       const T = (a, b, c, d) => byTuple.get([a, b, c, d].join(','));
       const full = T(t, t, t, t);
@@ -151,15 +107,24 @@ export class Editor {
         [T(-1, t, -1, -1), T(t, t, -1, -1), T(t, -1, -1, -1)]];
       const blob = grid.every((r) => r.every((c) => c && c.length));
       const isPool = [...ts.tiles].some(([id, inf]) => full.includes(id) && 'res_pool' in inf.props);
+      const blocks = [...ts.tiles].some(([id, inf]) => full.includes(id) && ('large-rock' in inf.props));
       out.push({
-        key: 'i' + t, name, cn: ITEM_CN[name] || name, terrain: t, pool: isPool,
+        key: 'i' + t, name, cn: ITEM_CN[name] || name, terrain: t, pool: isPool, blocks,
         stamp: blob ? grid.map((r) => r.map((c) => ts.firstgid + c[0])) : null,
         variants: full.map((id) => ts.firstgid + id),
         rep: ts.firstgid + (ts.terrainRep[t] >= 0 ? ts.terrainRep[t] : full[0]),
       });
     });
     out.sort((a, b) => (b.pool - a.pool));
+    this.poolGids = new Set();
+    for (const [id, inf] of ts.tiles) if ('res_pool' in inf.props) this.poolGids.add(ts.firstgid + id);
     return out;
+  }
+  itemTupleTransform(gid, kind) {
+    const t = this.itemTuple && this.itemTuple.get(gid);
+    if (!t) return gid;
+    const nt = transformTuple(t, kind);
+    return this.itemByTuple.get(nt.join(',')) || gid;
   }
 
   buildUnitIndex() {
@@ -180,32 +145,56 @@ export class Editor {
   }
 
   // ---- 撤销 ----
-  begin(label) { this.op = new Op(this, label); return this.op; }
+  begin(label) { if (this.op) this.commit(); this.op = new Op(this, label); return this.op; }
+  // 整体操作（改尺寸、缩放、镜像整图）：记录整张图的状态
+  beginWhole(label) {
+    const op = this.begin(label);
+    const before = this.map.snapshotState();
+    let after = null;
+    op.meta = {
+      undo: () => { if (!after) after = this.map.snapshotState(); this.map.restoreState(before); this.rebuildEngine(); },
+      redo: () => { this.map.restoreState(after); this.rebuildEngine(); },
+      bytes: before.layers.reduce((s, l) => s + l.data.byteLength, 0),
+    };
+    return op;
+  }
   commit() {
     const op = this.op; this.op = null;
     if (!op) return;
     op.finish();
-    if (!op.size) return;
+    if (op.empty) return;
     this.undoStack.push(op); this.redoStack = [];
-    let total = this.undoStack.reduce((s, o) => s + o.size, 0);
-    while ((this.undoStack.length > 200 || total > 12e6) && this.undoStack.length > 1) total -= this.undoStack.shift().size;
+    let total = this.undoStack.reduce((s, o) => s + o.size + (o.meta ? o.meta.bytes / 2 : 0), 0);
+    while ((this.undoStack.length > 300 || total > 40e6) && this.undoStack.length > 1) {
+      const o = this.undoStack.shift(); total -= o.size + (o.meta ? o.meta.bytes / 2 : 0);
+    }
     this.dirty = true;
     this.emit('edit');
+  }
+  discard() {
+    const op = this.op; this.op = null;
+    if (op && !op.empty) { op.apply(true); this.emit({ type: 'changed', box: op.box, full: !!op.meta }); }
   }
   undo() { this.step(this.undoStack, this.redoStack, true); }
   redo() { this.step(this.redoStack, this.undoStack, false); }
   step(from, to, undo) {
     if (this.op) this.commit();
-    const op = from.pop(); if (!op) return;
+    const op = from.pop(); if (!op) return null;
     op.apply(undo); to.push(op);
     this.dirty = true;
     this.selected = null;
-    this.emit({ type: 'changed', box: op.box, objs: !!op.objs });
+    this.emit({ type: 'changed', box: op.box, objs: !!op.objs, full: !!op.meta || op.snaps.size > 0 });
+    return op;
+  }
+  // 历史面板：跳到第 n 步（0 = 最早之前）
+  jumpTo(n) {
+    while (this.undoStack.length > n) this.undo();
+    while (this.undoStack.length < n && this.redoStack.length) this.redo();
   }
 
   // ---- 对称 ----
+  // kind: 'v' 角点坐标, 't' 格子坐标, 'p' 像素坐标
   symPoints(fx, fy, kind) {
-    // kind: 'v' 角点坐标, 't' 格子坐标, 'p' 像素坐标
     const m = this.map;
     const W = kind === 'v' ? m.width : kind === 't' ? m.width - 1 : m.width * m.tw;
     const H = kind === 'v' ? m.height : kind === 't' ? m.height - 1 : m.height * m.th;
@@ -214,7 +203,13 @@ export class Editor {
     if (s === 'lr' || s === 'quad') pts.push([W - fx, fy]);
     if (s === 'tb' || s === 'quad') pts.push([fx, H - fy]);
     if (s === 'rot' || s === 'quad') pts.push([W - fx, H - fy]);
-    return pts;
+    if (s === 'diag') pts.push([fy * W / Math.max(1, H), fx * H / Math.max(1, W)]);
+    const eps = kind === 'p' ? 10 : 0.5;
+    return pts.filter((p, i) => pts.findIndex((q) => Math.abs(q[0] - p[0]) < eps && Math.abs(q[1] - p[1]) < eps) === i);
+  }
+  symPairs(a, b) {
+    const pa = this.symPoints(a[0], a[1], 'v'), pb = this.symPoints(b[0], b[1], 'v');
+    return pa.map((p, i) => [p, pb[i] || p]);
   }
 
   // ---- 地形 ----
@@ -223,77 +218,107 @@ export class Editor {
     const W1 = this.map.width + 1, H1 = this.map.height + 1;
     const x0 = Math.max(0, Math.ceil(cx - r)), x1 = Math.min(W1 - 1, Math.floor(cx + r));
     const y0 = Math.max(0, Math.ceil(cy - r)), y1 = Math.min(H1 - 1, Math.floor(cy + r));
+    const V = this.engine.V, only = this.onlyOver;
     for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
       if (shape === 'circle' && (x - cx) ** 2 + (y - cy) ** 2 > r * r + 0.01) continue;
-      out.push(y * W1 + x);
+      const v = y * W1 + x;
+      if (only !== null && V[v] !== only) continue;
+      out.push(v);
     }
   }
-  // 以角点坐标画一笔（带对称）
+  brushCenter(v) { return this.size % 2 ? Math.round(v) : Math.round(v - 0.5) + 0.5; }
   paintTerrainAt(vx, vy, t = this.terrain) {
     if (!this.engine) return null;
     const verts = [];
-    const cx = this.size % 2 ? Math.round(vx) : Math.round(vx - 0.5) + 0.5;
-    const cy = this.size % 2 ? Math.round(vy) : Math.round(vy - 0.5) + 0.5;
+    const cx = this.brushCenter(vx), cy = this.brushCenter(vy);
     for (const [x, y] of this.symPoints(cx, cy, 'v')) this.brushVerts(x, y, this.size, this.shape, verts);
+    if (!verts.length) return null;
     return this.engine.paint(this.op, verts, t);
   }
-  paintTerrainShape(kind, a, b, t = this.terrain) {
-    if (!this.engine) return null;
+  shapeVerts(kind, a, b) {
     const verts = [];
     const W1 = this.map.width + 1, H1 = this.map.height + 1;
+    const V = this.engine.V, only = this.onlyOver;
     for (const [[ax, ay], [bx, by]] of this.symPairs(a, b)) {
       const x0 = Math.max(0, Math.round(Math.min(ax, bx))), x1 = Math.min(W1 - 1, Math.round(Math.max(ax, bx)));
       const y0 = Math.max(0, Math.round(Math.min(ay, by))), y1 = Math.min(H1 - 1, Math.round(Math.max(ay, by)));
       const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, rx = Math.max(0.5, (x1 - x0) / 2), ry = Math.max(0.5, (y1 - y0) / 2);
       for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
         if (kind === 'ellipse' && ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 > 1.0001) continue;
-        verts.push(y * W1 + x);
+        const v = y * W1 + x;
+        if (only !== null && V[v] !== only) continue;
+        verts.push(v);
       }
     }
+    return verts;
+  }
+  paintTerrainShape(kind, a, b, t = this.terrain) {
+    if (!this.engine) return null;
+    const verts = this.shapeVerts(kind, a, b);
+    if (verts.length > 200000) { this.op.snapV(); this.op.snapLayer(this.engine.layer); }
     return this.engine.paint(this.op, verts, t);
   }
-  symPairs(a, b) {
-    const pa = this.symPoints(a[0], a[1], 'v'), pb = this.symPoints(b[0], b[1], 'v');
-    return pa.map((p, i) => [p, pb[i]]);
+  fillTerrainAt(vx, vy, t = this.terrain, global = false) {
+    if (!this.engine) return null;
+    let box = null;
+    for (const [x, y] of this.symPoints(Math.round(vx), Math.round(vy), 'v')) {
+      const b = this.engine.fill(this.op, Math.round(x), Math.round(y), t, global);
+      if (b) box = box ? { x0: Math.min(box.x0, b.x0), y0: Math.min(box.y0, b.y0), x1: Math.max(box.x1, b.x1), y1: Math.max(box.y1, b.y1) } : b;
+      if (global) break;
+    }
+    return box;
   }
   pickTerrain(vx, vy) {
     if (!this.engine) return;
     const t = this.engine.terrainAtVertex(Math.round(vx), Math.round(vy));
-    if (t !== NONE) { this.terrain = t; this.emit('palette'); }
+    if (t !== NONE && this.engine.paintable.includes(t)) { this.terrain = t; this.emit('palette'); }
   }
 
   // ---- 物品 ----
-  item() { return this.items.find((i) => i.key === this.itemKey) || null; }
-  placeItemAt(tx, ty) {
-    const it = this.item(); if (!it) return;
+  item(key = this.itemKey) { return this.items.find((i) => i.key === key) || null; }
+  placeItemAt(tx, ty, key = this.itemKey) {
+    const it = this.item(key); if (!it) return;
     const L = this.map.ensureLayer('Items');
-    for (const [x, y] of this.symPoints(tx, ty, 't')) {
-      if (it.stamp) {
-        for (let dy = 0; dy < 3; dy++) for (let dx = 0; dx < 3; dx++) this.setTile(L, x - 1 + dx, y - 1 + dy, it.stamp[dy][dx]);
+    for (const [x, y] of this.symPoints(tx, ty, 't')) this.placeItemOne(L, it, Math.round(x), Math.round(y));
+  }
+  placeItemOne(L, it, x, y) {
+    if (it.stamp) {
+      for (let dy = 0; dy < 3; dy++) for (let dx = 0; dx < 3; dx++) this.setTile(L, x - 1 + dx, y - 1 + dy, it.stamp[dy][dx]);
+      return;
+    }
+    const r = Math.floor(this.size / 2);
+    for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) {
+      if (this.shape === 'circle' && dx * dx + dy * dy > r * r + 0.5) continue;
+      const X = x + dx, Y = y + dy;
+      if (this.randomMix && this.randomMix.length) {
+        // 随机笔刷：按权重抽一种，留一部分空着显得自然
+        const h = hash(X, Y, this.op ? this.op.time : 0);
+        const tot = this.randomMix.reduce((s, e) => s + e.w, 0) + (this.randomGap || 0);
+        let pick = h * tot, chosen = null;
+        for (const e of this.randomMix) { if (pick < e.w) { chosen = e; break; } pick -= e.w; }
+        if (!chosen) continue;
+        const ci = this.item(chosen.key); if (!ci || ci.stamp) continue;
+        this.setTile(L, X, Y, ci.variants[Math.floor(hash(Y, X, 7) * ci.variants.length)]);
       } else {
-        const r = Math.floor(this.size / 2);
-        for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) {
-          if (this.shape === 'circle' && dx * dx + dy * dy > r * r + 0.5) continue;
-          const v = it.variants[((x + dx) * 7 + (y + dy) * 13) % it.variants.length];
-          this.setTile(L, x + dx, y + dy, v);
-        }
+        this.setTile(L, X, Y, it.variants[Math.floor(hash(X, Y, 3) * it.variants.length)]);
       }
     }
   }
   eraseAt(L, tx, ty) {
+    if (this.engine && L === this.engine.layer) return; // 地面不能留空格
     const r = Math.floor(this.size / 2);
     for (const [x, y] of this.symPoints(tx, ty, 't')) {
       for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) {
         if (this.shape === 'circle' && dx * dx + dy * dy > r * r + 0.5) continue;
-        this.setTile(L, x + dx, y + dy, 0);
+        this.setTile(L, Math.round(x) + dx, Math.round(y) + dy, 0);
       }
     }
   }
-  setTile(L, x, y, gid) {
+  setTile(L, x, y, gid, flip = 0) {
     const m = this.map;
     if (x < 0 || y < 0 || x >= m.width || y >= m.height) return;
     const i = y * m.width + x;
-    this.op.tile(L, i, L.data[i], L.flips.get(i) || 0, gid, 0);
+    this.op.tile(L, i, L.data[i], L.flips.get(i) || 0, gid, flip);
   }
   rawPaintAt(tx, ty) {
     const L = this.map.layer(this.rawLayer) || this.map.ground;
@@ -301,24 +326,27 @@ export class Editor {
     const r = Math.floor(this.size / 2);
     for (const [x, y] of this.symPoints(tx, ty, 't')) {
       for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) {
-        const X = x + dx, Y = y + dy;
+        const X = Math.round(x) + dx, Y = Math.round(y) + dy;
         if (X < 0 || Y < 0 || X >= this.map.width || Y >= this.map.height) continue;
         this.setTile(L, X, Y, this.rawGid);
-        if (this.engine && L === this.engine.layer) this.engine.syncTile(this.op, X, Y);
+        if (this.engine && L === this.engine.layer) this.engine.syncRect(this.op, X, Y, X, Y);
       }
     }
   }
 
   // ---- 单位与出生点 ----
   unitsGroup() { return this.map.group('UnitObjects') || this.map.group('Units') || this.map.ensureGroup('UnitObjects'); }
-  usedTeams() {
-    const s = new Set();
-    for (const G of this.map.groups) for (const o of G.objects) {
-      if (objProp(o, 'unit') === 'commandCenter') s.add(+objProp(o, 'team'));
+  allObjects() { const out = []; for (const G of this.map.groups) for (const o of G.objects) out.push({ o, G }); return out; }
+  spawns() {
+    const out = [];
+    for (const { o, G } of this.allObjects()) if (objProp(o, 'unit') === 'commandCenter') {
+      const w = +(o.attrs.width || 30), h = +(o.attrs.height || 30);
+      out.push({ o, G, team: +objProp(o, 'team'), cx: +o.attrs.x + w / 2, cy: +o.attrs.y - h / 2 });
     }
-    return s;
+    return out;
   }
-  nextTeam() { const s = this.usedTeams(); let t = 0; while (s.has(t)) t++; return t; }
+  usedTeams() { return new Set(this.spawns().map((s) => s.team)); }
+  nextTeamWith(extra = []) { const s = this.usedTeams(); for (const t of extra) s.add(t); let t = 0; while (s.has(t)) t++; return t; }
   makeUnit(unit, team, px, py, w, h, rot) {
     return {
       attrs: { name: `${unit} (t:${team})`, x: px.toFixed(1), y: py.toFixed(1), width: String(w), height: String(h), rotation: rot, gid: String(this.unitGid(unit, team)) },
@@ -326,34 +354,44 @@ export class Editor {
       extra: [],
     };
   }
+  // 以像素中心放一个出生点：指挥中心 + 2 个建造者（建造者在下方）
+  spawnAtCenter(G, cx, cy, team) {
+    G.objects.push(this.makeUnit('commandCenter', team, cx - 15, cy + 15, 30, 30, '-90.0'));
+    G.objects.push(this.makeUnit('builder', team, cx - 20, cy + 70, 20, 20, '90.0'));
+    G.objects.push(this.makeUnit('builder', team, cx, cy + 70, 20, 20, '90.0'));
+  }
+  clampSpawn(cx, cy) {
+    const m = this.map, Wp = m.width * m.tw, Hp = m.height * m.th;
+    return [Math.max(30, Math.min(Wp - 30, cx)), Math.max(30, Math.min(Hp - 80, cy))];
+  }
   addSpawnAt(tx, ty) {
+    if (this.usedTeams().size >= MAX_TEAMS) return [];
     const G = this.unitsGroup();
     this.op.snapshotGroup(G);
-    const pts = this.symPoints(tx, ty, 't');
     const added = [];
-    for (const [x, y] of pts) {
-      const X = Math.max(1, Math.min(this.map.width - 2, Math.round(x))), Y = Math.max(1, Math.min(this.map.height - 5, Math.round(y)));
+    for (const [px, py] of this.symPoints(tx * 20 + 10, ty * 20 + 10, 'p')) {
+      const [cx, cy] = this.clampSpawn(px, py);
       const team = this.nextTeamWith(added);
+      if (team >= MAX_TEAMS) break;
       added.push(team);
-      G.objects.push(this.makeUnit('commandCenter', team, X * 20 - 5, Y * 20 + 15, 30, 30, '-90.0'));
-      G.objects.push(this.makeUnit('builder', team, X * 20, Y * 20 + 80, 20, 20, '90.0'));
-      G.objects.push(this.makeUnit('builder', team, X * 20 + 20, Y * 20 + 80, 20, 20, '90.0'));
+      this.spawnAtCenter(G, cx, cy, team);
     }
     return added;
   }
-  nextTeamWith(extra) { const s = this.usedTeams(); for (const t of extra) s.add(t); let t = 0; while (s.has(t)) t++; return t; }
   addUnitAt(tx, ty) {
     const G = this.unitsGroup();
     this.op.snapshotGroup(G);
-    for (const [x, y] of this.symPoints(tx, ty, 't')) {
-      G.objects.push(this.makeUnit(this.unitName, this.team, Math.round(x) * 20, Math.round(y) * 20 + 20, 20, 20, '0'));
+    for (const [px, py] of this.symPoints(tx * 20 + 10, ty * 20 + 10, 'p')) {
+      G.objects.push(this.makeUnit(this.unitName, this.team, Math.round(px - 10), Math.round(py + 10), 20, 20, '0'));
     }
   }
   hitObject(mx, my) {
     let best = null;
     for (const G of this.map.groups) {
       if (!G.visible) continue;
-      if (G.name.toLowerCase() === 'triggers' && !this.showTriggers) continue;
+      const trig = G.name.toLowerCase() === 'triggers';
+      if (trig && !this.showTriggers) continue;
+      if (!trig && this.mode === 'triggers') continue;
       for (const o of G.objects) {
         const x = +(o.attrs.x || 0), y = +(o.attrs.y || 0), w = Math.max(+(o.attrs.width || 0), 20), h = Math.max(+(o.attrs.height || 0), 20);
         const top = o.attrs.gid ? y - h : y;
@@ -362,18 +400,18 @@ export class Editor {
     }
     return best;
   }
+  buildersOf(G, cc) {
+    const team = objProp(cc, 'team'), x = +cc.attrs.x, y = +cc.attrs.y;
+    return G.objects.filter((b) => objProp(b, 'unit') === 'builder' && objProp(b, 'team') === team &&
+      Math.abs(+b.attrs.x - x) < 120 && Math.abs(+b.attrs.y - y) < 160);
+  }
   deleteObject(o) {
     for (const G of this.map.groups) {
       const i = G.objects.indexOf(o);
       if (i < 0) continue;
       this.op.snapshotGroup(G);
-      G.objects.splice(i, 1);
-      // 删除指挥中心时一并删除同队、附近的建造者
-      if (objProp(o, 'unit') === 'commandCenter') {
-        const team = objProp(o, 'team'), x = +o.attrs.x, y = +o.attrs.y;
-        G.objects = G.objects.filter((b) => !(objProp(b, 'unit') === 'builder' && objProp(b, 'team') === team &&
-          Math.abs(+b.attrs.x - x) < 120 && Math.abs(+b.attrs.y - y) < 160));
-      }
+      const extra = objProp(o, 'unit') === 'commandCenter' ? this.buildersOf(G, o) : [];
+      G.objects = G.objects.filter((b) => b !== o && !extra.includes(b));
       return true;
     }
     return false;
@@ -383,18 +421,30 @@ export class Editor {
     const G = this.groupOf(o); if (!G) return;
     this.begin('改队伍');
     this.op.snapshotGroup(G);
-    const old = objProp(o, 'team');
-    const unit = objProp(o, 'unit');
-    const touch = [o];
-    if (unit === 'commandCenter') {
-      for (const b of G.objects) if (objProp(b, 'unit') === 'builder' && objProp(b, 'team') === old &&
-        Math.abs(+b.attrs.x - +o.attrs.x) < 120 && Math.abs(+b.attrs.y - +o.attrs.y) < 160) touch.push(b);
-    }
+    const touch = [o, ...(objProp(o, 'unit') === 'commandCenter' ? this.buildersOf(G, o) : [])];
     for (const t of touch) {
       setObjProp(t, 'team', team);
       const u = objProp(t, 'unit');
       t.attrs.name = `${u} (t:${team})`;
       const g = this.unitGid(u, team); if (g) t.attrs.gid = String(g);
+    }
+    this.commit();
+  }
+  // 把队伍号重新排成 0,1,2…（保留中立）
+  renumberTeams() {
+    const sp = this.spawns().filter((s) => s.team >= 0).sort((a, b) => a.team - b.team);
+    const map = new Map(); sp.forEach((s, i) => { if (!map.has(s.team)) map.set(s.team, map.size); });
+    this.begin('队伍号重排');
+    for (const G of this.map.groups) {
+      this.op.snapshotGroup(G);
+      for (const o of G.objects) {
+        const t = objProp(o, 'team');
+        if (t === undefined || !map.has(+t)) continue;
+        const nt = map.get(+t);
+        setObjProp(o, 'team', nt);
+        const u = objProp(o, 'unit');
+        if (u) { o.attrs.name = `${u} (t:${nt})`; const g = this.unitGid(u, nt); if (g && o.attrs.gid) o.attrs.gid = String(g); }
+      }
     }
     this.commit();
   }
@@ -416,8 +466,8 @@ export class Editor {
     return mi;
   }
   setMapInfoProp(name, value) {
-    const mi = this.ensureMapInfo();
-    const T = this.groupOf(mi);
+    this.ensureMapInfo();
+    const T = this.map.group('Triggers');
     this.begin('修改 map_info');
     this.op.snapshotGroup(T);
     const live = T.objects.find((o) => (o.attrs.name || '').toLowerCase() === 'map_info');
@@ -425,14 +475,29 @@ export class Editor {
     this.commit();
   }
 
-  // ---- 资源池位置 ----
+  // ---- 资源池位置（中心格） ----
   poolTiles() {
-    const L = this.map.items; if (!L) return [];
-    const pools = new Set();
-    for (const ts of this.map.tilesets) for (const [id, inf] of ts.tiles) if ('res_pool' in inf.props) pools.add(ts.firstgid + id);
-    if (!pools.size) return [];
-    const out = [], d = L.data, W = this.map.width;
+    const L = this.map.items; if (!L || !this.poolGids || !this.poolGids.size) return [];
+    const out = [], d = L.data, W = this.map.width, pools = this.poolGids;
     for (let i = 0; i < d.length; i++) if (d[i] && pools.has(d[i])) out.push([i % W, (i / W) | 0]);
     return out;
   }
+}
+
+export function transformTuple(t, kind) {
+  const [a, b, c, d] = t; // 左上 右上 左下 右下
+  if (kind === 'h') return [b, a, d, c];
+  if (kind === 'v') return [c, d, a, b];
+  if (kind === 'r180') return [d, c, b, a];
+  if (kind === 'cw') return [c, a, d, b];
+  if (kind === 'ccw') return [b, d, a, c];
+  if (kind === 'diag') return [a, c, b, d];
+  return t;
+}
+
+export function hash(x, y, s) {
+  let h = (x * 374761393 + y * 668265263 + s * 2147483647) | 0;
+  h = Math.imul(h ^ (h >>> 13), 1274126177);
+  h ^= h >>> 16;
+  return (h >>> 0) / 4294967296;
 }
