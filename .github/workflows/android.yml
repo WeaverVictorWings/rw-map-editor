@@ -3,11 +3,14 @@ name: 安卓 APK
 on:
   push:
     branches: [main]
-    tags: ['v*']
   workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -85,28 +88,39 @@ jobs:
           path: out/*
           if-no-files-found: error
 
+      # package.json 里的版本还没有正式发布过 → 发布正式版（例如 2.0.0 → “2.0”）；否则发布测试版
+      - name: 判断是否发布正式版
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VER=$(node -p "require('./package.json').version")
+          echo "VER=$VER" >> $GITHUB_ENV
+          echo "REL_NAME=$(echo $VER | sed 's/\.0$//')" >> $GITHUB_ENV
+          if gh release view "v$VER" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1; then echo "OFFICIAL=0" >> $GITHUB_ENV; else echo "OFFICIAL=1" >> $GITHUB_ENV; echo "::notice title=release::publishing v$VER"; fi
+
+      - name: 发布正式版
+        if: env.OFFICIAL == '1'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.VER }}
+          target_commitish: ${{ github.sha }}
+          name: ${{ env.REL_NAME }}
+          prerelease: false
+          make_latest: true
+          body_path: RELEASE_NOTES.md
+          files: |
+            out/rw-map-editor.apk
+            out/rw-map-editor-web.zip
+
       - name: 发布测试版
-        if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+        if: env.OFFICIAL != '1'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: build-${{ github.run_number }}
           name: 测试版 ${{ github.run_number }}
           prerelease: true
           body: |
-            自动构建（提交 ${{ github.sha }}）。下载 rw-map-editor.apk 安装。
-          files: |
-            out/rw-map-editor.apk
-            out/rw-map-editor-web.zip
-
-      - name: 发布正式版
-        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: ${{ github.ref_name == 'v2.0.0' && '2.0' || github.ref_name }}
-          prerelease: false
-          make_latest: true
-          body_path: RELEASE_NOTES.md
+            自动构建（提交 ${{ github.sha }}，版本 ${{ env.VER }}）。下载 rw-map-editor.apk 安装。
           files: |
             out/rw-map-editor.apk
             out/rw-map-editor-web.zip
