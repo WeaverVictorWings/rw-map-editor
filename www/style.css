@@ -349,3 +349,4 @@ code { font: 12px ui-monospace, Menlo, Consolas, monospace; background: var(--bg
   .tplrow { grid-template-columns: 1fr 1fr; }
   #coach { top: 8px; }
 }
+#coach:not(.hidden) ~ #toast { top: 100px; }

@@ -88,18 +88,14 @@ jobs:
           path: out/*
           if-no-files-found: error
 
-      # package.json 里的版本还没有正式发布过 → 发布正式版（例如 2.0.0 → “2.0”）；否则发布测试版
-      - name: 判断是否发布正式版
-        env:
-          GH_TOKEN: ${{ github.token }}
+      # 按 package.json 的版本发布（例如 2.0.0 → “2.0”）。同一版本再次构建时，覆盖这个版本的安装包（修复会直接进到同一个版本里）
+      - name: 读取版本
         run: |
           VER=$(node -p "require('./package.json').version")
           echo "VER=$VER" >> $GITHUB_ENV
           echo "REL_NAME=$(echo $VER | sed 's/\.0$//')" >> $GITHUB_ENV
-          if gh release view "v$VER" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1; then echo "OFFICIAL=0" >> $GITHUB_ENV; else echo "OFFICIAL=1" >> $GITHUB_ENV; echo "::notice title=release::publishing v$VER"; fi
 
-      - name: 发布正式版
-        if: env.OFFICIAL == '1'
+      - name: 发布
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ env.VER }}
@@ -107,20 +103,8 @@ jobs:
           name: ${{ env.REL_NAME }}
           prerelease: false
           make_latest: true
+          overwrite_files: true
           body_path: RELEASE_NOTES.md
-          files: |
-            out/rw-map-editor.apk
-            out/rw-map-editor-web.zip
-
-      - name: 发布测试版
-        if: env.OFFICIAL != '1'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: build-${{ github.run_number }}
-          name: 测试版 ${{ github.run_number }}
-          prerelease: true
-          body: |
-            自动构建（提交 ${{ github.sha }}，版本 ${{ env.VER }}）。下载 rw-map-editor.apk 安装。
           files: |
             out/rw-map-editor.apk
             out/rw-map-editor-web.zip
