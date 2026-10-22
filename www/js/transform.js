@@ -266,11 +266,48 @@ export function clearSelection(ed, sel, fillTerrain) {
   op.grow(sel.x0, sel.y0); op.grow(sel.x1, sel.y1);
 }
 
+// ---------------- 图块形式的单位 ----------------
+// 有些地图把单位画在图块图层里（每格一个单位图块）。整图操作前先转成对象，
+// 这样缩放、镜像时单位是“搬家”而不是按格子被复制。
+export function unitTileLayers(ed) {
+  const m = ed.map, ts = ed.unitsTs;
+  if (!ts) return [];
+  const lo = ts.firstgid, hi = ts.firstgid + ts.tilecount;
+  return m.layers.filter((L) => L !== m.ground && L !== m.items && L.data.some((g) => g >= lo && g < hi));
+}
+export function unitTilesToObjects(ed) {
+  const m = ed.map, ts = ed.unitsTs;
+  const layers = unitTileLayers(ed);
+  if (!layers.length) return 0;
+  const G = ed.unitsGroup();
+  const lo = ts.firstgid, hi = ts.firstgid + ts.tilecount, W = m.width;
+  let n = 0;
+  for (const L of layers) {
+    const d = L.data;
+    for (let i = 0; i < d.length; i++) {
+      const g = d[i];
+      if (g < lo || g >= hi) continue;
+      const info = ts.tiles.get(g - lo);
+      const unit = info && info.props.unit;
+      if (!unit) continue;
+      const team = info.props.team ?? '-1';
+      const x = i % W, y = (i - x) / W;
+      G.objects.push({ attrs: { name: `${unit} (t:${team})`, x: String(x * TW), y: String((y + 1) * TW), width: String(TW), height: String(TW), gid: String(g) },
+        props: [{ name: 'unit', value: unit }, { name: 'team', value: String(team) }], extra: [] });
+      d[i] = 0; L.flips.delete(i); n++;
+    }
+    L.dirty = true; L.ver = (L.ver || 0) + 1;
+  }
+  return n;
+}
+
 // ---------------- 整图镜像 ----------------
 // kind: 'lr' 左半→右半, 'rl' 右→左, 'tb' 上→下, 'bt' 下→上, 'rot' 左半旋转 180° 到右半, 'quad' 左上四分之一→其余三块
 export function mirrorMap(ed, kind) {
   const m = ed.map, eng = ed.engine, W = m.width, H = m.height;
+  ed.unitsGroup(); // 先建好对象层，撤销时才能还原
   ed.beginWhole('整图镜像');
+  const converted = unitTilesToObjects(ed);
   const op = directOp(ed);
   // 每个目标格/角点 -> 源坐标（null 表示保持）
   const srcT = (x, y) => {
@@ -351,6 +388,7 @@ export function mirrorMap(ed, kind) {
   }
   ed.op.markAll();
   ed.commit();
+  return { converted };
 }
 
 // ---------------- 对称差异检查 ----------------
@@ -381,14 +419,21 @@ export function symmetryDiff(ed, kind) {
 }
 
 // ---------------- 等比缩放 ----------------
-// k：倍数（0.25~4）；opts.pools: 'keep' 资源池数量不变 | 'area' 按面积增加
+// k：倍数（0.25~4）
+// opts.units: 'move' 单位挪到对应位置（默认，绝不复制）| 'keep' 原地不动
+// opts.pools: 'keep' 资源池数量不变（默认）| 'area' 按面积增加
+// opts.triggers: 触发器区域是否跟着缩放（默认是）
 export function scaleMap(ed, k, opts = {}) {
   const m = ed.map, eng = ed.engine;
   const W = m.width, H = m.height;
   const W2 = Math.max(10, Math.round(W * k)), H2 = Math.max(10, Math.round(H * k));
   const kx = W2 / W, ky = H2 / H;
+  const unitsMode = opts.units || 'move', poolsMode = opts.pools || 'keep', scaleTrig = opts.triggers !== false;
+  ed.unitsGroup();
   ed.beginWhole(`等比缩放 ×${k}`);
   const op = directOp(ed);
+  // 0. 图块形式的单位先转成对象，避免按格子放大时被复制
+  const converted = unitTilesToObjects(ed);
   // 1. 收集要“整体搬家”而不是拉伸的东西：3×3 物品（资源池、大岩石）和贴图
   const stamps = [];
   const I = m.items;
@@ -401,17 +446,21 @@ export function scaleMap(ed, k, opts = {}) {
     const seen = new Uint8Array(W * H);
     for (let i = 0; i < d.length; i++) {
       const g = d[i]; if (!g) continue;
-      if (stampCenters.has(g)) stamps.push({ it: stampCenters.get(g), x: i % W, y: (i / W) | 0 });
+      if (stampCenters.has(g)) {
+        const it = stampCenters.get(g), x = i % W, y = (i / W) | 0;
+        // 每个资源池保留原来的样式（1 格或 3×3）
+        const bordered = x > 0 && y > 0 && d[i - W - 1] === it.stamp[0][0];
+        stamps.push({ it, x, y, style: it.pool ? (bordered ? '3x3' : '1x1') : '3x3' });
+      }
       if (!seen[i] && pictureTs(g)) {
-        // 贴图：同一个图块集、连在一起的一块
         const ts = pictureTs(g);
-        let x0 = W, y0 = H, x1 = -1, y1 = -1;
+        let x0 = W, y0 = H;
         const st = [i]; seen[i] = 1;
         const cells = [];
         while (st.length) {
           const c = st.pop(); cells.push(c);
           const x = c % W, y = (c - x) / W;
-          if (x < x0) x0 = x; if (y < y0) y0 = y; if (x > x1) x1 = x; if (y > y1) y1 = y;
+          if (x < x0) x0 = x; if (y < y0) y0 = y;
           for (const u of [x > 0 ? c - 1 : -1, x < W - 1 ? c + 1 : -1, y > 0 ? c - W : -1, y < H - 1 ? c + W : -1]) {
             if (u >= 0 && !seen[u] && d[u] && m.tilesetOf(d[u]) === ts) { seen[u] = 1; st.push(u); }
           }
@@ -431,7 +480,7 @@ export function scaleMap(ed, k, opts = {}) {
       for (let x = 0; x <= W2; x++) V2[y * (W2 + 1) + x] = eng.V[sy * eng.W1 + Math.min(W, Math.round(x / kx))];
     }
   }
-  // 3. 各图层按最近邻采样（地形图块之后会重铺；3×3 物品和贴图另外处理）
+  // 3. 各图层按最近邻采样（地形图块之后会重铺；3×3 物品和贴图另外处理；树、草等装饰跟着放大）
   for (const L of m.layers) {
     const old = L.data, oflips = L.flips;
     const data = (old instanceof Uint32Array) ? new Uint32Array(W2 * H2) : new Uint16Array(W2 * H2);
@@ -457,11 +506,14 @@ export function scaleMap(ed, k, opts = {}) {
     eng.repairRect(op, 0, 0, W2, H2);
     eng.retileRect(op, 0, 0, W2 - 1, H2 - 1);
   }
-  // 5. 3×3 物品放回新位置；资源池可按面积增加
+  // 5. 3×3 物品和资源池放回新位置（数量不变）；勾选“按面积增加”时才加资源池
+  let poolsOut = 0, poolsAdded = 0;
   if (I) {
-    const put = (it, cx, cy) => {
-      cx = Math.max(1, Math.min(W2 - 2, cx)); cy = Math.max(1, Math.min(H2 - 2, cy));
-      for (let dy = 0; dy < 3; dy++) for (let dx = 0; dx < 3; dx++) I.data[(cy - 1 + dy) * W2 + cx - 1 + dx] = it.stamp[dy][dx];
+    const put = (it, cx, cy, style) => {
+      const cells = ed.stampCells(it, style);
+      const r = cells.length > 1 ? 1 : 0;
+      cx = Math.max(r, Math.min(W2 - 1 - r, cx)); cy = Math.max(r, Math.min(H2 - 1 - r, cy));
+      for (const [dx, dy, g] of cells) I.data[(cy + dy) * W2 + cx + dx] = g;
     };
     const landOK = (x, y) => {
       if (!eng) return true;
@@ -470,8 +522,9 @@ export function scaleMap(ed, k, opts = {}) {
     };
     for (const s of stamps) {
       const cx = Math.round((s.x + 0.5) * kx - 0.5), cy = Math.round((s.y + 0.5) * ky - 0.5);
-      put(s.it, cx, cy);
-      if (s.it.pool && opts.pools === 'area' && kx * ky > 1.5) {
+      put(s.it, cx, cy, s.style);
+      if (s.it.pool) poolsOut++;
+      if (s.it.pool && poolsMode === 'area' && kx * ky > 1.5) {
         const extra = Math.round(kx * ky) - 1;
         const R = Math.max(5, Math.round(3 * Math.sqrt(kx * ky)));
         for (let e = 0; e < extra; e++) {
@@ -479,8 +532,8 @@ export function scaleMap(ed, k, opts = {}) {
           let ok = false;
           for (let r = R; r <= R + 6 && !ok; r += 2) {
             const x = Math.round(cx + r * Math.cos(ang)), y = Math.round(cy + r * Math.sin(ang));
-            if (x < 2 || y < 2 || x > W2 - 3 || y > H2 - 3 || !landOK(x, y)) continue;
-            put(s.it, x, y); ok = true;
+            if (x < 2 || y < 2 || x > W2 - 3 || y > H2 - 3 || !landOK(x, y) || I.data[y * W2 + x]) continue;
+            put(s.it, x, y, s.style); ok = true; poolsAdded++;
           }
         }
       }
@@ -490,7 +543,8 @@ export function scaleMap(ed, k, opts = {}) {
       for (const [dx, dy, g] of b.cells) { const X = nx + dx, Y = ny + dy; if (X >= 0 && Y >= 0 && X < W2 && Y < H2) I.data[Y * W2 + X] = g; }
     }
   }
-  // 6. 对象：出生点和单位按比例移动（建造者跟着指挥中心），区域类触发器按比例缩放
+  // 6. 对象：单位挪到对应位置（建造者跟着指挥中心，不复制）；触发区域按比例缩放
+  const Wp2 = W2 * TW, Hp2 = H2 * TW;
   for (const grp of m.groups) {
     const trig = grp.name.toLowerCase() === 'triggers';
     const ccs = grp.objects.filter((o) => objProp(o, 'unit') === 'commandCenter');
@@ -501,11 +555,13 @@ export function scaleMap(ed, k, opts = {}) {
       if (isMapInfo(o)) continue;
       if (follow.has(o)) continue;
       const [cx, cy] = oldCenter.get(o);
-      if (trig && !o.attrs.gid) {
+      if (!o.attrs.gid) {
+        if (!scaleTrig) continue;
         o.attrs.x = (+(o.attrs.x || 0) * kx).toFixed(1); o.attrs.y = (+(o.attrs.y || 0) * ky).toFixed(1);
         if (o.attrs.width) o.attrs.width = (+o.attrs.width * kx).toFixed(1);
         if (o.attrs.height) o.attrs.height = (+o.attrs.height * ky).toFixed(1);
-      } else placeObjAtCenter(o, cx * kx, cy * ky);
+      } else if (unitsMode === 'move') placeObjAtCenter(o, cx * kx, cy * ky);
+      else placeObjAtCenter(o, Math.min(cx, Wp2 - 15), Math.min(cy, Hp2 - 15)); // 原地不动（缩小时拉回图内）
     }
     for (const [b, cc] of follow) {
       const [bx, by] = oldCenter.get(b), [ox, oy] = oldCenter.get(cc), [nx, ny] = objCenter(cc);
@@ -515,5 +571,5 @@ export function scaleMap(ed, k, opts = {}) {
   ed.rebuildEngineAfterResize();
   ed.op.markAll();
   ed.commit();
-  return { W2, H2, pools: stamps.filter((s) => s.it.pool).length };
+  return { W2, H2, pools: poolsOut, poolsAdded, converted };
 }

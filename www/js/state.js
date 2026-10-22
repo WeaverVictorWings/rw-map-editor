@@ -15,7 +15,7 @@ export const A = {
   savePromise: null,
   dockTab: 'tool',
   overlayKind: 'none',
-  settings: { grid: true, dim: false, prune: false, autosaveSec: 30, symDiffKind: 'lr' },
+  settings: { grid: true, dim: false, prune: false, autosaveSec: 30, symDiffKind: 'lr', poolStyle: '1x1', cover: true, coverSize: 400 },
   // 由各模块注册的界面刷新函数
   hooks: {},
   refresh(...what) { for (const w of what.length ? what : ['top', 'toolbar', 'dock', 'modes']) if (this.hooks[w]) this.hooks[w](); },

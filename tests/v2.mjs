@@ -86,12 +86,15 @@ await page.keyboard.press('Escape');
 const sc = await page.evaluate(async () => {
   const { ed, scaleMap, rend, A } = window.__rw;
   const t = performance.now();
-  const r = scaleMap(ed, 2, { pools: 'area' });
+  const p0 = ed.poolTiles().length;
+  const r = scaleMap(ed, 2, {});
   rend.setMap(ed.map); A.mini.rebuild();
-  return { ...r, ms: Math.round(performance.now() - t), spawns: ed.spawns().length };
+  return { ...r, ms: Math.round(performance.now() - t), spawns: ed.spawns().length, p0, p1: ed.poolTiles().length };
 });
 console.log('  缩放', JSON.stringify(sc));
 expect(sc.W2 === info.w * 2, '缩放后宽度翻倍');
+expect(sc.spawns === info.spawns, `缩放后出生点数量不变 ${info.spawns} → ${sc.spawns}`);
+expect(sc.p0 === sc.p1, `缩放后资源池数量不变 ${sc.p0} → ${sc.p1}`);
 await page.waitForTimeout(500);
 await page.screenshot({ path: out + '/12-scaled.png' });
 const ser = await page.evaluate(async () => { const s = await window.__rw.serialize(); return s.length; });
@@ -99,6 +102,25 @@ expect(ser > 1000, '缩放后可以保存 ' + ser);
 // 撤销缩放
 await page.evaluate(() => window.__rw.ed.undo());
 expect(await page.evaluate(() => window.__rw.ed.map.width) === info.w, '撤销缩放');
+// 图块形式的单位：缩放时转成对象，不被复制
+const ut = await page.evaluate(() => {
+  const { ed, scaleMap } = window.__rw;
+  ed.undo();
+  const L = ed.map.ensureLayer('Units');
+  const g = ed.unitGid('commandCenter', 0), W = ed.map.width;
+  for (const [x, y] of [[10, 10], [50, 40], [200, 300]]) L.data[y * W + x] = g;
+  const before = ed.spawns().length;
+  scaleMap(ed, 2, {});
+  const after = ed.spawns().length, left = [...ed.map.layer('Units').data].filter((v) => v).length;
+  ed.undo();
+  const back = [...ed.map.layer('Units').data].filter((v) => v).length;
+  return { before, after, left, back };
+});
+console.log('  ', JSON.stringify(ut));
+expect(ut.after === ut.before + 3 && ut.left === 0 && ut.back === 3, '图块单位转成 3 个对象（不复制），撤销后还原');
+// 资源池默认 1 格
+const pool1 = await page.evaluate(() => { const { ed } = window.__rw; const it = ed.items.find((i) => i.pool); ed.begin('t'); ed.placeItemOne(ed.map.ensureLayer('Items'), it, 30, 30); const n = ed.op.tI.length; ed.commit(); ed.undo(); ed.poolStyle = '3x3'; ed.begin('t'); ed.placeItemOne(ed.map.items, it, 30, 30); const n3 = ed.op.tI.length; ed.commit(); ed.undo(); ed.poolStyle = '1x1'; return [n, n3]; });
+expect(pool1[0] <= 1 && pool1[1] >= 8, '资源池默认 1 格，3×3 样式可选 ' + pool1);
 // 手机
 const ph = await newPage(400, 860, true);
 await ph.evaluate(async (t) => { await window.__rw.loadMapFromText(t, 'sample.tmx'); }, text);

@@ -237,9 +237,19 @@ export function triggerColor(o) {
 
 // ---------------- 检查 ----------------
 const TIME_RE = /^\d+(\.\d+)?\s*(ms|s)?$/i;
+let issCache = { key: '', val: null };
 export function triggerIssues() {
+  if (!ed.map) return [];
+  const last = ed.undoStack[ed.undoStack.length - 1];
+  const T0 = trigGroup();
+  const key = `${ed.map.width}|${ed.undoStack.length}|${ed.redoStack.length}|${last ? last.time + last.label : ''}|${T0 ? T0.objects.length : 0}`;
+  if (issCache.key === key && issCache.map === ed.map) return issCache.val;
+  const val = computeIssues();
+  issCache = { key, val, map: ed.map };
+  return val;
+}
+function computeIssues() {
   const out = [];
-  if (!ed.map) return out;
   const T = trigGroup();
   const objs = T ? T.objects : [];
   const first = new Map();
@@ -676,7 +686,7 @@ async function cityTemplate() {
     h('div', { class: 'grid2' },
       h('div', {}, h('label', {}, '城市区域大小（格）'), h('input', { type: 'number', min: 1, max: 30, value: st.size, oninput: (e) => { st.size = Math.max(1, Math.min(30, +e.target.value || 3)); } })),
       h('div', {}, h('label', {}, ' '), toggle('城市名随占领方变色', st.color, (v) => { st.color = v; }))),
-    h('div', { class: 'hint', style: 'margin-top:8px' }, '城市里的建筑要你自己放（单位模式），区域要盖住它。占领 = 区域里有该队的建筑。'));
+    h('div', { class: 'hint', style: 'margin-top:8px', html: '城市里的建筑要你自己放（单位模式），区域要盖住它。占领 = 区域里有该队的建筑。<br>每个队伍 3 个触发器。<b>普通房间只认前 10 队</b>，在大房间（服务器）玩才需要更多。' }));
   const ok = await modal('城市争夺模板', body, [{ label: '取消', value: false }, { label: '下一步：点地图放城市', value: true, primary: true }]);
   if (!ok) return;
   const pt = await pickOnMap(`点地图放「${st.name}」`);

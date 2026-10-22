@@ -66,7 +66,7 @@ function onEditorEvent(ev) {
     A.refresh();
     return;
   }
-  if (ev === 'edit') { A.autoDirty = true; A.report = null; A.refresh('top'); refreshOverlaySoon(); if (A.dockTab === 'history' || ed.mode === 'triggers' || ed.mode === 'units') A.refresh('dock'); return; }
+  if (ev === 'edit') { A.autoDirty = true; A.lastEditTime = Date.now(); A.report = null; A.refresh('top'); refreshOverlaySoon(); if (A.dockTab === 'history' || ed.mode === 'triggers' || ed.mode === 'units') A.refresh('dock'); return; }
   if (ev === 'palette') { A.refresh('dock'); return; }
   if (ev && ev.type === 'changed') {
     A.autoDirty = true;
@@ -126,6 +126,7 @@ async function init() {
   await D.loadSettings();
   rend.showGrid = A.settings.grid;
   rend.dimOthers = A.settings.dim;
+  ed.poolStyle = A.settings.poolStyle || '1x1';
   Object.assign(A.hooks, {
     top: P.renderTop, toolbar: P.renderToolbar, dock: P.renderDock, modes: P.renderModes,
     showWelcome: P.showWelcome, openMap: IO.openMap, openChecks: D.openChecks, resetAutosave,

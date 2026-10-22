@@ -46,6 +46,7 @@ export class Editor {
     this.selection = null;       // {x0,y0,x1,y1} 或 {mask, box}
     this.clipboard = null;
     this.floating = null;        // 正在摆放的粘贴内容
+    this.poolStyle = '1x1';      // 资源池：'1x1' 只放真正的资源池格（默认），'3x3' 带边框样式
   }
 
   on(fn) { this.listeners.add(fn); }
@@ -275,6 +276,13 @@ export class Editor {
   }
 
   // ---- 物品 ----
+  // 3×3 物品要放的格子 [dx, dy, gid]；资源池默认只放中间那 1 格（游戏只认带 res_pool 的那格）
+  stampCells(it, style = this.poolStyle) {
+    if (it.pool && style !== '3x3') return [[0, 0, it.stamp[1][1]]];
+    const out = [];
+    for (let dy = 0; dy < 3; dy++) for (let dx = 0; dx < 3; dx++) out.push([dx - 1, dy - 1, it.stamp[dy][dx]]);
+    return out;
+  }
   item(key = this.itemKey) { return this.items.find((i) => i.key === key) || null; }
   placeItemAt(tx, ty, key = this.itemKey) {
     const it = this.item(key); if (!it) return;
@@ -283,7 +291,7 @@ export class Editor {
   }
   placeItemOne(L, it, x, y) {
     if (it.stamp) {
-      for (let dy = 0; dy < 3; dy++) for (let dx = 0; dx < 3; dx++) this.setTile(L, x - 1 + dx, y - 1 + dy, it.stamp[dy][dx]);
+      for (const [dx, dy, g] of this.stampCells(it)) this.setTile(L, x + dx, y + dy, g);
       return;
     }
     const r = Math.floor(this.size / 2);

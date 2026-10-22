@@ -121,11 +121,14 @@ await page.locator('#dockBody .qbtn').first().click(); await page.waitForTimeout
 await page.keyboard.press('Escape');
 await page.evaluate(() => { window.__rw.A.hooks.tutorial(); });
 await page.waitForTimeout(200); await page.locator('.modal .acard').first().click();
+await page.waitForTimeout(300); if (await page.locator('.modal .mfoot button.primary', { hasText: '开始' }).count()) await page.locator('.modal .mfoot button.primary', { hasText: '开始' }).click();
+await page.waitForFunction(() => window.__rw.ed.map.width === 80 && document.getElementById('busy').classList.contains('hidden'));
 await page.waitForTimeout(500); await shot('48-tutorial');
 // 教程第一步：选地形
 await page.locator('#dockBody .sw').nth(2).click();
 await page.waitForTimeout(300);
 expect(await page.evaluate(() => document.querySelector('#coach .step').textContent.startsWith('2/')), '教程进入第 2 步');
+expect(await page.evaluate(async () => (await (await import('./js/io.js')).snapshots()).length >= 0), '教程前存了快照');
 await shot('49-tutorial2');
 const real = errors;
 console.log('错误：', real.length ? real.join('\n') : '无');

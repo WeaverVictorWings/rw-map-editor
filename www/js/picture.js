@@ -69,6 +69,7 @@ export async function addPictureTileset(ed, prep) {
   const last = [...m.root.querySelectorAll(':scope > tileset')].pop();
   m.root.insertBefore(el, last ? last.nextSibling : m.root.firstChild);
   const ts = new Tileset(el);
+  ts.editorPicture = true;
   await ts.loadImage();
   m.tilesets.push(ts);
   m.tilesets.sort((a, b) => a.firstgid - b.firstgid);

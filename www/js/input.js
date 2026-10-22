@@ -5,7 +5,7 @@ import { NONE } from './terrain.js';
 import { teamColor } from './render.js';
 import { rectSelection, wandSelection, copySelection, transformClip, pasteWithSymmetry, clearSelection, selInside } from './transform.js';
 import { saveUserStamp } from './stamps.js';
-import { toast, h, promptBox, modalOpen, closeModal, closePopover } from './ui.js';
+import { toast, h, promptBox, modalOpen, closeModal, closePopover, menu } from './ui.js';
 import { icon } from './icons.js';
 import { setMode, setTool, tool, MODES, TOOLS, renderStatus } from './panels.js';
 import { ACTIONS, runAction } from './actions.js';
@@ -123,7 +123,12 @@ function startAction(e) {
         if (hit) { ed.begin('删除'); ed.deleteObject(hit.o); commit(); ed.selected = null; A.mini.draw(); A.refresh('dock', 'top'); }
         return;
       }
-      if (hit) { ed.selected = hit.o; A.refresh('dock'); act = beginObjDrag(hit.o, p, 'move'); rend.request(); return; }
+      if (hit) {
+        // 同一位置叠着好几个触发器时，记下来，抬手没拖动就弹出列表让你选
+        const many = mode === 'triggers' ? hitsAt(p.x, p.y) : [];
+        const pick = many.length > 1 && many.includes(ed.selected) ? ed.selected : hit.o;
+        ed.selected = pick; A.refresh('dock'); act = beginObjDrag(pick, p, 'move'); act.many = many; act.cx = e.clientX; act.cy = e.clientY; rend.request(); return;
+      }
       if (ed.selected) { ed.selected = null; A.refresh('dock'); rend.request(); }
       act = { kind: 'pan', sx: e.clientX, sy: e.clientY, ox: rend.view.ox, oy: rend.view.oy };
       return;
@@ -131,6 +136,28 @@ function startAction(e) {
   }
 }
 
+function hitsAt(mx, my) {
+  const out = [];
+  for (const G of ed.map.groups) {
+    if (!G.visible || G.name.toLowerCase() !== 'triggers') continue;
+    for (const o of G.objects) {
+      const x = +(o.attrs.x || 0), y = +(o.attrs.y || 0), w = Math.max(+(o.attrs.width || 0), 20), hh = Math.max(+(o.attrs.height || 0), 20);
+      if (mx >= x - 6 && mx <= x + w + 6 && my >= y - 6 && my <= y + hh + 6) out.push(o);
+    }
+  }
+  return out;
+}
+function chooseAmong(list, cx, cy) {
+  const anchor = h('div', { style: `position:fixed;left:${cx}px;top:${cy}px;width:1px;height:1px` });
+  document.body.append(anchor);
+  const items = [{ title: `这里叠着 ${list.length} 个，选一个：` }];
+  for (const o of list.slice(0, 80)) {
+    const nm = (o.props.find((p) => p.name === 'id') || {}).value || o.attrs.name || '对象';
+    items.push({ label: `${nm}  ·  ${o.attrs.type || o.attrs.name || ''}`, check: o === ed.selected, run: () => { ed.selected = o; A.refresh('dock'); rend.request(); } });
+  }
+  menu(anchor, items);
+  setTimeout(() => anchor.remove(), 0);
+}
 function beginObjDrag(o, p, how) {
   const G = ed.groupOf(o);
   const followers = objProp(o, 'unit') === 'commandCenter' ? ed.buildersOf(G, o) : [];
@@ -244,6 +271,7 @@ function endAction(e, cancelled = false) {
       break;
     case 'objdrag':
       if (a.moved) { commit('moved'); A.mini.draw(); A.refresh('dock'); }
+      else if (a.many && a.many.length > 1 && !cancelled) chooseAmong(a.many, a.cx, a.cy);
       break;
   }
   rend.request();
@@ -504,7 +532,7 @@ function drawCursor(ctx, mp) {
   } else if ((ed.mode === 'items' || ed.mode === 'tiles') && ['stamp', 'random', 'erase', 'brush'].includes(T)) {
     const it = ed.mode === 'items' ? ed.item() : null;
     const { tx, ty } = tileOf(mp);
-    const r = it && it.stamp && T === 'stamp' ? 1 : Math.floor(ed.size / 2);
+    const r = it && it.stamp && T === 'stamp' ? (ed.stampCells(it).length > 1 ? 1 : 0) : Math.floor(ed.size / 2);
     for (const [x, y] of ed.symPoints(tx, ty, 't')) {
       const a = S((Math.round(x) - r) * TW, (Math.round(y) - r) * TW);
       ctx.strokeStyle = T === 'erase' ? '#f2545b' : '#fff';

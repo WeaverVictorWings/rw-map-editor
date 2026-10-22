@@ -353,6 +353,7 @@ export class RWMap {
       const used = this.usedTilesets();
       for (const ts of this.tilesets) {
         if (used.has(ts) || ['ground', 'items', 'units'].includes(ts.layerTag) || /^export_(ground|items|units)$/.test(ts.name)) continue;
+        if (opts.prune === 'pictures' && !ts.editorPicture) continue;
         if (ts.el.parentNode) { ts.el.parentNode.removeChild(ts.el); pruned.push(ts); }
       }
     }

@@ -3,7 +3,7 @@ import { A } from './state.js';
 import { newMapFromTemplate } from './tmx.js';
 import { TERRAIN_CN, NONE } from './terrain.js';
 import { runChecks, sizeTier, MAP_TYPES } from './check.js';
-import { mirrorMap, symmetryDiff, scaleMap } from './transform.js';
+import { mirrorMap, symmetryDiff, scaleMap, unitTileLayers } from './transform.js';
 import { balanceReport } from './pathing.js';
 import { PRESETS, STYLES, generateMap, encodeShare, decodeShare } from './gen.js';
 import { sampleImage, dominantColors, classifyByColor, fitCoverage, classifyByHeight, deepenWater, suggestTerrains, srgbToOklab } from './imagemap.js';
@@ -16,7 +16,7 @@ import { TerrainEngine } from './terrain.js';
 import { Renderer } from './render.js';
 import { icon } from './icons.js';
 import { helpBtn } from './help.js';
-import { loadMapFromText, exportPreview, exportPoster } from './io.js';
+import { loadMapFromText, exportPreview, exportPoster, autoSnapshot, exportCover } from './io.js';
 
 const ed = A.ed, rend = A.rend;
 const tierDot = (w, hh) => { const t = sizeTier(w, hh); const c = t.level === 'ok' ? 'var(--ok)' : t.level === 'warn' ? 'var(--warn)' : 'var(--err)'; return `<span class="tier" style="background:${c}"></span>${t.text}`; };
@@ -137,6 +137,7 @@ export async function resizeDialog() {
     h('p', { style: 'color:var(--muted);font-size:12.5px' }, ed.engine ? `新增的区域用当前地形「${ed.engine.cn(ed.terrain)}」填充。可以撤销。` : '可以撤销。')),
   [{ label: '取消', value: null }, { label: '调整', value: () => ({ w: clamp(+wI.value || 20, 20, 5000), h: clamp(+hI.value || 20, 20, 5000) }), primary: true }]);
   if (!r) return;
+  await autoSnapshot('调整画布前');
   await busy('正在调整画布…', async () => {
     const ox = Math.round((r.w - m.width) * st.ax / 2), oy = Math.round((r.h - m.height) * st.ay / 2);
     const fill = ed.engine ? ed.engine.solidGid(ed.terrain) : 0;
@@ -152,28 +153,40 @@ export async function resizeDialog() {
 // ---------------- 等比缩放 ----------------
 export async function scaleDialog() {
   const m = ed.map; if (!m) return;
-  const st = { k: 2, pools: 'area' };
+  const st = { k: 2, units: 'move', pools: 'keep', triggers: true };
+  const nUnits = ed.allObjects().filter(({ o }) => o.attrs.gid).length, nPools = rend.pools.length;
+  const nTrig = (m.group('Triggers') || { objects: [] }).objects.filter((o) => !o.attrs.gid && (o.attrs.name || '').toLowerCase() !== 'map_info').length;
+  const tileUnits = unitTileLayers(ed).length;
   const info = h('div', { class: 'hint' });
-  const upd = () => { const w = Math.round(m.width * st.k), hh = Math.round(m.height * st.k); info.innerHTML = `${m.width}×${m.height} → <b>${w}×${hh}</b> 格（面积 ×${(st.k * st.k).toFixed(2)}）<br>${tierDot(w, hh)}`; };
+  const upd = () => {
+    const w = Math.round(m.width * st.k), hh = Math.round(m.height * st.k);
+    const pools = st.pools === 'area' && st.k * st.k > 1.5 ? `约 ${Math.round(nPools * Math.round(st.k * st.k))}` : nPools;
+    info.innerHTML = `${m.width}×${m.height} → <b>${w}×${hh}</b> 格（面积 ×${(st.k * st.k).toFixed(2)}）<br>${tierDot(w, hh)}<br>缩放后：资源池 <b>${pools}</b> 个，单位 <b>${nUnits}</b> 个${st.units === 'move' ? '（挪到对应位置）' : '（原地不动）'}，不会多出来。`;
+  };
   const presets = h('div', { class: 'presets' });
   for (const k of [0.5, 0.75, 1.5, 2, 3, 4]) presets.append(h('button', { class: k === st.k ? 'on' : '', onclick: (e) => { st.k = k; kI.value = k; for (const b of presets.children) b.classList.toggle('on', b === e.currentTarget); upd(); } }, '×' + k));
   const kI = h('input', { type: 'number', min: 0.25, max: 4, step: 0.05, value: st.k, oninput: (e) => { st.k = clamp(+e.target.value || 1, 0.25, 4); upd(); } });
   upd();
   const r = await modal('等比缩放地图', h('div', {},
-    h('div', { class: 'row' }, h('p', { style: 'margin:0;flex:1' }, '把整张地图按比例放大或缩小，地形、资源、出生点都会智能地重新排列。'), helpBtn('scale')),
+    h('div', { class: 'row' }, h('p', { style: 'margin:0;flex:1' }, '把整张地图按比例放大或缩小。地形会重新铺好；单位、资源池怎么处理由你决定，任何东西都不会被复制。'), helpBtn('scale')),
     h('label', {}, '倍数（长和宽同时乘以）'), presets, h('div', { style: 'margin-top:6px;max-width:140px' }, kI),
-    h('label', {}, '资源池'), segmented([['area', '按面积增加'], ['keep', '数量不变']], st.pools, (v) => { st.pools = v; }),
+    h('div', { class: 'sech', style: 'margin-top:12px' }, h('h3', {}, '细节选项')),
+    h('label', {}, `单位（指挥中心、建造者等，共 ${nUnits} 个）`),
+    segmented([['move', '挪到对应位置（推荐）'], ['keep', '原地不动']], st.units, (v) => { st.units = v; upd(); }),
+    h('label', {}, `资源池（${nPools} 个）`),
+    segmented([['keep', '数量不变，挪到对应位置'], ['area', '按面积增加']], st.pools, (v) => { st.pools = v; upd(); }),
+    nTrig ? toggle(`触发器区域跟着缩放（${nTrig} 个）`, st.triggers, (v) => { st.triggers = v; }) : null,
+    tileUnits ? h('div', { class: 'hint', style: 'margin-top:8px' }, '这张地图的部分单位是画在图块图层里的。缩放时会先把它们转成单位对象（游戏同样能读），这样只会搬位置、不会被复制。') : null,
     h('div', { style: 'margin-top:10px' }, info),
     h('ul', { style: 'color:var(--muted);font-size:12.5px;padding-left:18px' },
-      h('li', {}, '地形按地形放大，再重新铺过渡；海岸和悬崖会自动接好。'),
-      h('li', {}, '资源池、大岩石保持 3×3 大小，搬到新位置；贴图保持原大小。'),
-      h('li', {}, '出生点和单位按比例移动，建造者跟着指挥中心；触发区域按比例缩放。'),
-      h('li', {}, '可以撤销。缩小时细小的地形可能消失。'))),
+      h('li', {}, '树、草丛等装饰跟着地形一起放大。贴图保持原大小，搬到新位置。'),
+      h('li', {}, '开始前会自动存一个快照；也可以直接撤销。缩小时细小的地形可能消失。'))),
   [{ label: '取消', value: null }, { label: '开始缩放', value: () => ({ ...st }), primary: true }]);
   if (!r) return;
-  const res = await busy('正在缩放地图…', async () => scaleMap(ed, r.k, { pools: r.pools }));
+  await autoSnapshot('缩放前');
+  const res = await busy('正在缩放地图…', async () => scaleMap(ed, r.k, { units: r.units, pools: r.pools, triggers: r.triggers }));
   afterWhole();
-  toast(`已缩放到 ${res.W2}×${res.H2} 格`);
+  toast(`已缩放到 ${res.W2}×${res.H2} 格：资源池 ${res.pools + res.poolsAdded} 个${res.converted ? `，${res.converted} 个图块单位已转成对象` : ''}`, 4000);
 }
 
 // ---------------- 整图镜像 ----------------
@@ -191,9 +204,10 @@ export async function mirrorDialog() {
     h('p', { style: 'color:var(--muted);font-size:12.5px' }, '出生点和资源池一起复制，新出生点自动分配队伍号；触发器不复制。可以撤销。')),
   [{ label: '取消', value: null }, { label: '镜像', value: () => pick, primary: true }]);
   if (!r) return;
-  await busy('正在镜像…', async () => mirrorMap(ed, r));
+  await autoSnapshot('镜像前');
+  const mr = await busy('正在镜像…', async () => mirrorMap(ed, r));
   afterWhole();
-  toast('镜像完成');
+  toast('镜像完成' + (mr && mr.converted ? `；${mr.converted} 个图块单位已转成对象` : ''));
 }
 
 export async function symDiffDialog() {
@@ -240,6 +254,7 @@ export async function generatorDialog(code = '') {
   upd();
   const r = await modal('随机生成', body, [{ label: '取消', value: null }, { label: '生成', value: () => ({ ...st }), primary: true }]);
   if (!r) return;
+  await autoSnapshot('随机生成前');
   const res = await busy('正在生成…', async () => generateMap(ed, r));
   afterWhole();
   toast(`生成完成：${res.spawns} 个出生点、${res.pools} 个资源池${res.carved ? `，为保证互通铺了 ${res.carved} 格通道` : ''}`, 4000);
@@ -430,6 +445,7 @@ export async function imageToMapDialog() {
   await busy('正在分析图片…', async () => recompute());
   const r = await pModal;
   if (r !== 'go') return;
+  if (ed.map && st.target === 'current') await autoSnapshot('图片转地图前');
   await busy('正在生成地图…', async () => {
     const [W, H] = dims();
     if (st.target === 'new' || !into) {
@@ -525,10 +541,12 @@ export async function traceDialog() {
 export async function previewDialog() {
   const r = await modal('导出图片', h('div', {},
     h('div', { class: 'cards' },
-      h('button', { class: 'acard', onclick: () => closeModal(200), html: icon('image') + '<div><b>预览图 200 像素（推荐）</b><small>游戏选地图时显示的缩略图，文件名为“地图名_map.png”，和地图放在同一个文件夹。</small></div>' }),
+      h('button', { class: 'acard', onclick: () => closeModal('cover'), html: icon('image') + `<div><b>地图封面（推荐）</b><small>整张地图拍一张照，文件名和地图一样：「${A.mapName}.png」，和地图放在同一个文件夹。保存地图时默认会一起导出。</small></div>` }),
+      h('button', { class: 'acard', onclick: () => closeModal(200), html: icon('image') + '<div><b>小预览图 200 像素</b><small>文件名为“地图名_map.png”。</small></div>' }),
       h('button', { class: 'acard', onclick: () => closeModal(500), html: icon('image') + '<div><b>预览图 500 像素</b><small>游戏允许的最大尺寸。</small></div>' }),
       h('button', { class: 'acard', onclick: () => closeModal('poster'), html: icon('poster') + '<div><b>展示图</b><small>带标题、尺寸、人数、资源池和图例的大图，适合发群、发论坛、工坊介绍。</small></div>' }))), []);
-  if (r === 'poster') await exportPoster();
+  if (r === 'cover') await exportCover();
+  else if (r === 'poster') await exportPoster();
   else if (r) await exportPreview(r);
 }
 
@@ -576,6 +594,9 @@ export async function settingsDialog() {
   await modal('设置', h('div', {},
     toggle('显示网格（放大时）', s.grid, (v) => { s.grid = v; rend.showGrid = v; rend.request(); saveSettings(); }),
     toggle('保存时去掉没用到的图块集（地图更小）', s.prune, (v) => { s.prune = v; saveSettings(); }),
+    toggle('保存地图时一起导出封面（地图名.png）', s.cover !== false, (v) => { s.cover = v; saveSettings(); }),
+    slider('封面大小（长边像素）', 200, 1000, s.coverSize || 400, (v) => { s.coverSize = v; saveSettings(); }, { step: 50 }),
+    h('label', {}, '资源池默认样式'), segmented([['1x1', '1 格（推荐）'], ['3x3', '3×3 带边框']], s.poolStyle || '1x1', (v) => { s.poolStyle = v; ed.poolStyle = v; saveSettings(); A.refresh('dock'); }),
     slider('自动保存间隔（秒）', 10, 120, s.autosaveSec, (v) => { s.autosaveSec = v; saveSettings(); A.hooks.resetAutosave && A.hooks.resetAutosave(); }, { step: 5 }),
     h('div', { class: 'row', style: 'margin-top:10px' },
       h('button', { onclick: async () => { const { forgetGameFolder } = await import('./files.js'); await forgetGameFolder(); toast('已忘记游戏文件夹'); } }, '重新选择游戏文件夹'),

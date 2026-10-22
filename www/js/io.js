@@ -76,7 +76,8 @@ async function rememberRecent(text) {
 
 // ---- 序列化（同一时间只跑一个） ----
 export function serializeOnce(opts = {}) {
-  const run = async () => ed.map.serialize({ prune: opts.prune ?? (A.settings.prune || ed.pruneOnSave) });
+  // 编辑器自己加的贴图图块集，没用到（例如撤销了放置）时总是去掉
+  const run = async () => ed.map.serialize({ prune: opts.prune ?? ((A.settings.prune || ed.pruneOnSave) ? true : 'pictures') });
   A.savePromise = (A.savePromise || Promise.resolve()).catch(() => {}).then(run);
   return A.savePromise;
 }
@@ -91,6 +92,8 @@ async function confirmIssues() {
 
 export async function saveMap(saveAs = false) {
   if (!ed.map) return;
+  // 手机上授权过游戏文件夹后，“保存”直接存进去（地图和封面一步到位）
+  if (!saveAs && isNative() && (await gameFolder())) return saveToGameFlow();
   const go = await confirmIssues();
   if (go === 'check') { A.hooks.openChecks && A.hooks.openChecks(); return; }
   if (go !== 'save') return;
@@ -102,6 +105,7 @@ export async function saveMap(saveAs = false) {
       if (r.handle) { A.fileHandle = r.handle; A.handleName = A.mapName; }
       markSaved(text);
       toast(r.where + `：${A.mapName}.tmx`);
+      if (A.settings.cover !== false) await exportCover(true);
       A.hooks.coach && A.hooks.coach('saved');
     }
   } catch (e) {
@@ -138,13 +142,11 @@ export async function saveToGameFlow() {
   if (go !== 'save') return;
   try {
     const text = await busy('正在生成地图文件…', () => serializeOnce());
-    const pv = renderPreview(ed, rend, 200);
-    const png = new Uint8Array(await (await pv.convertToBlob({ type: 'image/png' })).arrayBuffer());
-    const where = await busy('正在写入游戏文件夹…', () => saveToGame([
-      { name: A.mapName + '.tmx', data: text, mime: 'application/octet-stream' },
-      { name: A.mapName + '_map.png', data: png, mime: 'image/png' }]));
+    const files = [{ name: A.mapName + '.tmx', data: text, mime: 'application/octet-stream' }];
+    if (A.settings.cover !== false) files.push({ name: A.mapName + '.png', data: await coverBytes(), mime: 'image/png' });
+    const where = await busy('正在写入游戏文件夹…', () => saveToGame(files));
     markSaved(text);
-    toast(`已存进「${where}」：${A.mapName}.tmx 和预览图。去游戏里用普通模式试玩吧`, 4200);
+    toast(`已存进「${where}」：${A.mapName}.tmx${files.length > 1 ? ` 和封面 ${A.mapName}.png` : ''}。去游戏里试玩吧`, 4200);
     A.hooks.coach && A.hooks.coach('saved');
   } catch (e) {
     const again = await modal('保存到游戏失败', h('div', {}, h('p', {}, e.message || String(e)), h('p', { class: 'hint' }, '可能是文件夹权限过期了。可以重新选择文件夹，或者改用普通保存。')),
@@ -154,9 +156,38 @@ export async function saveToGameFlow() {
   }
 }
 
-// ---- 自动保存 ----
+// ---- 封面：整张地图拍一张照，和地图同名 .png ----
+async function coverBytes() {
+  const cv = renderPreview(ed, rend, A.settings.coverSize || 400);
+  return new Uint8Array(await (await cv.convertToBlob({ type: 'image/png' })).arrayBuffer());
+}
+export async function exportCover(quiet = false) {
+  if (!ed.map) return;
+  const r = await saveFile(A.mapName + '.png', await coverBytes(), 'image/png');
+  if (r.ok) toast(`${quiet ? '地图和' : ''}封面${r.where}：${A.mapName}.png`);
+}
+
+// ---- 自动快照：整图操作（缩放、镜像、生成……）之前存一份，最多保留 3 个 ----
+export async function autoSnapshot(label) {
+  if (!ed.map) return;
+  try {
+    const text = await busy('正在存快照（以防万一）…', () => serializeOnce());
+    let list = await snapshots();
+    list.unshift({ name: `自动：${label}`, time: Date.now(), text, auto: true });
+    let autos = 0;
+    list = list.filter((s) => !s.auto || ++autos <= 3).slice(0, 13);
+    await kvSet('snaps:' + A.mapName, list);
+  } catch (e) { console.warn('自动快照失败', e); }
+}
+
+// ---- 自动保存（停手几秒后再存；超大地图隔久一点，避免手机卡顿） ----
 export async function autosave(force = false) {
   if (!ed.map || (!A.autoDirty && !force) || (ed.op && !force)) return;
+  if (!force) {
+    if (Date.now() - (A.lastEditTime || 0) < 3000) return;
+    const big = ed.map.width * ed.map.height > 2e6;
+    if (big && Date.now() - (A.lastAuto || 0) < 120000) return;
+  }
   try {
     const text = await serializeOnce();
     const ok = await kvSet('autosave', { name: A.mapName, text, time: Date.now() });

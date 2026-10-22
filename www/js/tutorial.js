@@ -5,6 +5,7 @@ import { h, modal, closeModal, toast } from './ui.js';
 import { icon } from './icons.js';
 import { setMode } from './panels.js';
 import * as D from './dialogs.js';
+import { autoSnapshot } from './io.js';
 
 const ed = A.ed;
 const el = () => document.getElementById('coach');
@@ -103,9 +104,15 @@ export function coach(evt) {
 
 export async function startLesson(id) {
   const lesson = LESSONS.find((l) => l.id === id); if (!lesson) return;
-  if (lesson.needMap && !ed.map) {
+  if (lesson.needMap) {
+    // 教程总是在一张新的练习图上进行，不动你正在做的地图
     const tpl = await kvGet('template');
     if (!tpl) { await modal('先打开一张地图', h('p', {}, '教程需要图块素材。请先打开一张你已有的铁锈战争地图（.tmx），编辑器会从里面取出素材。'), [{ label: '知道了', value: 1, primary: true }]); return; }
+    if (ed.map && ed.dirty) {
+      const go = await modal('开始教程', h('p', {}, '教程会打开一张新的练习图。你当前地图还没保存的改动会先存成一个快照（在“历史”面板里可以恢复）。'), [{ label: '取消', value: 0 }, { label: '开始', value: 1, primary: true }]);
+      if (!go) return;
+      await autoSnapshot('开始教程前');
+    }
     await D.createNewMap({ name: '教程练习', w: 80, h: 60, players: 2, start: 'blank', layout: 'lr', base: -1, pools: 1, center: 0 });
   }
   document.getElementById('welcome').classList.add('hidden');

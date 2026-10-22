@@ -26,9 +26,9 @@ function rect(clip, x0, y0, x1, y1, t) {
 }
 function pool(ed, clip, cx, cy) {
   const it = ed.items.find((i) => i.pool); if (!it) return;
-  for (let dy = 0; dy < 3; dy++) for (let dx = 0; dx < 3; dx++) {
-    const x = cx - 1 + dx, y = cy - 1 + dy;
-    if (x >= 0 && y >= 0 && x < clip.w && y < clip.h) clip.items[y * clip.w + x] = it.stamp[dy][dx];
+  for (const [dx, dy, g] of ed.stampCells(it)) {
+    const x = cx + dx, y = cy + dy;
+    if (x >= 0 && y >= 0 && x < clip.w && y < clip.h) clip.items[y * clip.w + x] = g;
   }
 }
 function base(ed, clip, cx, cy, team = 0) {

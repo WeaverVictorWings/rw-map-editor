@@ -222,7 +222,7 @@ export function placePoolsAround(ed, op, spawnTiles, perTeam, centerPools = 0, s
     }
     return true;
   };
-  const put = (x, y) => { for (let dy = 0; dy < 3; dy++) for (let dx = 0; dx < 3; dx++) ed.setTile(L, x - 1 + dx, y - 1 + dy, poolItem.stamp[dy][dx]); };
+  const put = (x, y) => { for (const [dx, dy, g] of ed.stampCells(poolItem)) ed.setTile(L, x + dx, y + dy, g); };
   let placed = 0;
   for (const [sx, sy] of spawnTiles) {
     const toC = Math.atan2(H / 2 - sy, W / 2 - sx);

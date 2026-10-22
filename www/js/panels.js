@@ -280,7 +280,8 @@ function toolItems(body, T) {
   const it = ed.item();
   if (T === 'erase' || (it && !it.stamp)) body.append(sec('笔刷', null, sizeSec(24)));
   const ss = symSec(); if (ss) body.append(ss);
-  body.append(h('div', { class: 'hint', html: (it && it.stamp ? `「${it.cn}」占 3×3 格，点一下放一个。` : '按住拖动可以连续画。') + `<br>地图上现在有 <b>${rend.pools.length}</b> 个资源池。资源池和单位之间最好留 1 格空隙。` }));
+  if (it && it.pool) body.append(sec('资源池样式', 'items.pool', segmented([['1x1', '1 格（推荐）'], ['3x3', '3×3 带边框']], ed.poolStyle, (v) => { ed.poolStyle = v; A.settings.poolStyle = v; D.saveSettings(); rend.request(); })));
+  body.append(h('div', { class: 'hint', html: (it && it.stamp ? (ed.stampCells(it).length > 1 ? `「${it.cn}」占 3×3 格，点一下放一个。` : `「${it.cn}」占 1 格，点一下放一个，按住拖动不会连放。`) : '按住拖动可以连续画。') + `<br>地图上现在有 <b>${rend.pools.length}</b> 个资源池。资源池和单位之间最好留 1 格空隙。` }));
 }
 
 export function teamSelect(cur, on, withNeutral = true) {
