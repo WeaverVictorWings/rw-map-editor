@@ -5,3 +5,4 @@ android/
 *.jks
 test-output/
 www/capacitor.js
+!android-plugin/signing.keystore
