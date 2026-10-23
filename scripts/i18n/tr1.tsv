@@ -1,0 +1,626 @@
+0	Dosya
+1	Yeni harita
+2	Boyut ve oyuncu seç; üsler ve kaynaklar otomatik yerleşir
+3	Harita aç…
+4	Oyun klasöründen aç…
+5	Oyunun harita klasöründeki haritaları listele
+6	Son açılanlar…
+7	Kaydet
+8	Farklı kaydet…
+9	Oyun klasörüne kaydet
+a	Haritayı önizlemesiyle oyuna kaydet, hemen oynanır
+b	Önizleme / tanıtım görseli dışa aktar…
+c	Harita kitaplığı…
+d	Yaptığın ve açtığın tüm haritalar, küçük resim ve etiketlerle
+e	Toplu işlem…
+f	Birçok haritayı birden kontrol et ve düzelt, kapak üret
+g	Harita koleksiyonu paketle (Mod)…
+h	Birkaç haritayı bir .rwmod içine paketle
+i	Mod desteği…
+j	Mod'dan birim ve tileset içe aktar
+k	Karo kaynağı…
+l	Ayarlar…
+m	Düzen
+n	Geri al
+o	Yinele
+p	Kopyala
+q	Kes
+r	Yapıştır
+s	Tümünü seç
+t	Seçimi kaldır
+u	Seçimi yatay çevir
+v	Seçimi dikey çevir
+w	Seçimi 90° döndür
+x	Seçimi damga olarak kaydet…
+y	Geçmiş
+z	Her adımı gör, dokunup geri dön; anlık görüntü kaydet
+10	Harita
+11	Test listesi…
+12	Oyunda neyin test edileceği ve her testin kaydı
+13	Harita puanı…
+14	Haritaya puan verir, nerede puan kaybettiğini ve nasıl düzelteceğini söyler
+15	«Oynanabilir mi?» kontrolü
+16	Kaydetmeden önce haritanın oyunda çalıştığını kontrol et
+17	Denge raporu
+18	Takımların kaynak ve bölgesini yürüme rotasıyla karşılaştır
+19	Simetri farkı kontrolü…
+1a	Rastgele üret…
+1b	Ön ayar ve tohumla arazi, üs ve kaynak
+1c	Görselden harita…
+1d	Bir görseli haritaya çevir; arazi karışımını sen belirle
+1e	Orantılı ölçek…
+1f	Tüm haritayı büyüt ya da küçült; kaynak ve üsler akıllıca yeniden dizilir
+1g	Haritayı aynala…
+1h	Yarım harita çiz, tek dokunuşla simetrik yap
+1i	Tuval boyutu…
+1j	Görsel çıkartma…
+1k	Haritaya görsel yapıştır (karolara bölünür)
+1l	Çizim referansı…
+1m	Üzerinden çizmek için yarı saydam görsel bindir
+1n	Damgalar
+1o	Üs, kaynak noktası, göl ve dahası tek dokunuşla
+1p	Otomatik detay…
+1r	Açılış simülasyonu…
+1s	Her takımın kaç saniyede düşmanla karşılaşacağını ya da merkeze varacağını tahmin eder
+1t	Başka haritadan kopyala…
+1u	Başka bir haritayı aç, bir parça seç ve getir
+1v	Harita birleştirme…
+1w	Birkaç haritayı tek büyük haritada birleştir
+1x	Sürüm karşılaştırma…
+1y	Anlık görüntüyle karşılaştır, değişeni gör, bir parçayı geri yükle
+1z	Savaş günlüğü…
+20	Oyunda akan mesajları zamana göre düzenle
+21	Eksik tileset görsellerini ekle…
+22	Takımları yeniden numarala
+23	Takım numaralarını 1, 2, 3… diye düzenle
+24	Görünüm
+25	Tüm harita
+26	Gerçek boyut (%100)
+27	Izgara
+28	Diğer katmanları karart
+29	Kaplama
+2a	Kaplama yok
+2b	Kara geçişi
+2c	Deniz geçişi
+2d	Hover geçişi
+2e	İnşa edilebilir alan
+2f	Takım bölgeleri
+2g	Yardım
+2h	Eğitim
+2i	Adımları takip et, temelleri dakikalar içinde öğren
+2j	Yardım merkezi
+2k	Hareketler ve kısayollar
+2l	Özellik ara
+2m	Bölgeler hesaplanıyor…
+2n	Son harita geri yüklensin mi?
+2o	Adsız
+2p	Otomatik kayıt bulundu: «
+2q	). Son seferde kaydedilememiş olabilir.
+2r	Geri yükle
+2s	Gerek yok
+2t	Geri yükleniyor…
+2u	Geri yükleme başarısız:
+2v	Editörden çıkılsın mı?
+2x	Çık
+2z	Başlatma başarısız:
+30	Tüm tileset'lerin görseli var
+31	Eksik tileset görsellerini ekle
+32	Bu haritada
+34	Gereken dosyalar:
+35	Oyun kurulum klasöründe şurada bulunur:
+37	Dosya seç (birden fazla olabilir)
+38	İptal
+39	Ekle
+3a	Tileset görselleri ekleniyor…
+3b	Eklendi
+3c	tileset
+3d	Eşleşme yok: dosya adları haritadakilerle aynı olmalı
+3e	Kara (çimen, varsayılan)
+3f	Çimen gibi yürünür ve inşa edilir
+3g	Sığ geçit
+3h	Kara birimleri ve gemiler geçer
+3i	Sığ su
+3j	Gemiler geçer, kara birimleri geçemez
+3k	Derin su
+3l	Gemiler geçer, kara birimleri geçemez (daha derin görünür)
+3m	Geçilmez
+3n	Uçurum gibi, kara birimleri geçemez
+3o	Lav
+3p	Kara birimleri geçemez
+3q	Renk bloğu sınırı
+3r	tür; önce kullanılmayanları sil
+3s	Yeni renk bloğu
+3t	Kırmızı R
+3u	Yeşil G
+3v	Mavi B
+3w	Ton
+3x	Doygunluk
+3y	Parlaklık
+3z	HSV (ton/doygunluk/parlaklık)
+40	Ekrandan renk al
+41	Renk kodu
+42	Sık renkler
+43	Bu haritadaki renk blokları
+44	Oyunda ne olacak (zorunlu)
+46	Tamam
+47	500'e kadar: mobil çok oyunculuda bile güvenli
+4b	Biçim
+4c	Karo boyutu 20×20 değil
+4d	Şu an
+4e	; oyun 20×20 ister.
+4f	map_info eksik
+4h	Düzelt
+4i	map_info'da type yok
+4j	Çatışma haritaları skirmish olmalı.
+4k	skirmish yap
+4l	map_info type değeri «
+4m	Yaygın değerler:
+4n	(topluluk notları)
+4o	map_info tamam (type=
+4p	Ground katmanı yok
+4q	Zeminde
+4r	boş hücre var
+4s	Oyun Ground katmanında boş hücre istemez.
+4t	En yaygın zeminle doldur
+4u	Boşları doldur
+4v	Boş hücre yok
+4w	Katman «
+4x	» içinde
+4y	tanımsız karo
+4z	Eski oyun sürümleri tanımsız karoda çöker.
+50	Bu karoları temizle
+51	Tanımsız karoları temizle
+52	float özelliği sayı değil
+53	Eski sürümler geçersiz float'ta çöker.
+54	Tileset görseli ekle…
+55	Tileset'ler
+56	Tileset «
+57	» harici dosya kullanıyor
+59	» gömülü görsel içermiyor
+5a	Harici görsel kullanıyor: «
+5b	», başka cihazda görünmeyebilir.
+5c	su karosunda water özelliği yok
+5e	Bu karolara water ekle
+5f	lav karosunda lava özelliği yok
+5h	lava ekle
+5i	özellik adında büyük harf var
+5k	Hepsini küçük harf yap
+5l	Üsler
+5m	Hiç üs yok
+5o	takımın üssü var
+5p	Takım numaraları ardışık değil:
+5q	1, 2, 3… diye numarala
+5r	takım
+5t	100'ün üstünde takım numarası var
+5v	Yeniden numarala
+5w	komuta merkezi başka bir merkezle aynı takımda
+5y	Takım
+5z	: komuta merkezi su, uçurum ya da engel üzerinde
+60	Maç düzgün başlamayabilir.
+61	: üs harita kenarına çok yakın
+62	İnşaatçılar sıkışabilir.
+63	çift üs birbirine 15 karodan yakın
+64	ve takım
+65	:
+66	karo
+67	birim harita dışında
+68	Kaynaklar
+69	Haritada kaynak yok
+6b	Toplam
+6c	kaynak
+6d	kaynak suda, uçurumda ya da kenarda
+6e	Birimler ulaşamayabilir.
+6f	kaynak birimlere çok yakın
+6h	Boyut
+6i	Harita boyutu
+6j	tileset kullanılmıyor (yaklaşık
+6l	Kaydederken kaldır
+6m	Tetikleyiciler
+6n	karo ·
+6o	takım ·
+6p	Kaynak
+6q	Üs (sayı = takım)
+6r	Rusted Warfare Harita Editörü
+6s	Doğal kenarlar
+6u	Güç
+6v	Kıvrım boyutu
+6w	Yumuşat
+6x	Dağınık noktaları sil, arazi bölgelere toplansın
+6y	Geçiş
+6z	Doğal süs
+71	Yoğunluk
+72	Kümelenme
+73	Su detayı
+75	Sığ şerit genişliği (karo)
+76	Adacık sayısı
+77	Kıyı erozyonu
+78	Su kıyıda koy ve dil oyar
+79	Yüksek düzlükler ve uçurumlar
+7a	Üslerden uzakta birkaç uçurumlu yükselti
+7b	Sayı
+7c	Boyut (karo)
+7d	Orman parçaları
+7e	Görüşü ve geçişi kapatan orman
+7f	Nehir
+7g	Haritayı geçen, aralıklarla sığ geçitli nehir
+7h	Genişlik (karo)
+7i	Sığ geçit sayısı
+7j	Nehir sayısı
+7k	Bataklık
+7l	Su kenarındaki alçaklar su birikintili bataklığa döner
+7m	Kapsam
+7n	Resifli kıyı
+7o	Sığ suda resifler, daha katmanlı kıyı
+7p	Savaş izleri
+7q	Çimende yanık toprak ve kraterler
+7r	Derece
+7s	Lav gölleri
+7u	Rastgele engebe
+7w	Genlik
+7x	Engebe boyutu
+7y	Tema değiştir
+81	Süsleri temizle
+82	Ağaç, çalı, taşları kaldır (kaynaklar korunur)
+83	Kaldırma oranı
+84	Özel kurallar
+86	Genel yoğunluk
+87	Biyoma göre doldur
+89	Detay seviyesi
+8a	Yok
+8b	Orman
+8c	Çayır
+8d	Çöl
+8e	Kar
+8f	Bataklık
+8g	Volkan
+8h	Çorak
+8i	Doğal çayır
+8j	Sık orman
+8k	Çöl ve bozkır
+8l	Kar ve buz gölleri
+8m	Volkanik lav
+8n	Sulak alan
+8o	Tropik adalar
+8p	Yayla ve kanyon
+8q	Nehir deltası
+8r	Detay ön ayarı değil
+8s	Referans haritada arazi verisi yok
+8t	Otomatik detay
+8u	Araziyi tek dokunuşla zenginleştir — ayarlanabilir, önizlemeli
+8w	Önizlemeye bak, beğenince uygula
+8x	; uyguladıktan sonra geri alınabilir.
+90	Yalnız bir bölgeyi değiştirmek için: seç ve «Yalnız seçim»i işaretle.
+92	Hangi arazide, neye ne uzaklıkta, ne koyulacak
+94	Referans haritadan öğren
+95	Sevdiğin bir haritanın tarzını izle
+97	Detay fırçası
+98	Detay fırçaladığın yere gelir
+9a	Yükseklik fırçası
+9b	Tepe yontar gibi yükselt ve alçalt
+9d	Biyom fırçası
+9e	Önce «burası orman, şurası çöl» diye boya
+9g	Yol aracı
+9h	Bir yürüyüş rotası çiz
+9j	Taktik modüller
+9k	Boğaz, köprübaşı, yüksek kale otomatik
+9m	Önce arazi verili bir harita aç
+9n	(küçültüldü; tam boyutta uygulanır)
+9o	S↔S
+9p	Ü↕A
+9q	Merkez
+9r	4 yön
+9s	Önizleme
+9t	· tohum
+9u	· simetri:
+9v	Yukarı
+9w	Aşağı
+9x	Kaldır
+9y	Öğrenileni kullan
+9z	dağıtma kuralı
+a1	— Ön ayar seç —
+a2	+ Değiştirici
+a3	Değiştirici yığını
+a4	Rastgelelik ve alan
+a5	Tohum
+a6	Başka
+a7	4 varyant üret
+a8	Simetrik değil
+a9	Simetrik (algılanan:
+aa	Otomatik
+ab	Üs ve kaynak çevresini koru
+ad	Yalnız seçim
+ae	Uyguladıktan sonra taktik modül yerleştir
+af	Tür başına
+ag	Ön ayarlar
+ah	Ön ayarım olarak kaydet
+ai	Ad
+aj	Ön ayarlarım
+ak	Kaydedildi
+al	Paylaşım kodu kopyalandı
+am	Paylaşım kodunu kopyala
+an	Paylaşım kodu içe aktar
+ao	Paylaşım kodu
+ap	Geçersiz paylaşım kodu
+aq	Önce yukarıda silinecek «★» ön ayarı seç
+ar	Silindi
+as	Seçili ön ayarı sil
+at	Efekt
+au	Orijinal
+av	Bir varyant seç
+aw	Hiçbiri
+ax	Referans harita okunuyor…
+ay	Tarzı öğrenildi: «
+az	»:
+b0	Öğrenme başarısız:
+b1	Haritaya uygula
+b2	Otomatik detay öncesi
+b3	Detaylar üretiliyor…
+b4	Detaylar eklendi
+b5	; yolları açık tutmak için açıldı
+b6	karo koridor
+b7	. Beğenmezsen geri al.
+b8	(herhangi arazi)
+b9	Koy
+ba	Değiştir:
+bb	Üzerinde
+bc	Eylem
+bd	Uzaklık kaynağı (isteğe bağlı)
+be	Mesafe (karo)
+bf	Olasılık %
+bg	Kümeli
+bh	Kuralı sil
+bi	Kural ekle
+bj	Taktik modül yerleştir
+bk	Süs
+bl	Erozyon
+bm	Engebe
+bn	Savaş izleri
+bo	Süsleri temizle
+bp	Fırça
+bq	«Otomatik detay»ı aç (tüm harita)
+br	Yükselt
+bs	Alçalt
+bu	Sil
+bv	Biyoma göre üret…
+bw	Biyomları temizle
+by	Karayı toprak yol yap
+bz	Yol genişliği
+c1	Karo gerekli
+c3	Harita aç
+c4	Yeni harita oluşturulsun mu?
+c6	Yine de oluştur
+c7	Yeni harita
+c8	Üs düzeni
+c9	Daire
+ca	Sol karşı sağ
+cb	Üst karşı alt
+cc	Düzenli ızgara (çok oyuncu için)
+cd	Temel arazi
+ce	Arazi ön ayarı
+cf	Tarz
+cg	Simetri
+ch	Merkez dönüşü
+ci	Tohum
+cj	Boş harita
+ck	Rastgele arazi
+cl	1v1 simetrik
+cm	4 oyuncu köşelerde
+cn	4 köşe
+co	8 oyuncu halka
+cp	8 halka
+cq	10 oyuncu herkes herkese karşı
+cr	10 FFA
+cs	Deniz haritası
+ct	Deniz
+cu	Şehir ele geçirme
+cv	Şehirler
+cw	Hayatta kalma savunması
+cx	Hayatta kalma
+cy	Görev
+cz	Görev
+d1	Harita adı
+d2	Boyut (karo, 20 px)
+d3	G
+d4	Y
+d5	Oyuncu (1–100)
+d6	Başlangıç
+d7	Her takımın yanındaki kaynak
+d8	∅
+d9	Ortadaki ortak kaynaklar
+db	Üret
+dc	Harita üretiliyor…
+dd	Tuval boyutu
+df	Yeni genişlik
+dg	Yeni yükseklik
+dh	Orijinalin yeri
+di	Yeni alan mevcut araziyle dolar: «
+dj	». Geri alınabilir.
+dk	Geri alınabilir.
+dl	Değiştir
+dm	Tuval değişikliği öncesi
+dn	Tuval değiştiriliyor…
+do	Tuvali değiştir
+dp	yaklaşık
+dq	(karşılık gelen yere taşındı)
+dr	(yerinde kalır)
+ds	karo (alan ×
+dt	Ölçek sonrası: kaynak
+du	, birim
+dv	— hiçbir şey çoğaltılmaz.
+dw	Haritayı orantılı ölçekle
+dy	Çarpan (genişlik ve yükseklik)
+dz	Seçenekler
+e0	Birimler (komuta merkezi, inşaatçı vb.,
+e1	)
+e2	Karşılık gelen yere taşı (önerilen)
+e3	Yerinde bırak
+e4	Kaynaklar (
+e5	Sayı aynı, karşılık gelen yere
+e6	Alana göre artır
+e7	Tetikleyici alanları da ölçeklenir (
+eb	Ölçeklemeyi başlat
+ec	Ölçek öncesi
+ed	Harita ölçekleniyor…
+ee	karo birimi nesneye çevrildi
+ef	Ölçeklendi:
+eg	karo: kaynak
+eh	Sol → sağ
+ei	Sol yarıyı sağa aynala
+ej	Sağ → sol
+ek	Sağ yarıyı sola aynala
+el	Üst → alt
+em	Üst yarıyı alta aynala
+en	Alt → üst
+eo	Alt yarıyı üste aynala
+eq	Sol üst çeyreği diğer üçüne kopyala (4 oyuncu)
+er	Haritayı aynala
+eu	Aynala
+ev	Aynalama öncesi
+ew	Aynalanıyor…
+ex	Aynalama bitti
+ey	Simetri farkı kontrolü
+f0	Simetri türü
+f1	Kontrol et
+f2	Karşılaştırılıyor…
+f3	üssün simetrik eşi yok
+f4	Var:
+f5	karo (
+f6	%) simetrik değil, kırmızıyla işaretli
+f7	Arazi tamamen simetrik, ama var:
+f8	Tamamen simetrik
+f9	Önce bir harita oluştur ya da aç
+fb	Oyuncu
+fc	Takım başı kaynak
+fd	Merkez kaynakları
+fe	Su oranı
+ff	Uçurum/yayla oranı
+fg	Orman oranı
+fh	Paylaşım kodu (başkaları aynı haritayı üretir)
+fi	Paylaşım kodu kopyalandı
+fj	Başkasının kodunu kullan
+fk	Yükle
+fl	Rastgele üret
+fm	Rastgele üretim öncesi
+fn	Üretiliyor…
+fo	; yolları açık tutmak için döşendi
+fp	Bitti:
+fq	üs,
+fr	Önce var olan bir harita aç (karolar için)
+fs	Görsel okunamıyor
+ft	+ Bant ekle
+fu	− Son bandı kaldır
+fv	Ters çevir
+fw	Bu «
+fx	» olsun:
+fy	Renk
+fz	Yükseklik
+g0	Yalnız çizim
+g1	Ana renk sayısı
+g2	Her ana renk için arazi
+g3	Hedef oranlara göre ayarla (aşağıdaki kaydırıcılar)
+g6	Yeni harita genişliği (karo)
+g7	Nereye
+g8	Mevcut harita (
+g9	Mod
+ga	Örnekleme ve temizlik
+gb	Yumuşak (fotoğraf, ekran görüntüsü)
+gc	Piksel (piksel sanatı)
+gd	Bulanıklaştırma (JPG için 1)
+ge	Temizlik (kırıntı ve şeritleri sil)
+gf	Kıyıdan uzak su derin su olsun
+gg	Mevcut sonuç
+gh	Üretimden sonra
+gi	Üsleri otomatik koy
+gk	Mevcut nesneleri temizle (kaynak, ağaç vb.)
+gm	Sonuç
+gn	Bindirerek karşılaştır
+go	Görselden harita
+gp	Harita üret
+gq	Görsel inceleniyor…
+gr	Görselden harita öncesi
+gt	Hesaplanıyor…
+gv	Kaplar
+gw	karo; tekrarlar atılınca
+gx	parça; harita dosyası yaklaşık büyür
+gy	Görsel çıkartma
+h0	karo =
+h1	px
+h2	Yerleştir
+h3	Görsel gömülüyor…
+h4	Çıkartma yerleştir
+h5	Çizim referansı
+h6	Referans yalnız editörde görünür, haritaya yazılmaz.
+h7	Referansı göster
+h8	Opaklık
+h9	Boyut
+ha	Yatay konum
+hb	Dikey konum
+hc	Haritaya yay
+hd	Referansı kaldır
+he	Bitti
+hf	Görsel dışa aktar
+hg	Harita kapağı (önerilen)
+hh	Tüm haritanın fotoğrafı, harita adıyla: «
+hj	Küçük önizleme 200 px
+hk	Dosya adı «haritaadi_map.png».
+hl	Önizleme 500 px
+hm	Oyunun izin verdiği en büyük boyut.
+hn	Tanıtım görseli
+hp	Mevcut karolar şu haritadan: «
+hq	», içerir:
+ht	Kapat
+hu	Bu haritanın karolarını kullan
+hv	Karo kaynağı
+hw	Karolar güncellendi
+hx	sorun oyunu etkiliyor,
+hy	hatırlatma.
+hz	Ciddi sorun yok;
+i0	Sorun yok; kaydet ve oyunda dene.
+i1	Göz at
+i2	Test listesi
+i3	Harita puanı
+i5	Oynanır mı?
+i6	Ayarlar
+i7	Izgarayı göster (yakınlaşınca)
+i8	Kaydederken kullanılmayan tileset'leri kaldır
+ia	Kişisel verileri dışa aktar
+ib	Kişisel verileri içe aktar
+ic	Kaydederken kapağı da aktar (haritaadi.png)
+id	Kapak boyutu (uzun kenar, px)
+ie	Varsayılan kaynak stili
+if	1 karo (önerilen)
+ig	Çerçeveli 3×3
+ih	Otomatik kayıt aralığı (sn)
+ii	Oyun klasörü unutuldu
+ij	Oyun klasörünü yeniden seç
+ik	Eğitim yeniden önerilecek
+il	Eğitimi sıfırla
+in	Ağaç
+io	Çalı
+ip	Taşlar
+iq	Krater
+ir	Çamur
+is	Kaktüs
+it	Büyük kaya
+iu	Komuta merkezi
+iv	İnşaatçı
+iw	Çıkarıcı
+ix	Kara fabrikası
+iy	Hava fabrikası
+iz	Deniz fabrikası
+j0	Mech fabrikası
+j1	Laboratuvar
+j2	Üretici
+j3	Kule
+j4	Uçaksavar kulesi
+j5	Kredi sandığı
+j6	Muharip mühendis
+j7	Mech mühendisi
+j8	Tank
+j9	Hover tank
+ja	Topçu
+jb	Saldırı helikopteri
+jc	Helikopter
+jd	İnşa gemisi
+je	Savaş botu
+jf	Ağır tank

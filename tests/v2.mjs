@@ -9,7 +9,7 @@ const fail = []; const errors = [];
 const expect = (c, m) => { console.log(c ? '  ✓' : '  ✗', m); if (!c) fail.push(m); };
 const browser = await chromium.launch();
 async function newPage(w, h, mobile = false) {
-  const ctx = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: mobile ? 2 : 1, hasTouch: mobile, isMobile: mobile });
+  const ctx = await browser.newContext({ locale: 'zh-CN', viewport: { width: w, height: h }, deviceScaleFactor: mobile ? 2 : 1, hasTouch: mobile, isMobile: mobile });
   const page = await ctx.newPage();
   page.on('pageerror', (e) => errors.push('pageerror: ' + e.message + '\n' + e.stack));
   page.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text()); });

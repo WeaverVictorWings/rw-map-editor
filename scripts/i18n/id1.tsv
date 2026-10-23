@@ -1,0 +1,626 @@
+0	File
+1	Peta baru
+2	Pilih ukuran dan pemain; markas dan sumber daya ditempatkan otomatis
+3	Buka peta…
+4	Buka dari folder game…
+5	Tampilkan peta di folder peta game
+6	Terbaru…
+7	Simpan
+8	Simpan sebagai…
+9	Simpan ke folder game
+a	Simpan peta dan pratinjau ke game, langsung bisa dimainkan
+b	Ekspor pratinjau / gambar pamer…
+c	Pustaka peta…
+d	Semua peta yang pernah dibuat atau dibuka, dengan gambar kecil dan tag
+e	Proses massal…
+f	Periksa dan perbaiki banyak peta sekaligus, buat sampul
+g	Kemas koleksi peta (Mod)…
+h	Kemas beberapa peta jadi .rwmod
+i	Dukungan Mod…
+j	Impor unit dan tileset dari Mod
+k	Sumber tile…
+l	Pengaturan…
+m	Edit
+n	Urungkan
+o	Ulangi
+p	Salin
+q	Potong
+r	Tempel
+s	Pilih semua
+t	Batal pilih
+u	Balik pilihan horizontal
+v	Balik pilihan vertikal
+w	Putar pilihan 90°
+x	Simpan pilihan sebagai stempel…
+y	Riwayat
+z	Lihat tiap langkah, ketuk untuk kembali; simpan snapshot
+10	Peta
+11	Daftar uji…
+12	Apa yang diuji di game, dengan catatan tiap uji
+13	Nilai peta…
+14	Menilai peta dan menunjukkan poin yang hilang serta cara memperbaiki
+15	Cek «Bisa dimainkan?»
+16	Pastikan peta berjalan di game sebelum disimpan
+17	Laporan keseimbangan
+18	Bandingkan sumber daya dan wilayah tim menurut rute jalan kaki
+19	Cek perbedaan simetri…
+1a	Buat acak…
+1b	Medan, markas dan sumber daya dari preset dan seed
+1c	Gambar jadi peta…
+1d	Ubah gambar jadi peta; kamu atur campuran medan
+1e	Skala proporsional…
+1f	Perbesar atau perkecil seluruh peta; sumber daya dan markas diatur ulang
+1g	Cerminkan peta…
+1h	Gambar setengah peta, jadikan simetris sekali ketuk
+1i	Ubah ukuran kanvas…
+1j	Stiker gambar…
+1k	Tempel gambar ke peta (dipotong jadi tile)
+1l	Gambar acuan…
+1m	Tumpuk gambar semi-transparan untuk dijiplak
+1n	Stempel
+1o	Markas, titik sumber daya, danau dan lainnya sekali ketuk
+1p	Detail otomatis…
+1r	Simulasi pembukaan…
+1s	Perkiraan berapa detik tiap tim bertemu musuh atau tiba di tengah
+1t	Salin dari peta lain…
+1u	Buka peta lain, pilih bagian dan bawa ke sini
+1v	Gabung peta…
+1w	Gabungkan beberapa peta jadi satu peta besar
+1x	Bandingkan versi…
+1y	Bandingkan dengan snapshot, lihat perubahan, pulihkan bagian
+1z	Log pertempuran…
+20	Edit pesan berjalan di game menurut waktu
+21	Tambah gambar tileset yang hilang…
+22	Nomori ulang tim
+23	Rapikan nomor tim jadi 1, 2, 3…
+24	Tampilan
+25	Seluruh peta
+26	Ukuran asli (100%)
+27	Kisi
+28	Redupkan lapisan lain
+29	Lapisan warna
+2a	Tanpa lapisan
+2b	Lintasan darat
+2c	Lintasan laut
+2d	Lintasan hover
+2e	Area bisa dibangun
+2f	Wilayah tim
+2g	Bantuan
+2h	Tutorial
+2i	Ikuti langkahnya, kuasai dasar dalam beberapa menit
+2j	Pusat bantuan
+2k	Gestur & pintasan
+2l	Cari fitur
+2m	Menghitung wilayah…
+2n	Pulihkan peta terakhir?
+2o	Tanpa nama
+2p	Ditemukan simpanan otomatis «
+2q	). Mungkin belum sempat disimpan terakhir kali.
+2r	Pulihkan
+2s	Tidak usah
+2t	Memulihkan…
+2u	Gagal memulihkan:
+2v	Keluar dari editor?
+2x	Keluar
+2z	Gagal memulai:
+30	Semua tileset punya gambar
+31	Tambah gambar tileset yang hilang
+32	Peta ini punya
+34	File yang dibutuhkan:
+35	Bisa ditemukan di folder instalasi game di
+37	Pilih file (boleh banyak)
+38	Batal
+39	Tambah
+3a	Menambah gambar tileset…
+3b	Ditambahkan
+3c	tileset
+3d	Tidak cocok: nama file harus sama dengan yang dirujuk peta
+3e	Daratan (rumput, bawaan)
+3f	Bisa dilewati dan dibangun, sama seperti rumput
+3g	Arungan
+3h	Unit darat dan kapal bisa lewat
+3i	Air dangkal
+3j	Kapal bisa lewat, unit darat tidak
+3k	Air dalam
+3l	Kapal bisa lewat, unit darat tidak (terlihat lebih dalam)
+3m	Tak bisa dilewati
+3n	Seperti tebing, unit darat tidak bisa lewat
+3o	Lava
+3p	Unit darat tidak bisa lewat
+3q	Blok warna maksimal
+3r	jenis; hapus yang tak dipakai dulu
+3s	Blok warna baru
+3t	Merah R
+3u	Hijau G
+3v	Biru B
+3w	Rona
+3x	Saturasi
+3y	Kecerahan
+3z	HSV (rona/saturasi/kecerahan)
+40	Ambil warna dari layar
+41	Kode hex
+42	Warna umum
+43	Blok warna di peta ini
+44	Di game ini apa (wajib)
+46	OK
+47	Sampai 500: aman bahkan untuk multipemain di HP
+4b	Format
+4c	Ukuran tile bukan 20×20
+4d	Saat ini
+4e	; game mewajibkan 20×20.
+4f	map_info tidak ada
+4h	Perbaiki
+4i	map_info tanpa type
+4j	Peta skirmish harus diisi skirmish.
+4k	Set ke skirmish
+4l	type map_info adalah «
+4m	Nilai umum:
+4n	(catatan komunitas)
+4o	map_info OK (type=
+4p	Tidak ada lapisan Ground
+4q	Tanah punya
+4r	sel kosong
+4s	Game mewajibkan lapisan Ground tanpa sel kosong.
+4t	Isi dengan tanah paling umum
+4u	Isi sel kosong
+4v	Tidak ada sel kosong
+4w	Lapisan «
+4x	» punya
+4y	tile tak terdefinisi
+4z	Game versi lama crash karena tile tak terdefinisi.
+50	Hapus tile ini
+51	Hapus tile tak terdefinisi
+52	properti float bukan angka
+53	Game versi lama crash karena float tidak valid.
+54	Tambah gambar tileset…
+55	Tileset
+56	Tileset «
+57	» merujuk file eksternal
+59	» tanpa gambar tertanam
+5a	Merujuk gambar eksternal «
+5b	», yang mungkin tidak tampil di perangkat lain.
+5c	tile air tanpa properti water
+5e	Tambah water ke tile ini
+5f	tile lava tanpa properti lava
+5h	Tambah lava
+5i	nama properti berisi huruf besar
+5k	Ubah semua jadi huruf kecil
+5l	Markas
+5m	Tidak ada markas sama sekali
+5o	tim punya markas
+5p	Nomor tim tidak berurutan:
+5q	Nomori ulang 1, 2, 3…
+5r	tim
+5t	Ada nomor tim di atas 100
+5v	Nomori ulang
+5w	pusat komando satu tim dengan pusat komando lain
+5y	Tim
+5z	: pusat komando di air, tebing atau rintangan
+60	Pertandingan mungkin tidak mulai dengan benar.
+61	: markas terlalu dekat tepi peta
+62	Builder bisa tersangkut.
+63	pasang markas berjarak kurang dari 15 tile
+64	dan tim
+65	:
+66	tile
+67	unit di luar peta
+68	Sumber daya
+69	Tidak ada sumber daya di peta
+6b	Total
+6c	sumber daya
+6d	sumber daya di air, tebing atau tepi peta
+6e	Unit mungkin tidak bisa menjangkau.
+6f	sumber daya terlalu dekat unit
+6h	Ukuran
+6i	Ukuran peta
+6j	tileset tak terpakai (sekitar
+6l	Buang saat simpan
+6m	Pemicu
+6n	tile ·
+6o	tim ·
+6p	Sumber daya
+6q	Markas (angka = tim)
+6r	Editor Peta Rusted Warfare
+6s	Tepi alami
+6u	Kekuatan
+6v	Ukuran lekuk
+6w	Haluskan
+6x	Hilangkan bintik kecil agar medan menyatu
+6y	Kali
+6z	Dekorasi alami
+71	Kepadatan
+72	Pengelompokan
+73	Detail air
+75	Lebar pita dangkal (tile)
+76	Jumlah pulau kecil
+77	Erosi pantai
+78	Air mengikis teluk dan tanjung kecil
+79	Dataran tinggi & tebing
+7a	Beberapa dataran tinggi bertebing jauh dari markas
+7b	Jumlah
+7c	Ukuran (tile)
+7d	Petak hutan
+7e	Hutan yang menghalangi pandangan dan jalan
+7f	Sungai
+7g	Sungai melintasi peta dengan arungan berkala
+7h	Lebar (tile)
+7i	Jumlah arungan
+7j	Jumlah sungai
+7k	Rawa
+7l	Dataran rendah di tepi air jadi rawa dengan genangan
+7m	Jangkauan
+7n	Pantai karang
+7o	Karang di air dangkal, pantai lebih berlapis
+7p	Bekas perang
+7q	Tanah hangus dan kawah di rumput
+7r	Tingkat
+7s	Kolam lava
+7u	Relief acak
+7w	Amplitudo
+7x	Ukuran relief
+7y	Ganti tema
+81	Hapus dekorasi
+82	Hapus pohon, semak, batu (sumber daya tidak disentuh)
+83	Porsi dihapus
+84	Aturan sendiri
+86	Kepadatan total
+87	Isi menurut bioma
+89	Tingkat detail
+8a	Tidak ada
+8b	Hutan
+8c	Padang rumput
+8d	Gurun
+8e	Salju
+8f	Rawa
+8g	Gunung api
+8h	Tanah gersang
+8i	Padang rumput alami
+8j	Hutan lebat
+8k	Gurun & gobi
+8l	Salju & danau es
+8m	Lava vulkanik
+8n	Lahan basah
+8o	Pantai pulau tropis
+8p	Dataran tinggi & ngarai
+8q	Delta sungai
+8r	Bukan preset detail
+8s	Peta acuan tidak punya data medan
+8t	Detail otomatis
+8u	Perkaya medan sekali ketuk — bisa diatur, ada pratinjau
+8w	Lihat pratinjau, terapkan kalau sudah suka
+8x	; bisa diurungkan setelah diterapkan.
+90	Untuk mengubah satu bagian saja: pilih area lalu centang «Hanya pilihan».
+92	Di medan apa, sejauh apa dari apa, taruh apa
+94	Belajar dari peta acuan
+95	Ikuti gaya peta yang kamu suka
+97	Kuas detail
+98	Detail muncul di tempat yang kamu kuas
+9a	Kuas ketinggian
+9b	Naikkan dan turunkan seperti membentuk bukit
+9d	Kuas bioma
+9e	Lukis dulu «di sini hutan, di sana gurun»
+9g	Alat jalan
+9h	Gambar rute pasukan
+9j	Modul taktis
+9k	Otomatis taruh celah, kepala jembatan, benteng tinggi
+9m	Buka dulu peta yang punya data medan
+9n	(diperkecil; diterapkan ukuran penuh)
+9o	Ki↔Ka
+9p	At↕Bw
+9q	Tengah
+9r	4 arah
+9s	Pratinjau
+9t	· seed
+9u	· simetri:
+9v	Naik
+9w	Turun
+9x	Hapus
+9y	Pakai hasil belajar
+9z	aturan sebar
+a1	— Pilih preset —
+a2	+ Modifier
+a3	Tumpukan modifier
+a4	Acak & area
+a5	Seed
+a6	Ganti
+a7	Buat 4 varian
+a8	Tidak simetris
+a9	Simetris (terdeteksi:
+aa	Otomatis
+ab	Lindungi sekitar markas dan sumber daya
+ad	Hanya pilihan
+ae	Taruh modul taktis setelah diterapkan
+af	Per jenis
+ag	Preset
+ah	Simpan sebagai preset saya
+ai	Nama
+aj	Preset saya
+ak	Tersimpan
+al	Kode bagi tersalin
+am	Salin kode bagi
+an	Impor kode bagi
+ao	Kode bagi
+ap	Kode bagi tidak valid
+aq	Pilih dulu preset «★» yang mau dihapus di atas
+ar	Dihapus
+as	Hapus preset pilihan
+at	Efek
+au	Asli
+av	Pilih varian
+aw	Tidak ada
+ax	Membaca peta acuan…
+ay	Gaya dipelajari dari «
+az	»:
+b0	Gagal belajar:
+b1	Terapkan ke peta
+b2	Sebelum detail otomatis
+b3	Membuat detail…
+b4	Detail ditambahkan
+b5	; agar rute tetap terbuka, dibuka
+b6	tile koridor
+b7	. Urungkan kalau tidak suka.
+b8	(medan apa saja)
+b9	Taruh
+ba	Ubah jadi
+bb	Di
+bc	Aksi
+bd	Dari (opsional)
+be	Jarak (tile)
+bf	Peluang %
+bg	Berkelompok
+bh	Hapus aturan
+bi	Tambah aturan
+bj	Taruh modul taktis
+bk	Dekorasi
+bl	Erosi
+bm	Relief
+bn	Bekas perang
+bo	Hapus dekorasi
+bp	Kuas
+bq	Buka «Detail otomatis» (seluruh peta)
+br	Naikkan
+bs	Turunkan
+bu	Hapus
+bv	Buat menurut bioma…
+bw	Hapus bioma
+by	Lapisi daratan jadi jalan tanah
+bz	Lebar jalan
+c1	Butuh tile
+c3	Buka peta
+c4	Buat peta baru?
+c6	Tetap buat
+c7	Peta baru
+c8	Tata letak markas
+c9	Melingkar
+ca	Kiri lawan kanan
+cb	Atas lawan bawah
+cc	Kisi rata (untuk banyak pemain)
+cd	Medan dasar
+ce	Preset medan
+cf	Gaya
+cg	Simetri
+ch	Rotasi tengah
+ci	Seed
+cj	Peta kosong
+ck	Medan acak
+cl	1v1 simetris
+cm	4 pemain di sudut
+cn	4 sudut
+co	8 pemain melingkar
+cp	8 melingkar
+cq	10 pemain saling lawan
+cr	10 FFA
+cs	Peta laut
+ct	Laut
+cu	Rebut kota
+cv	Kota
+cw	Bertahan hidup
+cx	Bertahan
+cy	Misi
+cz	Misi
+d1	Nama peta
+d2	Ukuran (tile, 20 px)
+d3	L
+d4	T
+d5	Pemain (1–100)
+d6	Mulai dengan
+d7	Sumber daya dekat tiap tim
+d8	∅
+d9	Sumber daya bersama di tengah
+db	Buat
+dc	Membuat peta…
+dd	Ubah ukuran kanvas
+df	Lebar baru
+dg	Tinggi baru
+dh	Letak peta asli
+di	Area baru diisi medan saat ini «
+dj	». Bisa diurungkan.
+dk	Bisa diurungkan.
+dl	Ubah
+dm	Sebelum ubah kanvas
+dn	Mengubah kanvas…
+do	Ubah kanvas
+dp	sekitar
+dq	(dipindah ke posisi padanan)
+dr	(tetap di tempat)
+ds	tile (luas ×
+dt	Setelah skala: sumber daya
+du	, unit
+dv	— tidak ada yang digandakan.
+dw	Skala peta proporsional
+dy	Faktor (lebar dan tinggi)
+dz	Opsi
+e0	Unit (pusat komando, builder, dll.,
+e1	)
+e2	Pindah ke posisi padanan (disarankan)
+e3	Tetap di tempat
+e4	Sumber daya (
+e5	Jumlah sama, pindah ke posisi padanan
+e6	Tambah sesuai luas
+e7	Area pemicu ikut diskalakan (
+eb	Mulai skala
+ec	Sebelum skala
+ed	Menskalakan peta…
+ee	unit tile diubah jadi objek
+ef	Diskalakan ke
+eg	tile: sumber daya
+eh	Kiri → kanan
+ei	Cerminkan sisi kiri ke kanan
+ej	Kanan → kiri
+ek	Cerminkan sisi kanan ke kiri
+el	Atas → bawah
+em	Cerminkan sisi atas ke bawah
+en	Bawah → atas
+eo	Cerminkan sisi bawah ke atas
+eq	Salin seperempat kiri atas ke tiga lainnya (4 pemain)
+er	Cerminkan peta
+eu	Cerminkan
+ev	Sebelum cermin
+ew	Mencerminkan…
+ex	Cermin selesai
+ey	Cek perbedaan simetri
+f0	Jenis simetri
+f1	Cek
+f2	Membandingkan…
+f3	markas tanpa pasangan simetris
+f4	Ada
+f5	tile (
+f6	%) tidak simetris, ditandai merah
+f7	Medan simetris sempurna, tetapi ada
+f8	Simetris sempurna
+f9	Buat atau buka peta dulu
+fb	Pemain
+fc	Sumber daya per tim
+fd	Sumber daya tengah
+fe	Porsi air
+ff	Porsi tebing/dataran tinggi
+fg	Porsi hutan
+fh	Kode bagi (orang lain dapat peta sama)
+fi	Kode bagi tersalin
+fj	Pakai kode orang lain
+fk	Muat
+fl	Buat acak
+fm	Sebelum buat acak
+fn	Membuat…
+fo	; agar rute terbuka, dilapisi
+fp	Selesai:
+fq	markas,
+fr	Buka dulu peta yang ada (untuk tile)
+fs	Gambar tidak bisa dibaca
+ft	+ Tambah pita
+fu	− Hapus pita terakhir
+fv	Balik warna
+fw	«
+fx	» ini jadi:
+fy	Warna
+fz	Tinggi
+g0	Jiplak saja
+g1	Jumlah warna utama
+g2	Medan untuk tiap warna utama
+g3	Sesuaikan dengan porsi target (geser di bawah)
+g6	Lebar peta baru (tile)
+g7	Ubah ke
+g8	Peta saat ini (
+g9	Mode
+ga	Sampel & bersihkan
+gb	Halus (foto, tangkapan layar)
+gc	Piksel (pixel art)
+gd	Blur (1 untuk JPG)
+ge	Kebersihan (hapus bintik dan garis tipis)
+gf	Air jauh dari pantai jadi air dalam
+gg	Hasil saat ini
+gh	Setelah dibuat
+gi	Taruh markas otomatis
+gk	Hapus objek yang ada (sumber daya, pohon, dll.)
+gm	Hasil
+gn	Bandingkan tumpuk
+go	Gambar jadi peta
+gp	Buat peta
+gq	Menganalisis gambar…
+gr	Sebelum gambar jadi peta
+gt	Menghitung…
+gv	Memakai
+gw	tile; setelah dedup
+gx	keping; file peta bertambah sekitar
+gy	Stiker gambar
+h0	tile =
+h1	px
+h2	Taruh
+h3	Menanam gambar…
+h4	Taruh stiker
+h5	Gambar acuan
+h6	Acuan hanya tampil di editor dan tidak masuk peta.
+h7	Tampilkan acuan
+h8	Opasitas
+h9	Ukuran
+ha	Posisi horizontal
+hb	Posisi vertikal
+hc	Rentangkan ke peta
+hd	Hapus acuan
+he	Selesai
+hf	Ekspor gambar
+hg	Sampul peta (disarankan)
+hh	Foto seluruh peta, nama sama dengan peta: «
+hj	Pratinjau kecil 200 px
+hk	Nama file «namapeta_map.png».
+hl	Pratinjau 500 px
+hm	Ukuran terbesar yang diizinkan game.
+hn	Gambar pamer
+hp	Tile saat ini dari peta «
+hq	», termasuk:
+ht	Tutup
+hu	Pakai tile peta ini
+hv	Sumber tile
+hw	Tile diperbarui
+hx	masalah memengaruhi game,
+hy	pengingat.
+hz	Tidak ada masalah serius;
+i0	Tidak ada masalah; simpan lalu uji di game.
+i1	Lihat
+i2	Daftar uji
+i3	Nilai peta
+i5	Siap main?
+i6	Pengaturan
+i7	Tampilkan kisi (saat diperbesar)
+i8	Buang tileset tak terpakai saat simpan
+ia	Ekspor data pribadi
+ib	Impor data pribadi
+ic	Ekspor sampul saat simpan (namapeta.png)
+id	Ukuran sampul (sisi panjang, px)
+ie	Gaya sumber daya bawaan
+if	1 tile (disarankan)
+ig	3×3 berbingkai
+ih	Interval simpan otomatis (dtk)
+ii	Folder game dilupakan
+ij	Pilih ulang folder game
+ik	Tutorial akan ditawarkan lagi
+il	Atur ulang tutorial
+in	Pohon
+io	Semak
+ip	Batu kecil
+iq	Kawah
+ir	Lumpur
+is	Kaktus
+it	Batu besar
+iu	Pusat komando
+iv	Builder
+iw	Ekstraktor
+ix	Pabrik darat
+iy	Pabrik udara
+iz	Pabrik laut
+j0	Pabrik mech
+j1	Laboratorium
+j2	Fabrikator
+j3	Menara
+j4	Menara antiudara
+j5	Peti kredit
+j6	Insinyur tempur
+j7	Insinyur mech
+j8	Tank
+j9	Tank hover
+ja	Artileri
+jb	Gunship
+jc	Helikopter
+jd	Kapal builder
+je	Kapal meriam
+jf	Tank berat

@@ -359,7 +359,7 @@ export class Renderer {
     for (const G of m.groups) {
       if (!G.visible) continue;
       const isTrig = G.name.toLowerCase() === 'triggers';
-      if (isTrig && !this.ed.showTriggers) continue;
+      if (isTrig && !this.ed.showTriggers) { if (v.z > 0.08) this.drawMapTexts(G, 0.75); continue; }
       // 同一位置的多个区域（模板常见）只画一次，标上数量
       const same = new Map();
       for (const o of G.objects) if (!o.attrs.gid) { const k = `${o.attrs.x},${o.attrs.y},${o.attrs.width},${o.attrs.height}`; const e = same.get(k); if (e) e.n++; else same.set(k, { first: o, n: 1 }); }
@@ -409,8 +409,21 @@ export class Renderer {
           ctx.strokeRect(s.x, s.y, sw, sh);
           ctx.fillStyle = `rgba(${color},1)`;
           ctx.font = '12px system-ui, sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+          if (kind === 'mapText') {
+            const pr = (n) => (o.props.find((q) => q.name === n) || {}).value;
+            const txt = pr('text');
+            if (txt && v.z > 0.08) {
+              const fs = Math.max(8, (+pr('textSize') || 20) * v.z);
+              ctx.font = `bold ${fs}px system-ui, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+              const cx = s.x + sw / 2, cy = s.y + sh / 2;
+              ctx.lineWidth = Math.max(2, fs / 6); ctx.strokeStyle = 'rgba(0,0,0,.8)'; ctx.strokeText(txt, cx, cy);
+              ctx.fillStyle = pr('textColor') || '#fff'; ctx.fillText(txt, cx, cy);
+              if (pr('style') === 'arrow') { ctx.beginPath(); ctx.moveTo(cx - fs / 3, cy + fs * 0.7); ctx.lineTo(cx + fs / 3, cy + fs * 0.7); ctx.lineTo(cx, cy + fs * 1.2); ctx.closePath(); ctx.fill(); }
+              ctx.font = '12px system-ui, sans-serif'; ctx.textBaseline = 'bottom'; ctx.textAlign = 'left';
+            }
+          }
           if (o !== sel && (grp.first !== o || (sw < 26 && v.z < 0.3))) continue;
-          const nm = (o.attrs.name || kind || '对象') + (grp.n > 1 && o !== sel ? `  等 ${grp.n} 个` : '');
+          const T = window.__rwT || String; const nm = (o.attrs.name || T(kind || '对象')) + (grp.n > 1 && o !== sel ? T(`  等 ${grp.n} 个`) : '');
           ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(0,0,0,.75)'; ctx.strokeText(nm, s.x, s.y - 2);
           ctx.fillText(nm, s.x, s.y - 2);
         }
@@ -418,6 +431,23 @@ export class Renderer {
     }
   }
 }
+
+Renderer.prototype.drawMapTexts = function (G, alpha) {
+  const ctx = this.ctx, v = this.view;
+  ctx.globalAlpha = alpha;
+  for (const o of G.objects) {
+    if ((o.attrs.type || '').toLowerCase() !== 'maptext') continue;
+    const pr = (n) => (o.props.find((q) => q.name === n) || {}).value;
+    const txt = pr('text'); if (!txt || pr('activatedBy')) continue;
+    const s = this.toScreen(+(o.attrs.x || 0) + +(o.attrs.width || 0) / 2, +(o.attrs.y || 0) + +(o.attrs.height || 0) / 2);
+    if (s.x < -200 || s.y < -50 || s.x > this.cw + 200 || s.y > this.ch + 50) continue;
+    const fs = Math.max(8, (+pr('textSize') || 20) * v.z);
+    ctx.font = `bold ${fs}px system-ui, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.lineWidth = Math.max(2, fs / 6); ctx.strokeStyle = 'rgba(0,0,0,.8)'; ctx.strokeText(txt, s.x, s.y);
+    ctx.fillStyle = pr('textColor') || '#fff'; ctx.fillText(txt, s.x, s.y);
+  }
+  ctx.globalAlpha = 1;
+};
 
 // 小地图
 export class Minimap {

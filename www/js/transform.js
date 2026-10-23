@@ -292,13 +292,39 @@ export function unitTilesToObjects(ed) {
       if (!unit) continue;
       const team = info.props.team ?? '-1';
       const x = i % W, y = (i - x) / W;
-      G.objects.push({ attrs: { name: `${unit} (t:${team})`, x: String(x * TW), y: String((y + 1) * TW), width: String(TW), height: String(TW), gid: String(g) },
+      G.objects.push({ attrs: { name: `${unit} (t:${team})`, x: String(x * TW), y: String((y + 1) * TW), width: String(TW), height: String(TW), gid: String(g), 'data-rw-tile': L.name },
         props: [{ name: 'unit', value: unit }, { name: 'team', value: String(team) }], extra: [] });
       d[i] = 0; L.flips.delete(i); n++;
     }
     L.dirty = true; L.ver = (L.ver || 0) + 1;
   }
   return n;
+}
+
+// 保存时把“原来画在图块层里的单位”写回图块层，保持地图原来的存法。返回还原函数。
+export function unitsBackToTiles(ed) {
+  const m = ed.map;
+  const restores = [];
+  const W = m.width, H = m.height;
+  for (const G of m.groups) {
+    const keep = [], moved = [];
+    for (const o of G.objects) {
+      const lname = o.attrs['data-rw-tile'];
+      const L = lname && m.layer(lname);
+      if (!L || !o.attrs.gid) { keep.push(o); continue; }
+      const [cx, cy] = objCenter(o);
+      const tx = Math.floor(cx / TW), ty = Math.floor(cy / TW);
+      if (tx < 0 || ty < 0 || tx >= W || ty >= H || L.data[ty * W + tx]) { keep.push(o); continue; }
+      const unit = objProp(o, 'unit'), team = objProp(o, 'team');
+      const g = (unit && ed.unitIndex.get(unit + '|' + team)) || +o.attrs.gid;
+      const i = ty * W + tx;
+      if (g > 0xffff && L.data instanceof Uint16Array) m.widenLayer(L);
+      L.data[i] = g; L.dirty = true;
+      moved.push([L, i]);
+    }
+    if (moved.length) { restores.push([G, G.objects, moved]); G.objects = keep; }
+  }
+  return () => { for (const [G, objs, moved] of restores) { G.objects = objs; for (const [L, i] of moved) L.data[i] = 0; } };
 }
 
 // ---------------- 整图镜像 ----------------

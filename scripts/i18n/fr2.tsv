@@ -1,0 +1,1177 @@
+jg	Char Mammouth
+jh	Bombardier
+ji	Intercepteur
+jj	Char lance-missiles
+jk	Araignée expérimentale
+jl	Transport
+jm	Artillerie lourde
+jn	Défense laser
+jo	Canon antiaérien
+jp	Silo nucléaire
+jq	Silo antinucléaire
+jr	Mech (mitrailleuse)
+js	Mech (missiles)
+jt	Avion amphibie
+ju	Changer d'équipe
+jv	Renuméroter les équipes
+jw	Ajouter map_info
+jx	Modifier map_info
+jy	Quoi tester en jeu
+k0	Bilan de la carte
+k1	Note la carte et montre où elle perd des points
+k3	Exporter / importer les données perso
+k4	Nouveau téléphone, ou synchro PC et téléphone
+k6	La carte s'ouvre en jeu et sa couverture s'affiche
+k9	Les extracteurs se construisent sur les ressources ;
+ka	toutes OK
+kc	Les navires vont sur l'eau, pas les terrestres ; les terrestres passent les gués
+ke	Les déclencheurs d'apparition créent les unités à temps, au bon endroit et équipe
+kg	Les changements de crédits sont justes (combien, à quelle fréquence)
+kh	Le texte de la carte s'affiche bien, couleur et position justes
+ki	Les messages du journal de combat arrivent à temps
+kk	Les objectifs arrivent dans l'ordre ; tous accomplis = victoire
+kl	La grande carte ne rame pas et ne plante pas sur mobile
+kn	Dernier test :
+ko	réussis.
+kp	Problèmes de la dernière fois :
+kq	Notez le problème s'il y en a (facultatif)
+kr	Enregistrer ce test
+ks	Noté : encore
+kt	en échec — corrigez et retestez
+ku	Tout est réussi, prêt à publier !
+kv	Vérification…
+kw	problèmes qui affectent le jeu
+kx	Ouvrez « Jouable ? » et corrigez un par un ; la plupart en un geste.
+ky	rappels
+kz	Regardez les points jaunes dans « Jouable ? ».
+l0	Les distances à la ressource la plus proche diffèrent de
+l2	Le nombre de ressources proches diffère de
+l3	Placez les ressources symétriquement ou faites un miroir.
+l4	Le plus grand territoire vaut ce multiple du plus petit :
+l5	×
+l6	Déplacez les bases vers des positions plus symétriques.
+l7	Les terrestres d'une équipe n'atteignent aucun ennemi
+l8	Si ce n'est pas une carte navale, ouvrez un passage avec une route ou un gué.
+l9	Moins de 2 bases
+la	Placez des bases en mode Unités.
+lb	Trop peu de types de terrain
+lc	Essayez un préréglage dans « Détails auto ».
+ld	Presque pas d'arbres, de rochers ni de décor
+le	Ajoutez-en avec « Décor naturel » ou le pinceau d'objets.
+lf	Bords de terrain trop réguliers
+lg	Utilisez « Bords naturels ».
+lh	Excellent
+li	Bien
+lj	À améliorer
+lk	Beaucoup de problèmes
+ll	Aucune pénalité.
+lm	rw-map-editor-donnees-perso.json
+ln	Données perso
+lo	Ce n'est pas un fichier de données perso
+lp	Importé. Certains réglages prennent effet à la réouverture.
+lq	Échec de l'import :
+lr	Carte Rusted Warfare
+ls	Échec de l'enregistrement :
+lt	Enregistré sur le fichier d'origine
+lu	Téléchargé dans « Téléchargements »
+lv	Dossier des cartes
+lx	Pas de droit d'écriture sur le dossier
+ly	Dossier de cartes du jeu pas encore choisi
+lz	Continent
+m0	Un grand continent entouré de mer ; combats surtout terrestres
+m1	Archipel naval
+m2	Beaucoup d'îles ; marine et aviation comptent plus
+m3	Mer intérieure
+m4	Une mer au centre, des terres autour
+m5	Vallée fluviale
+m6	Un grand fleuve traverse la carte ; quelques gués sont disputés
+m7	Forteresse sur plateau
+m8	Un plateau cerné de falaises avec des passages
+m9	Tempéré
+ma	Format de code invalide (doit commencer par RWG1-)
+mb	Herbe
+mc	Terre
+md	Sable
+me	Terrain
+mf	Peindre herbe, eau, sable, falaises, etc.
+mg	Choisissez un terrain et peignez. Entre terrains différents l'éditeur
+mh	ajoute les transitions tout seul
+ml	Objets
+mm	Ressources, arbres, rochers et autres choses au sol
+mo	Laissez 1 case entre ressources et unités.
+mq	Unités
+mr	Bases et unités pré-placées
+mt	Avec la symétrie, les bases sont aussi placées aux positions symétriques.
+mv	Règles de carte, apparitions, texte, conditions de victoire
+mx	Les cartes d'escarmouche normales n'ont besoin que de map_info.
+my	Les cartes de villes, survie et mission peuvent partir d'un modèle.
+mz	Génération, image vers carte, échelle, miroir
+n1	Tout cela est annulable.
+n2	Tuiles (expert)
+n3	Placer n'importe quelle tuile, sans transitions
+n5	Le sol ne peut pas être vide, donc pas de gomme pour ce calque.
+n6	Pinceau de terrain
+n7	Maintenez et glissez pour peindre
+nb	Rectangle
+nc	Tirer un rectangle rempli de terrain
+ne	Ellipse
+nf	Tirer une ellipse remplie de terrain
+nh	Pot de peinture
+ni	Remplacer d'un coup une zone connexe du même terrain
+nk	Par ex. transformer tout un désert en neige d'un coup.
+nl	Pipette
+nm	Prendre un terrain sur la carte
+nn	Touchez la carte pour mettre ce terrain dans le pinceau.
+no	Déplacer
+np	Déplacer la vue
+nr	Placer des objets
+ns	Touchez pour placer, glissez pour placer en continu
+nu	Style de ressource
+nv	1 case ou 3×3
+nx	1 case
+ny	comme l'éditeur officiel, plus souple ;
+o0	Les deux styles rapportent pareil en jeu.
+o1	Gomme d'objets
+o2	Effacer les objets
+o4	Pinceau aléatoire
+o5	Peindre plusieurs décors d'un trait
+o7	Touchez pour placer centre de commande + 2 constructeurs
+o9	Placer une unité
+oa	N'importe quelle unité
+oc	Sélection/déplacement
+od	Touchez une unité pour la déplacer, changer d'équipe ou la supprimer
+of	Supprimer
+og	Touchez les unités pour les supprimer
+oi	Sélection rectangle
+oj	Tirer une sélection rectangulaire
+ol	Baguette magique
+om	Sélectionner une zone connexe du même terrain
+oo	Copier terrain, objets et unités de la sélection.
+or	Les bases collées reçoivent de nouveaux numéros d'équipe.
+ot	Retourner horizontalement
+ou	Retourner la sélection gauche-droite
+ow	Retourner verticalement
+ox	Retourner la sélection haut-bas
+oy	Pivoter de 90°
+oz	Pivoter la sélection de 90° dans le sens horaire
+p0	Enregistrer comme tampon
+p1	Mettre la sélection dans les tampons
+p3	Placer une tuile
+p4	Placer la tuile choisie
+p5	Gomme de tuiles
+p6	Vider les cases des calques autres que le sol
+p7	Pipette de tuile
+p8	Prendre une tuile sur la carte
+p9	Dessin symétrique
+pa	Vous dessinez à un endroit, le symétrique est dessiné aussi
+pd	« 4 côtés » convient aux cartes à 4 joueurs.
+pe	« Diagonale » ne convient qu'aux cartes carrées.
+pf	Remplacer seulement
+pg	Ne changer qu'un terrain
+pi	Principal / secondaire
+pj	Alterner vite entre deux terrains
+pl	Mettre en avant ce que vous éditez
+pn	Montrer où l'on peut marcher et construire
+po	Superpose une couche de couleur sur la carte :
+pq	• Naval : en bleu, l'eau navigable
+pr	• Aéroglisseur : en rouge, infranchissable même pour eux
+ps	• Construction : vert possible, rouge non
+pt	• Territoire : chaque case va à l'équipe la plus proche à pied
+pu	• Écart de symétrie : en rouge là où les côtés diffèrent
+pw	Comparer les ressources des équipes par trajets réels
+py	Plus les chiffres sont proches, plus c'est équitable.
+q4	Les déclencheurs ne sont pas copiés.
+q5	Trouver où les côtés diffèrent
+q7	Mise à l'échelle
+q8	Agrandir ou réduire toute la carte
+qa	Unités et ressources ne sont jamais dupliquées
+qe	Changer la taille sans mettre le contenu à l'échelle
+qg	Image vers carte, avec vos proportions
+qh	1. Choisissez l'image et la taille de carte.
+qk	4. « Netteté » retire points et filets.
+qn	Pour un JPG, mettez « Flou » à 1.
+qo	Pour dessiner à la main sur l'image, utilisez « Décalque seul ».
+qp	Générer une carte de base par préréglage et graine
+qs	Un texte qui reproduit la même carte aléatoire
+qu	Coller une image dans la carte
+qy	Combinaisons courantes en un geste
+r0	Les tampons s'exportent en fichier.
+r1	Chaque opération, touchez pour revenir
+r3	Enregistrer en fichier .tmx
+r5	Enregistrer dans le jeu
+r6	Enregistrer directement dans le dossier de cartes du jeu
+r9	Couverture de la carte
+ra	Prendre une photo de toute la carte
+rc	Grande image avec titre, joueurs et légende
+rd	Pour partager votre carte en groupe, sur forum ou workshop.
+re	Tuiles
+rf	D'où les nouvelles cartes tirent leurs tuiles
+rh	Sauvegarde auto
+ri	Une copie toutes les 30 secondes
+rk	Type de carte et règles de base
+rm	Équipes
+rn	Jusqu'à 100 (limite du moteur)
+ro	Le moteur gère jusqu'à 100 équipes.
+rp	Les salons normaux n'ont que 10 équipes
+rt	L'essentiel
+ru	Téléphone
+rw	PC
+ry	Blocs de couleur
+rz	Un sol de votre couleur ; choisissez ce qu'il est en jeu
+s1	ne se fondent pas avec le terrain voisin
+s4	Clic droit ou appui long sur un bloc pour le modifier ou le supprimer.
+s5	Forme et densité des objets
+s6	Rectangle, ellipse, ligne, pot, densité et espacement
+s9	Espacement minimal
+sa	, le pinceau les espace au lieu de les entasser.
+sb	Choisir dans la palette d'unités, toucher la carte
+sd	Combien à la fois
+se	Rangée ou bloc automatique
+sg	Texte
+sh	Écrire une ligne sur la carte
+sj	Journal de combat
+sk	Les messages qui défilent en jeu
+sm	Qu'est-ce que c'est ?
+sn	Astuce
+so	Compris
+sp	Rechercher : ex. « symétrie », « ressource », « enregistrer »
+sq	Cette carte ne peint pas le terrain auto ; utilisez le mode « Tuiles »
+sr	Peindre le terrain
+ss	Créez ou choisissez d'abord un bloc de couleur à droite
+st	Peindre un bloc de couleur
+su	Pot de bloc de couleur
+sv	Monter le sol
+sw	Creuser le sol
+sx	Choisi :
+sy	Cette carte n'a pas de tileset d'objets
+sz	Effacer les objets
+t0	Choisissez d'abord des objets à droite
+t1	Pot d'objets
+t2	Touchez d'abord une tuile à droite
+t4	Effacer les tuiles
+t5	Placer une base
+t6	Limite d'équipes atteinte
+t7	Équipe
+t8	Base placée :
+t9	unités
+ta	Empilés ici :
+tb	— choisissez :
+tc	Objet
+td	Redimensionner la zone
+te	Déplacer
+tf	Tracer un rectangle
+tg	Tracer une ellipse
+th	Tracer une route
+ti	, dont
+tj	Copié
+tk	Coupé. Le vide a été rempli avec le terrain secondaire
+tl	Vider la sélection
+tm	Pivoter de -90°
+tn	Transformer
+to	Sélectionnez d'abord une zone
+tp	Nom du tampon
+tq	Tampons
+ts	Enregistré comme tampon :
+tt	Glissez en place puis touchez « Poser »
+tv	Presse-papiers vide : sélectionnez et copiez d'abord
+tw	Poser
+tx	Retourner H
+ty	Retourner V
+tz	90°
+u0	Sélection
+u1	Tampon
+u2	Vider
+u3	Annulé
+u4	Taille du pinceau
+u5	Inverser principal/secondaire
+u8	Ouvrir une autre carte ?
+ua	Ouvrir quand même
+ub	Lecture de la carte…
+uc	Impossible d'ouvrir ce fichier
+ud	Cette entrée a expiré
+ue	Ouverture…
+uf	Cet appareil ne lit pas les dossiers directement
+ug	Lecture du dossier…
+uh	Échec de lecture :
+ui	Pas encore de carte .tmx dans le dossier du jeu
+uj	Ouvrir depuis le dossier du jeu
+uk	La carte a encore des problèmes
+ul	Trouvé
+um	problèmes qui affectent le jeu :
+un	Voir d'abord
+uo	Enregistrer quand même
+up	Création du fichier de carte…
+uq	Échec de l'enregistrement
+us	Sur mobile c'est en général
+uv	Sur PC, en général dans le dossier d'installation du jeu, sous
+ux	Choisir le dossier de cartes du jeu
+uy	Choisir
+uz	Mémorisé :
+v0	Échec du choix :
+v2	Écriture dans le dossier du jeu…
+v3	et couverture
+v4	Enregistré dans «
+v5	. Allez tester !
+v6	Échec de l'enregistrement dans le jeu
+v8	Enregistrement normal
+v9	Rechoisir le dossier
+va	Carte et
+vb	Couverture
+vc	Instantané de sécurité…
+vd	Auto :
+ve	Échec de la sauvegarde auto : stockage peut-être plein
+vf	Enregistrer un instantané
+vg	Nom de l'instantané
+vi	Enregistrement de l'instantané…
+vj	Instantané enregistré
+vk	Restaurer l'instantané ?
+vl	Restaurer «
+vn	Aperçu
+vo	Création de l'image de présentation…
+vp	_presentation.png
+vq	Tuiles
+vr	Pinceau
+vs	Détails
+vt	Biome
+vu	Route
+vv	Ligne
+vw	Gomme
+vx	Sélection
+vy	Tracer une zone
+vz	Texte
+w0	Outils
+w1	Calques
+w2	Historique
+w3	Rapport
+w4	Sauvegarde auto faite
+w5	Non enregistré
+w6	Annuler :
+w7	Annuler (Ctrl+Z)
+w8	Rétablir :
+w9	Rétablir (Ctrl+Y)
+wa	Rechercher une fonction…
+wb	Zoom avant
+wc	Zoom arrière
+wd	Nom du fichier (sans .tmx)
+wf	Superposition
+wg	Constructible
+wh	Écart de symétrie
+wi	Appui long ou clic droit pour l'aide
+wj	Zoom
+wl	Rond
+wm	Carré
+wq	Même terrain sur toute la carte
+wr	Les cases vides n'écrasent pas les objets au collage
+ws	Coller le presse-papiers
+wv	Clic pour principal, clic droit ou appui long pour secondaire
+ww	Secondaire :
+wx	Terrain (principal / secondaire)
+wy	Inverser principal et secondaire (X)
+wz	⇄ Inverser principal/secondaire
+x0	Peindre en secondaire
+x1	Clic droit peint en secondaire
+x2	Remplacer ce terrain sur toute la carte
+x3	Tous (tous les terrains)
+x4	Remplacer seulement
+x5	 » se dessine
+x6	L'intérieur est un sol ordinaire
+x8	(aucun)
+x9	En peignant, il va
+xa	 » peut toucher directement :
+xb	. À côté d'autres terrains, un anneau de terrain intermédiaire est ajouté.
+xd	Pinceau aléatoire : choisissez des objets ; les curseurs fixent les parts
+xe	Part de vide
+xf	Épaisseur du trait
+xg	Densité
+xh	Espacement min. (cases)
+xi	Placer sur le même sol sur toute la carte
+xj	Maintenez et glissez pour placer en continu
+xk	Tirez un rectangle
+xl	Tirez une ellipse
+xm	Tirez une ligne
+xn	Touchez pour remplir le même sol
+xo	Maintenez et glissez pour effacer
+xq	Plus la « Densité » est basse, plus c'est clairsemé et naturel.
+xr	La carte a maintenant
+xt	Clic droit ou appui long : modifier / supprimer
+xu	Modifier le bloc de couleur
+xv	Blocs de couleur (votre couleur, choisir la propriété)
+xx	Forme
+xy	Les blocs de couleur remplacent le sol et, avec le terrain voisin,
+xz	ne se fondent pas
+y0	. Pour revenir à un terrain normal, repeignez avec le pinceau de terrain.
+y1	Modifier couleur et propriété
+y2	Supprimer (si inutilisé sur la carte)
+y3	Ce bloc est encore utilisé sur la carte ; repeignez-le d'abord
+y4	Neutre
+y5	Hostile (-2)
+y6	Touchez la carte pour en placer un
+y9	Unité choisie
+ya	Position : case (
+yb	Supprimer l'unité
+yc	Bases (
+yd	 ; touchez pour y aller)
+ye	Pas encore de base.
+yf	Renuméroter les équipes 1, 2, 3…
+yg	Toutes
+yh	Terrestres
+yi	Aériennes
+yj	Navales
+yk	Bâtiments
+yl	Expérimentales
+ym	Rien trouvé. Essayez d'autres mots ou une autre catégorie.
+yn	Rechercher des unités (nom chinois ou anglais)
+yo	Choisir une unité
+yp	Équipe
+yq	Espacement (cases)
+yr	Disposition
+ys	Rangée
+yt	Colonne
+yu	Bloc
+yw	Chargement de l'éditeur de déclencheurs…
+yx	Toute la carte
+yy	Plusieurs cartes
+yz	Image
+z0	Peindre sur le calque
+z1	Touchez pour choisir une tuile
+z3	Masquer
+z4	Afficher
+z5	Sol
+z6	Calques de tuiles
+z7	Calques d'objets ·
+z8	Assombrir les autres calques (met en avant ce que le mode édite)
+z9	Afficher la grille
+za	Régler…
+zb	Choisir une image de référence…
+zc	tuiles ·
+zd	Utilisé
+ze	Inutilisé
+zf	Retirer les tilesets inutilisés à l'enregistrement
+zg	Placer le tampon :
+zh	Tampons intégrés (toucher pour placer, appui long pour l'info)
+zi	Mes tampons
+zj	Enregistrer la sélection comme tampon
+zk	Importer
+zm	Exporter en fichier
+zn	Supprimer le tampon ?
+zo	Supprimer «
+zp	Tampons importés :
+zq	(à l'ouverture)
+zr	Annulé
+zs	Historique (
+zt	étapes ; touchez pour revenir)
+zu	Instantanés
+zv	Enregistrer un instantané
+zy	Calcul des distances à pied…
+zz	Recalculer
+100	Calculer
+101	Pas de base ; calcul impossible.
+102	Ça semble plutôt équilibré.
+103	Distances et nombre de ressources des équipes sont proches.
+104	 ; plus grand territoire contre plus petit :
+105	Déséquilibres :
+106	La distance à la ressource la plus proche diffère de
+107	cases ; ressources à 30 cases diffèrent de
+108	Ressources à 30 cases
+109	Ressource la plus proche
+10a	Territoire
+10b	Les terrestres n'atteignent aucun ennemi
+10c	Île
+10d	Comparaison des équipes (touchez une ligne pour aller à la base)
+10f	Ressources partagées (
+10g	 ; à peu près à égale distance des deux équipes les plus proches)
+10h	Ces ressources deviendront des points disputés.
+10j	Afficher les territoires sur la carte
+10k	Simulation d'ouverture
+10n	Ouvrir une carte
+10o	Choisir un fichier .tmx
+10p	Taille et joueurs ; bases placées pour vous
+10q	Ouvrez d'abord une carte
+10r	Autoriser le dossier de cartes une fois
+10s	Transformer une image en carte
+10t	Pas à pas, en quelques minutes
+10u	Comment marche chaque fonction
+10v	Retirer de la liste
+10w	Récents
+10y	Revenir à la carte
+10z	etc.
+110	Base standard
+112	Base riche
+114	Point de ressources
+116	Lac
+117	Un ovale d'eau, plage et eau peu profonde ajoutées automatiquement.
+118	Île de ressources en mer
+11a	Expansion
+11c	Centre riche
+11e	Défense de col
+11g	Tête de pont
+11i	Fort en hauteur
+11k	Passage à gué
+11l	Un gué pour que les terrestres traversent ; à placer verticalement sur la rivière.
+11m	Bosquet
+11n	Un bosquet irrégulier qui bloque la vue et le passage.
+11o	Plateau à falaises
+11p	Un plateau cerné de falaises avec un passage.
+11q	Fosse de lave
+11s	Lac gelé
+11t	Un lac gelé dans la neige.
+11u	cases,
+11v	Ce n'est pas un fichier de tampon
+11w	Eau
+11x	Neige
+11y	Falaise d'herbe
+11z	Glace
+120	Falaise de terre
+121	Dunes
+122	Forêt gelée
+123	Sol de pierre
+124	Compression non prise en charge :
+125	 » : longueur de données incorrecte (
+126	octets, attendu
+127	Fichier XML / TMX invalide :
+128	Pas une carte TMX (la racine n'est pas
+129	Les cartes infinies (infinite=1) ne sont pas prises en charge
+12a	 » : taille différente de la carte
+12b	En combien de secondes chaque équipe croise l'ennemi
+12d	Les chiffres sont des estimations
+12f	Assemblage de cartes
+12h	Les cartes devraient utiliser les mêmes tuiles.
+12i	Pratique pour faire une grande carte par zones.
+12j	Copier d'une autre carte
+12k	Rapporter une partie d'une autre carte
+12m	Bibliothèque de cartes
+12n	Toutes les cartes créées ou ouvertes
+12p	Traitement par lot
+12q	Vérifier et corriger plein de cartes d'un coup
+12t	Empaqueter une collection
+12u	Un Mod à déposer directement dans le jeu
+12x	Comparer des versions
+12y	Voir ce qui diffère entre deux versions
+130	Prise en charge des Mods
+131	Utiliser unités et tuiles des Mods
+135	Terrestre (char)
+136	Aéroglisseurs
+137	Simulation…
+138	Pas encore de base sur la carte
+139	min
+13a	s
+13b	Contact
+13c	Terrestre au centre
+13e	Les temps de premier contact diffèrent de
+13g	Temps de premier contact proches (écart
+13h	), ouverture équitable.
+13j	Afficher les lignes de front
+13k	Calcul des lignes de front…
+13n	Mettre la carte actuelle «
+13o	 » en premier
+13q	Par rangée
+13r	Assembler
+13s	Il faut au moins deux cartes
+13t	Assemblage…
+13u	Ouverture de la carte assemblée…
+13v	assemblage-
+13w	Réparation des joints
+13x	Assemblé en
+13y	nouvelle carte
+13z	De «
+140	 » copier
+142	Copier et placer dans la carte actuelle
+143	Sélectionnez d'abord une partie sur la miniature
+145	J
+146	Énorme
+147	Grande
+148	Petite/moyenne
+149	Défi
+14a	Favori
+14b	Étiquettes
+14c	Étiquettes (séparées par des virgules)
+14g	Analyse
+14h	cartes…
+14i	Ajouté
+14j	cartes
+14k	Rechercher noms ou étiquettes
+14l	Favoris seulement
+14m	Analyser le dossier du jeu
+14n	Vérifier et corriger un lot de cartes.
+14o	Quelles cartes
+14p	Toutes les cartes du dossier du jeu
+14q	Les fichiers que je choisis
+14r	Que faire
+14s	Ajouter le map_info manquant
+14t	Ajouter les propriétés eau et lave
+14u	Remplir le sol vide
+14v	Générer les couvertures (nomcarte.png)
+14y	Démarrer
+14z	Autorisez d'abord le dossier de cartes du jeu
+150	Aucune carte à traiter
+151	Traitement
+152	resultats-lot.zip
+153	Problèmes
+154	Corrigés
+155	Graves restants
+156	Échec de lecture
+157	Résultats du lot
+158	Écrits
+159	fichiers.
+15a	Vérification seule ; aucun fichier modifié.
+15b	Ma collection de cartes
+15d	Nom de la collection
+15e	Description
+15f	Inclure la carte actuelle «
+15g	Choisir d'autres cartes (plusieurs possibles)
+15i	Empaqueter
+15j	Empaquetage…
+15k	Il faut au moins une carte
+15l	Empaqueté
+15m	cartes :
+15o	Choisir un instantané à comparer
+15p	L'instantané mesure
+15q	, différent d'aujourd'hui ; côte à côte seulement, pas case par case
+15r	Comparer : maintenant ↔ «
+15t	Maintenant
+15u	Instantané (rouge = différent)
+15v	Restaurer la zone depuis l'instantané
+15w	Sélectionnez d'abord une zone sur l'instantané
+15x	Restaurer une zone depuis l'instantané
+15y	Restauré. Annulez si ça ne vous plaît pas.
+160	unités ·
+161	tilesets
+162	Retirer
+163	Ajouté à la carte actuelle ; utilisez-le en mode « Tuiles »
+164	Ajouter
+165	Lecture du Mod…
+166	Lu
+167	unités,
+168	Importer un Mod
+16b	Échelle ×
+16c	Vide = toutes les équipes
+16d	Conditions
+16e	Logique
+16f	Actions
+16g	Détection d'unités
+16i	Type d'unité
+16j	Un seul type ; vide = n'importe lequel
+16k	Au moins
+16l	Par défaut 1
+16m	Au plus
+16n	0 = « aucune dans la zone »
+16o	Compter seulement les bâtiments
+16p	Compter seulement la production
+16q	Compter seulement les constructeurs
+16r	Compter seulement bâtiments sur ressources
+16s	Compter seulement les inactives
+16t	Compter seulement les attaquantes
+16u	Compter seulement l'anti-aérien
+16v	Compter seulement un niveau tech
+16w	Compter seulement avec étiquette
+16x	Inclure les bâtiments inachevés
+16y	Détection d'étiquette
+170	Étiquette
+171	Relais / minuteur
+173	Faire apparaître
+174	Fait apparaître des unités au centre de la zone.
+175	Quelles unités
+176	Retire les unités de la zone.
+177	Seulement les transports vides
+178	Changer les crédits
+179	Ajouter, retirer ou fixer les crédits d'une équipe.
+17a	Ajouter (négatif retire)
+17b	Fixer à
+17c	Si les deux, « Fixer » passe avant « Ajouter »
+17d	Étiquettes d'équipe
+17f	Ajouter des étiquettes (virgules)
+17g	Retirer des étiquettes (virgules)
+17h	Texte sur la carte
+17i	Affiche du texte au centre de la zone. Seulement si « activé ».
+17j	Taille du texte
+17k	Par défaut 20
+17l	Style
+17m	Objectif de mission
+17o	Texte de l'objectif
+17p	Déplacer la caméra
+17q	Déplace la caméra au centre de la zone (pour l'histoire).
+17r	Déplacer des unités
+17s	Envoie les unités de la zone vers un « point de destination ».
+17t	Point de destination
+17u	Décharger à l'arrivée
+17w	Réglages d'équipe
+17y	Crédits de départ
+17z	Alliance (solo)
+180	Bloquer la difficulté IA (-2~3)
+181	Désactiver l'IA (solo)
+182	IA facile (solo)
+183	Point d'apparition ennemi
+184	En survie, les ennemis sortent d'ici ; on peut en mettre plusieurs.
+185	Caméra de départ
+186	Position de la caméra au départ.
+187	Délai
+188	Combien de temps après le début avant de pouvoir se déclencher (une fois)
+189	Durée
+18a	La condition doit tenir aussi longtemps sans interruption
+18b	Peut se redéclencher
+18d	Intervalle de répétition
+18e	Après déclenchement, répéter régulièrement (sans revérifier)
+18f	Message du journal de combat
+18g	Couleur du message
+18h	Vitesse de frappe (ex. 0.05s)
+18i	Marquer sur la minicarte
+18j	Notes (ignorées par le jeu)
+18k	Activé par
+18l	Ne se déclenche que quand ces déclencheurs sont vrais
+18m	Active aussi
+18n	Quand celui-ci est vrai, ceux du dessous comptent comme activés
+18o	Désactivé par
+18p	Quand ceux-ci sont vrais, celui-ci est coupé
+18q	Par défaut
+18r	Détruire le centre de commande
+18s	Détruire les bâtiments principaux
+18t	Détruire tous les bâtiments
+18u	Détruire toutes les unités et bâtiments
+18v	Accomplir tous les objectifs
+18w	Aucune (ne finit pas seule)
+18x	Escarmouche (combat normal)
+18y	Survie (vagues)
+18z	Mission (histoire)
+190	(sans nom)
+191	ms
+192	Toutes les équipes
+193	Neutre hostile
+194	Équipe «
+195	 :
+196	dans la zone
+197	aucune
+198	au moins
+199	la zone contient
+19a	a l'étiquette «
+19b	(aucune unité choisie)
+19c	donner à
+19d	faire apparaître
+19e	toutes
+19f	retirer dans la zone
+19g	crédits
+19h	fixer à
+19i	(pas de nombre)
+19j	ajouter l'étiquette «
+19k	retirer l'étiquette «
+19l	afficher le texte «
+19m	objectif «
+19n	 » accompli
+19o	caméra ici
+19p	envoyer
+19q	unités vers «
+19r	marquer comme vrai
+19s	début
+19t	après
+19u	tous
+19v	n'importe lequel
+19w	vrai
+19x	Quand
+19y	, et
+19z	, ou
+1a0	(pendant
+1a1	Au début,
+1a2	, et activer
+1a3	, message «
+1a4	 ; puis toutes les
+1a5	répéter
+1a6	puis peut se redéclencher
+1a7	 ; une seule fois
+1a8	pause si vrai
+1a9	« Tout doit être vrai » sans condition — ne se déclenche jamais
+1aa	 » : le type est dans class
+1ac	Changer en type
+1ad	 » : type «
+1ae	 » inconnu du jeu
+1af	Le jeu l'ignorera. Types valides :
+1ag	Objet «
+1ah	 » sans type
+1ai	Le jeu l'ignore (peut servir de commentaire).
+1aj	 » n'a aucune propriété
+1ak	Le jeu ignore les déclencheurs sans propriété.
+1al	Ajouter un id
+1am	) manque «
+1an	propriété
+1ao	est obligatoire.
+1ap	 » : «
+1aq	 » n'est pas un entier
+1ar	Actuellement «
+1as	 » : zone de taille 0
+1at	Rien n'est détecté dans une zone de largeur ou hauteur nulle.
+1au	Mettre 1×1 case
+1av	 » contient un «
+1ax	Retirer ce lien
+1ay	 » : équipe «
+1az	 » n'est pas un nombre
+1b1	 » : équipe
+1b2	hors limites
+1b3	Seulement -2, -1 ou 0–99.
+1b4	 » : temps «
+1b5	 » illisible pour le jeu
+1b7	 » vaut seulement
+1b8	Un nombre seul = millisecondes. Vouliez-vous des secondes ?
+1b9	 » :
+1ba	vaut «
+1bc	Changer en true
+1bd	 » : unités «
+1be	 » peut-être mal écrites
+1bg	 » : point de destination «
+1bh	 » n'existe pas
+1bj	 » : combien de crédits n'est pas indiqué
+1bk	Remplissez « Ajouter » ou « Fixer à ».
+1bl	 » ne se déclenchera jamais
+1bm	« Tout doit être vrai » coché mais aucune condition.
+1bn	 » : repeatCount n'a pas d'effet
+1bo	La version 1.15 lit mais n'utilise pas cette propriété.
+1bp	déclencheurs s'appellent «
+1br	Condition de victoire «
+1bs	Le jeu signalera une erreur. Options :
+1bt	La carte n'a pas de condition de victoire
+1bv	Mettre « accomplir tous les objectifs »
+1bw	La carte de survie n'a pas d'apparition ennemie
+1by	La carte de survie n'a pas de vagues perso
+1bz	Les vagues par défaut seront utilisées. Modifiables dans map_info.
+1c1	Ajoutez-en avec « Nouveau → Objectif de mission ».
+1c2	Des déclencheurs utilisent l'équipe
+1c4	déclencheurs, aucun problème
+1c5	Que sont les déclencheurs
+1c6	Règles « quand… alors… »
+1c7	Chaque déclencheur est une règle :
+1c9	alors
+1ca	faire quelque chose (unités, crédits, texte).
+1ce	Le « Schéma logique » montre comment tout se relie.
+1cf	Liens
+1cg	Comment les déclencheurs travaillent ensemble
+1ci	 : quand celui-ci est vrai, ceux du dessous s'activent aussi.
+1cj	 : quand ceux-là sont vrais, celui-ci est en pause.
+1cl	Les noms ignorent la casse.
+1cm	Temps
+1cn	Délai, durée, réarmement, répétition
+1co	 : combien de temps après le début avant de pouvoir se déclencher (une fois).
+1cp	 : combien de temps la condition doit tenir.
+1cq	 : combien de temps après déclenchement il se réarme.
+1cr	Vide = une seule fois
+1cs	, puis reste « vrai ».
+1ct	 : répéter régulièrement après déclenchement.
+1cw	Zone
+1cx	Où se trouve le déclencheur
+1cz	Modèle de prise de ville
+1d0	Une ville pour carte de prise de villes
+1d2	garnison neutre quand personne ne la tient ;
+1d3	détecte si chaque équipe la tient ;
+1d4	crédits au détenteur à intervalles ;
+1d5	le nom de la ville prend la couleur du détenteur.
+1d6	Chaque ville se règle à part.
+1d7	La zone de la ville doit couvrir ses bâtiments.
+1d8	Plus d'équipes, plus de déclencheurs (3 par équipe).
+1d9	Modèle de survie
+1da	Vague après vague d'ennemis
+1dc	Modèle de mission
+1dd	Accomplir des objectifs pas à pas
+1df	Schéma logique
+1dg	Voir comment tous les déclencheurs se relient
+1dh	Chaque boîte est un déclencheur ; la couleur indique le type.
+1di	Bleu
+1dj	=condition,
+1dk	Orange
+1dl	=action,
+1dm	Vert
+1do	Nouveau déclencheur
+1dp	Conditions : « Quand… »
+1dq	Actions : « Alors… »
+1dr	Texte et objectifs
+1ds	Réglages et repères
+1dt	Nouveau
+1du	Nouvel objectif
+1dv	‹ Retour à la liste
+1dw	Déclencheurs (règles de la carte)
+1dx	Prise de villes
+1dy	Survie
+1dz	Blocs courants
+1e0	Tracez une zone sur la carte pour créer
+1e1	Tirez une zone sur la carte, puis choisissez le type
+1e2	Pas encore de déclencheur.
+1e3	Les cartes normales n'ont pas besoin de déclencheurs
+1e4	, seulement des « Réglages de carte » ci-dessus.
+1e6	Rechercher
+1e7	déclencheurs (nom, texte, unité)
+1e8	Avec problèmes
+1e9	Afficher
+1ea	de plus (total
+1eb	Aucun déclencheur ne correspond.
+1ed	Réglages de carte (map_info)
+1ee	Type de carte
+1ef	Condition de victoire
+1eg	Brouillard de guerre
+1eh	Selon le salon
+1ei	Ligne de vue
+1ej	Brouillard de carte
+1ek	Vision partagée entre alliés
+1el	Introduction (introText)
+1em	Texte affiché au début
+1en	Modifier les vagues ennemies…
+1eo	Dupliquer
+1ep	Nom (destination de « Déplacer des unités »)
+1eq	Nom (les autres déclencheurs y font référence)
+1er	Type
+1es	Changer le type
+1eu	Changer « tout doit être vrai »
+1ev	Messages et notes
+1ew	Gauche (cases)
+1ex	Changer la zone
+1ey	Haut (cases)
+1ez	Largeur (cases)
+1f0	Hauteur (cases)
+1f1	Tirer une nouvelle zone sur la carte
+1f2	Retracer sur la carte
+1f3	Y aller
+1f4	Modifier la propriété
+1f5	Supprimer la propriété
+1f6	Nom de propriété
+1f7	Valeur
+1f8	Ajouter
+1f9	Ajouter une propriété
+1fa	Autres propriétés (avancé)
+1fb	(choisir)
+1fc	Neutre hostile (attaque de lui-même)
+1fd	(grand salon requis)
+1fe	Modifier
+1ff	#RRGGBB ou red
+1fg	Effacer
+1fh	Normal
+1fi	Avec flèche vers le bas
+1fj	ex. supplyDepot
+1fk	(choisir une destination)
+1fl	Touchez la carte pour placer une destination
+1fm	Fixer la destination
+1fn	Nouvelle destination
+1fo	Chinois
+1fp	日本語
+1fq	(remplies
+1fr	)
+1fs	Versions dans d'autres langues
+1ft	Vide = celle du dessus
+1fu	Vide
+1fv	Format incorrect
+1fw	Modifier les unités qui apparaissent
+1fx	Nom d'unité, ex. tank
+1fy	Options :
+1fz	En ajouter une
+1g0	Déclencheur introuvable
+1g1	Modifier les liens
+1g2	Choisir les déclencheurs «
+1g3	 »
+1g4	+ Ajouter
+1g5	Rechercher un nom
+1g7	Pas de virgule dans les noms
+1g8	Renommer
+1g9	Aussi mis à jour
+1ga	références
+1gb	Dupliquer le déclencheur
+1gc	Supprimer le déclencheur ?
+1gd	déclencheurs liés à «
+1ge	 ». Ces liens seront aussi retirés.
+1gf	Supprimer le déclencheur
+1gg	Ville
+1gi	Après « Suivant », touchez l'emplacement de la ville.
+1gj	Nom de la ville
+1gk	Équipes participantes
+1gl	Garnison neutre (quand personne ne tient)
+1gm	Vide = aucune
+1gn	Intervalle de garnison (s)
+1go	Revenu de prise (0 = aucun)
+1gp	Paiement toutes les N secondes
+1gq	Taille de la zone de ville (cases)
+1gr	Nom coloré selon le détenteur
+1gt	3 déclencheurs par équipe.
+1gu	Les salons normaux ne comptent que les 10 premières équipes
+1gv	 ; plus seulement dans les grands salons (serveur).
+1gw	Suivant : touchez la carte pour placer la ville
+1gx	Touchez la carte pour placer «
+1gy	Modèle de ville :
+1gz	_aBatiments
+1h0	Un bâtiment dans la zone
+1h1	Garnison neutre si personne ne tient
+1h2	_garnison
+1h3	_detenteur
+1h4	tient
+1h5	_revenu
+1h6	_nom
+1h7	Généré «
+1h8	déclencheurs. Placez les bâtiments de la ville en mode Unités.
+1h9	Vague 1
+1ha	Vague 2
+1hb	Dernière vague
+1hc	Chaque ligne est une vague.
+1hd	Intervalle
+1he	est le temps depuis la vague précédente (min:s) ;
+1hf	Ennemis
+1hg	écrivez « nombre unité », séparés par des virgules, ex.
+1hh	Titre
+1hi	Victoire après celle-ci
+1hj	vague
+1hk	Ajouter une vague
+1hl	Vagues ennemies (survivalWaves)
+1hm	Vagues enregistrées
+1hn	Modèle de survie
+1ho	Passe la carte en
+1hr	Survie activée, placé
+1hs	points d'apparition ennemis
+1ht	Atteindre un lieu
+1hu	Détruire le CC ennemi
+1hv	Atteindre un endroit
+1hw	Détruire le CC ennemi là-bas
+1hx	Détruire tous les ennemis là-bas
+1hy	Tenir jusqu'à la seconde N
+1hz	Mode mission
+1i0	(victoire : accomplir les objectifs). Les objectifs
+1i1	apparaissent dans l'ordre
+1i3	Étape
+1i4	Seconde (depuis le début)
+1i5	Équipe du joueur
+1i6	Équipe ennemie
+1i7	Ajouter une étape
+1i8	Modèle de mission
+1i9	Objectif
+1ia	_condition
+1ib	Accompli :
+1ic	_fleche
+1id	Généré
+1ie	objectifs (
+1ig	Crédits de départ de chaque équipe (team_info)
+1ih	Apparitions minutées
+1ij	Message à l'entrée
+1ik	Un message quand des unités d'une équipe entrent dans la zone
+1il	Une ligne de texte fixe sur la carte
+1im	Revenu de point
+1in	Celui qui tient un point gagne des crédits en continu (un par équipe)
+1io	Message de compte à rebours
+1ip	Un message du journal à la seconde N
+1iq	Renforts minutés
+1ir	La base de chaque équipe reçoit des renforts régulièrement
+1is	Tenir un bastion
+1it	Tenez le bastion un moment : crédits et annonce au journal
+1iu	Camp neutre
+1iw	 : renforts arrivés
+1ix	Renforts
+1iy	Donné à
+1j0	Crédits de départ par équipe
+1j1	équipes avec crédits de départ réglés
+1j2	Touchez la carte pour choisir l'endroit
+1j3	Ennemis en approche !
+1j4	Vous avez trouvé un lieu secret !
+1j5	Entrée dans la zone
+1j6	Ici c'est…
+1j7	Plus que 5 minutes !
+1j8	Minuteur
+1j9	Bastion
+1ja	 : l'équipe a tenu le bastion !
+1jb	Prime du bastion
+1jc	Nom du bastion
+1jd	Camp nettoyé
+1je	Gardes du camp
+1jf	Prise
+1jg	Ajouter des crédits
+1jh	Pas encore de déclencheur
+1ji	━ active
+1jj	┅ désactive
+1jk	(seulement les premiers
+1jl	Schéma logique (
+1jm	déclencheurs ; touchez une boîte pour modifier)
+1jn	Texte à afficher
+1jo	Écrivez ici
+1jp	Flèche en dessous (pointe une cible)
+1jr	Placer
+1js	Placer le texte
+1jt	 » est vrai
+1ju	Au début
+1jv	Les messages qui défilent en jeu. Par temps :
+1jw	N secondes après le début
+1jx	d'abord,
+1jy	Quand les conditions sont remplies
+1jz	ensuite. Modifiez texte et couleur directement.
+1k0	Quand
+1k1	Message
+1k2	Vitesse de frappe
+1k3	Modifier le journal
+1k4	Changer la couleur
+1k5	Afficher d'un coup
+1k6	Rapide
+1k7	Moyen
+1k8	Lent
+1k9	Changer la vitesse
+1ka	Retirer ce message
+1kb	Supprimer l'entrée du journal
+1kc	Modifier ce déclencheur
+1kd	Pas encore de message. Ajoutez-en avec les boutons ci-dessous.
+1ke	Secondes
+1kf	Ajouter au journal
+1kg	Journal
+1kh	N secondes après le début
+1ki	Touchez la carte pour choisir une zone
+1kj	Nouveau lieu découvert !
+1kk	Quand quelqu'un entre dans une zone
+1kl	Parler quand quel déclencheur est vrai ?
+1km	Quand un déclencheur est vrai
+1kn	Retracer la zone
+1ko	Que fait cette zone ?
+1kp	Leçon 1 : une carte jouable en cinq minutes
+1kq	Terrain, symétrie, ressources, bases, vérification, enregistrement
+1kr	Voici le mode
+1kt	Sur la carte
+1ku	maintenez et glissez
+1kv	pour peindre. Regardez : les bords reçoivent
+1kw	(plage, eau peu profonde) — pas besoin d'assembler les tuiles.
+1kx	Une erreur ? Touchez
+1ky	. Sur PC Ctrl+Z ; sur mobile
+1kz	un toucher à deux doigts
+1l0	sur l'écran marche aussi.
+1l1	Les cartes de combat sont souvent symétriques. Dans « Symétrie » choisissez
+1l2	puis peignez à nouveau — l'autre moitié se peint en même temps.
+1l3	Passez en mode
+1l4	puis touchez la carte pour placer une
+1l5	, touchez la carte pour placer une
+1l7	Touchez
+1l9	Enfin
+1lb	Ne pas enregistrer
+1lc	Leçon 2 : sélectionner, copier, tampons
+1le	Choisissez l'outil
+1lf	(raccourci M).
+1lg	Tirez un cadre
+1lh	pour sélectionner une zone.
+1li	Une barre apparaît en dessous :
+1lj	copier, couper, retourner, pivoter
+1lk	. Touchez
+1ll	puis
+1ln	Avec une zone sélectionnée, touchez «
+1lo	 » ; elle apparaît dans le panneau
+1lq	Leçon 3 : les bases des déclencheurs
+1ls	. Les déclencheurs sont les règles de la carte :
+1lt	quelque chose arrive,
+1lu	faire quelque chose.
+1lv	Le plus rapide est un modèle. Touchez
+1lw	, entrez un nom, puis touchez l'emplacement de la ville.
+1ly	Touchez «
+1m0	Leçon 4 : générer et remodeler toute la carte
+1m4	Passer
+1m5	Suivant
+1m6	Quitter le tutoriel
+1m7	 » terminée !
+1m8	Ouvrez d'abord une carte
+1ma	Commencer le tutoriel
+1mc	Avant le tutoriel
+1md	Entraînement du tutoriel
+1me	· terminée
+1mf	À tout moment, touchez le
+1mg	à côté d'un outil pour l'aide, ou appuyez sur
+1mk	Pas un fichier zip / rwmod
+1ml	Méthode de compression non prise en charge :
+1mm	Traitement…
+1mn	Menu
+1mo	Barre de menus
+1mp	Touchez pour renommer
+1mq	Rechercher une fonction (Ctrl+K)
+1mr	Vérifier si la carte est jouable
+1ms	Enregistrer (Ctrl+S)
+1mt	Autres façons d'enregistrer
+1mu	Mode d'édition
+1mv	Minicarte : touchez ou glissez pour y aller

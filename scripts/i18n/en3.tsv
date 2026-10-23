@@ -1,0 +1,719 @@
+12w	The pack format follows common community practice; test it in-game before publishing.
+12x	Version diff
+12y	See what differs between two versions
+12z	Compare a snapshot with the current map; differences are marked in red. Box-select an area on the diff to restore it from the snapshot.
+130	Mod support
+131	Use units and tiles from Mods
+132	Import a Mod in .rwmod or .zip format; the editor reads its units (names and icons) and tilesets. Units appear in the “Mod” category of the unit palette; tilesets can be added to the current map.
+133	For RAR Mods, extract first and re-pack as zip.
+134	Players of this map need the same Mod installed, or Mod units won't appear.
+135	Land (tank)
+136	Hover units
+137	Simulating…
+138	No spawns on the map yet
+139	min
+13a	s
+13b	Meets enemy
+13c	Land to center
+13d	Estimated time for each team to first meet an enemy along actual routes (estimates).
+13e	Teams' first-contact times differ by
+13f	; the earliest team (in red) is under clearly more early pressure.
+13g	Teams' first-contact times are close (difference
+13h	), a fair opening.
+13i	The fastest contact is under 45 s — a fast-paced map; to allow more build-up, increase distance or add obstacles.
+13j	Show front lines on the map
+13k	Computing front lines…
+13l	Red is where two teams arrive almost at the same time — the most likely battlegrounds. Choose “None” in “Overlay” to turn it off.
+13m	Arrange several maps in columns, in order, and stitch them into a new map.
+13n	Put the current map “
+13o	” first
+13p	Pick maps to stitch (in selection order, left to right, top to bottom)
+13q	Per row
+13r	Start stitching
+13s	Need at least two maps
+13t	Stitching…
+13u	Opening the stitched map…
+13v	stitched-
+13w	Stitch seam repair
+13x	Stitched into
+13y	new map
+13z	From “
+140	” copy
+141	Drag a box on the thumbnail below to select the part to copy.
+142	Copy and place in current map
+143	First box-select a part on the thumbnail
+144	tile kinds don't exist in the current map and were skipped (terrain unaffected)
+145	P
+146	Huge
+147	Large
+148	Small/medium
+149	Challenge
+14a	Favorite
+14b	Add tags
+14c	Tags (comma-separated)
+14d	No maps found. Maps you open or save are added automatically; you can also scan the game folder.
+14e	This map's full text isn't stored on this device (big maps store info only); please pick the file
+14f	First authorize the game map folder once via “File → Open from game folder”
+14g	Scanning
+14h	maps…
+14i	Added
+14j	maps
+14k	Search names or tags
+14l	Favorites only
+14m	Scan game folder
+14n	Check and fix a batch of maps at once.
+14o	Which maps
+14p	All maps in the game folder
+14q	Files I pick
+14r	What to do
+14s	Add missing map_info
+14t	Add water and lava properties
+14u	Fill empty ground cells
+14v	Generate covers (mapname.png)
+14w	Write back changes (game folder: overwrite; picked files: download as zip)
+14x	“Write back” overwrites the originals; back up first. Without it, only a report is produced.
+14y	Start
+14z	Authorize the game map folder first
+150	No maps to process
+151	Processing
+152	batch-results.zip
+153	Issues
+154	Fixed
+155	Serious issues left
+156	Read failed
+157	Batch results
+158	Written back
+159	files.
+15a	Only checked; no files changed.
+15b	My map collection
+15c	Pack several maps into one .rwmod; others put it in the game's mods folder to play the whole collection.
+15d	Collection name
+15e	Description
+15f	Include current map “
+15g	Pick more maps (multiple allowed)
+15h	Each map includes its cover. The pack format follows common community practice (mod-info.txt + maps folder); test it in-game before publishing.
+15i	Pack
+15j	Packing…
+15k	Need at least one map
+15l	Packed
+15m	maps:
+15n	This map has no snapshots yet. Save one in “History”, or do a scale or mirror (saves one automatically).
+15o	Pick a snapshot to compare
+15p	Snapshot size is
+15q	, different from now; can only view side by side, not cell by cell
+15r	Version diff: now ↔ “
+15s	tiles differ (red). Box-select an area on the snapshot at right to restore it from the snapshot.
+15t	Now
+15u	Snapshot (red = different)
+15v	Restore the boxed area from snapshot
+15w	First box-select an area on the snapshot
+15x	Restore an area from snapshot
+15y	Restored. Undo if you don't like it.
+15z	Import a Mod in .rwmod or .zip format and read its units and tilesets.
+160	units ·
+161	tilesets
+162	Remove
+163	Added to the current map; use it in “Tiles” mode
+164	Add
+165	Reading Mod…
+166	Read
+167	units,
+168	Import Mod
+169	Mod units appear in the “Mod” category of the unit palette. Players of this map need the same Mod.
+16a	No units (.ini) or tilesets (.tsx) found in this Mod
+16b	Proportional scale ×
+16c	Leave empty for all teams
+16d	Conditions
+16e	Logic
+16f	Actions
+16g	Unit detect
+16h	True when the area has (or doesn't have) certain units. The most common condition.
+16i	Unit type
+16j	Only one type; empty means any unit
+16k	At least
+16l	Default 1
+16m	At most
+16n	0 means “none in the area”
+16o	Count buildings only
+16p	Count production buildings only
+16q	Count builders only
+16r	Count buildings on pools only
+16s	Count idle units only
+16t	Count attackers only
+16u	Count anti-air only
+16v	Count a tech level only
+16w	Count units with a tag only
+16x	Include unfinished buildings
+16y	Tag detect
+16z	True when a team has a tag (add tags with “Team tags”).
+170	Tag
+171	Relay / timer
+172	Does nothing itself. Use it as a timer (with “Delay”) or to combine conditions (and / or).
+173	Spawn units
+174	Spawn units at the area's center.
+175	Which units
+176	Remove units in the area.
+177	Only remove empty transports
+178	Change credits
+179	Add, subtract or set a team's credits.
+17a	Add (negative subtracts)
+17b	Set to
+17c	If both are filled, “Set to” comes before “Add”
+17d	Team tags
+17e	Add or remove a team's tags; use with “Tag detect” as switches.
+17f	Add tags (comma-separated)
+17g	Remove tags (comma-separated)
+17h	Map text
+17i	Show text at the area's center. Only shown while “activated”.
+17j	Font size
+17k	Default 20
+17l	Style
+17m	Mission objective
+17n	An objective for mission maps. Counts as “done” when activated. Use with map_info's win condition “complete all objectives”.
+17o	Objective text
+17p	Move camera
+17q	Move the camera to the area's center (for story).
+17r	Move units
+17s	Send units in the area to a “waypoint”.
+17t	Waypoint
+17u	Unload on arrival
+17v	Destination for “Move units”. Its name is its identifier.
+17w	Team settings
+17x	A team's starting credits, AI difficulty etc. (applies once at start).
+17y	Starting credits
+17z	Alliance group (single player)
+180	Lock AI difficulty (-2~3)
+181	Disable AI (single player)
+182	Easy AI (single player)
+183	Enemy spawn point
+184	In survival, enemies come from here; you can place several.
+185	Start camera
+186	Camera position at start.
+187	Delay
+188	How long after start before it can fire (counted once)
+189	Duration
+18a	The condition must hold this long continuously
+18b	Can fire again
+18c	How long after firing it resets to fire again; empty means fire once
+18d	Repeat interval
+18e	After firing, repeat every so often (without rechecking conditions)
+18f	Battle log message
+18g	Message color
+18h	Typing speed (e.g. 0.05s)
+18i	Mark on minimap
+18j	Notes (ignored by the game)
+18k	Activated by
+18l	This fires only when these triggers are true
+18m	Also activates
+18n	When this is true, the ones below count as activated too
+18o	Deactivated by
+18p	When these triggers are true, this one is turned off and can't fire
+18q	Default
+18r	Destroy command center
+18s	Destroy main buildings
+18t	Destroy all buildings
+18u	Destroy all units and buildings
+18v	Complete all objectives
+18w	None (never ends automatically)
+18x	Skirmish (normal battle)
+18y	Survival (waves)
+18z	Mission (story level)
+190	(unnamed)
+191	ms
+192	All teams
+193	Hostile neutral
+194	Team “
+195	's
+196	in the area
+197	none
+198	at least
+199	area has
+19a	has tag “
+19b	(no unit chosen yet)
+19c	give
+19d	spawn
+19e	all
+19f	remove in area
+19g	credits
+19h	set to
+19i	(no number yet)
+19j	add tag “
+19k	remove tag “
+19l	show text “
+19m	objective “
+19n	” is complete
+19o	move camera here
+19p	send
+19q	units to “
+19r	mark as true
+19s	start
+19t	after
+19u	all
+19v	any
+19w	true
+19x	When
+19y	, and
+19z	, or
+1a0	(for
+1a1	At start,
+1a2	, and activate
+1a3	, message “
+1a4	; then every
+1a5	repeat
+1a6	then can fire again
+1a7	; fires once
+1a8	pause when true
+1a9	“All must hold” but no conditions — never fires
+1aa	”'s type is in class
+1ab	Tiled 1.9 saves the type as class; the game only reads type.
+1ac	Change to type
+1ad	”'s type “
+1ae	” isn't known to the game
+1af	The game will skip it. Valid types:
+1ag	Object “
+1ah	” has no type
+1ai	The game ignores it (can be used as a comment).
+1aj	” has no properties at all
+1ak	The game skips triggers with no properties.
+1al	Add id
+1am	) is missing “
+1an	property
+1ao	is required.
+1ap	”'s “
+1aq	” isn't an integer
+1ar	Currently “
+1as	” has an area of size 0
+1at	Nothing can be detected in an area with zero width or height.
+1au	Set to 1×1 tile
+1av	” contains a missing “
+1aw	The game ignores this link. Maybe a typo, or that trigger was deleted.
+1ax	Remove this link
+1ay	”'s team “
+1az	” isn't a number
+1b0	Trigger teams can only be -2, -1 or 0–99 (not none). The game drops this trigger.
+1b1	”'s team
+1b2	is out of range
+1b3	Must be -2, -1 or 0–99.
+1b4	”'s time “
+1b5	” can't be read by the game
+1b6	Write time as 20s (seconds) or 500ms (milliseconds).
+1b7	” is only
+1b8	A plain number means milliseconds. Did you mean seconds?
+1b9	”'s
+1ba	is “
+1bb	Switch properties can only be true or false.
+1bc	Change to true
+1bd	”'s units “
+1be	” may be written wrong
+1bf	Format: unitname*count, separated by commas, e.g. tank*5, builder.
+1bg	”'s waypoint “
+1bh	” doesn't exist
+1bi	First place one with “New → Waypoint”, with the same name.
+1bj	” doesn't say how much credit
+1bk	Fill in at least one of “Add” or “Set to”.
+1bl	” will never fire
+1bm	“All must hold” is ticked but there are no conditions.
+1bn	”'s repeatCount has no effect
+1bo	Version 1.15 reads but doesn't use this property.
+1bp	triggers are all named “
+1bq	When referenced elsewhere, the game uses only the first. If you merged conditions on purpose with “same name + activates itself”, ignore this.
+1br	Win condition “
+1bs	The game will error. Options:
+1bt	The map has no win condition
+1bu	Mission and challenge maps need a winCondition, usually “complete all objectives”.
+1bv	Set to complete all objectives
+1bw	Survival map has no enemy spawn point
+1bx	Place at least one object named attack_point; enemies come from there.
+1by	Survival map has no custom waves
+1bz	Game default waves will be used. You can edit waves in map_info.
+1c0	Win condition is “complete all objectives” but there are no objectives
+1c1	Add one with “New → Mission objective”.
+1c2	Triggers use team
+1c3	Normal rooms only have 10 teams; triggers of team 11+ are dropped by the game; you need a server room supporting more players.
+1c4	triggers, no issues found
+1c5	What are triggers
+1c6	“When… then…” rules
+1c7	Each trigger is a rule:
+1c8	something happens (a team's units in an area, some seconds passed, another trigger is true)
+1c9	then
+1ca	do something (spawn units, add credits, show text).
+1cb	Conditions (blue) handle “when”, actions (orange) handle “then”; link them with “Activated by”.
+1cc	Fastest: generate a set from a template (city capture / survival / mission), then tweak.
+1cd	The sentence at the top of each card says what the rule means; glance at it after editing.
+1ce	The “Logic map” shows how all triggers connect.
+1cf	Links
+1cg	How triggers work together
+1ch	: this fires only when those triggers are true (any one if several; tick “All must hold” to require all).
+1ci	: when this is true, those below count as activated too.
+1cj	: when those are true, this one pauses and can't fire.
+1ck	“Deactivated by” is often used for “spawn garrison only when nobody holds it”.
+1cl	Names are case-insensitive.
+1cm	Time
+1cn	Delay, duration, reset, repeat
+1co	: how long after start before it can fire (counted once).
+1cp	: how long the condition must hold continuously.
+1cq	: how long after firing it resets.
+1cr	Empty means fire once
+1cs	, then stays “true”.
+1ct	: repeat every so often after firing.
+1cu	20s means 20 seconds; a plain number means milliseconds.
+1cv	To fire “after a time AND when a condition holds”, tick “All must hold”. The default is “or”.
+1cw	Area
+1cx	Where the trigger is on the map
+1cy	Detecting, removing and moving units look inside the area; spawning, text and camera use its center. Pick the “Draw area” tool and drag on the map to create one; select it to drag, drag the bottom-right corner to resize.
+1cz	City capture template
+1d0	One city for a city-capture map
+1d1	Generates all triggers a “city” needs where you tap:
+1d2	spawns neutral garrison when nobody holds it;
+1d3	detects whether each team holds it (team's buildings in the area);
+1d4	gives the holder credits at intervals;
+1d5	city name changes color with the holder.
+1d6	Each city can be edited separately.
+1d7	The city area should cover the city's buildings.
+1d8	More teams means more triggers (3 per team).
+1d9	Survival template
+1da	Fight wave after wave of enemies
+1db	Sets the map to survival, edits enemy waves and places enemy spawn points (attack_point). Players lose when all their command centers are gone.
+1dc	Mission template
+1dd	Complete objectives step by step
+1de	Sets the map to mission mode (win: complete all objectives) and generates objectives in order: reach a place, destroy enemies somewhere, hold until a time. Each step's arrow hint appears only after the previous is done.
+1df	Logic map
+1dg	See how all triggers connect
+1dh	Each box is a trigger; color shows its kind.
+1di	Blue
+1dj	=condition,
+1dk	Orange
+1dl	=action,
+1dm	Green
+1dn	=text, gray=relay/timer. Green line: activates; red dashed: deactivates. Tap a box to open its settings.
+1do	New trigger
+1dp	Conditions: “When…”
+1dq	Actions: “Then…”
+1dr	Text & objectives
+1ds	Settings & markers
+1dt	New
+1du	New objective
+1dv	‹ Back to list
+1dw	Triggers (map rules)
+1dx	City capture
+1dy	Survival
+1dz	Common blocks
+1e0	Draw an area on the map to create
+1e1	Drag an area on the map, then choose the trigger type
+1e2	No triggers yet.
+1e3	Normal battle maps need no triggers
+1e4	, only the “Map settings” above.
+1e5	For city-capture, survival or mission maps, start from a template above; or drag an area with the “Draw area” tool.
+1e6	Search
+1e7	triggers (name, text, unit)
+1e8	Has issues
+1e9	Show
+1ea	more (total
+1eb	No matching triggers.
+1ec	This map has no map_info; the game may not end matches properly.
+1ed	Map settings (map_info)
+1ee	Map type
+1ef	Win condition
+1eg	Fog of war
+1eh	Room setting
+1ei	Line of sight
+1ej	Map fog
+1ek	Allies share vision
+1el	Intro (introText)
+1em	Text shown at the start
+1en	Edit enemy waves…
+1eo	Duplicate
+1ep	Name (use this as the “Move units” waypoint)
+1eq	Name (other triggers reference it)
+1er	Type
+1es	Change type
+1et	All must hold (all “Activated by” true, delay passed, and conditions true)
+1eu	Change all-must-hold
+1ev	Messages & notes
+1ew	Left (tiles)
+1ex	Change area
+1ey	Top (tiles)
+1ez	Width (tiles)
+1f0	Height (tiles)
+1f1	Drag a new area on the map
+1f2	Redraw on map
+1f3	Go there
+1f4	Change property
+1f5	Delete property
+1f6	Property name
+1f7	Value
+1f8	Add
+1f9	Add property
+1fa	Other properties (advanced)
+1fb	(please choose)
+1fc	Hostile neutral (attacks on its own)
+1fd	(big room needed)
+1fe	Edit
+1ff	#RRGGBB or red
+1fg	Clear
+1fh	Normal
+1fi	With down arrow
+1fj	e.g. supplyDepot
+1fk	(pick a waypoint)
+1fl	Tap the map to place a waypoint
+1fm	Set waypoint
+1fn	New waypoint
+1fo	Chinese
+1fp	日本語
+1fq	(filled
+1fr	)
+1fs	Other language versions
+1ft	Empty uses the one above
+1fu	Empty
+1fv	Bad format
+1fw	Edit spawned units
+1fx	Unit name, e.g. tank
+1fy	Options:
+1fz	Add another
+1g0	Can't find this trigger
+1g1	Change links
+1g2	Choose “
+1g3	” triggers
+1g4	+ Add
+1g5	Search names
+1g6	No other triggers yet. Create a condition first (e.g. “Unit detect”).
+1g7	Names can't contain commas
+1g8	Rename
+1g9	Also updated
+1ga	references
+1gb	Duplicate trigger
+1gc	Delete trigger?
+1gd	triggers link to “
+1ge	”. Those links will be removed too.
+1gf	Delete trigger
+1gg	City
+1gh	Generates the triggers for one city: neutral garrison when unheld, detect each team holding it, income while held, city name colored by holder.
+1gi	After “Next”, tap the city's position on the map.
+1gj	City name
+1gk	Teams taking part
+1gl	Neutral garrison (spawned when unheld)
+1gm	Empty = none
+1gn	Garrison respawn interval (s)
+1go	Capture income (per payout, 0 = none)
+1gp	Payout every N seconds
+1gq	City area size (tiles)
+1gr	City name colored by holder
+1gs	Place the city's buildings yourself (Units mode); the area should cover them. Held = the team has buildings in the area.
+1gt	3 triggers per team.
+1gu	Normal rooms only count the first 10 teams
+1gv	; more are only needed in big (server) rooms.
+1gw	Next: tap the map to place the city
+1gx	Tap the map to place “
+1gy	City template:
+1gz	_hasBuildings
+1h0	Any buildings in area
+1h1	Spawn neutral garrison when unheld
+1h2	_garrison
+1h3	_owner
+1h4	holds it
+1h5	_income
+1h6	_name
+1h7	Generated “
+1h8	triggers. Place the city's buildings in Units mode.
+1h9	Wave 1
+1ha	Wave 2
+1hb	Final wave
+1hc	Each row is one enemy wave.
+1hd	Interval
+1he	is the time since the previous wave (min:sec);
+1hf	Enemies
+1hg	write “count unitname”, comma-separated, e.g.
+1hh	Title
+1hi	Win after this
+1hj	wave
+1hk	Add wave
+1hl	Enemy waves (survivalWaves)
+1hm	Waves saved
+1hn	Survival template
+1ho	Sets the map to
+1hp	: enemies come wave after wave from “enemy spawn points”; players lose when all command centers are gone.
+1hq	Enemy spawn points (placed at the map edge farthest from players; drag later)
+1hr	Set to survival, placed
+1hs	enemy spawn points
+1ht	Reach a location
+1hu	Destroy enemy command center
+1hv	Reach somewhere
+1hw	Destroy the enemy command center there
+1hx	Destroy all enemies there
+1hy	Hold until second N after start
+1hz	Mission mode
+1i0	(win: complete all objectives). Objectives
+1i1	appear in order
+1i2	: the next one's arrow appears only after the previous is done. After generating, drag each objective's area where you want.
+1i3	Step
+1i4	Second (from start)
+1i5	Player team
+1i6	Enemy team
+1i7	Add step
+1i8	Mission level template
+1i9	Objective
+1ia	_condition
+1ib	Done:
+1ic	_arrow
+1id	Generated
+1ie	objectives (
+1if	triggers). Drag each objective's area where you want.
+1ig	Each team's starting credits (team_info)
+1ih	Timed spawns
+1ii	Spawn enemies here N seconds after start, then every M seconds
+1ij	Area entry message
+1ik	Show a message when a team's units enter the area
+1il	Show a line of text on the map permanently
+1im	Capture income
+1in	Whoever holds a point keeps getting credits (one per team)
+1io	Countdown message
+1ip	A battle log message N seconds after start
+1iq	Timed reinforcements
+1ir	Each team's spawn gets reinforcements periodically
+1is	Stronghold hold
+1it	Hold a stronghold for a while to get credits and a battle log announcement
+1iu	Neutral creep camp
+1iv	Hostile neutral guards in an area respawn some time after being cleared
+1iw	team's reinforcements have arrived
+1ix	Reinforcements
+1iy	Gave
+1iz	teams timed reinforcements (first after 2 min, then every 3 min)
+1j0	Starting credits per team
+1j1	teams' starting credits set
+1j2	Tap the map to pick a spot
+1j3	Enemies incoming!
+1j4	You found a secret place!
+1j5	Enter area
+1j6	This is…
+1j7	5 minutes left!
+1j8	Timer
+1j9	Stronghold
+1ja	team held the stronghold!
+1jb	Stronghold reward
+1jc	Stronghold name
+1jd	Camp cleared
+1je	Camp guards
+1jf	Capture
+1jg	Add credits
+1jh	No triggers yet
+1ji	━ activates
+1jj	┅ deactivates
+1jk	(showing only the first
+1jl	Logic map (
+1jm	triggers; tap a box to edit)
+1jn	Text to show
+1jo	Write here
+1jp	Arrow below (points at a target)
+1jq	You can edit it later in the trigger list, add other language versions, or set “when to show”.
+1jr	Place it
+1js	Place text
+1jt	” is true
+1ju	At start
+1jv	The scrolling messages in the game. Sorted by time:
+1jw	N seconds after start
+1jx	ones first,
+1jy	When conditions are met
+1jz	ones after. Edit text and color directly.
+1k0	When
+1k1	Message
+1k2	Typing speed
+1k3	Edit battle log
+1k4	Change color
+1k5	Show at once
+1k6	Fast
+1k7	Medium
+1k8	Slow
+1k9	Change typing speed
+1ka	Remove this message
+1kb	Delete battle log entry
+1kc	Edit this trigger
+1kd	No messages yet. Add one with the buttons below.
+1ke	Seconds
+1kf	Add battle log entry
+1kg	Log
+1kh	N seconds after start
+1ki	Tap the map to pick an area
+1kj	New place discovered!
+1kk	When someone enters an area
+1kl	Speak when which trigger is true?
+1km	When a trigger is true
+1kn	Redraw area
+1ko	What does this area do?
+1kp	Lesson 1: a playable map in five minutes
+1kq	Terrain, symmetry, pools, spawns, checking, saving
+1kr	This is
+1ks	mode. On the right (below on phones) tap a terrain, e.g.
+1kt	On the map
+1ku	hold and drag
+1kv	to paint a stroke. Notice the edges get
+1kw	(beach, shallows) — no need to assemble tiles yourself.
+1kx	Made a mistake? Tap
+1ky	. On PC press Ctrl+Z; on phones a
+1kz	two-finger tap
+1l0	on the screen works too.
+1l1	Battle maps are usually symmetric. Under “Symmetry” choose
+1l2	, then paint again — the other half is painted at the same time.
+1l3	Switch to
+1l4	mode, then tap the map to place a
+1l5	mode, tap the map to place a
+1l6	(command center + 2 builders). Team numbers increase automatically.
+1l7	Tap
+1l8	to check: missing map_info, spawns on water, crowded pools… you'll be told, and many issues fix in one tap.
+1l9	Finally
+1la	. The small arrow beside it also offers “Save to game folder” — then go play.
+1lb	Don't save yet
+1lc	Lesson 2: select, copy, stamps
+1ld	Copy a finished part elsewhere, or save it as a reusable stamp
+1le	Pick the
+1lf	tool (shortcut M).
+1lg	Drag a box
+1lh	to select an area.
+1li	A toolbar appears below:
+1lj	copy, cut, flip, rotate
+1lk	. Tap
+1ll	, then tap
+1lm	After pasting, drag into position; on PC click to drop, on phones tap “Drop”.
+1ln	With an area selected, tap “
+1lo	”; it then appears in the
+1lp	panel on the right, placeable with one tap. The stamp panel also has built-in standard bases, lakes, fords and more.
+1lq	Lesson 3: trigger basics
+1lr	Build a city-capture city from a template and understand “when… then…”
+1ls	mode. Triggers are map rules:
+1lt	something happens,
+1lu	do something.
+1lv	Fastest is a template. Tap
+1lw	, enter a name, then tap the city's position on the map.
+1lx	The sentence at the top of each card is the rule's meaning, e.g. “When team 1 has buildings in the area → team 1 credits +5”. Tap a card to edit details.
+1ly	Tap “
+1lz	” to see how all triggers connect: green lines “activate”, red dashed lines “deactivate”. Remember to run “Playable?” after editing.
+1m0	Lesson 4: generate and reshape the whole map
+1m1	mode holds whole-map operations: random generate, image to map, proportional scale, mirror, resize canvas.
+1m2	: pick an image; main colors are found automatically, you decide each color's terrain and share; generate when the preview looks good, then edit region by region.
+1m3	: when doubling the map, terrain re-tiles automatically, spawns and pools move along, and pools can increase by area.
+1m4	Skip
+1m5	Next
+1m6	Exit tutorial
+1m7	” done!
+1m8	Open a map first
+1m9	The tutorial needs tile assets. First open a Rusted Warfare map you have (.tmx); the editor takes the assets from it.
+1ma	Start tutorial
+1mb	The tutorial opens a new practice map. Unsaved changes to your current map are first saved as a snapshot (restorable in the “History” panel).
+1mc	Before tutorial
+1md	Tutorial practice
+1me	· done
+1mf	Anytime, tap the
+1mg	next to a tool for help, or press
+1mh	(on phones: top-left menu → Search features) to find features by name.
+1mi	Type a feature name, e.g. “mirror”, “pool”, “save”…
+1mj	This is a RAR archive, which the editor can't open. Extract it with an unzip app, then pack the files as zip or pick them directly.
+1mk	Not a zip / rwmod file
+1ml	Unsupported compression method:
+1mm	Working…
+1mn	Menu
+1mo	Menu bar
+1mp	Tap to rename
+1mq	Search features (Ctrl+K)
+1mr	Check whether the map is playable in the game
+1ms	Save (Ctrl+S)
+1mt	More save options
+1mu	Edit mode

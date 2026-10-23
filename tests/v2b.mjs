@@ -8,7 +8,7 @@ const URL = process.env.URL || 'http://localhost:8765/index.html';
 const fail = []; const errors = [];
 const expect = (c, m) => { console.log(c ? '  ✓' : '  ✗', m); if (!c) fail.push(m); };
 const browser = await chromium.launch();
-const ctx = await browser.newContext({ viewport: { width: 1366, height: 820 } });
+const ctx = await browser.newContext({ locale: 'zh-CN', viewport: { width: 1366, height: 820 } });
 const page = await ctx.newPage();
 page.on('pageerror', (e) => errors.push('pageerror: ' + e.message + '\n' + e.stack));
 page.on('console', (m) => { if (m.type() === 'error' && !/404/.test(m.text())) errors.push('console: ' + m.text()); });

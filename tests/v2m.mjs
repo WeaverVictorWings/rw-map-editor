@@ -7,7 +7,7 @@ const [, , sample, out = '.'] = process.argv;
 const fail = []; const errors = [];
 const expect = (c, m) => { console.log(c ? '  ✓' : '  ✗', m); if (!c) fail.push(m); };
 const browser = await chromium.launch();
-const ctx = await browser.newContext({ viewport: { width: 400, height: 860 }, deviceScaleFactor: 2, hasTouch: true, isMobile: true });
+const ctx = await browser.newContext({ locale: 'zh-CN', viewport: { width: 400, height: 860 }, deviceScaleFactor: 2, hasTouch: true, isMobile: true });
 const page = await ctx.newPage();
 page.on('pageerror', (e) => errors.push(e.message + '\n' + e.stack));
 await page.goto(process.env.URL || 'http://localhost:8765/index.html');

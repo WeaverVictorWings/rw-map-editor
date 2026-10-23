@@ -357,7 +357,7 @@ export class Editor {
   nextTeamWith(extra = []) { const s = this.usedTeams(); for (const t of extra) s.add(t); let t = 0; while (s.has(t)) t++; return t; }
   makeUnit(unit, team, px, py, w, h, rot) {
     return {
-      attrs: { name: `${unit} (t:${team})`, x: px.toFixed(1), y: py.toFixed(1), width: String(w), height: String(h), rotation: rot, gid: String(this.unitGid(unit, team)) },
+      attrs: { name: `${unit} (t:${team})`, x: px.toFixed(1), y: py.toFixed(1), width: String(w), height: String(h), rotation: rot, gid: String(this.unitGid(unit, team) || this.unitGid('builder', team) || 2303) },
       props: [{ name: 'unit', value: unit }, { name: 'team', value: String(team) }],
       extra: [],
     };

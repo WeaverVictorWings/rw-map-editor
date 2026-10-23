@@ -59,7 +59,7 @@ const BY_NAME = { attack_point: { cn: '敌军出生点', cat: 'special', icon: '
   camera_start: { cn: '开局镜头', cat: 'special', icon: 'fit', desc: '开局时镜头的位置。', fields: [['zoomTo', '缩放', 'text']] } };
 const TIMING = [['delay', '延迟', 'time', '开局后多久才可以触发（只算一次）'], ['warmup', '持续', 'time', '条件要连续成立这么久才算'],
   ['resetActivationAfter', '可以再次触发', 'time', '触发后过多久复位，能再次触发；不填就只触发一次'], ['repeatDelay', '重复间隔', 'time', '触发后每隔多久再做一次（不重新检查条件）']];
-const MSG = [['globalMessage', '全屏消息', 'text'], ['globalMessage_textColor', '消息颜色', 'color'], ['globalMessage_delayPerChar', '打字速度（如 0.05s）', 'text'], ['showOnMap', '在小地图上标出', 'bool'], ['comment', '备注（游戏不读）', 'text']];
+const MSG = [['globalMessage', '作战日志消息', 'text'], ['globalMessage_textColor', '消息颜色', 'color'], ['globalMessage_delayPerChar', '打字速度（如 0.05s）', 'text'], ['showOnMap', '在小地图上标出', 'bool'], ['comment', '备注（游戏不读）', 'text']];
 const BOOL_PROPS = new Set(['allToActivate', 'showOnMap', 'onlyBuildings', 'onlyMainBuildings', 'onlyBuilders', 'onlyOnResourcePool', 'onlyIdle', 'onlyEmptyQueue', 'onlyAttack', 'onlyAttackAir', 'includeIncomplete', 'onlyIfEmpty', 'unload', 'disabledAI', 'basicAI', 'shareFogWithAllies', 'survivalWavesClassic', 'startWithMusic']);
 const TIME_PROPS = ['delay', 'warmup', 'resetActivationAfter', 'repeatDelay'];
 const LINKS = [['activatedBy', '被谁激活', '这些触发器成立时，这个才会触发'], ['alsoActivate', '同时激活', '这个成立时，也算作激活下面这些'], ['deactivatedBy', '被谁关闭', '这些触发器成立时，这个被关闭、不能触发']];
@@ -391,6 +391,7 @@ export function triggerPanel(body, T) {
   body.append(h('div', { class: 'row', style: 'margin:10px 0 8px' },
     h('button', { class: 'primary', onclick: async () => { const t = await chooseType(); if (t) { const c = viewCenterRect(); createAt(t, c); } }, html: icon('plus') + ' 新建' }),
     h('button', { onclick: () => graphView(), html: icon('rules') + ' 逻辑图' }), helpBtn('trig.graph'),
+    h('button', { onclick: () => logDialog(), html: icon('log') + ' 作战日志' }),
     h('button', { class: 'ib', title: '在地图上画区域来新建', style: T === 'region' ? 'color:var(--accent2)' : '', onclick: () => { ed.tool.triggers = 'region'; A.refresh('toolbar', 'dock'); toast('在地图上拖出一个区域，然后选择触发器类型'); }, html: icon('region') })));
   const TG = trigGroup();
   const objs = TG ? TG.objects.filter((o) => kindOf(o) !== 'map_info') : [];
@@ -557,9 +558,20 @@ function field(o, [p, cn, kind, req, tip]) {
     default: {
       const big = p === 'text' || p === 'globalMessage';
       const inp = h(big ? 'textarea' : 'input', { rows: 2, value: v || '', onchange: (e) => commit(e.target.value) });
-      return h('div', {}, lb, inp);
+      return h('div', {}, lb, inp, big ? langFields(o, p) : null);
     }
   }
+}
+// 其他语言版本：游戏读 text_zh、globalMessage_en 这样的属性，玩家看到自己语言的那一份
+export const MAP_LANGS = [['zh', '中文'], ['en', 'English'], ['ru', 'Русский'], ['pt', 'Português'], ['es', 'Español'], ['in', 'Bahasa Indonesia'], ['tr', 'Türkçe'], ['uk', 'Українська'], ['fr', 'Français'], ['ja', '日本語']];
+function langFields(o, p) {
+  const have = MAP_LANGS.filter(([c]) => objProp(o, `${p}_${c}`) !== undefined).length;
+  const box = h('details', { class: 'langs', open: have > 0 }, h('summary', {}, `其他语言版本${have ? `（已填 ${have} 种）` : ''}`));
+  for (const [c, n] of MAP_LANGS) {
+    const k = `${p}_${c}`;
+    box.append(h('div', { class: 'langrow' }, h('span', {}, n), h('input', { value: objProp(o, k) || '', placeholder: '不填就用上面的', onchange: (e) => edit('修改' + n, () => setP(o, k, e.target.value)) })));
+  }
+  return box;
 }
 function timeField(o, p, cn, tip) {
   const v = objProp(o, p);
@@ -833,13 +845,22 @@ async function blocksTemplate() {
     ['enter', 'eye', '进入区域提示', '某队的单位走进区域时弹出一句话'],
     ['text', 'text', '地图文字', '在地图上一直显示一行字'],
     ['income', 'coin', '占点加钱', '某个点被谁占着就一直给谁加钱（每队一条）'],
-    ['timer', 'clock', '倒计时消息', '开局后第 N 秒全屏提示'],
+    ['timer', 'clock', '倒计时消息', '开局后第 N 秒在作战日志里提示'],
+    ['reinforce', 'units', '定时援军', '每个队的出生点定时来一批援军'],
+    ['hold', 'flag', '据点争夺', '守住据点一段时间就给钱并在作战日志里播报'],
+    ['camp', 'wave', '中立野怪营地', '一片区域里的敌对中立守军被清空后，过一会儿重新刷出来'],
   ];
   const body = h('div', { class: 'grid2' });
   for (const [id, ic, t, d] of items) body.append(h('button', { class: 'acard', onclick: () => closeModal(id), html: icon(ic) + `<div><b>${t}</b><small>${d}</small></div>` }));
   const pick = await modal('常用积木', body, [{ label: '取消', value: null }], { wide: true });
   if (!pick) return;
   const teams = Math.max(1, Math.max(-1, ...ed.usedTeams()) + 1);
+  if (pick === 'reinforce') {
+    const sp = ed.spawns().filter((x) => x.team >= 0);
+    if (!sp.length) { toast('地图上还没有出生点'); return; }
+    edit('定时援军', (TT) => { const tk = allKeys(); for (const x of sp) TT.objects.push(makeTrigger('unitAdd', { x: x.cx - 40, y: x.cy + 40, w: 80, h: 40 }, { team: x.team, spawnUnits: 'tank*3', delay: '120s', repeatDelay: '180s', globalMessage: `第 ${x.team + 1} 队的援军到了`, globalMessage_textColor: teamHex(x.team) }, `援军${x.team + 1}`, tk)); });
+    toast(`已给 ${sp.length} 个队加上定时援军（开局 2 分钟后，每 3 分钟一批）`, 3600); return;
+  }
   if (pick === 'money') {
     const v = await numberAsk('开局资金', '每个队开局多少钱', 4000); if (v === null) return;
     edit('开局资金', (T) => { const taken = allKeys(); for (let k = 0; k < teams; k++) T.objects.push(makeTrigger('team_info', { x: -60, y: k * TW, w: TW, h: TW }, { team: k, credits: v }, `队伍设置${k + 1}`, taken)); });
@@ -854,6 +875,21 @@ async function blocksTemplate() {
   if (pick === 'enter') add('进入区域提示', (tk) => [makeTrigger('unitDetect', r, { team: 0, minUnits: 1, globalMessage: '你发现了一个秘密地点！' }, '进入区域', tk)]);
   if (pick === 'text') add('地图文字', (tk) => [makeTrigger('mapText', r, { text: '这里是…', textSize: 20 }, '文字', tk)]);
   if (pick === 'timer') add('倒计时消息', (tk) => [makeTrigger('basic', { ...r, x: -60 }, { delay: '300s', globalMessage: '还剩 5 分钟！' }, '计时', tk)]);
+  if (pick === 'hold') add('据点争夺', (tk) => {
+    const out = [];
+    for (let k = 0; k < teams; k++) {
+      const ow = uniqueId(`据点${k + 1}`, tk);
+      out.push(makeTrigger('unitDetect', r, { team: k, minUnits: 1, warmup: '30s', resetActivationAfter: '60s', globalMessage: `第 ${k + 1} 队守住了据点！`, globalMessage_textColor: teamHex(k) }, ow, new Set()));
+      out.push(makeTrigger('changeCredits', r, { team: k, add: 500, activatedBy: ow }, `据点奖励${k + 1}`, tk));
+    }
+    out.push(makeTrigger('mapText', r, { text: '据点', textSize: 18, style: 'arrow', textColor: '#ffd34d' }, '据点名字', tk));
+    return out;
+  });
+  if (pick === 'camp') add('中立野怪营地', (tk) => {
+    const id0 = uniqueId('营地清空', tk);
+    return [makeTrigger('unitDetect', r, { team: -2, maxUnits: 0, resetActivationAfter: '90s' }, id0, new Set()),
+      makeTrigger('unitAdd', r, { team: -2, spawnUnits: 'tank*2, c_turret_t1*1', activatedBy: id0, warmup: '60s', resetActivationAfter: '90s' }, '营地守军', tk)];
+  });
   if (pick === 'income') add('占点加钱', (tk) => {
     const out = [];
     for (let k = 0; k < teams; k++) {
@@ -920,11 +956,82 @@ export function graphView() {
   modal(`逻辑图（${objs.length} 个触发器，点方块编辑）`, h('div', {}, legend, h('div', { class: 'gwrap' }, svg)), [{ label: '关闭', value: 1 }], { full: true });
 }
 
+// ---------------- 文字工具 ----------------
+export async function textAt(px, py) {
+  const st = { text: '', color: '#ffffff', size: 20, arrow: false };
+  const inp = h('textarea', { rows: 2, placeholder: '要显示的文字' });
+  const r = await modal('在这里写字', h('div', {},
+    h('label', {}, '文字'), inp,
+    h('div', { class: 'grid2' },
+      h('div', {}, h('label', {}, '颜色'), h('input', { type: 'color', value: st.color, oninput: (e) => { st.color = e.target.value; } })),
+      h('div', {}, h('label', {}, '字号'), h('input', { type: 'number', min: 5, max: 80, value: st.size, oninput: (e) => { st.size = Math.max(5, Math.min(80, +e.target.value || 20)); } }))),
+    toggle('下面带一个箭头（指示目标）', false, (v) => { st.arrow = v; }),
+    h('div', { class: 'hint', style: 'margin-top:8px' }, '写好后可以在触发器列表里改，或者填其他语言的版本、设置“什么时候显示”。')),
+  [{ label: '取消', value: null }, { label: '放上去', value: () => inp.value.trim(), primary: true }]);
+  setTimeout(() => inp.focus(), 30);
+  if (!r) return;
+  const w = Math.max(2, Math.min(12, Math.ceil(r.length * st.size / 2 / TW)));
+  const rect = { x: Math.max(0, Math.round(px / TW - w / 2) * TW), y: Math.max(0, Math.floor(py / TW) * TW), w: w * TW, h: TW };
+  const o = edit('放文字', (T) => { const t = makeTrigger('mapText', rect, { text: r, textColor: st.color, textSize: st.size, style: st.arrow ? 'arrow' : '' }, '文字'); T.objects.push(t); return t; });
+  selectTrigger(o, false);
+  A.hooks.coach && A.hooks.coach('text');
+}
+
+// ---------------- 作战日志编辑器 ----------------
+function whenOf(o) {
+  const d = parseTime(objProp(o, 'delay'));
+  const ab = links(o, 'activatedBy');
+  const c = condText(o).replace(/<[^>]+>/g, '');
+  const parts = [];
+  if (d !== null) parts.push(`开局 ${fmtTime(d)}`);
+  if (ab.length) parts.push(`「${ab.join('」「')}」成立时`);
+  if (c) parts.push(c);
+  return { text: parts.join('，') || '开局时', sort: d !== null ? d : ab.length || c ? 1e12 : 0 };
+}
+export async function logDialog() {
+  const T = trigGroup(true);
+  const box = h('div', {});
+  const draw = () => {
+    box.innerHTML = '';
+    const rows = T.objects.filter((o) => isTrigger(o) && objProp(o, 'globalMessage')).map((o) => ({ o, w: whenOf(o) })).sort((a, b) => a.w.sort - b.w.sort);
+    box.append(h('div', { class: 'hint', html: '游戏里滚动显示的那些消息。按时间排好，<b>开局第几秒</b>的在前，<b>满足条件时</b>的在后。每条可以直接改文字和颜色。' }));
+    const tb = h('table', { class: 'rep logtb' }, h('tr', {}, h('th', {}, '什么时候'), h('th', {}, '消息'), h('th', {}, '颜色'), h('th', {}, '打字速度'), h('th', {}, '')));
+    for (const { o, w } of rows) {
+      tb.append(h('tr', {},
+        h('td', { style: 'min-width:120px' }, w.text, h('small', { style: 'display:block;color:var(--dim)' }, label(o))),
+        h('td', {}, h('input', { value: objProp(o, 'globalMessage'), onchange: (e) => { edit('改作战日志', () => setP(o, 'globalMessage', e.target.value)); } })),
+        h('td', {}, h('input', { type: 'color', value: /^#[0-9a-f]{6}$/i.test(objProp(o, 'globalMessage_textColor') || '') ? objProp(o, 'globalMessage_textColor') : '#ffffff', style: 'width:44px;padding:0', onchange: (e) => edit('改颜色', () => setP(o, 'globalMessage_textColor', e.target.value)) })),
+        h('td', {}, select([['', '一下子显示'], ['0.03s', '快'], ['0.06s', '中'], ['slow', '慢']], objProp(o, 'globalMessage_delayPerChar') || '', (v) => edit('改打字速度', () => setP(o, 'globalMessage_delayPerChar', v)))),
+        h('td', {}, h('button', { class: 'ib', title: '去掉这条消息', onclick: () => { edit('删作战日志', () => setP(o, 'globalMessage', '')); draw(); }, html: icon('close') }),
+          h('button', { class: 'ib', title: '编辑这个触发器', onclick: () => { closeModal(); selectTrigger(o); }, html: icon('settings') }))));
+    }
+    if (!rows.length) tb.append(h('tr', {}, h('td', { colspan: 5, style: 'color:var(--dim)' }, '还没有消息。用下面的按钮加一条。')));
+    box.append(h('div', { style: 'overflow:auto;margin:8px 0' }, tb));
+    box.append(h('div', { class: 'row' },
+      h('button', { onclick: async () => {
+        const sec2 = await numberAsk('开局第几秒', '秒数', 60); if (sec2 === null) return;
+        edit('加作战日志', (TT) => TT.objects.push(makeTrigger('basic', { x: -60, y: 0, w: TW, h: TW }, { delay: sec2 + 's', globalMessage: `第 ${sec2} 秒` }, '日志'))); draw();
+      }, html: icon('timer') + ' 开局第 N 秒' }),
+      h('button', { onclick: async () => {
+        closeModal(); const pt = await pickOnMap('点地图选区域'); if (!pt) return;
+        const r = { x: (pt.tx - 2) * TW, y: (pt.ty - 2) * TW, w: 5 * TW, h: 5 * TW };
+        edit('加作战日志', (TT) => TT.objects.push(makeTrigger('unitDetect', r, { team: 0, minUnits: 1, globalMessage: '发现了新地点！' }, '进入区域'))); logDialog();
+      }, html: icon('region') + ' 有人进入区域时' }),
+      h('button', { onclick: async () => {
+        const pick = await pickTrigger('哪个触发器成立时说话？', null); if (!pick) return;
+        edit('加作战日志', () => setP(pick, 'globalMessage', objProp(pick, 'globalMessage') || '……')); draw();
+      }, html: icon('link') + ' 某个触发器成立时' })));
+  };
+  draw();
+  await modal('作战日志', box, [{ label: '关闭', value: 1, primary: true }], { wide: true });
+}
+
 // ---------------- 注册 ----------------
 export function initTriggers() {
   A.hooks.triggerPanel = triggerPanel;
   A.hooks.triggerIssues = triggerIssues;
   A.hooks.removeTrigger = remove;
+  A.hooks.textAt = textAt;
   A.hooks.regionDrawn = async (r) => {
     if (r.w < TW / 2 || r.h < TW / 2) { r.w = Math.max(r.w, TW); r.h = Math.max(r.h, TW); }
     if (A.regionFor && trigGroup() && trigGroup().objects.includes(A.regionFor)) {
@@ -941,3 +1048,4 @@ export function initTriggers() {
   };
   ed.triggerColor = triggerColor;
 }
+export { cityTemplate, survivalTemplate, missionTemplate, blocksTemplate };

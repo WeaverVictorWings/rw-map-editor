@@ -1,0 +1,626 @@
+0	Fichier
+1	Nouvelle carte
+2	Choisissez taille et joueurs ; bases et ressources sont placées pour vous
+3	Ouvrir une carte…
+4	Ouvrir depuis le dossier du jeu…
+5	Lister les cartes du dossier de cartes du jeu
+6	Récents…
+7	Enregistrer
+8	Enregistrer sous…
+9	Enregistrer dans le dossier du jeu
+a	Enregistre la carte et son aperçu dans le jeu, prête à jouer
+b	Exporter aperçu / image de présentation…
+c	Bibliothèque de cartes…
+d	Toutes les cartes créées ou ouvertes, avec miniatures et étiquettes
+e	Traitement par lot…
+f	Vérifier et corriger plein de cartes d'un coup, générer les couvertures
+g	Empaqueter une collection (Mod)…
+h	Empaqueter plusieurs cartes en un .rwmod
+i	Prise en charge des Mods…
+j	Importer unités et tilesets d'un Mod
+k	Source des tuiles…
+l	Paramètres…
+m	Édition
+n	Annuler
+o	Rétablir
+p	Copier
+q	Couper
+r	Coller
+s	Tout sélectionner
+t	Désélectionner
+u	Retourner la sélection horizontalement
+v	Retourner la sélection verticalement
+w	Pivoter la sélection de 90°
+x	Enregistrer la sélection comme tampon…
+y	Historique
+z	Chaque étape, touchez pour revenir ; instantanés
+10	Carte
+11	Liste de test…
+12	Quoi tester en jeu, avec un journal de chaque test
+13	Note de la carte…
+14	Note la carte et indique où elle perd des points et comment corriger
+15	Vérifier « Jouable ? »
+16	Vérifier avant d'enregistrer que la carte marche en jeu
+17	Rapport d'équilibre
+18	Comparer ressources et territoire des équipes par trajets à pied
+19	Vérifier la symétrie…
+1a	Génération aléatoire…
+1b	Terrain, bases et ressources selon préréglage et graine
+1c	Image vers carte…
+1d	Transformer une image en carte ; vous dosez les terrains
+1e	Mise à l'échelle…
+1f	Agrandir ou réduire toute la carte ; ressources et bases réarrangées
+1g	Miroir de la carte…
+1h	Dessinez une demi-carte, rendez-la symétrique en un geste
+1i	Taille du canevas…
+1j	Décalcomanie d'image…
+1k	Coller une image dans la carte (découpée en tuiles)
+1l	Calque de référence…
+1m	Superposer une image semi-transparente pour décalquer
+1n	Tampons
+1o	Bases, points de ressources, lacs et plus en un geste
+1p	Détails auto…
+1r	Simulation d'ouverture…
+1s	Estime en combien de secondes chaque équipe croise l'ennemi ou atteint le centre
+1t	Copier d'une autre carte…
+1u	Ouvrez une autre carte, sélectionnez une zone et rapportez-la
+1v	Assemblage de cartes…
+1w	Assembler plusieurs cartes en une grande
+1x	Comparer des versions…
+1y	Comparer à un instantané, voir les changements, restaurer une zone
+1z	Journal de combat…
+20	Modifier les messages défilant en jeu, par temps
+21	Ajouter les images de tileset manquantes…
+22	Renuméroter les équipes
+23	Ranger les numéros d'équipe : 1, 2, 3…
+24	Affichage
+25	Toute la carte
+26	Taille réelle (100 %)
+27	Grille
+28	Assombrir les autres calques
+29	Superposition
+2a	Aucune
+2b	Passage terrestre
+2c	Passage naval
+2d	Passage aéroglisseur
+2e	Zone constructible
+2f	Territoire des équipes
+2g	Aide
+2h	Tutoriel
+2i	Suivez le guide et apprenez les bases en quelques minutes
+2j	Centre d'aide
+2k	Gestes et raccourcis
+2l	Rechercher une fonction
+2m	Calcul des territoires…
+2n	Restaurer la dernière carte ?
+2o	Sans titre
+2p	Sauvegarde auto trouvée de «
+2q	). Elle n'a peut-être pas été enregistrée la dernière fois.
+2r	Restaurer
+2s	Non merci
+2t	Restauration…
+2u	Échec de la restauration :
+2v	Quitter l'éditeur ?
+2x	Quitter
+2z	Échec du démarrage :
+30	Tous les tilesets ont une image
+31	Ajouter les images de tileset manquantes
+32	Cette carte a
+34	Fichiers nécessaires :
+35	Vous les trouverez dans le dossier du jeu, sous
+37	Choisir des fichiers (plusieurs possibles)
+38	Annuler
+39	Ajouter
+3a	Ajout des images de tileset…
+3b	Ajouté
+3c	tilesets
+3d	Aucune correspondance : les noms doivent correspondre à ceux de la carte
+3e	Terre (herbe, par défaut)
+3f	On peut marcher et construire, comme sur l'herbe
+3g	Gué
+3h	Unités terrestres et navires passent
+3i	Eau peu profonde
+3j	Les navires passent, pas les terrestres
+3k	Eau profonde
+3l	Les navires passent, pas les terrestres (paraît plus profond)
+3m	Infranchissable
+3n	Comme une falaise, les unités terrestres ne passent pas
+3o	Lave
+3p	Les unités terrestres ne passent pas
+3q	Blocs de couleur limités à
+3r	types ; supprimez ceux inutilisés
+3s	Nouveau bloc de couleur
+3t	Rouge R
+3u	Vert G
+3v	Bleu B
+3w	Teinte
+3x	Saturation
+3y	Luminosité
+3z	TSV (teinte/saturation/valeur)
+40	Prendre une couleur à l'écran
+41	Code hex
+42	Couleurs courantes
+43	Blocs de couleur de cette carte
+44	Ce que c'est en jeu (obligatoire)
+46	OK
+47	Jusqu'à 500 : sûr même en multijoueur mobile
+4b	Format
+4c	Tuile différente de 20×20
+4d	Actuel
+4e	 ; le jeu exige 20×20.
+4f	map_info manquant
+4h	Corriger
+4i	map_info sans type
+4j	Les cartes d'escarmouche doivent utiliser skirmish.
+4k	Mettre skirmish
+4l	Le type de map_info est «
+4m	Valeurs courantes :
+4n	(d'après la communauté)
+4o	map_info OK (type=
+4p	Pas de calque Ground
+4q	Le sol a
+4r	cases vides
+4s	Le jeu exige un calque Ground sans case vide.
+4t	Remplir avec le sol le plus courant
+4u	Remplir les vides
+4v	Aucune case vide
+4w	Le calque «
+4x	 » a
+4y	tuiles non définies
+4z	Les anciennes versions plantent sur les tuiles non définies.
+50	Effacer ces tuiles
+51	Effacer les tuiles non définies
+52	propriétés float ne sont pas des nombres
+53	Les anciennes versions plantent sur les float invalides.
+54	Ajouter les images de tileset…
+55	Tilesets
+56	Le tileset «
+57	 » utilise un fichier externe
+59	 » sans image intégrée
+5a	Il utilise une image externe «
+5b	 », qui peut manquer sur un autre appareil.
+5c	tuiles d'eau sans propriété water
+5e	Ajouter water à ces tuiles
+5f	tuiles de lave sans propriété lava
+5h	Ajouter lava
+5i	noms de propriété avec majuscules
+5k	Tout mettre en minuscules
+5l	Bases
+5m	Aucune base
+5o	équipes ont une base
+5p	Numéros d'équipe non continus :
+5q	Renuméroter 1, 2, 3…
+5r	équipes
+5t	Numéros d'équipe au-delà de 100
+5v	Renuméroter
+5w	centres de commande partagent une équipe avec un autre
+5y	Équipe
+5z	 : centre de commande sur l'eau, une falaise ou un obstacle
+60	La partie risque de mal démarrer.
+61	 : base trop près du bord
+62	Les constructeurs peuvent rester coincés.
+63	paires de bases à moins de 15 cases
+64	et équipe
+65	 :
+66	cases
+67	unités hors de la carte
+68	Ressources
+69	Aucune ressource sur la carte
+6b	Total
+6c	ressources
+6d	ressources dans l'eau, sur une falaise ou au bord
+6e	Les unités risquent de ne pas les atteindre.
+6f	ressources trop près des unités
+6h	Taille
+6i	Taille de la carte
+6j	tilesets inutilisés (environ
+6l	Retirer à l'enregistrement
+6m	Déclencheurs
+6n	cases ·
+6o	équipes ·
+6p	Ressource
+6q	Base (numéro = équipe)
+6r	Éditeur de cartes Rusted Warfare
+6s	Bords naturels
+6u	Force
+6v	Taille des courbes
+6w	Lisser
+6x	Retirer les points isolés pour former des plaques
+6y	Passes
+6z	Décor naturel
+71	Densité
+72	Regroupement
+73	Détails de l'eau
+75	Largeur de bande peu profonde (cases)
+76	Îlots
+77	Érosion côtière
+78	L'eau creuse baies et flèches de sable
+79	Plateaux et falaises
+7a	Quelques plateaux à falaises loin des bases
+7b	Nombre
+7c	Taille (cases)
+7d	Bosquets
+7e	Forêt qui bloque vue et passage
+7f	Rivière
+7g	Une rivière qui traverse la carte avec des gués réguliers
+7h	Largeur (cases)
+7i	Gués
+7j	Rivières
+7k	Marais
+7l	Les basses terres près de l'eau deviennent marais avec flaques
+7m	Portée
+7n	Côte de récifs
+7o	Récifs en eau peu profonde, côte plus riche
+7p	Traces de guerre
+7q	Terre brûlée et cratères sur l'herbe
+7r	Intensité
+7s	Lacs de lave
+7u	Relief aléatoire
+7w	Amplitude
+7x	Taille du relief
+7y	Changer de thème
+81	Retirer le décor
+82	Retirer arbres, buissons, rochers (ressources intactes)
+83	Part retirée
+84	Règles perso
+86	Densité globale
+87	Remplir par biome
+89	Niveau de détail
+8a	Aucun
+8b	Forêt
+8c	Prairie
+8d	Désert
+8e	Neige
+8f	Marais
+8g	Volcan
+8h	Friche
+8i	Prairie naturelle
+8j	Forêt dense
+8k	Désert et gobi
+8l	Neige et lacs gelés
+8m	Lave volcanique
+8n	Zone humide
+8o	Îles tropicales
+8p	Plateau et canyon
+8q	Delta
+8r	Ce n'est pas un préréglage de détails
+8s	La carte de référence n'a pas de données de terrain
+8t	Détails auto
+8u	Enrichir le terrain en un geste — réglable, avec aperçu
+8w	Regardez l'aperçu, appliquez quand ça vous plaît
+8x	 ; annulable après application.
+90	Pour ne changer qu'une zone : sélectionnez-la et cochez « Sélection seule ».
+92	Sur quel terrain, à quelle distance de quoi, placer quoi
+94	Apprendre d'une carte
+95	Suivre le style d'une carte que vous aimez
+97	Pinceau de détails
+98	Les détails vont là où vous peignez
+9a	Pinceau de hauteur
+9b	Monter et creuser comme sculpter des collines
+9d	Pinceau de biomes
+9e	Peignez d'abord « ici forêt, là désert »
+9g	Outil de route
+9h	Tracer une route de marche
+9j	Modules tactiques
+9k	Place cols, têtes de pont, forts en hauteur
+9m	Ouvrez d'abord une carte avec données de terrain
+9n	(réduit ; appliqué en taille réelle)
+9o	G↔D
+9p	H↕B
+9q	Centre
+9r	4 côtés
+9s	Aperçu
+9t	· graine
+9u	· symétrie :
+9v	Monter
+9w	Descendre
+9x	Retirer
+9y	Utiliser l'appris
+9z	règles de dispersion
+a1	— Choisir un préréglage —
+a2	+ Modificateur
+a3	Pile de modificateurs
+a4	Hasard et zone
+a5	Graine
+a6	Autre
+a7	Générer 4 variantes
+a8	Pas symétrique
+a9	Symétrique (détecté :
+aa	Auto
+ab	Protéger les abords des bases et ressources
+ad	Sélection seule
+ae	Placer des modules tactiques après application
+af	Par type
+ag	Préréglages
+ah	Enregistrer comme mon préréglage
+ai	Nom
+aj	Mes préréglages
+ak	Enregistré
+al	Code copié
+am	Copier le code
+an	Importer un code
+ao	Code
+ap	Code invalide
+aq	Choisissez d'abord ci-dessus le préréglage « ★ » à supprimer
+ar	Supprimé
+as	Supprimer le préréglage choisi
+at	Effet
+au	Original
+av	Choisir une variante
+aw	Aucune
+ax	Lecture de la carte de référence…
+ay	Style appris de «
+az	 » :
+b0	Échec de l'apprentissage :
+b1	Appliquer à la carte
+b2	Avant les détails auto
+b3	Génération des détails…
+b4	Détails ajoutés
+b5	 ; pour garder les passages, ouvert
+b6	cases de couloir
+b7	. Annulez si ça ne vous plaît pas.
+b8	(tout terrain)
+b9	Placer
+ba	Changer en
+bb	Sur
+bc	Action
+bd	Loin de (facultatif)
+be	Distance (cases)
+bf	Probabilité %
+bg	Groupé
+bh	Supprimer la règle
+bi	Ajouter une règle
+bj	Placer des modules
+bk	Décor
+bl	Érosion
+bm	Relief
+bn	Traces de guerre
+bo	Retirer le décor
+bp	Pinceau
+bq	Ouvrir « Détails auto » (toute la carte)
+br	Monter
+bs	Creuser
+bu	Effacer
+bv	Générer par biome…
+bw	Effacer les biomes
+by	Paver la terre en chemin de terre
+bz	Largeur de route
+c1	Tuiles nécessaires
+c3	Ouvrir une carte
+c4	Créer une nouvelle carte ?
+c6	Créer quand même
+c7	Nouvelle carte
+c8	Disposition des bases
+c9	En cercle
+ca	Gauche contre droite
+cb	Haut contre bas
+cc	Grille régulière (beaucoup de joueurs)
+cd	Terrain de base
+ce	Préréglage de terrain
+cf	Style
+cg	Symétrie
+ch	Rotation centrale
+ci	Graine
+cj	Carte vide
+ck	Terrain aléatoire
+cl	1v1 symétrique
+cm	4 joueurs aux coins
+cn	4 coins
+co	8 joueurs en anneau
+cp	8 en anneau
+cq	10 joueurs chacun pour soi
+cr	10 FFA
+cs	Carte navale
+ct	Navale
+cu	Prise de villes
+cv	Villes
+cw	Défense survie
+cx	Survie
+cy	Mission
+cz	Mission
+d1	Nom de la carte
+d2	Taille (cases de 20 px)
+d3	L
+d4	H
+d5	Joueurs (1–100)
+d6	Commencer avec
+d7	Ressources près de chaque équipe
+d8	∅
+d9	Ressources partagées au centre
+db	Générer
+dc	Génération de la carte…
+dd	Taille du canevas
+df	Nouvelle largeur
+dg	Nouvelle hauteur
+dh	Où placer l'original
+di	La nouvelle zone est remplie avec le terrain actuel «
+dj	 ». Annulable.
+dk	Annulable.
+dl	Modifier
+dm	Avant changement de canevas
+dn	Changement du canevas…
+do	Changer le canevas
+dp	environ
+dq	(déplacés à la position correspondante)
+dr	(restent en place)
+ds	cases (surface ×
+dt	Après mise à l'échelle : ressources
+du	, unités
+dv	— rien n'est dupliqué.
+dw	Mettre la carte à l'échelle
+dy	Facteur (largeur et hauteur)
+dz	Options
+e0	Unités (centres de commande, constructeurs, etc.,
+e1	)
+e2	Déplacer à la position correspondante (recommandé)
+e3	Laisser en place
+e4	Ressources (
+e5	Même nombre, à la position correspondante
+e6	Augmenter selon la surface
+e7	Les zones de déclencheurs suivent aussi (
+eb	Mettre à l'échelle
+ec	Avant mise à l'échelle
+ed	Mise à l'échelle…
+ee	unités de tuiles converties en objets
+ef	Mis à l'échelle à
+eg	cases : ressources
+eh	Gauche → droite
+ei	Copier en miroir la moitié gauche sur la droite
+ej	Droite → gauche
+ek	Copier en miroir la moitié droite sur la gauche
+el	Haut → bas
+em	Copier en miroir la moitié haute sur la basse
+en	Bas → haut
+eo	Copier en miroir la moitié basse sur la haute
+eq	Copier le quart haut-gauche sur les trois autres (4 joueurs)
+er	Miroir de la carte
+eu	Miroir
+ev	Avant miroir
+ew	Miroir en cours…
+ex	Miroir fait
+ey	Vérification de symétrie
+f0	Type de symétrie
+f1	Vérifier
+f2	Comparaison…
+f3	bases sans symétrique
+f4	Il y a
+f5	cases (
+f6	 %) asymétriques, en rouge
+f7	Terrain parfaitement symétrique, mais il y a
+f8	Parfaitement symétrique
+f9	Créez ou ouvrez d'abord une carte
+fb	Joueurs
+fc	Ressources par équipe
+fd	Ressources au centre
+fe	Part d'eau
+ff	Part de falaises/plateaux
+fg	Part de forêt
+fh	Code (les autres obtiennent la même carte)
+fi	Code copié
+fj	Utiliser le code de quelqu'un
+fk	Charger
+fl	Génération aléatoire
+fm	Avant génération aléatoire
+fn	Génération…
+fo	 ; pour garder les passages, pavé
+fp	Terminé :
+fq	bases,
+fr	Ouvrez d'abord une carte existante (pour les tuiles)
+fs	Impossible de lire l'image
+ft	+ Bande
+fu	− Retirer la dernière bande
+fv	Inverser
+fw	Ce «
+fx	 » devient :
+fy	Couleur
+fz	Hauteur
+g0	Décalque seul
+g1	Couleurs principales
+g2	Terrain pour chaque couleur principale
+g3	Ajuster aux parts voulues (curseurs ci-dessous)
+g6	Largeur de la nouvelle carte (cases)
+g7	Convertir vers
+g8	Carte actuelle (
+g9	Mode
+ga	Échantillonnage et nettoyage
+gb	Lisse (photos, captures)
+gc	Pixel (pixel art)
+gd	Flou (1 pour JPG)
+ge	Netteté (retirer points et filets)
+gf	L'eau loin des côtes devient profonde
+gg	Résultat actuel
+gh	Après génération
+gi	Placer les bases
+gk	Effacer les objets existants (ressources, arbres, etc.)
+gm	Résultat
+gn	Comparer en superposition
+go	Image vers carte
+gp	Générer la carte
+gq	Analyse de l'image…
+gr	Avant image vers carte
+gt	Calcul…
+gv	Occupe
+gw	cases ; sans doublons
+gx	morceaux ; le fichier grossit d'environ
+gy	Décalcomanie d'image
+h0	cases =
+h1	px
+h2	Placer
+h3	Intégration de l'image…
+h4	Placer la décalcomanie
+h5	Calque de référence
+h6	La référence n'apparaît que dans l'éditeur, pas dans la carte.
+h7	Afficher la référence
+h8	Opacité
+h9	Taille
+ha	Position horizontale
+hb	Position verticale
+hc	Étirer sur la carte
+hd	Retirer la référence
+he	Terminé
+hf	Exporter une image
+hg	Couverture de la carte (recommandé)
+hh	Une photo de toute la carte, nommée comme la carte : «
+hj	Petit aperçu 200 px
+hk	Nom « nomcarte_map.png ».
+hl	Aperçu 500 px
+hm	La plus grande taille acceptée par le jeu.
+hn	Image de présentation
+hp	Les tuiles actuelles viennent de la carte «
+hq	 », dont :
+ht	Fermer
+hu	Utiliser les tuiles de cette carte
+hv	Source des tuiles
+hw	Tuiles mises à jour
+hx	problèmes affectent le jeu,
+hy	rappels.
+hz	Pas de problème grave ;
+i0	Aucun problème ; enregistrez et allez tester.
+i1	Voir
+i2	Liste de test
+i3	Note de la carte
+i5	Jouable ?
+i6	Paramètres
+i7	Afficher la grille (zoomé)
+i8	Retirer les tilesets inutilisés à l'enregistrement
+ia	Exporter les données perso
+ib	Importer les données perso
+ic	Exporter la couverture à l'enregistrement (nomcarte.png)
+id	Taille de la couverture (grand côté, px)
+ie	Style de ressource par défaut
+if	1 case (recommandé)
+ig	3×3 avec bord
+ih	Intervalle de sauvegarde auto (s)
+ii	Dossier du jeu oublié
+ij	Rechoisir le dossier du jeu
+ik	Le tutoriel sera reproposé
+il	Réinitialiser le tutoriel
+in	Arbre
+io	Buisson
+ip	Rochers
+iq	Cratère
+ir	Boue
+is	Cactus
+it	Gros rocher
+iu	Centre de commande
+iv	Constructeur
+iw	Extracteur
+ix	Usine terrestre
+iy	Usine aérienne
+iz	Chantier naval
+j0	Usine de mechs
+j1	Laboratoire
+j2	Fabricateur
+j3	Tourelle
+j4	Tourelle anti-aérienne
+j5	Caisse de crédits
+j6	Ingénieur de combat
+j7	Ingénieur mech
+j8	Char
+j9	Char aéroglisseur
+ja	Artillerie
+jb	Hélico de combat
+jc	Hélicoptère
+jd	Navire constructeur
+je	Canonnière
+jf	Char lourd

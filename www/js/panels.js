@@ -14,6 +14,7 @@ import { helpBtn, HELP, showHelp } from './help.js';
 import { ACTIONS, runAction, menuItems, MENU_GROUPS, action } from './actions.js';
 import * as IO from './io.js';
 import * as D from './dialogs.js';
+import * as DU from './detailui.js';
 
 const ed = A.ed, rend = A.rend;
 const $ = (id) => document.getElementById(id);
@@ -27,14 +28,14 @@ export const MODES = [
   { id: 'tiles', label: '图块', icon: 'tiles', help: 'mode.tiles', layer: null, expert: true },
 ];
 export const TOOLS = {
-  terrain: [['brush', '画笔', 'B', 'terrain.brush'], ['rect', '矩形', 'R', 'terrain.rect'], ['ellipse', '椭圆', 'E', 'terrain.ellipse'], ['fill', '油漆桶', 'F', 'terrain.fill'], ['pick', '吸管', 'I', 'terrain.pick'], '|', ['marquee', '框选', 'M', 'select.marquee'], ['wand', '魔棒', 'W', 'select.wand'], '|', ['pan', '拖动', 'H', 'tool.pan']],
-  items: [['stamp', '放置', 'B', 'items.stamp'], ['random', '随机笔刷', 'N', 'items.random'], ['erase', '橡皮', 'X', 'items.erase'], '|', ['marquee', '框选', 'M', 'select.marquee'], '|', ['pan', '拖动', 'H', 'tool.pan']],
+  terrain: [['brush', '画笔', 'B', 'terrain.brush'], ['rect', '矩形', 'R', 'terrain.rect'], ['ellipse', '椭圆', 'E', 'terrain.ellipse'], ['fill', '油漆桶', 'F', 'terrain.fill'], ['pick', '吸管', 'I', 'terrain.pick'], ['color', '色块', 'C', 'terrain.color'], '|', ['detail', '细节', 'D', 'terrain.detail'], ['height', '高度', 'U', 'terrain.height'], ['biome', '群系', 'Y', 'terrain.biome'], ['road', '道路', 'O', 'terrain.road'], '|', ['marquee', '框选', 'M', 'select.marquee'], ['wand', '魔棒', 'W', 'select.wand'], '|', ['pan', '拖动', 'H', 'tool.pan']],
+  items: [['stamp', '画笔', 'B', 'items.stamp'], ['rect', '矩形', 'R', 'items.shape'], ['ellipse', '椭圆', 'E', 'items.shape'], ['line', '直线', 'L', 'items.shape'], ['fill', '油漆桶', 'F', 'items.shape'], ['random', '随机笔刷', 'N', 'items.random'], ['erase', '橡皮', 'X', 'items.erase'], '|', ['marquee', '框选', 'M', 'select.marquee'], '|', ['pan', '拖动', 'H', 'tool.pan']],
   units: [['spawn', '出生点', 'S', 'units.spawn'], ['unit', '放单位', 'U', 'units.unit'], ['select', '选择', 'V', 'units.select'], ['del', '删除', 'D', 'units.del'], '|', ['marquee', '框选', 'M', 'select.marquee'], '|', ['pan', '拖动', 'H', 'tool.pan']],
-  triggers: [['select', '选择', 'V', 'units.select'], ['region', '画区域', 'G', 'mode.triggers'], '|', ['pan', '拖动', 'H', 'tool.pan']],
+  triggers: [['select', '选择', 'V', 'units.select'], ['region', '画区域', 'G', 'mode.triggers'], ['text', '文字', 'T', 'trig.text'], '|', ['pan', '拖动', 'H', 'tool.pan']],
   generate: [['marquee', '框选', 'M', 'select.marquee'], ['wand', '魔棒', 'W', 'select.wand'], '|', ['pan', '拖动', 'H', 'tool.pan']],
   tiles: [['brush', '放图块', 'B', 'tiles.brush'], ['erase', '橡皮', 'X', 'tiles.erase'], ['pick', '吸管', 'I', 'tiles.pick'], '|', ['pan', '拖动', 'H', 'tool.pan']],
 };
-const TOOL_ICON = { brush: 'brush', rect: 'rect', ellipse: 'ellipse', fill: 'fill', pick: 'pick', pan: 'pan', stamp: 'stamp', random: 'random', erase: 'erase', spawn: 'spawn', unit: 'unit', select: 'select', del: 'del', marquee: 'marquee', wand: 'wand', region: 'region' };
+const TOOL_ICON = { brush: 'brush', rect: 'rect', ellipse: 'ellipse', fill: 'fill', pick: 'pick', pan: 'pan', stamp: 'stamp', random: 'random', erase: 'erase', spawn: 'spawn', unit: 'unit', select: 'select', del: 'del', marquee: 'marquee', wand: 'wand', region: 'region', color: 'palette', line: 'line', text: 'text', detail: 'wand2', height: 'mountain', biome: 'globe', road: 'road' };
 const DOCK_TABS = [['tool', '工具', 'settings'], ['layers', '图层', 'layers'], ['stamps', '印章', 'stamp'], ['history', '历史', 'clock'], ['report', '报告', 'report']];
 
 export const tool = () => ed.tool[ed.mode];
@@ -48,12 +49,14 @@ export function setMode(mode) {
   if (A.settings.dim) rend.invalidateAll();
   if (!TOOLS[mode].some((t) => Array.isArray(t) && t[0] === ed.tool[mode])) ed.tool[mode] = TOOLS[mode][0][0];
   A.dockTab = 'tool';
+  dropBiomeTint();
   document.getElementById('dock').classList.remove('collapsed');
   A.refresh('modes', 'toolbar', 'dock');
   rend.request();
   A.hooks.coach && A.hooks.coach('mode:' + mode);
 }
-export function setTool(t) { ed.tool[ed.mode] = t; A.refresh('toolbar', 'dock'); rend.request(); A.hooks.coach && A.hooks.coach('tool:' + t); }
+function dropBiomeTint() { if (rend.tint && rend.tint.kind === 'biome' && !(ed.mode === 'terrain' && ed.tool.terrain === 'biome')) rend.setTint(null); }
+export function setTool(t) { ed.tool[ed.mode] = t; dropBiomeTint(); A.refresh('toolbar', 'dock'); rend.request(); A.hooks.coach && A.hooks.coach('tool:' + t); }
 
 // ---------------- 顶栏 ----------------
 export function renderTop() {
@@ -232,6 +235,8 @@ function dockTool(body) {
 }
 
 function toolTerrain(body, T) {
+  if (T === 'color') { colorPanel(body); return; }
+  if (['detail', 'height', 'biome', 'road'].includes(T)) { DU.toolPanel(body, T, sec, sizeSec); return; }
   const eng = ed.engine;
   if (!eng) { body.append(h('div', { class: 'hint warnh' }, '这张地图的地面图块集没有地形标注，无法自动过渡。请用“图块”模式直接放图块。')); return; }
   const sw = h('div', { class: 'swatches' });
@@ -274,14 +279,54 @@ function toolItems(body, T) {
   }
   const sw = h('div', { class: 'swatches' });
   for (const it of ed.items) {
-    sw.append(h('button', { class: 'sw' + (ed.itemKey === it.key ? ' on' : ''), title: it.name, onclick: () => { ed.itemKey = it.key; ed.tool.items = 'stamp'; A.refresh('dock', 'toolbar'); A.hooks.coach && A.hooks.coach('item:' + it.name); } }, tileThumb(it.stamp ? it.stamp[1][1] : it.rep), it.cn));
+    sw.append(h('button', { class: 'sw' + (ed.itemKey === it.key ? ' on' : ''), title: it.name, onclick: () => { ed.itemKey = it.key; if (T === 'erase') ed.tool.items = 'stamp'; A.refresh('dock', 'toolbar'); A.hooks.coach && A.hooks.coach('item:' + it.name); } }, tileThumb(it.stamp ? it.stamp[1][1] : it.rep), it.cn));
   }
   body.append(sec('物品', 'mode.items', sw));
   const it = ed.item();
-  if (T === 'erase' || (it && !it.stamp)) body.append(sec('笔刷', null, sizeSec(24)));
-  const ss = symSec(); if (ss) body.append(ss);
   if (it && it.pool) body.append(sec('资源池样式', 'items.pool', segmented([['1x1', '1 格（推荐）'], ['3x3', '3×3 带边框']], ed.poolStyle, (v) => { ed.poolStyle = v; A.settings.poolStyle = v; D.saveSettings(); rend.request(); })));
-  body.append(h('div', { class: 'hint', html: (it && it.stamp ? (ed.stampCells(it).length > 1 ? `「${it.cn}」占 3×3 格，点一下放一个。` : `「${it.cn}」占 1 格，点一下放一个，按住拖动不会连放。`) : '按住拖动可以连续画。') + `<br>地图上现在有 <b>${rend.pools.length}</b> 个资源池。资源池和单位之间最好留 1 格空隙。` }));
+  if (T === 'stamp' || T === 'erase' || T === 'line') body.append(sec(T === 'line' ? '线宽' : '笔刷', null, sizeSec(24)));
+  if (T !== 'erase') {
+    const dens = slider('密度', 5, 100, Math.round((A.itemDensity ?? 1) * 100), (v) => { A.itemDensity = v / 100; }, { fmt: (v) => v + '%', step: 5 });
+    body.append(sec('疏密', 'items.shape', dens,
+      it && it.stamp ? slider('最小间距（格）', 1, 30, A.itemSpacing ?? 4, (v) => { A.itemSpacing = v; }, { fmt: (v) => v + ' 格' }) : null,
+      T === 'fill' ? toggle('全图同种地面一起放', !!A.fillGlobal, (v) => { A.fillGlobal = v; }) : null));
+  }
+  const ss = symSec(); if (ss) body.append(ss);
+  const how = { stamp: '按住拖动连续放', rect: '拖出一个矩形', ellipse: '拖出一个椭圆', line: '拖出一条线', fill: '点一下，填满同一种地面', erase: '按住拖动擦除' }[T] || '';
+  body.append(h('div', { class: 'hint', html: `${how}。` + (it && it.stamp ? `「${it.cn}」之间至少隔开“最小间距”，不会铺成一片。` : '“密度”越低越稀疏，看起来更自然。') + `<br>地图上现在有 <b>${rend.pools.length}</b> 个资源池。资源池和单位之间最好留 1 格空隙。` }));
+}
+
+// ---- 色块 ----
+function colorPanel(body) {
+  import('./assets.js').then((AS) => {
+    const list = AS.colorList();
+    const grid = h('div', { class: 'swatches' });
+    for (const e of list) {
+      const kind = AS.KINDS.find((k) => k[0] === e.kind) || AS.KINDS[0];
+      const b = h('button', { class: 'sw' + (ed.colorGid === e.gid ? ' on' : ''), title: `${e.hex} · ${kind[1]}\n右键或长按：修改 / 删除`, onclick: () => { ed.colorGid = e.gid; A.refresh('dock'); } },
+        h('span', { class: 'cchip', style: `background:${e.hex}` }, h('i', { class: 'kmark k-' + e.kind })), kind[1].replace(/（.*）/, ''));
+      const edit = async () => {
+        const r = await AS.colorPicker({ hex: e.hex, kind: e.kind }, '修改色块');
+        if (r) { await AS.addColor(r.hex, r.kind, e.id); A.refresh('dock'); }
+      };
+      b.addEventListener('contextmenu', (ev) => { ev.preventDefault(); colorMenu(b, e, edit, AS); });
+      let tm = 0; b.addEventListener('pointerdown', () => { tm = setTimeout(() => colorMenu(b, e, edit, AS), 550); });
+      b.addEventListener('pointerup', () => clearTimeout(tm)); b.addEventListener('pointerleave', () => clearTimeout(tm));
+      grid.append(b);
+    }
+    const add = h('button', { class: 'primary', onclick: async () => { const r = await AS.colorPicker(); if (!r) return; const g = await AS.addColor(r.hex, r.kind); if (g) { ed.colorGid = g; A.refresh('dock'); } }, html: icon('plus') + ' 新建色块' });
+    body.append(sec('色块（自己调颜色，选好性质）', 'terrain.color', list.length ? grid : h('div', { class: 'hint' }, '还没有色块。点下面“新建色块”，调好颜色、选好它在游戏里是什么（陆地、水、悬崖……）。'), h('div', { class: 'row', style: 'margin-top:8px' }, add)));
+    body.append(sec('形状', 'items.shape', segmented([['brush', '画笔'], ['rect', '矩形'], ['ellipse', '椭圆'], ['line', '直线'], ['fill', '油漆桶']], A.colorShape || 'brush', (v) => { A.colorShape = v; A.refresh('dock'); })));
+    if (!A.colorShape || A.colorShape === 'brush' || A.colorShape === 'line') body.append(sec('笔刷', null, sizeSec(64)));
+    const ss = symSec(); if (ss) body.append(ss);
+    body.append(h('div', { class: 'hint', html: '色块直接替换地面，和旁边的地形之间<b>不会自动过渡</b>。想换回普通地形，用地形画笔画回去就行。' }));
+  });
+}
+function colorMenu(anchor, e, edit, AS) {
+  menu(anchor, [
+    { label: '修改颜色和性质', iconHtml: icon('palette'), run: edit },
+    { label: '删除（地图上没用到时）', iconHtml: icon('del'), run: async () => { if (AS.colorUsed(e.gid)) { toast('地图上还在用这个色块，先把它画掉'); return; } await AS.removeColor(e.id); if (ed.colorGid === e.gid) ed.colorGid = null; A.refresh('dock'); } },
+  ]);
 }
 
 export function teamSelect(cur, on, withNeutral = true) {
@@ -292,12 +337,7 @@ export function teamSelect(cur, on, withNeutral = true) {
 }
 
 function toolUnits(body, T) {
-  if (T === 'unit') {
-    const names = ed.unitNames.length ? ed.unitNames : ['commandCenter', 'builder'];
-    body.append(sec('放单位', 'units.unit', h('div', { class: 'grid2' },
-      h('div', {}, h('label', {}, '单位'), select(names.map((u) => [u, (UNIT_CN[u] ? UNIT_CN[u] + ' · ' : '') + u]), ed.unitName, (v) => { ed.unitName = v; })),
-      h('div', {}, h('label', {}, '队伍'), teamSelect(ed.team, (v) => { ed.team = v; })))));
-  }
+  if (T === 'unit') unitPalette(body);
   if (T === 'spawn') body.append(sec('出生点', 'units.spawn', h('div', { class: 'hint', html: `点一下地图放一个<b>出生点</b>：1 个指挥中心 + 2 个建造者，队伍号自动往后排。最多 ${MAX_TEAMS} 支队伍。开了对称时会同时放好对称的出生点。` })));
   const ss = symSec(); if (ss) body.append(ss);
   const o = ed.selected;
@@ -318,6 +358,57 @@ function toolUnits(body, T) {
     sp.length ? h('button', { style: 'margin-top:8px', onclick: () => ed.renumberTeams() }, '队伍号重新编号为 1、2、3…') : null));
 }
 
+// ---- 单位面板：图标 + 中文名 + 分类 + 搜索；可以一次放一排 ----
+const UNIT_CATS = [['all', '全部'], ['land', '陆军'], ['air', '空军'], ['naval', '海军'], ['build', '建筑'], ['exp', '实验'], ['mod', 'Mod']];
+export function unitCat(n) {
+  if (/experiment|modularSpider/i.test(n)) return 'exp';
+  if (/factory|turret|extractor|fabricator|laboratory|commandCenter|defen[cs]e|launcher|bunker|depot|antiAir|nuke|repair|radar|wall|outpost|crates/i.test(n)) return 'build';
+  if (/gunship|helicopter|interceptor|bomber|dropship|airship|jet|fireBee|plane|aircraft/i.test(n)) return 'air';
+  if (/boat|ship|sub(marine)?\b|submarine|battleship|lightSub|heavySub/i.test(n) && !/hover/i.test(n)) return 'naval';
+  return 'land';
+}
+function unitPalette(body) {
+  const st = A.unitPal || (A.unitPal = { cat: 'all', q: '', n: 1, gap: 2, layout: 'row' });
+  const mods = (A.modUnits || []).map((u) => ({ name: u.name, mod: u }));
+  const all = [...(ed.unitNames.length ? ed.unitNames : ['commandCenter', 'builder']).map((n) => ({ name: n })), ...mods];
+  const grid = h('div', { class: 'unitgrid' });
+  const fill = () => {
+    grid.innerHTML = '';
+    const q = st.q.trim().toLowerCase();
+    let n = 0;
+    for (const u of all) {
+      const cat = u.mod ? 'mod' : unitCat(u.name);
+      if (st.cat !== 'all' && st.cat !== cat) continue;
+      if (q && !(u.name.toLowerCase().includes(q) || (UNIT_CN[u.name] || '').includes(q))) continue;
+      if (++n > 400) break;
+      let ic;
+      if (u.mod && u.mod.icon) { ic = document.createElement('canvas'); ic.width = ic.height = 36; const x = ic.getContext('2d'); x.imageSmoothingEnabled = false; const im = u.mod.icon, s = Math.min(36 / im.width, 36 / im.height); x.drawImage(im, (36 - im.width * s) / 2, (36 - im.height * s) / 2, im.width * s, im.height * s); }
+      else ic = tileThumb(ed.unitGid(u.name, ed.team >= 0 ? ed.team : 0), 36);
+      grid.append(h('button', { class: 'ucell' + (ed.unitName === u.name ? ' on' : ''), title: u.name, onclick: () => { ed.unitName = u.name; ed.tool.units = 'unit'; fill(); } }, ic, h('span', {}, UNIT_CN[u.name] || u.name)));
+    }
+    if (!n) grid.append(h('div', { class: 'hint' }, '没有找到。试试别的关键字，或者换个分类。'));
+  };
+  const search = h('input', { placeholder: '搜索单位（中文或英文名）', value: st.q, oninput: (e) => { st.q = e.target.value; fill(); } });
+  body.append(sec('选单位', 'units.unit', search, h('div', { style: 'margin:6px 0' }, segmented(UNIT_CATS.filter(([k]) => k !== 'mod' || mods.length), st.cat, (v) => { st.cat = v; fill(); })), grid));
+  body.append(sec('属于哪个队', 'teams', teamSelect(ed.team, (v) => { ed.team = v; fill(); })));
+  body.append(sec('一次放几个', 'units.row', h('div', { class: 'grid3' },
+    h('div', {}, h('label', {}, '数量'), h('input', { type: 'number', min: 1, max: 100, value: st.n, onchange: (e) => { st.n = Math.max(1, Math.min(100, +e.target.value || 1)); } })),
+    h('div', {}, h('label', {}, '间距（格）'), h('input', { type: 'number', min: 1, max: 20, value: st.gap, onchange: (e) => { st.gap = Math.max(1, Math.min(20, +e.target.value || 1)); } })),
+    h('div', {}, h('label', {}, '排法'), select([['row', '横排'], ['col', '竖排'], ['grid', '方阵']], st.layout, (v) => { st.layout = v; })))));
+  if (mods.length) body.append(h('div', { class: 'hint warnh' }, 'Mod 单位需要游戏里装了同一个 Mod 才会出现。'));
+  fill();
+}
+export function unitRowPositions(tx, ty) {
+  const st = A.unitPal || { n: 1, gap: 2, layout: 'row' };
+  const out = [];
+  const cols = st.layout === 'grid' ? Math.ceil(Math.sqrt(st.n)) : st.layout === 'row' ? st.n : 1;
+  for (let k = 0; k < st.n; k++) {
+    const c = k % cols, r = Math.floor(k / cols);
+    out.push([tx + c * st.gap - Math.floor((cols - 1) * st.gap / 2), ty + r * st.gap]);
+  }
+  return out;
+}
+
 function toolTriggers(body, T) {
   if (A.hooks.triggerPanel) { A.hooks.triggerPanel(body, T); return; }
   body.append(h('div', { class: 'hint' }, '触发器编辑器加载中…'));
@@ -325,7 +416,8 @@ function toolTriggers(body, T) {
 
 function toolGenerate(body) {
   const card = (id) => { const a = action(id); return h('button', { class: 'acard', disabled: a.enabled && !a.enabled(), onclick: () => runAction(a), html: a.iconHtml + `<div><b>${a.label.replace('…', '')}</b><small>${a.desc || (HELP[a.help] || {}).s || ''}</small></div>` }); };
-  body.append(sec('整张地图', 'mode.generate', h('div', { class: 'cards' }, ['generate', 'image', 'scale', 'mirror', 'symdiff', 'resize'].map(card))),
+  body.append(sec('整张地图', 'mode.generate', h('div', { class: 'cards' }, ['detail', 'generate', 'image', 'scale', 'mirror', 'symdiff', 'resize'].map(card))),
+    sec('多张地图', null, h('div', { class: 'cards' }, ['crosscopy', 'stitch', 'diff', 'library', 'batch', 'pack', 'mods'].map(card))),
     sec('图片', null, h('div', { class: 'cards' }, ['picture', 'trace'].map(card))));
 }
 
@@ -482,7 +574,7 @@ function dockReport(body) {
     res.matrix.forEach((row, a) => mt.append(h('tr', {}, h('th', {}, res.teams[a] + 1), ...row.map((d, b) => h('td', {}, a === b ? '·' : d < 0 ? '×' : d)))));
     body.append(sec('出生点之间的步行距离（格，× 表示陆路不通）', null, h('div', { style: 'overflow:auto' }, mt)));
   }
-  body.append(h('button', { onclick: () => A.hooks.setOverlay('territory'), html: icon('flag') + ' 在地图上显示各队地盘' }));
+  body.append(h('div', { class: 'row' }, h('button', { onclick: () => A.hooks.setOverlay('territory'), html: icon('flag') + ' 在地图上显示各队地盘' }), h('button', { onclick: () => import('./tools2.js').then((m) => m.timingDialog()), html: icon('timer') + ' 开局推演' })));
 }
 
 // ---------------- 欢迎页 ----------------

@@ -1,0 +1,700 @@
+0	File
+1	New map
+2	Pick size and players; spawns and resource pools are placed for you
+3	Open map…
+4	Open from game folder…
+5	List the maps in the game's map folder
+6	Recent…
+7	Save
+8	Save as…
+9	Save to game folder
+a	Save the map and its preview into the game, ready to play
+b	Export preview / showcase image…
+c	Map library…
+d	Every map you've made or opened, with thumbnails and tags
+e	Batch processing…
+f	Check and fix many maps at once, generate covers
+g	Pack map collection (Mod)…
+h	Pack several maps into a .rwmod
+i	Mod support…
+j	Import units and tilesets from a Mod
+k	Tile asset source…
+l	Settings…
+m	Edit
+n	Undo
+o	Redo
+p	Copy
+q	Cut
+r	Paste
+s	Select all
+t	Deselect
+u	Flip selection horizontally
+v	Flip selection vertically
+w	Rotate selection 90°
+x	Save selection as stamp…
+y	History
+z	See every step, tap to jump back; save snapshots
+10	Map
+11	Playtest checklist…
+12	What to test in-game, with a log of each test
+13	Map health score…
+14	Scores the map and tells you what lost points and how to fix it
+15	Playable? check
+16	Check the map works in the game before saving
+17	Balance report
+18	Compare teams' resources and territory by walking routes
+19	Symmetry difference check…
+1a	Random generate…
+1b	Generate terrain, spawns and pools from a preset and seed
+1c	Image to map…
+1d	Turn an image into a map; you control the terrain mix
+1e	Proportional scale…
+1f	Enlarge or shrink the whole map; pools and spawns are rearranged smartly
+1g	Mirror whole map…
+1h	Draw half a map, make it symmetric in one tap
+1i	Resize canvas…
+1j	Picture decal…
+1k	Paste an image into the map (cut into tiles)
+1l	Tracing reference…
+1m	Overlay a semi-transparent image to trace over
+1n	Stamp library
+1o	Standard bases, resource spots, lakes and more in one tap
+1p	Auto detail…
+1q	Presets + modifier stack to enrich terrain in one tap, with preview and variants
+1r	Opening simulation…
+1s	Estimate how many seconds until each team meets an enemy or reaches the center
+1t	Copy from another map…
+1u	Open another map, box-select a part and bring it over
+1v	Map stitching…
+1w	Stitch several maps into one big map
+1x	Version diff…
+1y	Compare with a snapshot, see what changed, restore a part
+1z	Battle log…
+20	Edit the scrolling in-game messages by time
+21	Add missing tileset images…
+22	Renumber teams
+23	Tidy team numbers into 1, 2, 3…
+24	View
+25	Fit whole map
+26	Actual size (100%)
+27	Grid
+28	Dim other layers
+29	Overlay
+2a	No overlay
+2b	Land passability
+2c	Naval passability
+2d	Hover passability
+2e	Buildable area
+2f	Team territory
+2g	Help
+2h	Tutorial
+2i	Follow along and learn the basics in minutes
+2j	Help center
+2k	Gestures & shortcuts
+2l	Search features
+2m	Computing team territory…
+2n	Restore last map?
+2o	Untitled
+2p	Found an autosave of “
+2q	). It may not have been saved last time.
+2r	Restore
+2s	No thanks
+2t	Restoring…
+2u	Restore failed:
+2v	Quit the editor?
+2w	The map isn't saved. The autosave copy can be restored next time.
+2x	Quit
+2y	Device storage is almost full: delete old snapshots in “History”, or clear big recent maps
+2z	Startup failed:
+30	All tilesets have images
+31	Add missing tileset images
+32	This map has
+33	tilesets whose images can't be found; those tiles show as purple. Usually the map was made in desktop Tiled and the tilesets live in the game folder instead of being embedded.
+34	Files needed:
+35	You can find them in the game install folder under
+36	(select both the .tsx and its .png). Once added, the images are embedded in the map for good.
+37	Choose files (multiple allowed)
+38	Cancel
+39	Add
+3a	Adding tileset images…
+3b	Added
+3c	tilesets
+3d	No match: file names must match those referenced in the map
+3e	Land (grass, default)
+3f	Walkable and buildable, same as grass
+3g	Ford
+3h	Both land units and ships can pass
+3i	Shallow water
+3j	Ships can pass, land units can't
+3k	Deep water
+3l	Ships can pass, land units can't (looks deeper)
+3m	Impassable
+3n	Like a cliff, ground units can't pass
+3o	Lava
+3p	Ground units can't pass
+3q	Color blocks are limited to
+3r	kinds; delete unused ones first
+3s	New color block
+3t	Red R
+3u	Green G
+3v	Blue B
+3w	Hue
+3x	Saturation
+3y	Brightness
+3z	HSV (hue/saturation/value)
+40	Pick color from screen
+41	Hex
+42	Common colors
+43	Color blocks in this map
+44	What it is in the game (required)
+45	The game only looks at the “property”, not the color. Color blocks don't blend with other terrain; edges are square.
+46	OK
+47	Up to 500: fairly safe even for mobile multiplayer
+48	500–1500: better on PC; phones may lag
+49	1500–4000: only for 64-bit PC with enough memory
+4a	Over 4000: experimental only; no reliable evidence it's playable
+4b	Format
+4c	Tile size isn't 20×20
+4d	Current
+4e	; the game requires 20×20.
+4f	Missing map_info
+4g	The game needs a map_info object (type=skirmish) in the Triggers layer, or the match may not end properly.
+4h	Fix it
+4i	map_info has no type
+4j	Skirmish maps should be set to skirmish.
+4k	Set to skirmish
+4l	map_info type is “
+4m	Common values:
+4n	(community notes)
+4o	map_info OK (type=
+4p	No Ground layer
+4q	The ground has
+4r	empty cells
+4s	The game requires the Ground layer to have no empty cells.
+4t	Fill with the most common ground
+4u	Fill empty cells
+4v	No empty ground cells
+4w	Layer “
+4x	” has
+4y	undefined tiles
+4z	Older game versions crash on undefined tiles.
+50	Clear these tiles
+51	Clear undefined tiles
+52	float properties aren't numbers
+53	Older game versions crash on invalid float properties.
+54	Add tileset images…
+55	Tilesets
+56	Tileset “
+57	” references an external file
+58	It shows purple in the editor and the game may not find it on other devices. Select the matching .tsx and .png to embed it.
+59	” has no embedded image
+5a	It references an external image “
+5b	”, which may not show on other devices.
+5c	water tiles lack the water property
+5d	Without it, ships can't sail and land units can walk and build on water.
+5e	Add water to these tiles
+5f	lava tiles lack the lava property
+5g	Without it, units can walk and build on lava.
+5h	Add lava
+5i	tile property names contain capitals
+5j	The game only accepts lowercase property names (water, not Water).
+5k	Make all lowercase
+5l	Spawns
+5m	No spawns at all
+5n	Each team needs at least one command center. Add one with “Spawn” in Units.
+5o	teams have spawns
+5p	Team numbers aren't continuous:
+5q	Renumber as 1, 2, 3…
+5r	teams
+5s	Default rooms only have 10 teams (1–10); units and triggers of team 11+ are skipped. To use them all you need a server room that supports more players (engine cap 100 teams).
+5t	Team numbers above 100
+5u	The engine supports at most 100 teams (1–100); extra teams can't be used.
+5v	Renumber
+5w	command centers share a team with another command center
+5x	Several command centers on one team is allowed, but if it's a mistake that team starts stronger.
+5y	Team
+5z	command center sits on water, a cliff or an obstacle
+60	The game may not start properly.
+61	spawn is too close to the map edge
+62	Builders may get stuck.
+63	pairs of spawns are less than 15 tiles apart
+64	and team
+65	:
+66	tiles
+67	units are outside the map
+68	Resources
+69	No resource pools on the map
+6a	Pick “Resource pool” in Items, or use “Standard base” from the stamp library.
+6b	Total
+6c	resource pools
+6d	pools are in water, on cliffs or at the map edge
+6e	Units may not reach them.
+6f	pools are too close to units
+6g	Community tip: leave a 1-tile gap between pools and units, or they may display oddly.
+6h	Size
+6i	Map size
+6j	tilesets are unused (about
+6k	In multiplayer the host sends the map to everyone; removing them makes it smaller.
+6l	Remove on save
+6m	Triggers
+6n	tiles ·
+6o	teams ·
+6p	Resource pool
+6q	Spawn (number = team)
+6r	Rusted Warfare Map Editor
+6s	Natural edges
+6t	Make straight terrain edges wiggly, as if formed naturally
+6u	Strength
+6v	Wiggle size
+6w	Smooth
+6x	Remove scattered specks so terrain forms patches
+6y	Passes
+6z	Natural decor
+70	Scatter trees, bushes, rocks and cacti by terrain, in natural clusters
+71	Density
+72	Clustering
+73	Water detail
+74	Shallow bands along shores, islets in deep sea, deeper water far from shore
+75	Shallow band width (tiles)
+76	Islet count
+77	Coastal erosion
+78	Water carves small bays and spits into the coast
+79	Highlands & cliffs
+7a	Add a few cliff-ringed highlands far from spawns
+7b	Count
+7c	Size (tiles)
+7d	Forest patches
+7e	Patches of forest terrain that block sight and movement
+7f	River
+7g	A river across the map with fords every so often
+7h	Width (tiles)
+7i	Ford count
+7j	Rivers
+7k	Swamp
+7l	Low ground by water turns to swamp with small puddles
+7m	Range
+7n	Reef coast
+7o	Reefs in the shallows for a layered coastline
+7p	War scars
+7q	Scorched earth and craters on grass, as if fought over
+7r	Amount
+7s	Lava pools
+7t	Add some lava far from spawns (cliff edges added automatically)
+7u	Random relief
+7v	Add gentle relief by “height”: lows become sand or ford, highs become dirt
+7w	Amplitude
+7x	Relief size
+7y	Change theme
+7z	Turn the whole map into snow, desert, volcano or wasteland; layout unchanged
+80	Theme (0 temperate 1 snow 2 desert 3 volcano 4 wasteland)
+81	Clear decor
+82	Remove trees, bushes, rocks etc. (pools untouched)
+83	Removal ratio
+84	Custom rules
+85	Write your own “on what terrain, how far from what, place what, how likely”
+86	Overall density
+87	Fill by biome
+88	Replace areas painted with the biome brush by matching terrain and decor
+89	Detail level
+8a	None
+8b	Forest
+8c	Grassland
+8d	Desert
+8e	Snowfield
+8f	Swamp
+8g	Volcano
+8h	Wasteland
+8i	Natural grassland
+8j	Dense forest
+8k	Desert & gobi
+8l	Snowfield & ice lakes
+8m	Volcanic lava
+8n	Swamp wetland
+8o	Tropical island coast
+8p	Plateau canyon
+8q	River delta
+8r	Not a detail preset
+8s	The reference map has no terrain data; can't learn from it
+8t	Auto detail
+8u	Enrich terrain in one tap — adjustable, with preview
+8v	Pick a preset, or chain a few “modifiers” yourself (e.g. Natural edges → Ford → Trees). Each step can be tuned, turned off or reordered.
+8w	Check the preview, apply when happy
+8x	; you can undo after applying.
+8y	Areas around spawns and pools are protected by default. Afterwards, land routes between spawns are checked and a ford corridor is opened if blocked.
+8z	Tap “Generate 4 variants” to pick your favorite side by side.
+90	To change only one area: box-select it, then tick “Selection only”.
+91	Save a good combination as “My preset” or copy a share code for others.
+92	On what terrain, how far from what, place what
+93	Each rule: on a terrain, within a distance of another terrain (optional), place an item or change terrain with a probability. E.g. “on grass, 3–6 tiles from water, place trees, 30%”.
+94	Learn from reference map
+95	Follow the style of a map you like
+96	Pick a map you like; the editor measures how much decor each terrain has and how wiggly the edges are, builds a set of modifiers and applies them to the current map.
+97	Detail brush
+98	Detail goes wherever you brush
+99	Pick an effect (natural edges, decor, erosion, smooth, relief, clear decor, war scars) and brush it on the map. More control than changing the whole map.
+9a	Height brush
+9b	Raise and lower like sculpting hills
+9c	Hold and brush to raise ground step by step: deep water → water → shallow → sand → grass → dirt → cliff highland; switch to “Lower” for the reverse. Each stroke is one step.
+9d	Biome brush
+9e	First paint “this is forest, that is desert”
+9f	Paint areas with the biome brush (forest, grassland, desert, snowfield, swamp, volcano, wasteland), then tap “Generate by biome”; the editor fills in matching terrain and decor with natural borders.
+9g	Road tool
+9h	Draw a march route
+9i	Drag along the route you want: trees and rocks on it are cleared, river crossings become fords; optionally pave land as dirt road.
+9j	Tactical modules
+9k	Auto-place chokepoints, bridgeheads, high forts
+9l	Pick a few modules from the stamp library; the editor places them near the midline between teams and in open ground, keeping symmetry.
+9m	Open a map with terrain data first
+9n	(shown smaller; full size is used when applying)
+9o	L↔R
+9p	T↕B
+9q	Center
+9r	4-way
+9s	Preview
+9t	· seed
+9u	· symmetry:
+9v	Move up
+9w	Move down
+9x	Remove
+9y	Use learned
+9z	scatter rules
+a0	No modifiers yet. Pick a preset above, or tap “Add modifier”.
+a1	— Pick a preset —
+a2	+ Add modifier
+a3	Modifier stack
+a4	Randomness & range
+a5	Seed
+a6	Reroll
+a7	Generate 4 variants
+a8	Not symmetric
+a9	Symmetric (detected:
+aa	Auto
+ab	Protect areas around spawns and pools
+ac	Ensure land routes between spawns (open a ford corridor if blocked)
+ad	Selection only
+ae	Auto-place some tactical modules after applying
+af	Per kind
+ag	Presets
+ah	Save as my preset
+ai	Name
+aj	My presets
+ak	Saved
+al	Share code copied
+am	Copy share code
+an	Import share code
+ao	Share code
+ap	Invalid share code
+aq	First select the “★” preset to delete above
+ar	Deleted
+as	Delete selected preset
+at	Effect
+au	Original
+av	Pick a variant
+aw	None of them
+ax	Reading reference map…
+ay	Learned the style of “
+az	”:
+b0	Learning failed:
+b1	Apply to map
+b2	Before auto detail
+b3	Generating details…
+b4	Details added
+b5	; to keep routes open, opened
+b6	tiles of corridor
+b7	. Undo if you don't like it.
+b8	(any terrain)
+b9	Place
+ba	Change to
+bb	On
+bc	Action
+bd	From (optional)
+be	Distance (tiles)
+bf	Chance %
+bg	Clustered
+bh	Delete rule
+bi	Add a rule
+bj	Place tactical modules
+bk	Decor
+bl	Erosion
+bm	Relief
+bn	War scars
+bo	Clear decor
+bp	Brush
+bq	Open “Auto detail” (whole map)
+br	Raise
+bs	Lower
+bt	Deep water → water → shallow → sand → grass → dirt → cliff highland. Each stroke is one step; lift and brush again for another.
+bu	Erase
+bv	Generate by biome…
+bw	Clear biomes
+bx	Biomes are only a “plan” and are not written to the map file. Tap “Generate by biome” when done.
+by	Pave land as dirt road
+bz	Road width
+c0	Drag along the route. Trees and decor are cleared; river crossings become fords.
+c1	Tile assets needed
+c2	Before creating a map, open a Rusted Warfare map you already have; the editor takes the tile assets from it.
+c3	Open a map
+c4	Create a new map?
+c5	The current map isn't saved; a new map discards unsaved changes (the autosave can still be restored).
+c6	Create anyway
+c7	New map
+c8	Spawn layout
+c9	Circle
+ca	Left vs right
+cb	Top vs bottom
+cc	Even grid (for many players)
+cd	Base terrain
+ce	Terrain preset
+cf	Style
+cg	Symmetry
+ch	Center rotation
+ci	Seed
+cj	Blank map
+ck	Random terrain
+cl	1v1 symmetric
+cm	4-player corners
+cn	4P corners
+co	8-player ring
+cp	8P ring
+cq	10-player free-for-all
+cr	10P FFA
+cs	Naval map
+ct	Naval
+cu	City capture map
+cv	City capture
+cw	Survival defense map
+cx	Survival
+cy	Mission level
+cz	Mission
+d0	Start from a layout template (tap to fill in the settings below)
+d1	Map name
+d2	Size (tiles, 20 px each)
+d3	W
+d4	H
+d5	Players (1–100)
+d6	Start with
+d7	Pools near each team
+d8
+d9	Shared pools in the center
+da	Generated automatically: ground, spawns (command center + 2 builders), resource pools and map_info (type=skirmish). You can keep editing afterwards.
+db	Generate
+dc	Generating map…
+dd	Resize canvas
+de	Changes the map size without scaling content: extend the edges or crop. To enlarge content too, use “Proportional scale”.
+df	New width
+dg	New height
+dh	Where to place the original
+di	New area is filled with the current terrain “
+dj	”. Can be undone.
+dk	Can be undone.
+dl	Resize
+dm	Before resizing canvas
+dn	Resizing canvas…
+do	Resize canvas
+dp	about
+dq	(moved to matching position)
+dr	(stay in place)
+ds	tiles (area ×
+dt	After scaling: pools
+du	, units
+dv	— nothing gets duplicated.
+dw	Scale map proportionally
+dx	Enlarge or shrink the whole map. Terrain is re-tiled; you decide how units and pools are handled — nothing is ever duplicated.
+dy	Factor (width and height both multiplied)
+dz	Detail options
+e0	Units (command centers, builders etc.,
+e1	)
+e2	Move to matching position (recommended)
+e3	Stay in place
+e4	Resource pools (
+e5	Same count, moved to matching position
+e6	Increase by area
+e7	Trigger areas scale too (
+e8	Some units in this map are drawn in a tile layer. They are first converted to unit objects (the game reads those too), so they're moved, never duplicated.
+e9	Trees, bushes and other decor scale with the terrain. Decals keep their size and move to the new position.
+ea	A snapshot is saved before starting; you can also just undo. Small terrain features may vanish when shrinking.
+eb	Start scaling
+ec	Before scaling
+ed	Scaling map…
+ee	tile units converted to objects
+ef	Scaled to
+eg	tiles: pools
+eh	Left → right
+ei	Flip-copy the left half to the right
+ej	Right → left
+ek	Flip-copy the right half to the left
+el	Top → bottom
+em	Flip-copy the top half to the bottom
+en	Bottom → top
+eo	Flip-copy the bottom half to the top
+ep	Rotate the left half 180° onto the right (common for 1v1)
+eq	Copy the top-left quarter to the other three (4-player)
+er	Mirror whole map
+es	Draw half a map, make it symmetric in one tap. The other half's content will be replaced.
+et	Spawns and pools are copied; new spawns get team numbers automatically; triggers aren't copied. Can be undone.
+eu	Mirror
+ev	Before mirroring
+ew	Mirroring…
+ex	Mirror done
+ey	Symmetry difference check
+ez	Compare the map with its symmetric version and mark differences in red.
+f0	Symmetry type
+f1	Check
+f2	Comparing…
+f3	spawns have no symmetric counterpart
+f4	There are
+f5	tiles (
+f6	%) asymmetric, marked in red
+f7	Terrain is fully symmetric, but
+f8	Fully symmetric
+f9	Create or open a map first
+fa	Generate terrain, spawns and pools for the whole map from a preset and seed. The current terrain is replaced (can be undone).
+fb	Players
+fc	Pools per team
+fd	Center pools
+fe	Water share
+ff	Cliff/highland share
+fg	Forest share
+fh	Share code (others can generate the same map)
+fi	Share code copied
+fj	Use someone's share code
+fk	Load
+fl	Random generate
+fm	Before random generate
+fn	Generating…
+fo	; to keep routes open, paved
+fp	Done:
+fq	spawns,
+fr	First open an existing map (to get tile assets)
+fs	Can't read this image
+ft	+ Add band
+fu	− Remove last band
+fv	Invert
+fw	This “
+fx	” becomes:
+fy	Color
+fz	Height
+g0	Trace only
+g1	Main colors
+g2	Terrain for each main color
+g3	Adjust to target shares (drag the sliders below)
+g4	Bands from dark to light by brightness: darker is lower. The numbers on the right are each band's share (converted to %).
+g5	No conversion; just overlay the image semi-transparently to trace by hand. Good for precise control.
+g6	New map width (tiles)
+g7	Convert into
+g8	Current map (
+g9	Mode
+ga	Sampling & cleanup
+gb	Smooth (photos, screenshots)
+gc	Pixel (pixel art)
+gd	Blur denoise (1 for JPG)
+ge	Cleanliness (remove specks and slivers)
+gf	Water far from shore becomes deep water
+gg	Current result
+gh	After generating
+gi	Auto-place spawns
+gj	Ensure land routes between spawns (pave ford or corridor if blocked)
+gk	Clear existing items (pools, trees, etc.)
+gl	Tip: tap a region in the preview on the left to change its terrain; changed regions are locked (white dot) on recalculation.
+gm	Result
+gn	Overlay compare
+go	Image to map
+gp	Generate map
+gq	Analyzing image…
+gr	Before image to map
+gs	Image converted to a map. Keep editing with brushes, or check passability with “Overlay”
+gt	Calculating…
+gu	The file gets much bigger and slower to send in multiplayer; consider shrinking.
+gv	Takes
+gw	tiles; after dedup
+gx	pieces; map file grows by about
+gy	Picture decal
+gz	The image is cut into 20×20 pieces and embedded in the map (Items layer). Tap “Place”, then drag it where you want.
+h0	tiles =
+h1	px
+h2	Place
+h3	Embedding image…
+h4	Place decal
+h5	Tracing reference
+h6	The reference only shows in the editor and isn't written to the map.
+h7	Show reference
+h8	Opacity
+h9	Size
+ha	Horizontal position
+hb	Vertical position
+hc	Stretch to fill map
+hd	Remove reference
+he	Done
+hf	Export image
+hg	Map cover (recommended)
+hh	A picture of the whole map, named like the map: “
+hi	.png”, in the same folder. Exported with the map on save by default.
+hj	Small preview 200 px
+hk	File name is “mapname_map.png”.
+hl	Preview 500 px
+hm	The largest size the game allows.
+hn	Showcase image
+ho	A large image with title, size, players, pools and legend, for groups, forums or workshop pages.
+hp	Current assets come from map “
+hq	”, including:
+hr	No tile assets yet. Open any map exported by the game (one with embedded ground tileset images) to extract them.
+hs	New maps will use these assets. Assets belong to the game developer; the editor uses them only on your device and never uploads or distributes them.
+ht	Close
+hu	Use this map's assets
+hv	Tile asset source
+hw	Tile assets updated
+hx	issues affect the game,
+hy	reminders.
+hz	No serious issues;
+i0	No issues found; save and go playtest.
+i1	Take a look
+i2	Playtest checklist
+i3	Map health score
+i4	Checks are based on community-collected game rules; what the game actually does is final.
+i5	Playable?
+i6	Settings
+i7	Show grid (when zoomed in)
+i8	Remove unused tilesets on save (smaller map)
+i9	Colorblind-friendly colors (overlays use orange / blue instead of red / green)
+ia	Export personal data
+ib	Import personal data
+ic	Export cover when saving (mapname.png)
+id	Cover size (long side, px)
+ie	Default pool style
+if	1 tile (recommended)
+ig	3×3 with border
+ih	Autosave interval (s)
+ii	Game folder forgotten
+ij	Choose game folder again
+ik	The tutorial will be offered again next time
+il	Reset tutorial
+im	Rusted Warfare Map Editor 2.2 · unofficial tool · tile assets come from your own map files
+in	Tree
+io	Bush
+ip	Rocks
+iq	Crater
+ir	Mud
+is	Cactus
+it	Big rock
+iu	Command center
+iv	Builder
+iw	Extractor
+ix	Land factory
+iy	Air factory
+iz	Sea factory
+j0	Mech factory
+j1	Laboratory
+j2	Fabricator
+j3	Turret
+j4	Anti-air turret
+j5	Credits crate
+j6	Combat engineer
+j7	Mech engineer
+j8	Tank
+j9	Hover tank
+ja	Artillery
+jb	Gunship
+jc	Helicopter
+jd	Builder ship
+je	Gunboat
+jf	Heavy tank

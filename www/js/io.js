@@ -1,6 +1,7 @@
 // 载入、保存、自动保存、最近打开、游戏文件夹、快照、导出
 import { A } from './state.js';
 import { RWMap, extractTemplate } from './tmx.js';
+import { unitTilesToObjects, unitsBackToTiles } from './transform.js';
 import { runChecks, renderPreview, renderPoster } from './check.js';
 import { pickFile, saveFile, gameFolder, pickGameFolder, saveToGame, addRecent, recentText, listGameMaps, readGameMap, gameFolderSupported, isNative } from './files.js';
 import { kvGet, kvSet, kvDel } from './util.js';
@@ -11,6 +12,9 @@ const ed = A.ed, rend = A.rend;
 export async function loadMapFromText(text, name, handle = null, opts = {}) {
   const map = await RWMap.parse(text, name);
   ed.setMap(map);
+  // 画在图块层里的单位统一成单位对象来编辑（保存时会写回原来的图层）
+  A.tileUnits = ed.unitsTs ? unitTilesToObjects(ed) : 0;
+  if (A.tileUnits) ed.emit('map');
   rend.setMap(map);
   A.mini.rebuild();
   A.mapName = (name || '未命名').replace(/\.tmx$/i, '');
@@ -21,6 +25,7 @@ export async function loadMapFromText(text, name, handle = null, opts = {}) {
     await kvSet('template', { ...tpl, from: A.mapName, time: Date.now() });
     toast('已从这张地图取出图块素材，以后新建地图会用它');
   }
+  if (map.tilesets.some((t) => !t.image)) setTimeout(() => import('./assets.js').then((m2) => m2.missingDialog()), 400);
   if (!ed.engine) toast('这张地图的地面图块没有地形标注，自动过渡不可用，可以用“图块”模式直接画', 4200);
   A.refresh();
   if (!opts.noRecent) rememberRecent(text).catch(() => {});
@@ -70,14 +75,24 @@ async function thumbDataUrl(size = 128) {
 }
 async function rememberRecent(text) {
   if (!ed.map) return;
+  if (text && text.length > 4e6) text = null; // 大图只记信息，不在本机另存一份全文（避免占满存储）
   const m = ed.map;
-  await addRecent({ name: A.mapName, w: m.width, h: m.height, teams: ed.usedTeams().size, thumb: await thumbDataUrl() }, text);
+  const thumb = await thumbDataUrl();
+  await addRecent({ name: A.mapName, w: m.width, h: m.height, teams: ed.usedTeams().size, thumb }, text);
+  const mi = ed.mapInfo();
+  import('./tools2.js').then((t) => t.libraryRemember({ name: A.mapName, w: m.width, h: m.height, teams: ed.usedTeams().size, thumb, type: mi ? (mi.props.find((p) => p.name === 'type') || {}).value : '', game: A.fromGame ? A.mapName + '.tmx' : undefined })).catch(() => {});
 }
 
 // ---- 序列化（同一时间只跑一个） ----
 export function serializeOnce(opts = {}) {
   // 编辑器自己加的贴图图块集，没用到（例如撤销了放置）时总是去掉
-  const run = async () => ed.map.serialize({ prune: opts.prune ?? ((A.settings.prune || ed.pruneOnSave) ? true : 'pictures') });
+  const run = async () => {
+    const restore = unitsBackToTiles(ed);
+    let p;
+    try { p = ed.map.serialize({ prune: opts.prune ?? ((A.settings.prune || ed.pruneOnSave) ? true : 'pictures') }); }
+    finally { restore(); } // serialize 在第一次 await 之前已经同步复制好了数据
+    return p;
+  };
   A.savePromise = (A.savePromise || Promise.resolve()).catch(() => {}).then(run);
   return A.savePromise;
 }
@@ -176,6 +191,7 @@ export async function autoSnapshot(label) {
     list.unshift({ name: `自动：${label}`, time: Date.now(), text, auto: true });
     let autos = 0;
     list = list.filter((s) => !s.auto || ++autos <= 3).slice(0, 13);
+    let total = 0; list = list.filter((s) => (total += s.text.length) < 40e6 || s === list[0]); // 每张图的快照总共不超过约 40MB
     await kvSet('snaps:' + A.mapName, list);
   } catch (e) { console.warn('自动快照失败', e); }
 }

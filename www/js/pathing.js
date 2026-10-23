@@ -146,8 +146,10 @@ function summarize(rows) {
 }
 
 // 通行图叠加颜色（RGBA 打包成 uint32，小端 ABGR）
-export function overlayColor(kind, c) {
-  const rgba = (r, g, b, a) => ((a << 24) | (b << 16) | (g << 8) | r) >>> 0;
+export function overlayColor(kind, c, cb = false) {
+  // cb：色盲友好配色（红→橙、绿→蓝、黄→天蓝）
+  const rgba0 = (r, g, b, a) => ((a << 24) | (b << 16) | (g << 8) | r) >>> 0;
+  const rgba = cb ? (r, g, b, a) => (r > 200 && g < 80 ? rgba0(230, 159, 0, a) : g > 150 && r < 120 ? rgba0(0, 114, 178, a) : r > 200 && g > 180 ? rgba0(86, 180, 233, a) : rgba0(r, g, b, a)) : rgba0;
   if (kind === 'land') return c & LAND ? (c & BUILD ? 0 : rgba(255, 210, 0, 90)) : rgba(230, 40, 40, 150);
   if (kind === 'naval') return c & NAVAL ? rgba(40, 140, 255, 130) : rgba(0, 0, 0, 110);
   if (kind === 'hover') return c & HOVER ? 0 : rgba(230, 40, 40, 150);

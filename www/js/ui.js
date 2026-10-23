@@ -107,12 +107,13 @@ export function menu(anchor, items, opts = {}) {
 
 // ---- 功能搜索（Ctrl+K） ----
 export function commandPalette(actions, onRun) {
+  const tr = window.__rwT || ((x) => x);
   const input = h('input', { placeholder: '输入功能名称，比如“镜像”“资源池”“保存”…', class: 'cpinput' });
   const list = h('div', { class: 'cplist' });
   let sel = 0, shown = [];
   const render = () => {
     const q = input.value.trim().toLowerCase();
-    shown = actions.filter((a) => !a.hidden && (!q || (a.label + (a.kw || '') + (a.desc || '')).toLowerCase().includes(q))).slice(0, 40);
+    shown = actions.filter((a) => !a.hidden && (!q || (a.label + (a.kw || '') + (a.desc || '') + tr(a.label) + tr(a.desc || '')).toLowerCase().includes(q))).slice(0, 40);
     sel = Math.min(sel, Math.max(0, shown.length - 1));
     list.innerHTML = '';
     shown.forEach((a, i) => list.append(h('button', { class: 'cpitem' + (i === sel ? ' on' : ''), disabled: a.enabled && !a.enabled(), onclick: () => { closeModal(); onRun(a); } },

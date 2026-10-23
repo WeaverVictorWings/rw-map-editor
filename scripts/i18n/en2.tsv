@@ -1,0 +1,700 @@
+jg	Mammoth tank
+jh	Bomber
+ji	Interceptor
+jj	Missile tank
+jk	Experimental spider
+jl	Transport
+jm	Heavy artillery
+jn	Laser defense
+jo	Flak cannon
+jp	Nuke launcher
+jq	Anti-nuke launcher
+jr	Mech (gun)
+js	Mech (missile)
+jt	Amphibious jet
+ju	Change team
+jv	Renumber teams
+jw	Add map_info
+jx	Edit map_info
+jy	What to test in-game
+jz	Based on this map's content (spawns, pools, water, triggers, battle log…) lists things to confirm one by one in-game. Add notes after ticking; each test is logged, so next time you can see whether earlier issues were fixed.
+k0	Map health check
+k1	Gives the map a score and shows where points were lost
+k2	Combines the “Playable?” check, balance report and detail richness into a 100-point score, with the reason and fix for each deduction. Just a reference — fun matters most.
+k3	Export / import personal data
+k4	New phone, or sync between PC and phone
+k5	Packs your stamps, detail presets, color blocks, settings and map library info into one file; import it on another device to carry on. Save the maps themselves separately.
+k6	The map opens in-game and its cover shows in map selection
+k7	spawns all start correctly (command center and builders present)
+k8	Over 10 teams: test spawns of team 11+ in a big (server) room
+k9	Extractors can be built on pools;
+ka	all fine
+kb	Land units can walk from your spawn to the enemy, not blocked by cliffs or water
+kc	Ships sail on water, land units can't enter it; land units can cross fords
+kd	Color block properties are right (ships sail on water blocks, cliff blocks are impassable…)
+ke	Spawn triggers spawn units on time, at the right place and team
+kf	Area detection: triggers react when units enter / leave the area
+kg	Credit changes are right (how much, how often)
+kh	Map text displays properly, with the right color and position
+ki	Battle log messages appear on time
+kj	Enemies come in waves from enemy spawns, and the last wave ends the game correctly
+kk	Mission objectives appear in order; completing all of them means victory
+kl	Big map doesn't lag or crash on phones
+km	Go through this list in-game. Tick what works; write a note for problems.
+kn	Last test:
+ko	passed.
+kp	Issues found last time:
+kq	Write a note if there's a problem (optional)
+kr	Save this test log
+ks	Logged:
+kt	still failing — fix and test again
+ku	All passed — ready to publish!
+kv	Checking…
+kw	issues that affect the game
+kx	Open “Playable?” and fix them one by one; most fix in one tap.
+ky	reminders
+kz	Look at the yellow items in “Playable?”.
+l0	Teams' nearest-pool distances differ by
+l1	Use the “Balance report” to find the disadvantaged team and move a pool closer or add one.
+l2	Teams' nearby pool counts differ by
+l3	Place pools symmetrically, or mirror the whole map.
+l4	Largest territory is this many times the smallest:
+l5	×
+l6	Move spawns to more symmetric positions.
+l7	Some team's land units can't reach any enemy
+l8	Unless it's a naval map, open a path with the road tool or fords.
+l9	Fewer than 2 spawns
+la	Place spawns in Units mode.
+lb	Too few terrain types
+lc	Try a preset in “Auto detail”.
+ld	Almost no trees, rocks or other decor
+le	Scatter some with “Natural decor” or the item brush.
+lf	Terrain edges are too regular
+lg	Use “Natural edges”.
+lh	Great
+li	Good
+lj	Needs work
+lk	Many problems
+ll	No deductions.
+lm	rw-map-editor-personal-data.json
+ln	Personal data
+lo	Not a personal data file
+lp	Imported. Some settings take effect after reopening.
+lq	Import failed:
+lr	Rusted Warfare map
+ls	Save failed:
+lt	Saved over the original file
+lu	Downloaded to the “Downloads” folder
+lv	Map folder
+lw	This browser can't pick folders; use “Save”.
+lx	No write permission for the folder
+ly	No game map folder chosen yet
+lz	Continent
+m0	One big continent surrounded by sea; land-focused battles
+m1	Archipelago naval
+m2	Many islands; navy and air matter more
+m3	Inland sea
+m4	An inland sea in the center, land all around
+m5	River valley
+m6	A big river crosses the map; a few fords are the contested points
+m7	Plateau fortress
+m8	A cliff-ringed plateau with gaps to get in and out
+m9	Temperate
+ma	Bad share code format (should start with RWG1-)
+mb	Grass
+mc	Dirt
+md	Sand
+me	Terrain
+mf	Paint grass, water, sand, cliffs and other ground
+mg	Pick a terrain and paint on the map. Between different terrains the editor will
+mh	add transitions automatically
+mi	: e.g. grass next to water gets a ring of dirt, sand and shallows. No need for manual “auto-tiling”.
+mj	Inside cliff terrains is ordinary ground; only the edge is a cliff.
+mk	Made a mistake? Undo (Ctrl+Z or two-finger tap).
+ml	Items
+mm	Pools, trees, rocks and other things on the ground
+mn	Items go on the Items layer. Pools and big rocks take 3×3; tap to place one. Bushes, rocks etc. can be painted by dragging.
+mo	Best leave a 1-tile gap between pools and units.
+mp	The “Random brush” paints trees, rocks and bushes mixed in one stroke.
+mq	Units
+mr	Spawns and pre-placed units
+ms	“Spawn” places 1 command center and 2 builders at once; team numbers increase automatically. “Place unit” places any unit, such as neutral turrets or credit crates.
+mt	With symmetry on, spawns are placed at symmetric positions too.
+mu	Team numbers are shown starting from 1 (stored from 0 in the file).
+mv	Map rules, spawning, text, win conditions
+mw	Triggers decide “what happens” on the map: opening hints, timed spawns, capture income, win conditions… Build them like blocks here, no code. The most basic is map_info (map type).
+mx	Normal skirmish maps only need map_info.
+my	City-capture, survival and mission maps can start from templates.
+mz	Random generate, image to map, proportional scale, mirror
+n0	Whole-map operations live here: generate a random base map, turn an image into a map, scale the whole map, mirror half a map into a symmetric one.
+n1	All of these can be undone.
+n2	Tiles (expert)
+n3	Place any tile directly, no auto transitions
+n4	Put a tile on a layer directly, without any automatic processing. For decor, patching single cells, or editing old maps without terrain data.
+n5	The ground can't have empty cells, so the ground layer has no eraser.
+n6	Terrain brush
+n7	Hold and drag to paint terrain
+n8	Hold and drag to paint. Adjust brush size with the slider or [ ] keys.
+n9	Right-click (or switch to “Secondary”) paints the second terrain, handy for touching up edges.
+na	“Only replace” changes just one terrain, e.g. turn only grass into snow.
+nb	Rectangle
+nc	Drag a rectangle and fill it with terrain
+nd	Drag from one corner to the other; fills on release. Good for big areas, roads and rivers.
+ne	Ellipse
+nf	Drag an ellipse and fill it with terrain
+ng	Drag, and an ellipse is filled on release. Good for lakes, islands and highlands.
+nh	Bucket
+ni	Replace a connected patch of the same terrain at once
+nj	Tap, and the connected same terrain is replaced by the current terrain. Tick “Whole map” to replace this terrain everywhere.
+nk	E.g. turn a whole desert into snow in one go.
+nl	Eyedropper
+nm	Pick terrain from the map
+nn	Tap the map to make that terrain the current brush.
+no	Pan
+np	Move the view
+nq	Hold and drag to move the map. On phones you can always drag and zoom with two fingers; on PC use right-click or Space+drag, wheel to zoom.
+nr	Place items
+ns	Tap to place, hold and drag to place continuously
+nt	Pick an item and tap the map. Pools take 1 tile by default (like the official editor) or a 3×3 bordered style; big rocks take 3×3.
+nu	Pool style
+nv	1 tile or 3×3
+nw	The game only counts the pool's center tile (with the res_pool property).
+nx	1 tile
+ny	like the official editor, more flexible;
+nz	only looks more like built-in maps; the 8 surrounding tiles are decor.
+o0	Both styles mine the same in-game.
+o1	Item eraser
+o2	Erase items
+o3	Hold and drag to erase things on the Items layer; the ground isn't affected.
+o4	Random brush
+o5	Paint several decor items in one stroke
+o6	Tick a few items and set ratios; dragging places them randomly mixed, with some gaps, for a natural look.
+o7	Tap to place a command center + 2 builders
+o8	Tap the map to place a spawn; the team number picks the next free one. Up to 100 teams (engine cap).
+o9	Place unit
+oa	Place any unit
+ob	Pick unit and team first, then tap the map. For neutral units choose “Neutral”.
+oc	Select/move
+od	Tap a unit to drag it, change team or delete
+oe	Tap to select, hold and drag to move. Its properties show on the right.
+of	Delete
+og	Tap units to delete
+oh	Tapping a unit deletes it. Deleting a command center also deletes its two builders.
+oi	Box select
+oj	Drag a rectangular selection
+ok	Hold and drag to box an area. Then copy, cut, flip, rotate or save as stamp.
+ol	Magic wand
+om	Select a connected patch of the same terrain
+on	Tap to select connected same terrain (e.g. a whole lake). Tick “Whole map” to select this terrain everywhere.
+oo	Copy terrain, items and units in the selection.
+op	Copy then clear the selection: ground becomes the “Secondary” terrain, items and units are deleted.
+oq	After pasting, content follows your finger or mouse; tap to drop. You can flip or rotate before dropping. With symmetry on, a flipped copy is placed at the symmetric position too.
+or	Pasted spawns get new team numbers automatically.
+os	Terrain is pasted “as terrain”; edges join the surroundings automatically.
+ot	Flip horizontally
+ou	Flip the selection left-right
+ov	Terrain is flipped as terrain and re-tiled; coast and cliff directions line up.
+ow	Flip vertically
+ox	Flip the selection top-bottom
+oy	Rotate 90°
+oz	Rotate the selection 90° clockwise
+p0	Save as stamp
+p1	Save the selection to the stamp library
+p2	Later, tap it in “Stamps” to place the same content.
+p3	Place tile
+p4	Place the selected tile directly
+p5	Tile eraser
+p6	Clear cells on non-ground layers
+p7	Tile eyedropper
+p8	Pick a tile from the map
+p9	Symmetric drawing
+pa	Draw in one place, the symmetric place is drawn too
+pb	When on, terrain, items, spawns and pastes are also drawn at the symmetric position. Handy for fair battle maps.
+pc	“Center” is 180° rotational symmetry, common for 1v1.
+pd	“Four-way” suits 4-player maps.
+pe	“Diagonal” only suits square maps.
+pf	Only replace
+pg	Change only one terrain
+ph	When set, brush, rectangle and ellipse only change this terrain; others are untouched.
+pi	Primary / Secondary
+pj	Quickly switch between two terrains
+pk	Left-click (or Primary) paints the main terrain, right-click (or Secondary) the second one. Cut also fills with the secondary terrain.
+pl	Highlight what you're editing
+pm	When editing items the ground dims; when editing units terrain and items dim, so you see what you're working on.
+pn	Show where units can walk and build
+po	Overlays a color layer on the map:
+pp	• Land: red is impassable, yellow is walkable but not buildable
+pq	• Naval: blue is water ships can use
+pr	• Hover: red is impassable even for hover units
+ps	• Build: green buildable, red not
+pt	• Territory: by walking distance, each tile belongs to the nearest team
+pu	• Symmetry diff: red is where the two sides differ
+pv	This is an approximation from tile properties; the game is final.
+pw	Compare team resources by actual walking routes
+px	From each spawn, along routes land units can actually walk (around water and cliffs): how many pools nearby, how far the nearest pool is, how big the territory is, whether enemies are reachable. Big gaps are flagged.
+py	The closer the numbers, the fairer.
+pz	Teams marked “Island” can't reach any enemy by land and need navy or air.
+q0	Checks map_info, empty ground cells, undefined tiles, water properties, spawn positions, pool positions, tileset size and more. Auto-fixable issues have a “Fix” button.
+q1	Check rules come from community notes; what the game actually does is final.
+q2	Copies one half onto the other (flipped or rotated), including spawns and pools; new spawns get team numbers automatically.
+q3	Terrain is mirrored as terrain and re-tiled, so coast and cliff directions are right.
+q4	Triggers aren't copied.
+q5	Find where the two sides differ
+q6	Compare the map with its symmetric version, mark mismatched cells in red, and count spawns without a symmetric counterpart.
+q7	Proportional scale
+q8	Enlarge or shrink the whole map
+q9	Multiply width and height by a factor; ×2 means 4× the area. Terrain is scaled as terrain and transitions re-tiled; trees, bushes and other decor scale too.
+qa	Units and pools are never duplicated
+qb	: units can “Move to matching position” or “Stay in place”; pools keep their count and move to matching positions by default. Decals keep their size.
+qc	Units drawn in tile layers are first converted to unit objects, then moved.
+qd	A snapshot is saved before starting. Small terrain features may vanish when shrinking.
+qe	Change map size without scaling content
+qf	Extend the edges or crop; original content keeps its size. New area is filled with the current terrain.
+qg	Turn an image into a map, with shares you control
+qh	1. Pick the image and map size.
+qi	2. Pick a mode: color (color maps, screenshots), height (grayscale), or just a tracing reference.
+qj	3. Pick a terrain for each main color and drag sliders to set shares, e.g. “water 30%”.
+qk	4. Use “Cleanliness” to remove specks and slivers.
+ql	5. Tap a region in the preview to change its terrain (changed regions are locked).
+qm	6. After generating, connectivity is checked and spawns and pools are placed.
+qn	For JPG images set “Blur denoise” to 1.
+qo	To draw by hand over an image, use “Trace only”.
+qp	Generate a base map from a preset and seed
+qq	Pick a preset (continent, archipelago, inland sea, river valley, plateau), a style (temperate, snow, desert, volcano), players and symmetry. Spawns and pools are placed and land routes between teams are guaranteed (except archipelago).
+qr	The same share code always generates the same map; send it to friends.
+qs	One string reproduces the same random map
+qt	Copy the share code and send it; pasting it into “Random generate” gives the same map.
+qu	Paste an image into the map
+qv	The image is cut into 20×20 pieces and embedded as a new tileset on the Items layer. Identical pieces are stored once; transparent parts take no space.
+qw	The bigger the image, the bigger the map file; in multiplayer the host sends the map to everyone. Keep it under 50 tiles (1000 px) wide.
+qx	The reference only shows in the editor and isn't written to the map. Adjust opacity, position and size.
+qy	Common combos in one tap
+qz	Built-in “Standard base”, “Resource spot”, “Lake”, “Ford crossing” and more; you can also save your own selection as a stamp. Placing a stamp works like pasting: it follows you, tap to drop.
+r0	Stamps can be exported to files to share.
+r1	See every operation, tap to jump back
+r2	Lists all operations; tap any step to return to that moment. You can also save “snapshots” to restore the whole map anytime.
+r3	Save as a .tmx file
+r4	On phones the system save dialog opens; on PC choose a place the first time, then it overwrites the original file.
+r5	Save to game
+r6	Save straight into the game's map folder
+r7	The first time, choose the game's map folder (on phones usually rustedWarfare/maps); after that one tap saves the map and its cover (mapname.png) there, ready to play. On phones, once a folder is chosen “Save” also saves there.
+r8	Test in normal mode in-game; some systems in sandbox mode differ from real matches.
+r9	Map cover
+ra	Take a picture of the whole map
+rb	The cover is named like the map with a .png suffix, in the same folder. Exported with the map on save by default; turn off or resize in settings.
+rc	Large image with title, players and legend
+rd	For sharing your map in groups, forums or the workshop.
+re	Tile assets
+rf	Where new maps get their tiles from
+rg	The editor doesn't ship game assets. Open any map you have and it extracts the ground, items and units tilesets; new maps use them from then on.
+rh	Autosave
+ri	A copy every 30 seconds
+rj	Keeps a copy on this device, also saved immediately when switching to background. After a crash or the system closing the app, you can restore it next time.
+rk	Map type and basic rules
+rl	Every map needs a map_info. For skirmish maps set type to skirmish. You can also set an opening hint etc.
+rm	Teams
+rn	Up to 100 (engine cap)
+ro	The engine supports up to 100 teams.
+rp	Normal rooms only have 10 teams
+rq	: units and triggers of team 11+ are skipped; to use them all you need a server room supporting more players (e.g. RW-HPS with a bigger maxPlayer, or relay rooms like P20).
+rr	For big maps with many players, test with 10 first, then expand.
+rs	If team numbers aren't continuous, tidy them with “Renumber teams”.
+rt	Basics
+ru	Phone
+rv	: one finger paints, two fingers drag and zoom, two-finger tap undo, three-finger tap redo.
+rw	PC
+rx	: wheel zoom, right-click or Space+drag to pan, Ctrl+Z undo, Ctrl+Y redo, Ctrl+C/X/V copy/cut/paste, [ ] brush size, 1–6 switch mode, Ctrl+K search features, F1 help.
+ry	Color blocks
+rz	Ground in your own color; choose what it is in-game
+s0	Mix any color with the palette (RGB or hue/saturation/brightness), then choose its in-game property: land (default, like grass), ford, shallow, deep water, impassable, lava. Color blocks replace the ground directly and
+s1	don't blend with neighboring terrain
+s2	The game looks at the property, not the color: units still walk on blue “land”.
+s3	Up to 64 color blocks per map, all in one tileset, so the file doesn't grow much.
+s4	Right-click or long-press a color block to edit or delete it.
+s5	Item shapes and density
+s6	Rectangle, ellipse, line, bucket, plus density and spacing
+s7	Items can be placed with shapes like terrain: drag a rectangle, ellipse or line, or bucket-fill an area of the same ground.
+s8	sets the chance per tile (lower is sparser and more natural); pools, big rocks and similar items also have a
+s9	Minimum spacing
+sa	, so brushing spaces them out instead of packing them.
+sb	Pick from the unit palette, tap the map to place
+sc	Units are grouped by land, air, naval, buildings and experimental, with icons and names, and searchable. Pick a team, then tap the map. Below, set “How many at once” to auto-arrange a row or block.
+sd	How many at once
+se	Auto-arrange in a row or block
+sf	Set count, spacing and arrangement; one tap places a whole row — good for defense lines and garrisons. With symmetry on, the symmetric spot is filled too.
+sg	Text tool
+sh	Write a line of text on the map
+si	Tap the map, type text, choose color and size, and that line appears there (the game's mapText). The editor shows it with that color and size. You can also fill in versions for other languages; players see the one in their language.
+sj	Battle log
+sk	The scrolling messages in the game
+sl	All triggers that write to the battle log, listed by time: N seconds after start, when someone enters an area, when a city is captured… Each one's text, color and typing speed can be edited, and you can add new ones.
+sm	What's this?
+sn	Tip
+so	Got it
+sp	Search: e.g. “symmetry”, “pool”, “save”
+sq	This map can't auto-paint terrain; use “Tiles” mode
+sr	Paint terrain
+ss	First create or pick a color block on the right
+st	Paint color block
+su	Bucket color block
+sv	Raise ground
+sw	Lower ground
+sx	Selected:
+sy	This map has no items tileset
+sz	Erase items
+t0	First pick some items on the right
+t1	Bucket place
+t2	First tap a tile on the right
+t3	The ground layer can't be empty; switch layers or paint another tile
+t4	Erase tiles
+t5	Place spawn
+t6	Team count is already at the limit
+t7	Team
+t8	Spawn placed:
+t9	units
+ta	Stacked here:
+tb	— pick one:
+tc	Object
+td	Resize area
+te	Move
+tf	Draw rectangle
+tg	Draw ellipse
+th	Draw road
+ti	, including
+tj	Copied
+tk	Cut. The emptied area was filled with the secondary terrain
+tl	Clear selection
+tm	Rotate -90°
+tn	Transform
+to	First box-select an area
+tp	Stamp name
+tq	Stamps
+tr	Stamps are stored on this device; tap one in the “Stamps” panel to place it. You can also export to a file to share.
+ts	Saved as stamp:
+tt	Drag into position, then tap “Drop” below
+tu	Move the mouse into position and click to drop (hold Shift to place repeatedly)
+tv	Clipboard is empty: box-select and copy first
+tw	Drop
+tx	Flip H
+ty	Flip V
+tz	Rotate 90°
+u0	Selection
+u1	Save stamp
+u2	Clear
+u3	Cancelled
+u4	Brush size
+u5	Swap primary/secondary
+u6	Tile assets extracted from this map; new maps will use them
+u7	This map's ground tiles have no terrain data, so auto transitions are unavailable; paint directly in “Tiles” mode
+u8	Open another map?
+u9	The current map isn't saved; opening another discards unsaved changes (the autosave can still be restored).
+ua	Open anyway
+ub	Reading map…
+uc	Can't open this file
+ud	This entry has expired
+ue	Opening…
+uf	This device can't read folders directly
+ug	Reading folder…
+uh	Read failed:
+ui	No .tmx maps in the game folder yet
+uj	Open from game folder
+uk	The map still has issues
+ul	Found
+um	issues that affect the game:
+un	Take a look first
+uo	Save anyway
+up	Building map file…
+uq	Save failed
+ur	Choose the game's map folder. After that, “Save to game” saves the map and preview straight into it.
+us	On phones it's usually
+ut	Internal storage / rustedWarfare / maps
+uu	. In the folder picker, open this folder, tap “Use this folder” at the bottom and allow access.
+uv	On PC it's usually in the game install folder under
+uw	(Steam: right-click the game in your library → Manage → Browse local files).
+ux	Choose game map folder
+uy	Choose
+uz	Remembered:
+v0	Choose failed:
+v1	This device can't write folders directly; used normal save instead
+v2	Writing to game folder…
+v3	and cover
+v4	Saved to “
+v5	. Go playtest!
+v6	Save to game failed
+v7	The folder permission may have expired. Choose the folder again, or use normal save.
+v8	Normal save
+v9	Choose folder again
+va	Map and
+vb	Cover
+vc	Saving snapshot (just in case)…
+vd	Auto:
+ve	Autosave failed: device storage may be full
+vf	Save snapshot
+vg	Snapshot name
+vh	A snapshot stores the whole map so you can return to it anytime. Up to 10 per map.
+vi	Saving snapshot…
+vj	Snapshot saved
+vk	Restore snapshot?
+vl	Restore to “
+vm	”. Save current changes as another snapshot first if needed. Undo history is cleared after restoring.
+vn	Preview
+vo	Building showcase image…
+vp	_showcase.png
+vq	Tiles
+vr	Brush
+vs	Detail
+vt	Biome
+vu	Road
+vv	Line
+vw	Eraser
+vx	Select
+vy	Draw area
+vz	Text
+w0	Tools
+w1	Layers
+w2	History
+w3	Report
+w4	Auto-backed up
+w5	Not saved
+w6	Undo:
+w7	Undo (Ctrl+Z)
+w8	Redo:
+w9	Redo (Ctrl+Y)
+wa	Search features…
+wb	Zoom in
+wc	Zoom out
+wd	File name for saving (without .tmx)
+we	Common style: add [p<players>] before the name, e.g. [p4]Islands. The preview is named “name_map.png”. Saving after renaming saves a new file.
+wf	Overlay
+wg	Buildable
+wh	Symmetry diff
+wi	Long-press or right-click for help
+wj	Zoom
+wk	No map open. Create or open one from the top-left menu.
+wl	Round
+wm	Square
+wn	After selecting an area with box select or magic wand, you can copy or flip just that area; whole-map operations are above.
+wo	Tap to select a connected patch of the same terrain. A toolbar then appears below the map: copy, cut, flip, rotate, save as stamp.
+wp	Hold and drag to box an area. A toolbar then appears below the map: copy, cut, flip, rotate, save as stamp.
+wq	Same terrain on whole map
+wr	Empty cells don't overwrite existing items when pasting
+ws	Paste clipboard content
+wt	Hold and drag to move the map. With any tool you can drag and zoom with two fingers; on PC use the middle mouse button or hold Space and drag (right-click also works outside Terrain mode), wheel to zoom.
+wu	This map's ground tileset has no terrain data, so auto transitions can't work. Use “Tiles” mode to place tiles directly.
+wv	Click for primary, right-click or long-press for secondary
+ww	Secondary:
+wx	Terrain (primary / secondary)
+wy	Swap primary and secondary (X)
+wz	⇄ Swap primary/secondary
+x0	Paint with secondary
+x1	Right-click paints secondary
+x2	Replace this terrain on whole map
+x3	Any (all terrains)
+x4	Only replace
+x5	” is drawn
+x6	Inside is ordinary ground
+x7	; only the edge shows as a cliff, and the edge is what units can't cross.
+x8	(none)
+x9	While painting it will
+xa	” can directly touch:
+xb	. Next to other terrains, a ring of intermediate terrain is added.
+xc	This map has no items tileset (export_items), so pools and other items can't be placed.
+xd	Random brush: pick some items; sliders set ratios
+xe	Empty ratio
+xf	Line width
+xg	Density
+xh	Min spacing (tiles)
+xi	Place on same ground over whole map
+xj	Hold and drag to place continuously
+xk	Drag a rectangle
+xl	Drag an ellipse
+xm	Drag a line
+xn	Tap to fill the same ground
+xo	Hold and drag to erase
+xp	” are kept at least “Min spacing” apart instead of packed together.
+xq	The lower the “Density”, the sparser and more natural.
+xr	The map now has
+xs	resource pools. Best leave a 1-tile gap between pools and units.
+xt	Right-click or long-press: edit / delete
+xu	Edit color block
+xv	Color blocks (your own color, pick a property)
+xw	No color blocks yet. Tap “New color block” below, mix a color and choose what it is in-game (land, water, cliff…).
+xx	Shape
+xy	Color blocks replace the ground directly, and with neighboring terrain
+xz	don't blend
+y0	. To go back to normal terrain, paint over it with the terrain brush.
+y1	Edit color and property
+y2	Delete (when unused on the map)
+y3	This color block is still used on the map; paint it out first
+y4	Neutral
+y5	Hostile (-2)
+y6	Tap the map to place one
+y7	: 1 command center + 2 builders, team numbers increase automatically. Up to
+y8	teams. With symmetry on, symmetric spawns are placed too.
+y9	Selected unit
+ya	Position: tile (
+yb	Delete unit
+yc	Spawns (
+yd	; tap to jump there)
+ye	No spawns yet.
+yf	Renumber teams as 1, 2, 3…
+yg	All
+yh	Land
+yi	Air
+yj	Naval
+yk	Buildings
+yl	Experimental
+ym	Nothing found. Try other keywords or another category.
+yn	Search units (Chinese or English name)
+yo	Pick unit
+yp	Team
+yq	Spacing (tiles)
+yr	Arrangement
+ys	Row
+yt	Column
+yu	Block
+yv	Mod units only appear if the same Mod is installed in the game.
+yw	Loading trigger editor…
+yx	Whole map
+yy	Multiple maps
+yz	Image
+z0	Paint to layer
+z1	Tap to pick a tile
+z2	Expert mode: place tiles directly, no auto transitions. The ground can't have empty cells, so the ground layer has no eraser.
+z3	Hide
+z4	Show
+z5	Ground
+z6	Tile layers
+z7	Object layers ·
+z8	Dim other layers (highlight what the current mode edits)
+z9	Show grid
+za	Adjust…
+zb	Pick a reference image…
+zc	tiles ·
+zd	In use
+ze	Unused
+zf	Remove unused tilesets on save
+zg	Place stamp:
+zh	Built-in stamps (tap to place, long-press for info)
+zi	My stamps
+zj	Save selection as stamp
+zk	Import
+zl	Box-select an area with “Box select”, then tap “Save as stamp” to place the same content in one tap later.
+zm	Export to file
+zn	Delete stamp?
+zo	Delete “
+zp	Stamps imported:
+zq	(as opened)
+zr	Undone
+zs	History (
+zt	steps; tap one to go back)
+zu	Snapshots
+zv	Save a snapshot
+zw	A snapshot stores the whole map and can be restored anytime. Good before big changes.
+zx	Compares teams by routes land units can actually walk (around water and cliffs). Recalculate after editing.
+zy	Computing walking distances…
+zz	Recalculate
+100	Calculate
+101	No spawns; can't calculate.
+102	Looks fairly balanced.
+103	Teams' nearest-pool distances and nearby pool counts are similar.
+104	; largest territory vs smallest:
+105	Some imbalance:
+106	Nearest-pool distance differs by
+107	tiles; pools within 30 tiles differ by
+108	Pools within 30 tiles
+109	Nearest pool
+10a	Territory
+10b	Land units can't reach any enemy
+10c	Island
+10d	Team comparison (tap a row to jump to the spawn)
+10e	“Territory” is the number of buildable tiles assigned to each team by walking distance; with over 24 teams only territory is computed.
+10f	Shared pools (
+10g	; about equally far from the two nearest teams)
+10h	These pools will become contested points.
+10i	Walking distance between spawns (tiles, × = no land route)
+10j	Show team territory on the map
+10k	Opening simulation
+10l	Open a map to keep editing, or create a new one. Not sure where to start? Try the tutorial.
+10m	First time: open a Rusted Warfare map you already have (.tmx). The editor takes the tile assets from it and uses them for new maps.
+10n	Open map
+10o	Choose a .tmx file
+10p	Pick size and players; spawns placed for you
+10q	Open a map first
+10r	Authorize the game map folder once
+10s	Turn an image into a map
+10t	Follow along, learn in minutes
+10u	How every feature works
+10v	Remove from list
+10w	Recent
+10x	Unofficial tool. Tile assets come from your own map files; the editor ships no game assets.
+10y	Back to current map
+10z	etc.
+110	Standard base
+111	1 command center, 2 builders and 2 pools about 7 tiles from it. Team number assigned automatically.
+112	Rich base
+113	3 pools around the command center, for resource-rich big maps.
+114	Resource spot
+115	3 pools in a triangle, good as a contested point in the center.
+116	Lake
+117	An oval of water with beaches and shallows added automatically.
+118	Sea resource island
+119	A small island with 2 pools; needs navy or transports to take. Place it at sea.
+11a	Expansion
+11b	2 pools with a small grove as cover. Place between spawn and center.
+11c	Rich center
+11d	5 pools in a cross, dotted with rocks. Place in the very center as the focus.
+11e	Choke defense
+11f	Two cliffs form a narrow pass with a neutral turret at its mouth. Place between two teams.
+11g	Bridgehead
+11h	A ford across a river, with 1 pool and beach on the far side; hold it to cross. For vertical rivers.
+11i	High fort
+11j	A cliff-ringed highland with 1 pool and a single entrance. Easy to defend.
+11k	Ford crossing
+11l	A ford that lets land units cross a river; place it vertically on a river.
+11m	Grove
+11n	An irregular grove that blocks sight and movement.
+11o	Cliff highland
+11p	A cliff-ringed highland with a gap to go up and down.
+11q	Lava pit
+11r	A patch of lava with cliff edges added automatically. No unit can pass.
+11s	Ice lake
+11t	An ice lake in the snow.
+11u	tiles,
+11v	Not a stamp file
+11w	Water
+11x	Snow
+11y	Grass cliff
+11z	Ice
+120	Dirt cliff
+121	Dunes
+122	Frozen forest
+123	Stone ground
+124	Unsupported compression:
+125	” data length is wrong (
+126	bytes, expected
+127	Not a valid XML / TMX file:
+128	Not a TMX map file (root element isn't
+129	Infinite maps (infinite=1) aren't supported
+12a	” size doesn't match the map
+12b	How many seconds until each team meets an enemy
+12c	Using rough speeds of land, hover and naval units and the actual routes, estimates “at what second you meet the nearest enemy” and “how long to reach the center”. Shows whether rushes are too fast or a team is too far.
+12d	The numbers are estimates
+12e	: speeds vary by unit type, upgrades and terrain; error is a few to a dozen seconds.
+12f	Map stitching
+12g	Pick several maps, arrange them in columns and stitch them into one. Terrain at the seams joins automatically; unit team numbers are offset and trigger names prefixed to avoid clashes. The result is a new map; the originals aren't changed.
+12h	Maps should use the same tile assets.
+12i	Good for building a big map in regions and joining them.
+12j	Copy from another map
+12k	Bring a part of another map over
+12l	Open another map as reference, box-select a part on its thumbnail, and place it into the current map like a paste. Terrain transitions are rejoined.
+12m	Map library
+12n	Every map you've made or opened
+12o	With thumbnails, size, players and type tags; searchable, with favorites. You can also scan the game map folder to add all maps in it.
+12p	Batch processing
+12q	Check and fix many maps at once
+12r	Pick a folder (or some files) and check all maps at once; optionally add map_info, water and lava properties, fill empty ground and generate covers. Saves time when making map collections.
+12s	Overwrites the original files directly; back up first. If unsure, tick “Check” only.
+12t	Pack map collection
+12u	Make a Mod you can drop into the game
+12v	Pick some maps, fill in name and description, and pack them into one .rwmod file. Others put it in the game's mods folder to play the whole collection.

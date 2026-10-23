@@ -1,0 +1,626 @@
+0	Archivo
+1	Nuevo mapa
+2	Elige tamaño y jugadores; bases y recursos se colocan solos
+3	Abrir mapa…
+4	Abrir desde la carpeta del juego…
+5	Listar los mapas de la carpeta de mapas del juego
+6	Recientes…
+7	Guardar
+8	Guardar como…
+9	Guardar en la carpeta del juego
+a	Guarda el mapa y su vista previa en el juego, listo para jugar
+b	Exportar vista previa / imagen de presentación…
+c	Biblioteca de mapas…
+d	Todos los mapas que hiciste o abriste, con miniaturas y etiquetas
+e	Procesamiento por lotes…
+f	Revisar y arreglar muchos mapas a la vez, generar portadas
+g	Empaquetar colección de mapas (Mod)…
+h	Empaquetar varios mapas en un .rwmod
+i	Soporte de Mods…
+j	Importar unidades y tilesets de un Mod
+k	Origen de los tiles…
+l	Ajustes…
+m	Editar
+n	Deshacer
+o	Rehacer
+p	Copiar
+q	Cortar
+r	Pegar
+s	Seleccionar todo
+t	Quitar selección
+u	Voltear selección horizontal
+v	Voltear selección vertical
+w	Girar selección 90°
+x	Guardar selección como sello…
+y	Historial
+z	Mira cada paso, toca para volver; guarda instantáneas
+10	Mapa
+11	Lista de prueba…
+12	Qué probar en el juego, con registro de cada prueba
+13	Nota del mapa…
+14	Puntúa el mapa y te dice dónde perdió puntos y cómo arreglarlo
+15	Comprobar «¿Jugable?»
+16	Comprueba que el mapa funcione en el juego antes de guardar
+17	Informe de equilibrio
+18	Comparar recursos y territorio de equipos por rutas a pie
+19	Comprobar diferencias de simetría…
+1a	Generar aleatorio…
+1b	Terreno, bases y recursos según preajuste y semilla
+1c	Imagen a mapa…
+1d	Convertir una imagen en mapa; tú controlas la mezcla de terrenos
+1e	Escala proporcional…
+1f	Agrandar o reducir todo el mapa; recursos y bases se reubican
+1g	Reflejar mapa…
+1h	Dibuja medio mapa y hazlo simétrico en un toque
+1i	Cambiar tamaño del lienzo…
+1j	Calcomanía de imagen…
+1k	Pegar una imagen en el mapa (cortada en tiles)
+1l	Referencia para calcar…
+1m	Superponer una imagen semitransparente para calcar
+1n	Sellos
+1o	Bases, puntos de recurso, lagos y más en un toque
+1p	Detalle automático…
+1r	Simulación de apertura…
+1s	Estima en cuántos segundos cada equipo encuentra enemigos o llega al centro
+1t	Copiar de otro mapa…
+1u	Abre otro mapa, selecciona una parte y tráela
+1v	Unir mapas…
+1w	Unir varios mapas en uno grande
+1x	Comparar versiones…
+1y	Comparar con una instantánea, ver cambios, restaurar una parte
+1z	Registro de batalla…
+20	Editar los mensajes que se desplazan en el juego, por tiempo
+21	Añadir imágenes de tileset faltantes…
+22	Renumerar equipos
+23	Ordenar números de equipo: 1, 2, 3…
+24	Ver
+25	Ver todo el mapa
+26	Tamaño real (100%)
+27	Cuadrícula
+28	Atenuar otras capas
+29	Superposición
+2a	Sin superposición
+2b	Paso terrestre
+2c	Paso naval
+2d	Paso aerodeslizador
+2e	Zona edificable
+2f	Territorio de equipos
+2g	Ayuda
+2h	Tutorial
+2i	Sigue los pasos y aprende lo básico en minutos
+2j	Centro de ayuda
+2k	Gestos y atajos
+2l	Buscar funciones
+2m	Calculando territorios…
+2n	¿Restaurar el último mapa?
+2o	Sin nombre
+2p	Se encontró un autoguardado de «
+2q	). Quizá no se guardó la última vez.
+2r	Restaurar
+2s	No, gracias
+2t	Restaurando…
+2u	Error al restaurar:
+2v	¿Salir del editor?
+2x	Salir
+2z	Error al iniciar:
+30	Todos los tilesets tienen imagen
+31	Añadir imágenes de tileset faltantes
+32	Este mapa tiene
+34	Archivos necesarios:
+35	Los encontrarás en la carpeta del juego en
+37	Elegir archivos (varios a la vez)
+38	Cancelar
+39	Añadir
+3a	Añadiendo imágenes de tileset…
+3b	Añadidos
+3c	tilesets
+3d	Sin coincidencia: los nombres deben coincidir con los del mapa
+3e	Tierra (hierba, por defecto)
+3f	Se puede caminar y construir, como en hierba
+3g	Vado
+3h	Pasan unidades terrestres y barcos
+3i	Agua poco profunda
+3j	Pasan barcos, terrestres no
+3k	Agua profunda
+3l	Pasan barcos, terrestres no (se ve más honda)
+3m	Intransitable
+3n	Como un acantilado, las terrestres no pasan
+3o	Lava
+3p	Las unidades terrestres no pasan
+3q	Bloques de color limitados a
+3r	tipos; borra los que no uses
+3s	Nuevo bloque de color
+3t	Rojo R
+3u	Verde G
+3v	Azul B
+3w	Tono
+3x	Saturación
+3y	Brillo
+3z	HSV (tono/saturación/brillo)
+40	Tomar color de la pantalla
+41	Código hex
+42	Colores comunes
+43	Bloques de color de este mapa
+44	Qué es en el juego (obligatorio)
+46	Aceptar
+47	Hasta 500: seguro incluso en multijugador móvil
+4b	Formato
+4c	El tile no es 20×20
+4d	Actual
+4e	; el juego exige 20×20.
+4f	Falta map_info
+4h	Arreglar
+4i	map_info sin type
+4j	Los mapas de escaramuza deben usar skirmish.
+4k	Poner skirmish
+4l	El type de map_info es «
+4m	Valores comunes:
+4n	(datos de la comunidad)
+4o	map_info OK (type=
+4p	No hay capa Ground
+4q	El suelo tiene
+4r	celdas vacías
+4s	El juego exige que la capa Ground no tenga celdas vacías.
+4t	Rellenar con el suelo más común
+4u	Rellenar vacíos
+4v	Sin celdas vacías
+4w	La capa «
+4x	» tiene
+4y	tiles no definidos
+4z	Las versiones antiguas se cierran con tiles no definidos.
+50	Borrar esos tiles
+51	Borrar tiles no definidos
+52	propiedades float no son números
+53	Las versiones antiguas se cierran con float inválidos.
+54	Añadir imágenes de tileset…
+55	Tilesets
+56	El tileset «
+57	» usa un archivo externo
+59	» no tiene imagen incrustada
+5a	Usa una imagen externa «
+5b	», que puede no verse en otro dispositivo.
+5c	tiles de agua sin la propiedad water
+5e	Añadir water a esos tiles
+5f	tiles de lava sin la propiedad lava
+5h	Añadir lava
+5i	nombres de propiedad con mayúsculas
+5k	Pasar todo a minúsculas
+5l	Bases
+5m	No hay ninguna base
+5o	equipos tienen base
+5p	Números de equipo no consecutivos:
+5q	Renumerar como 1, 2, 3…
+5r	equipos
+5t	Números de equipo mayores que 100
+5v	Renumerar
+5w	centros de mando comparten equipo con otro
+5y	Equipo
+5z	: centro de mando sobre agua, acantilado u obstáculo
+60	Puede que la partida no empiece bien.
+61	: base demasiado cerca del borde
+62	Los constructores pueden atascarse.
+63	pares de bases a menos de 15 tiles
+64	y equipo
+65	:
+66	tiles
+67	unidades fuera del mapa
+68	Recursos
+69	No hay recursos en el mapa
+6b	Total
+6c	recursos
+6d	recursos en agua, acantilados o en el borde
+6e	Puede que las unidades no lleguen.
+6f	recursos demasiado cerca de unidades
+6h	Tamaño
+6i	Tamaño del mapa
+6j	tilesets sin usar (unos
+6l	Quitar al guardar
+6m	Disparadores
+6n	tiles ·
+6o	equipos ·
+6p	Recurso
+6q	Base (número = equipo)
+6r	Editor de mapas de Rusted Warfare
+6s	Bordes naturales
+6u	Fuerza
+6v	Tamaño de curva
+6w	Suavizar
+6x	Quitar puntos sueltos para que el terreno forme manchas
+6y	Pasadas
+6z	Decoración natural
+71	Densidad
+72	Agrupación
+73	Detalle del agua
+75	Ancho de franja baja (tiles)
+76	Islotes
+77	Erosión costera
+78	El agua forma bahías y lenguas de arena
+79	Mesetas y acantilados
+7a	Algunas mesetas con acantilados lejos de las bases
+7b	Cantidad
+7c	Tamaño (tiles)
+7d	Manchas de bosque
+7e	Bosque que bloquea vista y paso
+7f	Río
+7g	Un río que cruza el mapa con vados cada cierto tramo
+7h	Ancho (tiles)
+7i	Vados
+7j	Ríos
+7k	Pantano
+7l	Las tierras bajas junto al agua se vuelven pantano con charcos
+7m	Alcance
+7n	Costa de arrecifes
+7o	Arrecifes en aguas bajas, costa con más capas
+7p	Marcas de guerra
+7q	Tierra quemada y cráteres sobre la hierba
+7r	Intensidad
+7s	Lagos de lava
+7u	Relieve aleatorio
+7w	Amplitud
+7x	Tamaño del relieve
+7y	Cambiar tema
+81	Quitar decoración
+82	Quitar árboles, arbustos, rocas (recursos intactos)
+83	Proporción a quitar
+84	Reglas propias
+86	Densidad general
+87	Rellenar por bioma
+89	Nivel de detalle
+8a	Ninguno
+8b	Bosque
+8c	Pradera
+8d	Desierto
+8e	Nieve
+8f	Pantano
+8g	Volcán
+8h	Páramo
+8i	Pradera natural
+8j	Bosque denso
+8k	Desierto y gobi
+8l	Nieve y lagos helados
+8m	Lava volcánica
+8n	Humedal
+8o	Islas tropicales
+8p	Meseta y cañón
+8q	Delta de río
+8r	No es un preajuste de detalle
+8s	El mapa de referencia no tiene datos de terreno
+8t	Detalle automático
+8u	Enriquece el terreno en un toque — ajustable, con vista previa
+8w	Mira la vista previa y aplica cuando te guste
+8x	; se puede deshacer después.
+90	Para cambiar solo una zona: selecciónala y marca «Solo selección».
+92	En qué terreno, a qué distancia de qué, qué poner
+94	Aprender de un mapa
+95	Seguir el estilo de un mapa que te guste
+97	Pincel de detalle
+98	El detalle va donde pintes
+9a	Pincel de altura
+9b	Subir y bajar como modelar colinas
+9d	Pincel de biomas
+9e	Primero pinta «aquí bosque, allí desierto»
+9g	Herramienta de caminos
+9h	Dibujar una ruta de marcha
+9j	Módulos tácticos
+9k	Coloca pasos, cabezas de puente y fuertes
+9m	Abre primero un mapa con datos de terreno
+9n	(reducido; se aplica a tamaño completo)
+9o	I↔D
+9p	Ar↕Ab
+9q	Centro
+9r	4 lados
+9s	Vista previa
+9t	· semilla
+9u	· simetría:
+9v	Subir
+9w	Bajar
+9x	Quitar
+9y	Usar lo aprendido
+9z	reglas de dispersión
+a1	— Elige un preajuste —
+a2	+ Modificador
+a3	Pila de modificadores
+a4	Azar y zona
+a5	Semilla
+a6	Otra
+a7	Generar 4 variantes
+a8	No simétrico
+a9	Simétrico (detectado:
+aa	Auto
+ab	Proteger alrededor de bases y recursos
+ad	Solo selección
+ae	Colocar módulos tácticos al aplicar
+af	Por tipo
+ag	Preajustes
+ah	Guardar como mi preajuste
+ai	Nombre
+aj	Mis preajustes
+ak	Guardado
+al	Código copiado
+am	Copiar código
+an	Importar código
+ao	Código
+ap	Código no válido
+aq	Elige arriba el preajuste «★» que quieres borrar
+ar	Borrado
+as	Borrar preajuste elegido
+at	Efecto
+au	Original
+av	Elige una variante
+aw	Ninguna
+ax	Leyendo mapa de referencia…
+ay	Estilo aprendido de «
+az	»:
+b0	Error al aprender:
+b1	Aplicar al mapa
+b2	Antes del detalle automático
+b3	Generando detalles…
+b4	Detalles añadidos
+b5	; para mantener rutas se abrieron
+b6	tiles de corredor
+b7	. Deshaz si no te gusta.
+b8	(cualquier terreno)
+b9	Poner
+ba	Cambiar a
+bb	En
+bc	Acción
+bd	Lejos de (opcional)
+be	Distancia (tiles)
+bf	Probabilidad %
+bg	Agrupado
+bh	Borrar regla
+bi	Añadir regla
+bj	Colocar módulos
+bk	Decoración
+bl	Erosión
+bm	Relieve
+bn	Marcas de guerra
+bo	Quitar decoración
+bp	Pincel
+bq	Abrir «Detalle automático» (todo el mapa)
+br	Subir
+bs	Bajar
+bu	Borrar
+bv	Generar por bioma…
+bw	Borrar biomas
+by	Pavimentar tierra como camino de tierra
+bz	Ancho del camino
+c1	Se necesitan tiles
+c3	Abrir un mapa
+c4	¿Crear un mapa nuevo?
+c6	Crear igualmente
+c7	Mapa nuevo
+c8	Disposición de bases
+c9	En círculo
+ca	Izquierda contra derecha
+cb	Arriba contra abajo
+cc	Cuadrícula uniforme (muchos jugadores)
+cd	Terreno base
+ce	Preajuste de terreno
+cf	Estilo
+cg	Simetría
+ch	Rotación central
+ci	Semilla
+cj	Mapa vacío
+ck	Terreno aleatorio
+cl	1v1 simétrico
+cm	4 jugadores en esquinas
+cn	4 esquinas
+co	8 jugadores en anillo
+cp	8 en anillo
+cq	10 jugadores todos contra todos
+cr	10 FFA
+cs	Mapa naval
+ct	Naval
+cu	Captura de ciudades
+cv	Ciudades
+cw	Defensa de supervivencia
+cx	Supervivencia
+cy	Misión
+cz	Misión
+d1	Nombre del mapa
+d2	Tamaño (tiles de 20 px)
+d3	An
+d4	Al
+d5	Jugadores (1–100)
+d6	Empezar con
+d7	Recursos junto a cada equipo
+d8	∅
+d9	Recursos compartidos en el centro
+db	Generar
+dc	Generando mapa…
+dd	Cambiar tamaño del lienzo
+df	Nuevo ancho
+dg	Nuevo alto
+dh	Dónde poner el original
+di	La zona nueva se rellena con el terreno actual «
+dj	». Se puede deshacer.
+dk	Se puede deshacer.
+dl	Cambiar
+dm	Antes de cambiar lienzo
+dn	Cambiando lienzo…
+do	Cambiar lienzo
+dp	unos
+dq	(movidos a su posición equivalente)
+dr	(se quedan en su sitio)
+ds	tiles (área ×
+dt	Tras escalar: recursos
+du	, unidades
+dv	— nada se duplica.
+dw	Escalar mapa proporcionalmente
+dy	Factor (ancho y alto)
+dz	Opciones
+e0	Unidades (centros de mando, constructores, etc.,
+e1	)
+e2	Mover a su posición equivalente (recomendado)
+e3	Dejar en su sitio
+e4	Recursos (
+e5	Misma cantidad, en su posición equivalente
+e6	Aumentar según área
+e7	Las zonas de disparadores también escalan (
+eb	Escalar
+ec	Antes de escalar
+ed	Escalando mapa…
+ee	unidades de tile convertidas en objetos
+ef	Escalado a
+eg	tiles: recursos
+eh	Izquierda → derecha
+ei	Reflejar la mitad izquierda en la derecha
+ej	Derecha → izquierda
+ek	Reflejar la mitad derecha en la izquierda
+el	Arriba → abajo
+em	Reflejar la mitad superior en la inferior
+en	Abajo → arriba
+eo	Reflejar la mitad inferior en la superior
+eq	Copiar el cuarto superior izquierdo en los otros tres (4 jugadores)
+er	Reflejar mapa
+eu	Reflejar
+ev	Antes de reflejar
+ew	Reflejando…
+ex	Reflejo hecho
+ey	Comprobar simetría
+f0	Tipo de simetría
+f1	Comprobar
+f2	Comparando…
+f3	bases sin pareja simétrica
+f4	Hay
+f5	tiles (
+f6	%) asimétricos, marcados en rojo
+f7	El terreno es totalmente simétrico, pero hay
+f8	Totalmente simétrico
+f9	Crea o abre un mapa primero
+fb	Jugadores
+fc	Recursos por equipo
+fd	Recursos en el centro
+fe	Proporción de agua
+ff	Proporción de acantilado/meseta
+fg	Proporción de bosque
+fh	Código (otros generan el mismo mapa)
+fi	Código copiado
+fj	Usar el código de alguien
+fk	Cargar
+fl	Generar aleatorio
+fm	Antes de generar
+fn	Generando…
+fo	; para mantener rutas se pavimentaron
+fp	Listo:
+fq	bases,
+fr	Abre antes un mapa existente (para obtener tiles)
+fs	No se puede leer la imagen
+ft	+ Franja
+fu	− Quitar última franja
+fv	Invertir
+fw	Este «
+fx	» pasa a:
+fy	Color
+fz	Altura
+g0	Solo calcar
+g1	Colores principales
+g2	Terreno para cada color principal
+g3	Ajustar a proporciones (deslizadores abajo)
+g6	Ancho del nuevo mapa (tiles)
+g7	Convertir en
+g8	Mapa actual (
+g9	Modo
+ga	Muestreo y limpieza
+gb	Suave (fotos, capturas)
+gc	Píxel (pixel art)
+gd	Desenfoque (1 para JPG)
+ge	Limpieza (quitar motas y franjas)
+gf	El agua lejos de la costa pasa a profunda
+gg	Resultado actual
+gh	Después de generar
+gi	Colocar bases
+gk	Quitar objetos existentes (recursos, árboles, etc.)
+gm	Resultado
+gn	Comparar superpuesto
+go	Imagen a mapa
+gp	Generar mapa
+gq	Analizando imagen…
+gr	Antes de imagen a mapa
+gt	Calculando…
+gv	Ocupa
+gw	tiles; sin repetidos
+gx	piezas; el archivo crece unos
+gy	Calcomanía de imagen
+h0	tiles =
+h1	px
+h2	Colocar
+h3	Incrustando imagen…
+h4	Colocar calcomanía
+h5	Referencia para calcar
+h6	La referencia solo se ve en el editor y no se escribe en el mapa.
+h7	Mostrar referencia
+h8	Opacidad
+h9	Tamaño
+ha	Posición horizontal
+hb	Posición vertical
+hc	Estirar al mapa
+hd	Quitar referencia
+he	Hecho
+hf	Exportar imagen
+hg	Portada del mapa (recomendado)
+hh	Una foto de todo el mapa con su nombre: «
+hj	Vista previa pequeña 200 px
+hk	Nombre «nombremapa_map.png».
+hl	Vista previa 500 px
+hm	El tamaño máximo que admite el juego.
+hn	Imagen de presentación
+hp	Los tiles actuales vienen del mapa «
+hq	», que incluye:
+ht	Cerrar
+hu	Usar los tiles de este mapa
+hv	Origen de los tiles
+hw	Tiles actualizados
+hx	problemas afectan al juego,
+hy	avisos.
+hz	Sin problemas graves;
+i0	Sin problemas; guarda y ve a probar.
+i1	Ver
+i2	Lista de prueba
+i3	Nota del mapa
+i5	¿Jugable?
+i6	Ajustes
+i7	Mostrar cuadrícula (con zoom)
+i8	Quitar tilesets sin usar al guardar
+ia	Exportar datos personales
+ib	Importar datos personales
+ic	Exportar portada al guardar (nombremapa.png)
+id	Tamaño de portada (lado largo, px)
+ie	Estilo de recurso por defecto
+if	1 tile (recomendado)
+ig	3×3 con borde
+ih	Intervalo de autoguardado (s)
+ii	Carpeta del juego olvidada
+ij	Elegir de nuevo la carpeta del juego
+ik	El tutorial se ofrecerá de nuevo
+il	Reiniciar tutorial
+in	Árbol
+io	Arbusto
+ip	Rocas
+iq	Cráter
+ir	Barro
+is	Cactus
+it	Roca grande
+iu	Centro de mando
+iv	Constructor
+iw	Extractor
+ix	Fábrica terrestre
+iy	Fábrica aérea
+iz	Fábrica naval
+j0	Fábrica de mechs
+j1	Laboratorio
+j2	Fabricador
+j3	Torreta
+j4	Torreta antiaérea
+j5	Caja de créditos
+j6	Ingeniero de combate
+j7	Ingeniero mech
+j8	Tanque
+j9	Tanque aerodeslizador
+ja	Artillería
+jb	Cañonero
+jc	Helicóptero
+jd	Barco constructor
+je	Lancha cañonera
+jf	Tanque pesado

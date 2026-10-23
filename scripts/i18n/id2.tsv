@@ -1,0 +1,1177 @@
+jg	Tank Mammoth
+jh	Pengebom
+ji	Pencegat
+jj	Tank rudal
+jk	Laba-laba eksperimen
+jl	Transport
+jm	Artileri berat
+jn	Pertahanan laser
+jo	Meriam antiudara
+jp	Silo nuklir
+jq	Silo antinuklir
+jr	Mech (senapan)
+js	Mech (rudal)
+jt	Jet amfibi
+ju	Ganti tim
+jv	Nomori ulang tim
+jw	Tambah map_info
+jx	Edit map_info
+jy	Apa yang diuji di game
+k0	Cek kesehatan peta
+k1	Menilai peta dan menunjukkan poin yang hilang
+k3	Ekspor / impor data pribadi
+k4	HP baru, atau sinkron PC dan HP
+k6	Peta terbuka di game dan sampul tampil di pilihan peta
+k9	Ekstraktor bisa dibangun di sumber daya;
+ka	semua beres
+kc	Kapal berlayar di air, unit darat tidak; unit darat bisa lewat arungan
+ke	Pemicu muncul unit tepat waktu, tempat dan tim
+kg	Perubahan kredit benar (berapa dan seberapa sering)
+kh	Teks peta tampil benar, warna dan posisi tepat
+ki	Pesan log pertempuran muncul tepat waktu
+kk	Tujuan misi muncul berurutan; semua selesai = menang
+kl	Peta besar tidak lag atau crash di HP
+kn	Uji terakhir:
+ko	lulus.
+kp	Masalah terakhir kali:
+kq	Tulis catatan kalau ada masalah (opsional)
+kr	Simpan catatan uji ini
+ks	Tercatat: masih
+kt	gagal — perbaiki lalu uji lagi
+ku	Semua lulus — siap dirilis!
+kv	Memeriksa…
+kw	masalah yang memengaruhi game
+kx	Buka «Bisa dimainkan?» dan perbaiki satu per satu; kebanyakan sekali ketuk.
+ky	pengingat
+kz	Lihat item kuning di «Bisa dimainkan?».
+l0	Jarak ke sumber daya terdekat berbeda
+l2	Jumlah sumber daya terdekat berbeda
+l3	Taruh sumber daya secara simetris, atau cerminkan peta.
+l4	Wilayah terbesar sekian kali yang terkecil:
+l5	×
+l6	Pindahkan markas ke posisi yang lebih simetris.
+l7	Unit darat satu tim tidak bisa mencapai musuh
+l8	Kalau bukan peta laut, buka jalan dengan alat jalan atau arungan.
+l9	Markas kurang dari 2
+la	Taruh markas di mode Unit.
+lb	Jenis medan terlalu sedikit
+lc	Coba preset di «Detail otomatis».
+ld	Hampir tidak ada pohon, batu atau dekorasi
+le	Sebar dengan «Dekorasi alami» atau kuas objek.
+lf	Tepi medan terlalu rapi
+lg	Pakai «Tepi alami».
+lh	Sangat bagus
+li	Bagus
+lj	Perlu diperbaiki
+lk	Banyak masalah
+ll	Tidak ada pengurangan.
+lm	rw-map-editor-data-pribadi.json
+ln	Data pribadi
+lo	Bukan file data pribadi
+lp	Diimpor. Sebagian pengaturan berlaku setelah dibuka ulang.
+lq	Gagal impor:
+lr	Peta Rusted Warfare
+ls	Gagal simpan:
+lt	Disimpan menimpa file asli
+lu	Diunduh ke folder «Download»
+lv	Folder peta
+lx	Tidak ada izin tulis ke folder
+ly	Folder peta game belum dipilih
+lz	Benua
+m0	Satu benua besar dikelilingi laut; fokus pertempuran darat
+m1	Kepulauan laut
+m2	Banyak pulau; angkatan laut dan udara lebih penting
+m3	Laut pedalaman
+m4	Laut di tengah, daratan di sekeliling
+m5	Lembah sungai
+m6	Sungai besar melintasi peta; beberapa arungan jadi rebutan
+m7	Benteng dataran tinggi
+m8	Dataran tinggi berpagar tebing dengan celah masuk
+m9	Sedang
+ma	Format kode salah (harus diawali RWG1-)
+mb	Rumput
+mc	Tanah
+md	Pasir
+me	Medan
+mf	Lukis rumput, air, pasir, tebing dan lainnya
+mg	Pilih medan dan lukis. Di antara medan berbeda editor akan
+mh	menambah transisi otomatis
+ml	Objek
+mm	Sumber daya, pohon, batu dan benda lain di tanah
+mo	Sisakan 1 tile antara sumber daya dan unit.
+mq	Unit
+mr	Markas dan unit yang sudah ditaruh
+mt	Dengan simetri aktif, markas juga ditaruh di posisi simetris.
+mv	Aturan peta, munculkan unit, teks, syarat menang
+mx	Peta skirmish biasa cukup map_info.
+my	Peta kota, bertahan dan misi bisa mulai dari templat.
+mz	Buat acak, gambar jadi peta, skala, cermin
+n1	Semua ini bisa diurungkan.
+n2	Tile (ahli)
+n3	Taruh tile apa saja langsung, tanpa transisi
+n5	Tanah tidak boleh kosong, jadi lapisan tanah tidak punya penghapus.
+n6	Kuas medan
+n7	Tahan dan seret untuk melukis
+nb	Persegi
+nc	Seret persegi berisi medan
+ne	Elips
+nf	Seret elips berisi medan
+nh	Ember
+ni	Ganti area tersambung bermedan sama sekaligus
+nk	Misalnya seluruh gurun jadi salju sekali jalan.
+nl	Pipet
+nm	Ambil medan dari peta
+nn	Ketuk peta untuk memakai medan itu di kuas.
+no	Geser
+np	Geser tampilan
+nr	Taruh objek
+ns	Ketuk untuk taruh, seret untuk taruh beruntun
+nu	Gaya sumber daya
+nv	1 tile atau 3×3
+nx	1 tile
+ny	seperti editor resmi, lebih fleksibel;
+o0	Kedua gaya sama saja saat ditambang di game.
+o1	Penghapus objek
+o2	Hapus objek
+o4	Kuas acak
+o5	Lukis beberapa dekorasi sekali sapuan
+o7	Ketuk untuk taruh pusat komando + 2 builder
+o9	Taruh unit
+oa	Unit apa saja
+oc	Pilih/pindah
+od	Ketuk unit untuk geser, ganti tim atau hapus
+of	Hapus
+og	Ketuk unit untuk menghapus
+oi	Pilih kotak
+oj	Seret pilihan persegi
+ol	Tongkat ajaib
+om	Pilih area tersambung bermedan sama
+oo	Salin medan, objek dan unit di pilihan.
+or	Markas yang ditempel dapat nomor tim baru.
+ot	Balik horizontal
+ou	Balik pilihan kiri-kanan
+ow	Balik vertikal
+ox	Balik pilihan atas-bawah
+oy	Putar 90°
+oz	Putar pilihan 90° searah jarum jam
+p0	Simpan sebagai stempel
+p1	Simpan pilihan ke stempel
+p3	Taruh tile
+p4	Taruh tile yang dipilih
+p5	Penghapus tile
+p6	Kosongkan sel lapisan selain tanah
+p7	Pipet tile
+p8	Ambil tile dari peta
+p9	Gambar simetris
+pa	Gambar di satu tempat, posisi simetris ikut tergambar
+pd	«4 arah» cocok untuk peta 4 pemain.
+pe	«Diagonal» hanya untuk peta persegi.
+pf	Hanya ganti
+pg	Ubah satu medan saja
+pi	Utama / kedua
+pj	Ganti cepat antara dua medan
+pl	Sorot yang sedang diedit
+pn	Tampilkan tempat bisa jalan dan bangun
+po	Menumpuk lapisan warna di peta:
+pq	• Laut: biru adalah air untuk kapal
+pr	• Hover: merah tak bisa dilewati bahkan oleh hover
+ps	• Bangun: hijau bisa, merah tidak
+pt	• Wilayah: tiap tile milik tim terdekat menurut jalan kaki
+pu	• Beda simetri: merah di bagian yang berbeda
+pw	Bandingkan sumber daya tim lewat rute nyata
+py	Makin dekat angkanya, makin adil.
+q4	Pemicu tidak disalin.
+q5	Temukan bagian yang berbeda
+q7	Skala proporsional
+q8	Perbesar atau perkecil seluruh peta
+qa	Unit dan sumber daya tidak pernah digandakan
+qe	Ubah ukuran peta tanpa menskalakan isi
+qg	Gambar jadi peta, porsinya kamu atur
+qh	1. Pilih gambar dan ukuran peta.
+qk	4. Pakai «Kebersihan» untuk hapus bintik dan garis tipis.
+qn	Untuk JPG set «Blur» ke 1.
+qo	Untuk menggambar manual di atas gambar, pakai «Jiplak saja».
+qp	Buat peta dasar dari preset dan seed
+qs	Satu kode yang menghasilkan peta acak yang sama
+qu	Tempel gambar ke peta
+qy	Kombinasi umum sekali ketuk
+r0	Stempel bisa diekspor ke file.
+r1	Lihat tiap operasi, ketuk untuk kembali
+r3	Simpan sebagai file .tmx
+r5	Simpan ke game
+r6	Simpan langsung ke folder peta game
+r9	Sampul peta
+ra	Foto seluruh peta
+rc	Gambar besar dengan judul, pemain dan legenda
+rd	Untuk membagikan peta di grup, forum atau workshop.
+re	Tile
+rf	Dari mana peta baru mendapat tile
+rh	Simpan otomatis
+ri	Salinan setiap 30 detik
+rk	Jenis peta dan aturan dasar
+rm	Tim
+rn	Hingga 100 (batas mesin)
+ro	Mesin mendukung hingga 100 tim.
+rp	Room biasa hanya 10 tim
+rt	Dasar
+ru	HP
+rw	PC
+ry	Blok warna
+rz	Tanah warna sendiri; pilih jadi apa di game
+s1	tidak berbaur dengan medan di sebelahnya
+s4	Klik kanan atau tekan lama blok untuk edit atau hapus.
+s5	Bentuk dan kepadatan objek
+s6	Persegi, elips, garis, ember, kepadatan dan jarak
+s9	Jarak minimum
+sa	, jadi kuas menaruhnya berjarak, tidak menumpuk.
+sb	Pilih dari palet unit, ketuk peta untuk menaruh
+sd	Berapa sekaligus
+se	Susun otomatis berbaris atau blok
+sg	Teks
+sh	Tulis satu baris di peta
+sj	Log pertempuran
+sk	Pesan yang berjalan di game
+sm	Apa ini?
+sn	Tips
+so	Mengerti
+sp	Cari: misalnya «simetri», «sumber daya», «simpan»
+sq	Peta ini tidak bisa lukis medan otomatis; pakai mode «Tile»
+sr	Lukis medan
+ss	Buat atau pilih blok warna di kanan dulu
+st	Lukis blok warna
+su	Ember blok warna
+sv	Naikkan tanah
+sw	Turunkan tanah
+sx	Dipilih:
+sy	Peta ini tidak punya tileset objek
+sz	Hapus objek
+t0	Pilih beberapa objek di kanan dulu
+t1	Ember objek
+t2	Ketuk tile di kanan dulu
+t4	Hapus tile
+t5	Taruh markas
+t6	Jumlah tim sudah maksimum
+t7	Tim
+t8	Markas ditaruh:
+t9	unit
+ta	Bertumpuk di sini:
+tb	— pilih satu:
+tc	Objek
+td	Ubah ukuran area
+te	Pindah
+tf	Gambar persegi
+tg	Gambar elips
+th	Gambar jalan
+ti	, termasuk
+tj	Tersalin
+tk	Dipotong. Bagian kosong diisi medan kedua
+tl	Kosongkan pilihan
+tm	Putar -90°
+tn	Ubah bentuk
+to	Pilih area dulu dengan kotak
+tp	Nama stempel
+tq	Stempel
+ts	Disimpan sebagai stempel:
+tt	Seret ke posisi, lalu ketuk «Taruh»
+tv	Papan klip kosong: pilih dan salin dulu
+tw	Taruh
+tx	Balik H
+ty	Balik V
+tz	90°
+u0	Pilihan
+u1	Stempel
+u2	Kosongkan
+u3	Dibatalkan
+u4	Ukuran kuas
+u5	Tukar utama/kedua
+u8	Buka peta lain?
+ua	Tetap buka
+ub	Membaca peta…
+uc	File tidak bisa dibuka
+ud	Catatan ini sudah kedaluwarsa
+ue	Membuka…
+uf	Perangkat ini tidak bisa membaca folder langsung
+ug	Membaca folder…
+uh	Gagal membaca:
+ui	Belum ada peta .tmx di folder game
+uj	Buka dari folder game
+uk	Peta masih bermasalah
+ul	Ditemukan
+um	masalah yang memengaruhi game:
+un	Lihat dulu
+uo	Tetap simpan
+up	Membuat file peta…
+uq	Gagal simpan
+us	Di HP biasanya
+uv	Di PC biasanya di folder instalasi game di
+ux	Pilih folder peta game
+uy	Pilih
+uz	Diingat:
+v0	Gagal memilih:
+v2	Menulis ke folder game…
+v3	dan sampul
+v4	Disimpan ke «
+v5	. Ayo uji di game!
+v6	Gagal simpan ke game
+v8	Simpan biasa
+v9	Pilih ulang folder
+va	Peta dan
+vb	Sampul
+vc	Menyimpan snapshot (untuk jaga-jaga)…
+vd	Otomatis:
+ve	Simpan otomatis gagal: penyimpanan mungkin penuh
+vf	Simpan snapshot
+vg	Nama snapshot
+vi	Menyimpan snapshot…
+vj	Snapshot tersimpan
+vk	Pulihkan snapshot?
+vl	Pulihkan ke «
+vn	Pratinjau
+vo	Membuat gambar pamer…
+vp	_pamer.png
+vq	Tile
+vr	Kuas
+vs	Detail
+vt	Bioma
+vu	Jalan
+vv	Garis
+vw	Penghapus
+vx	Pilih
+vy	Gambar area
+vz	Teks
+w0	Alat
+w1	Lapisan
+w2	Riwayat
+w3	Laporan
+w4	Dicadangkan otomatis
+w5	Belum disimpan
+w6	Urungkan:
+w7	Urungkan (Ctrl+Z)
+w8	Ulangi:
+w9	Ulangi (Ctrl+Y)
+wa	Cari fitur…
+wb	Perbesar
+wc	Perkecil
+wd	Nama file (tanpa .tmx)
+wf	Lapisan warna
+wg	Bisa dibangun
+wh	Beda simetri
+wi	Tekan lama atau klik kanan untuk bantuan
+wj	Zoom
+wl	Bulat
+wm	Kotak
+wq	Medan sama di seluruh peta
+wr	Sel kosong tidak menimpa objek saat ditempel
+ws	Tempel isi papan klip
+wv	Klik untuk utama, klik kanan atau tekan lama untuk kedua
+ww	Kedua:
+wx	Medan (utama / kedua)
+wy	Tukar utama dan kedua (X)
+wz	⇄ Tukar utama/kedua
+x0	Lukis dengan kedua
+x1	Klik kanan melukis kedua
+x2	Ganti medan ini di seluruh peta
+x3	Apa saja (semua medan)
+x4	Hanya ganti
+x5	» yang digambar
+x6	Bagian dalam adalah tanah biasa
+x8	(tidak ada)
+x9	Saat melukis akan
+xa	» bisa langsung bersebelahan dengan:
+xb	. Di sebelah medan lain akan ditambah cincin medan perantara.
+xd	Kuas acak: pilih objek; slider mengatur porsi
+xe	Porsi kosong
+xf	Tebal garis
+xg	Kepadatan
+xh	Jarak min. (tile)
+xi	Taruh di tanah sama di seluruh peta
+xj	Tahan dan seret untuk taruh beruntun
+xk	Seret persegi
+xl	Seret elips
+xm	Seret garis
+xn	Ketuk untuk isi tanah yang sama
+xo	Tahan dan seret untuk menghapus
+xq	Makin rendah «Kepadatan», makin jarang dan alami.
+xr	Peta sekarang punya
+xt	Klik kanan atau tekan lama: edit / hapus
+xu	Edit blok warna
+xv	Blok warna (warna sendiri, pilih sifat)
+xx	Bentuk
+xy	Blok warna langsung mengganti tanah dan dengan medan sebelahnya
+xz	tidak berbaur
+y0	. Untuk kembali ke medan biasa, lukis ulang dengan kuas medan.
+y1	Edit warna dan sifat
+y2	Hapus (jika tak dipakai di peta)
+y3	Blok ini masih dipakai di peta; lukis ulang dulu
+y4	Netral
+y5	Musuh (-2)
+y6	Ketuk peta untuk menaruh satu
+y9	Unit terpilih
+ya	Posisi: tile (
+yb	Hapus unit
+yc	Markas (
+yd	; ketuk untuk ke sana)
+ye	Belum ada markas.
+yf	Nomori ulang tim 1, 2, 3…
+yg	Semua
+yh	Darat
+yi	Udara
+yj	Laut
+yk	Bangunan
+yl	Eksperimen
+ym	Tidak ditemukan. Coba kata lain atau kategori lain.
+yn	Cari unit (nama Mandarin atau Inggris)
+yo	Pilih unit
+yp	Tim
+yq	Jarak (tile)
+yr	Susunan
+ys	Baris
+yt	Kolom
+yu	Blok
+yw	Memuat editor pemicu…
+yx	Seluruh peta
+yy	Banyak peta
+yz	Gambar
+z0	Lukis ke lapisan
+z1	Ketuk untuk memilih tile
+z3	Sembunyikan
+z4	Tampilkan
+z5	Tanah
+z6	Lapisan tile
+z7	Lapisan objek ·
+z8	Redupkan lapisan lain (sorot yang diedit mode ini)
+z9	Tampilkan kisi
+za	Atur…
+zb	Pilih gambar acuan…
+zc	tile ·
+zd	Dipakai
+ze	Tak dipakai
+zf	Buang tileset tak terpakai saat simpan
+zg	Taruh stempel:
+zh	Stempel bawaan (ketuk untuk taruh, tekan lama untuk info)
+zi	Stempel saya
+zj	Simpan pilihan sebagai stempel
+zk	Impor
+zm	Ekspor ke file
+zn	Hapus stempel?
+zo	Hapus «
+zp	Stempel diimpor:
+zq	(saat dibuka)
+zr	Diurungkan
+zs	Riwayat (
+zt	langkah; ketuk untuk kembali)
+zu	Snapshot
+zv	Simpan snapshot
+zy	Menghitung jarak jalan kaki…
+zz	Hitung ulang
+100	Hitung
+101	Tidak ada markas; tidak bisa dihitung.
+102	Terlihat cukup adil.
+103	Jarak dan jumlah sumber daya antar tim mirip.
+104	; wilayah terbesar dibanding terkecil:
+105	Ada ketimpangan:
+106	Jarak ke sumber daya terdekat berbeda
+107	tile; sumber daya dalam 30 tile berbeda
+108	Sumber daya dalam 30 tile
+109	Sumber daya terdekat
+10a	Wilayah
+10b	Unit darat tidak bisa mencapai musuh
+10c	Pulau
+10d	Perbandingan tim (ketuk baris untuk ke markas)
+10f	Sumber daya bersama (
+10g	; jaraknya hampir sama dari dua tim terdekat)
+10h	Sumber daya ini akan jadi titik rebutan.
+10j	Tampilkan wilayah tim di peta
+10k	Simulasi pembukaan
+10n	Buka peta
+10o	Pilih file .tmx
+10p	Ukuran dan pemain; markas ditaruh otomatis
+10q	Buka peta dulu
+10r	Izinkan folder peta game sekali
+10s	Ubah gambar jadi peta
+10t	Ikuti langkah, bisa dalam beberapa menit
+10u	Cara kerja tiap fitur
+10v	Hapus dari daftar
+10w	Terbaru
+10y	Kembali ke peta saat ini
+10z	dll.
+110	Markas standar
+112	Markas kaya
+114	Titik sumber daya
+116	Danau
+117	Air berbentuk oval, pantai dan air dangkal otomatis.
+118	Pulau sumber daya laut
+11a	Ekspansi
+11c	Tengah kaya
+11e	Pertahanan celah
+11g	Kepala jembatan
+11i	Benteng tinggi
+11k	Penyeberangan arungan
+11l	Arungan agar unit darat bisa menyeberang sungai; taruh tegak di atas sungai.
+11m	Hutan kecil
+11n	Hutan tak beraturan yang menghalangi pandangan dan jalan.
+11o	Dataran tinggi bertebing
+11p	Dataran tinggi berpagar tebing dengan celah naik turun.
+11q	Lubang lava
+11s	Danau es
+11t	Danau es di salju.
+11u	tile,
+11v	Bukan file stempel
+11w	Air
+11x	Salju
+11y	Tebing rumput
+11z	Es
+120	Tebing tanah
+121	Bukit pasir
+122	Hutan beku
+123	Tanah batu
+124	Kompresi tidak didukung:
+125	»: panjang data salah (
+126	byte, seharusnya
+127	File XML / TMX tidak valid:
+128	Bukan peta TMX (root bukan
+129	Peta tak terbatas (infinite=1) tidak didukung
+12a	»: ukuran tidak sama dengan peta
+12b	Berapa detik sampai tiap tim bertemu musuh
+12d	Angkanya perkiraan
+12f	Gabung peta
+12h	Peta sebaiknya memakai tile yang sama.
+12i	Cocok untuk membuat peta besar per bagian.
+12j	Salin dari peta lain
+12k	Bawa bagian dari peta lain
+12m	Pustaka peta
+12n	Semua peta yang pernah dibuat atau dibuka
+12p	Proses massal
+12q	Periksa dan perbaiki banyak peta sekaligus
+12t	Kemas koleksi peta
+12u	Jadikan Mod yang bisa langsung dimasukkan ke game
+12x	Bandingkan versi
+12y	Lihat perbedaan dua versi
+130	Dukungan Mod
+131	Pakai unit dan tile dari Mod
+135	Darat (tank)
+136	Unit hover
+137	Menyimulasikan…
+138	Belum ada markas di peta
+139	mnt
+13a	dtk
+13b	Bertemu musuh
+13c	Darat ke tengah
+13e	Waktu kontak pertama berbeda
+13g	Waktu kontak pertama mirip (selisih
+13h	), pembukaan adil.
+13j	Tampilkan garis depan
+13k	Menghitung garis depan…
+13n	Taruh peta saat ini «
+13o	» paling depan
+13q	Per baris
+13r	Mulai gabung
+13s	Butuh minimal dua peta
+13t	Menggabungkan…
+13u	Membuka peta gabungan…
+13v	gabungan-
+13w	Perbaiki sambungan
+13x	Digabung jadi
+13y	peta baru
+13z	Dari «
+140	» salin
+142	Salin dan taruh di peta saat ini
+143	Pilih dulu bagian di gambar kecil
+145	P
+146	Sangat besar
+147	Besar
+148	Kecil/sedang
+149	Tantangan
+14a	Favorit
+14b	Tag
+14c	Tag (pisahkan dengan koma)
+14g	Memindai
+14h	peta…
+14i	Ditambahkan
+14j	peta
+14k	Cari nama atau tag
+14l	Hanya favorit
+14m	Pindai folder game
+14n	Periksa dan perbaiki sekumpulan peta.
+14o	Peta mana
+14p	Semua peta di folder game
+14q	File yang saya pilih
+14r	Apa yang dilakukan
+14s	Tambah map_info yang hilang
+14t	Tambah properti air dan lava
+14u	Isi tanah kosong
+14v	Buat sampul (namapeta.png)
+14y	Mulai
+14z	Izinkan folder peta game dulu
+150	Tidak ada peta untuk diproses
+151	Memproses
+152	hasil-massal.zip
+153	Masalah
+154	Diperbaiki
+155	Masalah serius tersisa
+156	Gagal membaca
+157	Hasil proses massal
+158	Ditulis
+159	file.
+15a	Hanya diperiksa; tidak ada file yang diubah.
+15b	Koleksi peta saya
+15d	Nama koleksi
+15e	Deskripsi
+15f	Sertakan peta saat ini «
+15g	Pilih peta lain (boleh banyak)
+15i	Kemas
+15j	Mengemas…
+15k	Butuh minimal satu peta
+15l	Dikemas
+15m	peta:
+15o	Pilih snapshot untuk dibandingkan
+15p	Ukuran snapshot
+15q	, berbeda dari sekarang; hanya bisa berdampingan, tidak per sel
+15r	Bandingkan: sekarang ↔ «
+15t	Sekarang
+15u	Snapshot (merah = berbeda)
+15v	Pulihkan area dari snapshot
+15w	Pilih dulu area di snapshot
+15x	Pulihkan area dari snapshot
+15y	Dipulihkan. Urungkan kalau tidak suka.
+160	unit ·
+161	tileset
+162	Hapus
+163	Ditambahkan ke peta; pakai di mode «Tile»
+164	Tambah
+165	Membaca Mod…
+166	Terbaca
+167	unit,
+168	Impor Mod
+16b	Skala ×
+16c	Kosong = semua tim
+16d	Kondisi
+16e	Logika
+16f	Aksi
+16g	Deteksi unit
+16i	Jenis unit
+16j	Hanya satu jenis; kosong = apa saja
+16k	Minimal
+16l	Bawaan 1
+16m	Maksimal
+16n	0 = «tidak ada di area»
+16o	Hitung bangunan saja
+16p	Hitung bangunan produksi saja
+16q	Hitung builder saja
+16r	Hitung bangunan di sumber daya saja
+16s	Hitung unit menganggur saja
+16t	Hitung penyerang saja
+16u	Hitung antiudara saja
+16v	Hitung level teknologi tertentu
+16w	Hitung yang bertag saja
+16x	Termasuk bangunan belum jadi
+16y	Deteksi tag
+170	Tag
+171	Relai / pengatur waktu
+173	Munculkan unit
+174	Munculkan unit di tengah area.
+175	Unit apa
+176	Hapus unit di area.
+177	Hanya transport kosong
+178	Ubah kredit
+179	Tambah, kurangi atau atur kredit tim.
+17a	Tambah (negatif mengurangi)
+17b	Atur ke
+17c	Jika keduanya diisi, «Atur» lebih dulu dari «Tambah»
+17d	Tag tim
+17f	Tambah tag (koma)
+17g	Hapus tag (koma)
+17h	Teks peta
+17i	Tampilkan teks di tengah area. Hanya saat «aktif».
+17j	Ukuran huruf
+17k	Bawaan 20
+17l	Gaya
+17m	Tujuan misi
+17o	Teks tujuan
+17p	Gerakkan kamera
+17q	Pindahkan kamera ke tengah area (untuk cerita).
+17r	Pindahkan unit
+17s	Kirim unit di area ke «titik tujuan».
+17t	Titik tujuan
+17u	Turunkan saat tiba
+17w	Pengaturan tim
+17y	Kredit awal
+17z	Grup aliansi (pemain tunggal)
+180	Kunci kesulitan AI (-2~3)
+181	Matikan AI (pemain tunggal)
+182	AI mudah (pemain tunggal)
+183	Titik muncul musuh
+184	Di mode bertahan musuh muncul dari sini; boleh beberapa.
+185	Kamera awal
+186	Posisi kamera saat mulai.
+187	Tunda
+188	Berapa lama setelah mulai sebelum bisa terpicu (sekali)
+189	Durasi
+18a	Kondisi harus terpenuhi selama ini berturut-turut
+18b	Bisa terpicu lagi
+18d	Interval ulang
+18e	Setelah terpicu, ulangi tiap selang (tanpa cek kondisi)
+18f	Pesan log pertempuran
+18g	Warna pesan
+18h	Kecepatan ketik (mis. 0.05s)
+18i	Tandai di minimap
+18j	Catatan (tidak dibaca game)
+18k	Diaktifkan oleh
+18l	Hanya terpicu saat pemicu ini benar
+18m	Juga mengaktifkan
+18n	Saat ini benar, yang di bawah ikut dianggap aktif
+18o	Dimatikan oleh
+18p	Saat pemicu ini benar, yang ini dimatikan
+18q	Bawaan
+18r	Hancurkan pusat komando
+18s	Hancurkan bangunan utama
+18t	Hancurkan semua bangunan
+18u	Hancurkan semua unit dan bangunan
+18v	Selesaikan semua tujuan
+18w	Tidak ada (tidak berakhir sendiri)
+18x	Skirmish (pertempuran biasa)
+18y	Bertahan (gelombang)
+18z	Misi (cerita)
+190	(tanpa nama)
+191	md
+192	Semua tim
+193	Netral bermusuhan
+194	Tim «
+195	:
+196	di area
+197	tidak ada
+198	minimal
+199	area berisi
+19a	punya tag «
+19b	(unit belum dipilih)
+19c	beri
+19d	munculkan
+19e	semua
+19f	hapus di area
+19g	kredit
+19h	atur ke
+19i	(angka belum diisi)
+19j	tambah tag «
+19k	hapus tag «
+19l	tampilkan teks «
+19m	tujuan «
+19n	» selesai
+19o	kamera ke sini
+19p	kirim
+19q	unit ke «
+19r	tandai benar
+19s	mulai
+19t	setelah
+19u	semua
+19v	salah satu
+19w	benar
+19x	Saat
+19y	, dan
+19z	, atau
+1a0	(selama
+1a1	Saat mulai,
+1a2	, dan aktifkan
+1a3	, pesan «
+1a4	; lalu tiap
+1a5	ulangi
+1a6	lalu bisa terpicu lagi
+1a7	; hanya sekali
+1a8	jeda saat benar
+1a9	«Semua harus terpenuhi» tanpa kondisi — tidak akan terpicu
+1aa	»: jenisnya ditulis di class
+1ac	Ubah jadi type
+1ad	»: jenis «
+1ae	» tidak dikenal game
+1af	Game akan melewatinya. Jenis yang valid:
+1ag	Objek «
+1ah	» tanpa jenis
+1ai	Game mengabaikannya (bisa jadi komentar).
+1aj	» tidak punya properti sama sekali
+1ak	Game melewati pemicu tanpa properti.
+1al	Tambah id
+1am	) kurang «
+1an	properti
+1ao	wajib diisi.
+1ap	»: «
+1aq	» bukan bilangan bulat
+1ar	Saat ini «
+1as	»: area berukuran 0
+1at	Area dengan lebar atau tinggi 0 tidak mendeteksi apa pun.
+1au	Atur 1×1 tile
+1av	» berisi «
+1ax	Hapus tautan ini
+1ay	»: tim «
+1az	» bukan angka
+1b1	»: tim
+1b2	di luar rentang
+1b3	Hanya -2, -1 atau 0–99.
+1b4	»: waktu «
+1b5	» tidak dipahami game
+1b7	» hanya
+1b8	Angka saja berarti milidetik. Maksudnya detik?
+1b9	»:
+1ba	adalah «
+1bc	Ubah jadi true
+1bd	»: unit «
+1be	» mungkin salah tulis
+1bg	»: titik tujuan «
+1bh	» tidak ada
+1bj	»: jumlah kredit tidak diisi
+1bk	Isi «Tambah» atau «Atur ke».
+1bl	» tidak akan pernah terpicu
+1bm	«Semua harus terpenuhi» dicentang tapi tidak ada kondisi.
+1bn	»: repeatCount tidak berpengaruh
+1bo	Versi 1.15 membaca tapi tidak memakai properti ini.
+1bp	pemicu bernama «
+1br	Syarat menang «
+1bs	Game akan error. Pilihan:
+1bt	Peta tidak punya syarat menang
+1bv	Atur selesaikan semua tujuan
+1bw	Peta bertahan tanpa titik muncul musuh
+1by	Peta bertahan tanpa gelombang sendiri
+1bz	Gelombang bawaan game akan dipakai. Bisa diedit di map_info.
+1c1	Tambahkan lewat «Baru → Tujuan misi».
+1c2	Pemicu memakai tim
+1c4	pemicu, tidak ada masalah
+1c5	Apa itu pemicu
+1c6	Aturan «saat… maka…»
+1c7	Tiap pemicu adalah aturan:
+1c9	maka
+1ca	lakukan sesuatu (unit, kredit, teks).
+1ce	«Peta logika» menunjukkan semua pemicu tersambung.
+1cf	Tautan
+1cg	Cara pemicu bekerja bersama
+1ci	: saat ini benar, yang di bawah ikut aktif.
+1cj	: saat itu benar, yang ini dijeda.
+1cl	Nama tidak membedakan huruf besar kecil.
+1cm	Waktu
+1cn	Tunda, durasi, reset, ulang
+1co	: berapa lama setelah mulai sebelum bisa terpicu (sekali).
+1cp	: berapa lama kondisi harus terpenuhi.
+1cq	: berapa lama setelah terpicu ia direset.
+1cr	Kosong = terpicu sekali
+1cs	, lalu tetap «benar».
+1ct	: ulangi tiap selang setelah terpicu.
+1cw	Area
+1cx	Letak pemicu di peta
+1cz	Templat rebut kota
+1d0	Satu kota untuk peta rebut kota
+1d2	munculkan garnisun netral bila tak ada pemilik;
+1d3	deteksi apakah tiap tim menguasainya;
+1d4	beri kredit ke pemilik secara berkala;
+1d5	nama kota berganti warna sesuai pemilik.
+1d6	Tiap kota bisa diatur terpisah.
+1d7	Area kota harus menutupi bangunannya.
+1d8	Makin banyak tim makin banyak pemicu (3 per tim).
+1d9	Templat bertahan
+1da	Hadapi musuh gelombang demi gelombang
+1dc	Templat misi
+1dd	Selesaikan tujuan langkah demi langkah
+1df	Peta logika
+1dg	Lihat semua pemicu tersambung
+1dh	Tiap kotak adalah pemicu; warna menunjukkan jenis.
+1di	Biru
+1dj	=kondisi,
+1dk	Oranye
+1dl	=aksi,
+1dm	Hijau
+1do	Pemicu baru
+1dp	Kondisi: «Saat…»
+1dq	Aksi: «Maka…»
+1dr	Teks dan tujuan
+1ds	Pengaturan dan penanda
+1dt	Baru
+1du	Tujuan baru
+1dv	‹ Kembali ke daftar
+1dw	Pemicu (aturan peta)
+1dx	Rebut kota
+1dy	Bertahan
+1dz	Blok umum
+1e0	Gambar area di peta untuk membuat
+1e1	Seret area di peta, lalu pilih jenis pemicu
+1e2	Belum ada pemicu.
+1e3	Peta biasa tidak butuh pemicu
+1e4	, cukup «Pengaturan peta» di atas.
+1e6	Cari
+1e7	pemicu (nama, teks, unit)
+1e8	Bermasalah
+1e9	Tampilkan
+1ea	lagi (total
+1eb	Tidak ada pemicu yang cocok.
+1ed	Pengaturan peta (map_info)
+1ee	Jenis peta
+1ef	Syarat menang
+1eg	Kabut perang
+1eh	Ikut pengaturan room
+1ei	Pandangan
+1ej	Kabut peta
+1ek	Sekutu berbagi pandangan
+1el	Pembukaan (introText)
+1em	Teks yang tampil saat mulai
+1en	Edit gelombang musuh…
+1eo	Duplikat
+1ep	Nama (tujuan «Pindahkan unit»)
+1eq	Nama (dirujuk pemicu lain)
+1er	Jenis
+1es	Ubah jenis
+1eu	Ubah «semua harus terpenuhi»
+1ev	Pesan dan catatan
+1ew	Kiri (tile)
+1ex	Ubah area
+1ey	Atas (tile)
+1ez	Lebar (tile)
+1f0	Tinggi (tile)
+1f1	Seret area baru di peta
+1f2	Gambar ulang di peta
+1f3	Ke sana
+1f4	Ubah properti
+1f5	Hapus properti
+1f6	Nama properti
+1f7	Nilai
+1f8	Tambah
+1f9	Tambah properti
+1fa	Properti lain (lanjutan)
+1fb	(pilih)
+1fc	Netral bermusuhan (menyerang sendiri)
+1fd	(perlu room besar)
+1fe	Ubah
+1ff	#RRGGBB atau red
+1fg	Hapus
+1fh	Biasa
+1fi	Dengan panah ke bawah
+1fj	mis. supplyDepot
+1fk	(pilih titik tujuan)
+1fl	Ketuk peta untuk taruh titik tujuan
+1fm	Atur titik tujuan
+1fn	Titik tujuan baru
+1fo	Mandarin
+1fp	日本語
+1fq	(terisi
+1fr	)
+1fs	Versi bahasa lain
+1ft	Kosong pakai yang di atas
+1fu	Kosong
+1fv	Format salah
+1fw	Edit unit yang dimunculkan
+1fx	Nama unit, mis. tank
+1fy	Pilihan:
+1fz	Tambah satu lagi
+1g0	Pemicu tidak ditemukan
+1g1	Ubah tautan
+1g2	Pilih pemicu «
+1g3	»
+1g4	+ Tambah
+1g5	Cari nama
+1g7	Nama tidak boleh berisi koma
+1g8	Ganti nama
+1g9	Juga diperbarui
+1ga	rujukan
+1gb	Duplikat pemicu
+1gc	Hapus pemicu?
+1gd	pemicu tersambung ke «
+1ge	». Tautan itu juga akan dihapus.
+1gf	Hapus pemicu
+1gg	Kota
+1gi	Setelah «Lanjut», ketuk posisi kota di peta.
+1gj	Nama kota
+1gk	Jumlah tim ikut
+1gl	Garnisun netral (saat tak ada pemilik)
+1gm	Kosong = tidak ada
+1gn	Interval garnisun (dtk)
+1go	Pendapatan rebut (0 = tidak ada)
+1gp	Bayar tiap N detik
+1gq	Ukuran area kota (tile)
+1gr	Warna nama sesuai pemilik
+1gt	3 pemicu per tim.
+1gu	Room biasa hanya menghitung 10 tim pertama
+1gv	; lebih banyak hanya di room besar (server).
+1gw	Lanjut: ketuk peta untuk taruh kota
+1gx	Ketuk peta untuk taruh «
+1gy	Templat kota:
+1gz	_adaBangunan
+1h0	Ada bangunan di area
+1h1	Garnisun netral saat tak ada pemilik
+1h2	_garnisun
+1h3	_pemilik
+1h4	menguasai
+1h5	_pendapatan
+1h6	_nama
+1h7	Dibuat «
+1h8	pemicu. Taruh bangunan kota di mode Unit.
+1h9	Gelombang 1
+1ha	Gelombang 2
+1hb	Gelombang akhir
+1hc	Tiap baris satu gelombang.
+1hd	Interval
+1he	adalah jarak waktu dari gelombang sebelumnya (mnt:dtk);
+1hf	Musuh
+1hg	tulis «jumlah namaunit», pisahkan koma, mis.
+1hh	Judul
+1hi	Menang setelah ini
+1hj	gelombang
+1hk	Tambah gelombang
+1hl	Gelombang musuh (survivalWaves)
+1hm	Gelombang tersimpan
+1hn	Templat bertahan
+1ho	Mengubah peta menjadi
+1hr	Mode bertahan aktif, ditaruh
+1hs	titik muncul musuh
+1ht	Capai lokasi
+1hu	Hancurkan PK musuh
+1hv	Capai suatu tempat
+1hw	Hancurkan PK musuh di sana
+1hx	Hancurkan semua musuh di sana
+1hy	Bertahan sampai detik ke-N
+1hz	Mode misi
+1i0	(menang: selesaikan semua tujuan). Tujuan
+1i1	muncul berurutan
+1i3	Langkah
+1i4	Detik (dari mulai)
+1i5	Tim pemain
+1i6	Tim musuh
+1i7	Tambah langkah
+1i8	Templat misi
+1i9	Tujuan
+1ia	_kondisi
+1ib	Selesai:
+1ic	_panah
+1id	Dibuat
+1ie	tujuan (
+1ig	Kredit awal tiap tim (team_info)
+1ih	Munculkan berkala
+1ij	Pesan saat masuk area
+1ik	Pesan saat unit suatu tim masuk area
+1il	Satu baris teks tetap di peta
+1im	Pendapatan titik
+1in	Yang menguasai titik terus dapat kredit (satu per tim)
+1io	Pesan hitung mundur
+1ip	Pesan log pada detik ke-N
+1iq	Bala bantuan berkala
+1ir	Markas tiap tim dapat bala bantuan berkala
+1is	Kuasai benteng
+1it	Kuasai benteng sebentar: kredit dan pengumuman di log
+1iu	Kamp netral
+1iw	: bala bantuan tiba
+1ix	Bala bantuan
+1iy	Diberikan ke
+1j0	Kredit awal per tim
+1j1	tim diatur kredit awalnya
+1j2	Ketuk peta untuk pilih tempat
+1j3	Musuh datang!
+1j4	Kamu menemukan tempat rahasia!
+1j5	Masuk area
+1j6	Ini adalah…
+1j7	Tinggal 5 menit!
+1j8	Pengatur waktu
+1j9	Benteng
+1ja	: tim berhasil menguasai benteng!
+1jb	Hadiah benteng
+1jc	Nama benteng
+1jd	Kamp dibersihkan
+1je	Penjaga kamp
+1jf	Rebut
+1jg	Tambah kredit
+1jh	Belum ada pemicu
+1ji	━ mengaktifkan
+1jj	┅ mematikan
+1jk	(hanya menampilkan
+1jl	Peta logika (
+1jm	pemicu; ketuk kotak untuk edit)
+1jn	Teks yang ditampilkan
+1jo	Tulis di sini
+1jp	Panah di bawah (menunjuk target)
+1jr	Taruh
+1js	Taruh teks
+1jt	» benar
+1ju	Saat mulai
+1jv	Pesan yang berjalan di game. Menurut waktu:
+1jw	detik ke-N setelah mulai
+1jx	lebih dulu,
+1jy	Saat kondisi terpenuhi
+1jz	kemudian. Teks dan warna bisa langsung diedit.
+1k0	Kapan
+1k1	Pesan
+1k2	Kecepatan ketik
+1k3	Edit log
+1k4	Ubah warna
+1k5	Tampil sekaligus
+1k6	Cepat
+1k7	Sedang
+1k8	Lambat
+1k9	Ubah kecepatan ketik
+1ka	Hapus pesan ini
+1kb	Hapus entri log
+1kc	Edit pemicu ini
+1kd	Belum ada pesan. Tambah dengan tombol di bawah.
+1ke	Detik
+1kf	Tambah entri log
+1kg	Log
+1kh	Detik ke-N setelah mulai
+1ki	Ketuk peta untuk pilih area
+1kj	Tempat baru ditemukan!
+1kk	Saat seseorang masuk area
+1kl	Bicara saat pemicu mana benar?
+1km	Saat suatu pemicu benar
+1kn	Gambar ulang area
+1ko	Area ini untuk apa?
+1kp	Pelajaran 1: peta yang bisa dimainkan dalam lima menit
+1kq	Medan, simetri, sumber daya, markas, cek, simpan
+1kr	Ini mode
+1kt	Di peta
+1ku	tahan dan seret
+1kv	untuk melukis. Perhatikan: tepinya akan
+1kw	(pantai, air dangkal) — tidak perlu menyusun tile sendiri.
+1kx	Salah? Ketuk
+1ky	. Di PC tekan Ctrl+Z; di HP
+1kz	ketuk dua jari
+1l0	di layar juga bisa.
+1l1	Peta tempur biasanya simetris. Di «Simetri» pilih
+1l2	, lalu lukis lagi — sisi lain ikut terlukis.
+1l3	Pindah ke mode
+1l4	, lalu ketuk peta untuk menaruh
+1l5	, ketuk peta untuk menaruh
+1l7	Ketuk
+1l9	Terakhir
+1lb	Jangan simpan dulu
+1lc	Pelajaran 2: pilih, salin, stempel
+1le	Pilih alat
+1lf	(pintasan M).
+1lg	Seret kotak
+1lh	untuk memilih area.
+1li	Muncul bilah di bawah:
+1lj	salin, potong, balik, putar
+1lk	. Ketuk
+1ll	, lalu ketuk
+1ln	Dengan area terpilih, ketuk «
+1lo	»; ia muncul di panel
+1lq	Pelajaran 3: dasar pemicu
+1ls	. Pemicu adalah aturan peta:
+1lt	sesuatu terjadi,
+1lu	lakukan sesuatu.
+1lv	Paling cepat pakai templat. Ketuk
+1lw	, isi nama, lalu ketuk posisi kota di peta.
+1ly	Ketuk «
+1m0	Pelajaran 4: buat dan bentuk ulang seluruh peta
+1m4	Lewati
+1m5	Lanjut
+1m6	Keluar tutorial
+1m7	» selesai!
+1m8	Buka peta dulu
+1ma	Mulai tutorial
+1mc	Sebelum tutorial
+1md	Latihan tutorial
+1me	· selesai
+1mf	Kapan saja ketuk
+1mg	di samping alat untuk bantuan, atau tekan
+1mk	Bukan file zip / rwmod
+1ml	Metode kompresi tidak didukung:
+1mm	Memproses…
+1mn	Menu
+1mo	Bilah menu
+1mp	Ketuk untuk ganti nama
+1mq	Cari fitur (Ctrl+K)
+1mr	Cek apakah peta bisa dimainkan
+1ms	Simpan (Ctrl+S)
+1mt	Cara simpan lainnya
+1mu	Mode edit
+1mv	Minimap: ketuk atau seret untuk melompat

@@ -1,0 +1,1177 @@
+jg	Tanque Mamute
+jh	Bombardeiro
+ji	Interceptador
+jj	Tanque de mísseis
+jk	Aranha experimental
+jl	Transporte
+jm	Artilharia pesada
+jn	Defesa laser
+jo	Antiaéreo
+jp	Silo nuclear
+jq	Silo antinuclear
+jr	Mech (metralhadora)
+js	Mech (mísseis)
+jt	Jato anfíbio
+ju	Mudar equipe
+jv	Renumerar equipes
+jw	Adicionar map_info
+jx	Editar map_info
+jy	O que testar no jogo
+k0	Saúde do mapa
+k1	Dá nota ao mapa e mostra onde perdeu pontos
+k3	Exportar / importar dados pessoais
+k4	Celular novo, ou sincronizar PC e celular
+k6	O mapa abre no jogo e a capa aparece na seleção
+k9	Extratores podem ser construídos nos recursos;
+ka	todos ok
+kc	Navios andam na água, terrestres não; terrestres cruzam vaus
+ke	Gatilhos de spawn criam unidades na hora, lugar e equipe certos
+kg	Mudança de créditos correta (quanto e com que frequência)
+kh	Texto do mapa aparece certo, com cor e posição corretas
+ki	Mensagens do registro de batalha aparecem na hora
+kk	Objetivos aparecem em ordem; todos concluídos = vitória
+kl	Mapa grande não trava nem fecha no celular
+kn	Último teste:
+ko	passaram.
+kp	Problemas da última vez:
+kq	Escreva uma nota se houver problema (opcional)
+kr	Salvar este teste
+ks	Registrado: ainda
+kt	falhando — corrija e teste de novo
+ku	Tudo passou — pode publicar!
+kv	Verificando…
+kw	problemas que afetam o jogo
+kx	Abra «Jogável?» e corrija um a um; a maioria num toque.
+ky	avisos
+kz	Veja os itens amarelos em «Jogável?».
+l0	Distâncias ao recurso mais próximo diferem em
+l2	Recursos próximos diferem em
+l3	Coloque recursos simetricamente ou espelhe o mapa.
+l4	Maior território é este múltiplo do menor:
+l5	×
+l6	Mova as bases para posições mais simétricas.
+l7	Terrestres de alguma equipe não alcançam inimigos
+l8	Se não for mapa naval, abra caminho com estrada ou vau.
+l9	Menos de 2 bases
+la	Coloque bases no modo Unidades.
+lb	Poucos tipos de terreno
+lc	Tente uma predefinição em «Detalhe automático».
+ld	Quase sem árvores, pedras ou decoração
+le	Espalhe com «Decoração natural» ou pincel de itens.
+lf	Bordas de terreno muito retas
+lg	Use «Bordas naturais».
+lh	Ótimo
+li	Bom
+lj	Precisa melhorar
+lk	Muitos problemas
+ll	Sem descontos.
+lm	rw-map-editor-dados-pessoais.json
+ln	Dados pessoais
+lo	Não é arquivo de dados pessoais
+lp	Importado. Algumas configurações valem ao reabrir.
+lq	Falha ao importar:
+lr	Mapa de Rusted Warfare
+ls	Falha ao salvar:
+lt	Salvo sobre o arquivo original
+lu	Baixado na pasta «Downloads»
+lv	Pasta de mapas
+lx	Sem permissão de escrita na pasta
+ly	Pasta de mapas do jogo ainda não escolhida
+lz	Continente
+m0	Um grande continente cercado de mar; foco em batalhas terrestres
+m1	Arquipélago naval
+m2	Muitas ilhas; marinha e aviação pesam mais
+m3	Mar interior
+m4	Um mar no centro, terra em volta
+m5	Vale do rio
+m6	Um grande rio cruza o mapa; alguns vaus são disputados
+m7	Fortaleza no planalto
+m8	Planalto cercado de penhascos com passagens
+m9	Temperado
+ma	Formato de código inválido (deve começar com RWG1-)
+mb	Grama
+mc	Terra
+md	Areia
+me	Terreno
+mf	Pintar grama, água, areia, penhascos e mais
+mg	Escolha um terreno e pinte. Entre terrenos diferentes o editor vai
+mh	criar transições sozinho
+ml	Itens
+mm	Recursos, árvores, pedras e outras coisas no chão
+mo	Deixe 1 tile entre recurso e unidades.
+mq	Unidades
+mr	Bases e unidades pré-colocadas
+mt	Com simetria ligada, bases também vão para as posições simétricas.
+mv	Regras do mapa, spawns, texto, condições de vitória
+mx	Mapas normais de escaramuça só precisam de map_info.
+my	Mapas de cidades, sobrevivência e missão podem partir de modelos.
+mz	Gerar aleatório, imagem para mapa, escala, espelho
+n1	Tudo isso pode ser desfeito.
+n2	Tiles (avançado)
+n3	Colocar qualquer tile, sem transições
+n5	O chão não pode ter vazios, então a camada de chão não tem borracha.
+n6	Pincel de terreno
+n7	Segure e arraste para pintar
+nb	Retângulo
+nc	Arrastar um retângulo cheio de terreno
+ne	Elipse
+nf	Arrastar uma elipse cheia de terreno
+nh	Balde
+ni	Trocar de uma vez uma área ligada do mesmo terreno
+nk	Ex.: transformar todo um deserto em neve de uma vez.
+nl	Conta-gotas
+nm	Pegar terreno do mapa
+nn	Toque no mapa para usar aquele terreno no pincel.
+no	Mover
+np	Mover a vista
+nr	Colocar itens
+ns	Toque para colocar, arraste para colocar seguido
+nu	Estilo do recurso
+nv	1 tile ou 3×3
+nx	1 tile
+ny	como o editor oficial, mais flexível;
+o0	Os dois estilos mineram igual no jogo.
+o1	Borracha de itens
+o2	Apagar itens
+o4	Pincel aleatório
+o5	Pintar vários enfeites num traço
+o7	Toque para colocar centro de comando + 2 construtores
+o9	Colocar unidade
+oa	Qualquer unidade
+oc	Selecionar/mover
+od	Toque numa unidade para arrastar, mudar equipe ou apagar
+of	Apagar
+og	Toque nas unidades para apagar
+oi	Seleção retangular
+oj	Arrastar uma seleção retangular
+ol	Varinha mágica
+om	Selecionar área ligada do mesmo terreno
+oo	Copiar terreno, itens e unidades da seleção.
+or	Bases coladas ganham novos números de equipe.
+ot	Espelhar horizontal
+ou	Espelhar a seleção esquerda-direita
+ow	Espelhar vertical
+ox	Espelhar a seleção cima-baixo
+oy	Girar 90°
+oz	Girar a seleção 90° no sentido horário
+p0	Salvar como carimbo
+p1	Salvar a seleção nos carimbos
+p3	Colocar tile
+p4	Colocar o tile escolhido
+p5	Borracha de tiles
+p6	Limpar células das camadas que não são chão
+p7	Conta-gotas de tile
+p8	Pegar tile do mapa
+p9	Desenho simétrico
+pa	Desenhe num lugar, o simétrico é desenhado junto
+pd	«4 lados» serve para mapas de 4 jogadores.
+pe	«Diagonal» só serve para mapas quadrados.
+pf	Só substituir
+pg	Mudar só um terreno
+pi	Principal / secundário
+pj	Alternar rápido entre dois terrenos
+pl	Destacar o que você edita
+pn	Mostrar onde dá para andar e construir
+po	Sobrepõe uma camada de cor no mapa:
+pq	• Naval: azul é água para navios
+pr	• Hover: vermelho é intransponível até para hover
+ps	• Construir: verde pode, vermelho não
+pt	• Território: cada tile é da equipe mais próxima a pé
+pu	• Diferença de simetria: vermelho onde os lados diferem
+pw	Comparar recursos das equipes por rotas reais
+py	Quanto mais próximos os números, mais justo.
+q4	Gatilhos não são copiados.
+q5	Achar onde os lados diferem
+q7	Escala proporcional
+q8	Ampliar ou reduzir o mapa todo
+qa	Unidades e recursos nunca são duplicados
+qe	Mudar o tamanho sem escalar o conteúdo
+qg	Imagem para mapa, com proporções suas
+qh	1. Escolha a imagem e o tamanho do mapa.
+qk	4. Use «Limpeza» para tirar pontinhos e fiapos.
+qn	Para JPG, ponha «Desfoque» em 1.
+qo	Para desenhar à mão sobre a imagem, use «Só traçar».
+qp	Gerar um mapa base por predefinição e semente
+qs	Um texto que reproduz o mesmo mapa aleatório
+qu	Colar uma imagem no mapa
+qy	Combinações comuns num toque
+r0	Carimbos podem ser exportados para arquivo.
+r1	Veja cada operação, toque para voltar
+r3	Salvar como arquivo .tmx
+r5	Salvar no jogo
+r6	Salvar direto na pasta de mapas do jogo
+r9	Capa do mapa
+ra	Tirar foto do mapa inteiro
+rc	Imagem grande com título, jogadores e legenda
+rd	Para divulgar o mapa em grupos, fóruns ou workshop.
+re	Tiles
+rf	De onde os mapas novos tiram os tiles
+rh	Salvamento automático
+ri	Uma cópia a cada 30 segundos
+rk	Tipo de mapa e regras básicas
+rm	Equipes
+rn	Até 100 (limite do motor)
+ro	O motor suporta até 100 equipes.
+rp	Salas normais só têm 10 equipes
+rt	Básico
+ru	Celular
+rw	PC
+ry	Blocos de cor
+rz	Chão com cor própria; escolha o que ele é no jogo
+s1	não se misturam ao terreno vizinho
+s4	Clique direito ou toque longo num bloco para editar ou apagar.
+s5	Forma e densidade dos itens
+s6	Retângulo, elipse, linha, balde, densidade e espaçamento
+s9	Espaçamento mínimo
+sa	, então o pincel os espaça em vez de amontoar.
+sb	Escolha na paleta de unidades e toque no mapa
+sd	Quantos de uma vez
+se	Organizar em fila ou bloco
+sg	Texto
+sh	Escrever uma linha no mapa
+sj	Registro de batalha
+sk	As mensagens que rolam no jogo
+sm	O que é isto?
+sn	Dica
+so	Entendi
+sp	Buscar: ex. «simetria», «recurso», «salvar»
+sq	Este mapa não pinta terreno automático; use o modo «Tiles»
+sr	Pintar terreno
+ss	Crie ou escolha um bloco de cor à direita
+st	Pintar bloco de cor
+su	Balde de bloco de cor
+sv	Erguer chão
+sw	Rebaixar chão
+sx	Escolhido:
+sy	Este mapa não tem tileset de itens
+sz	Apagar itens
+t0	Escolha alguns itens à direita
+t1	Balde de itens
+t2	Toque antes num tile à direita
+t4	Apagar tiles
+t5	Colocar base
+t6	Limite de equipes atingido
+t7	Equipe
+t8	Base colocada:
+t9	unidades
+ta	Empilhados aqui:
+tb	— escolha um:
+tc	Objeto
+td	Redimensionar área
+te	Mover
+tf	Desenhar retângulo
+tg	Desenhar elipse
+th	Desenhar estrada
+ti	, incluindo
+tj	Copiado
+tk	Recortado. O espaço vazio foi preenchido com o terreno secundário
+tl	Limpar seleção
+tm	Girar -90°
+tn	Transformar
+to	Selecione uma área primeiro
+tp	Nome do carimbo
+tq	Carimbos
+ts	Salvo como carimbo:
+tt	Arraste para a posição e toque em «Soltar»
+tv	Área de transferência vazia: selecione e copie
+tw	Soltar
+tx	Espelhar H
+ty	Espelhar V
+tz	90°
+u0	Seleção
+u1	Carimbo
+u2	Limpar
+u3	Cancelado
+u4	Tamanho do pincel
+u5	Trocar principal/secundário
+u8	Abrir outro mapa?
+ua	Abrir mesmo assim
+ub	Lendo mapa…
+uc	Não foi possível abrir o arquivo
+ud	Este registro expirou
+ue	Abrindo…
+uf	Este aparelho não lê pastas diretamente
+ug	Lendo pasta…
+uh	Falha na leitura:
+ui	Ainda não há mapas .tmx na pasta do jogo
+uj	Abrir da pasta do jogo
+uk	O mapa ainda tem problemas
+ul	Encontrados
+um	problemas que afetam o jogo:
+un	Ver primeiro
+uo	Salvar mesmo assim
+up	Gerando arquivo do mapa…
+uq	Falha ao salvar
+us	No celular geralmente é
+uv	No PC fica na pasta de instalação do jogo em
+ux	Escolher pasta de mapas do jogo
+uy	Escolher
+uz	Lembrado:
+v0	Falha ao escolher:
+v2	Gravando na pasta do jogo…
+v3	e capa
+v4	Salvo em «
+v5	. Vá testar!
+v6	Falha ao salvar no jogo
+v8	Salvar normal
+v9	Escolher pasta de novo
+va	Mapa e
+vb	Capa
+vc	Salvando snapshot (por garantia)…
+vd	Auto:
+ve	Falha no salvamento automático: armazenamento cheio?
+vf	Salvar snapshot
+vg	Nome do snapshot
+vi	Salvando snapshot…
+vj	Snapshot salvo
+vk	Restaurar snapshot?
+vl	Restaurar para «
+vn	Prévia
+vo	Gerando vitrine…
+vp	_vitrine.png
+vq	Tiles
+vr	Pincel
+vs	Detalhe
+vt	Bioma
+vu	Estrada
+vv	Linha
+vw	Borracha
+vx	Selecionar
+vy	Desenhar área
+vz	Texto
+w0	Ferramentas
+w1	Camadas
+w2	Histórico
+w3	Relatório
+w4	Backup automático
+w5	Não salvo
+w6	Desfazer:
+w7	Desfazer (Ctrl+Z)
+w8	Refazer:
+w9	Refazer (Ctrl+Y)
+wa	Buscar funções…
+wb	Aproximar
+wc	Afastar
+wd	Nome do arquivo (sem .tmx)
+wf	Sobreposição
+wg	Construível
+wh	Dif. simetria
+wi	Toque longo ou clique direito para ajuda
+wj	Zoom
+wl	Redondo
+wm	Quadrado
+wq	Mesmo terreno no mapa todo
+wr	Células vazias não sobrescrevem itens ao colar
+ws	Colar conteúdo copiado
+wv	Clique para principal, clique direito ou toque longo para secundário
+ww	Secundário:
+wx	Terreno (principal / secundário)
+wy	Trocar principal e secundário (X)
+wz	⇄ Trocar principal/secundário
+x0	Pintar com secundário
+x1	Clique direito pinta o secundário
+x2	Trocar este terreno no mapa todo
+x3	Qualquer (todos os terrenos)
+x4	Só substituir
+x5	» é desenhado
+x6	Por dentro é chão comum
+x8	(nenhum)
+x9	Ao pintar, vai
+xa	» pode encostar direto em:
+xb	. Junto a outros terrenos, ganha um anel de terreno intermediário.
+xd	Pincel aleatório: escolha itens; os controles definem proporções
+xe	Proporção vazia
+xf	Espessura da linha
+xg	Densidade
+xh	Espaçamento mín. (tiles)
+xi	Colocar no mesmo chão no mapa todo
+xj	Segure e arraste para colocar seguido
+xk	Arraste um retângulo
+xl	Arraste uma elipse
+xm	Arraste uma linha
+xn	Toque para preencher o mesmo chão
+xo	Segure e arraste para apagar
+xq	Quanto menor a «Densidade», mais esparso e natural.
+xr	O mapa agora tem
+xt	Clique direito ou toque longo: editar / apagar
+xu	Editar bloco de cor
+xv	Blocos de cor (sua cor, escolha a propriedade)
+xx	Forma
+xy	Blocos de cor substituem o chão e, com o terreno vizinho,
+xz	não se misturam
+y0	. Para voltar ao terreno normal, pinte por cima com o pincel de terreno.
+y1	Editar cor e propriedade
+y2	Apagar (se não usado no mapa)
+y3	Este bloco ainda está em uso no mapa; pinte por cima antes
+y4	Neutro
+y5	Hostil (-2)
+y6	Toque no mapa para colocar um
+y9	Unidade escolhida
+ya	Posição: tile (
+yb	Apagar unidade
+yc	Bases (
+yd	; toque para ir)
+ye	Ainda não há bases.
+yf	Renumerar equipes como 1, 2, 3…
+yg	Todas
+yh	Terrestre
+yi	Aérea
+yj	Naval
+yk	Construções
+yl	Experimental
+ym	Nada encontrado. Tente outras palavras ou categoria.
+yn	Buscar unidades (nome chinês ou inglês)
+yo	Escolher unidade
+yp	Equipe
+yq	Espaçamento (tiles)
+yr	Disposição
+ys	Fila
+yt	Coluna
+yu	Bloco
+yw	Carregando editor de gatilhos…
+yx	Mapa todo
+yy	Vários mapas
+yz	Imagem
+z0	Pintar na camada
+z1	Toque para escolher um tile
+z3	Ocultar
+z4	Mostrar
+z5	Chão
+z6	Camadas de tiles
+z7	Camadas de objetos ·
+z8	Escurecer outras camadas (destaca o que o modo edita)
+z9	Mostrar grade
+za	Ajustar…
+zb	Escolher imagem de referência…
+zc	tiles ·
+zd	Em uso
+ze	Sem uso
+zf	Remover tilesets sem uso ao salvar
+zg	Colocar carimbo:
+zh	Carimbos embutidos (toque para colocar, toque longo para info)
+zi	Meus carimbos
+zj	Salvar seleção como carimbo
+zk	Importar
+zm	Exportar para arquivo
+zn	Apagar carimbo?
+zo	Apagar «
+zp	Carimbos importados:
+zq	(como foi aberto)
+zr	Desfeito
+zs	Histórico (
+zt	passos; toque para voltar)
+zu	Snapshots
+zv	Salvar um snapshot
+zy	Calculando distâncias a pé…
+zz	Recalcular
+100	Calcular
+101	Sem bases; não dá para calcular.
+102	Parece bem equilibrado.
+103	Distâncias e quantidade de recursos das equipes são parecidas.
+104	; maior território vs menor:
+105	Há desequilíbrio:
+106	Distância ao recurso mais próximo difere em
+107	tiles; recursos em 30 tiles diferem em
+108	Recursos em 30 tiles
+109	Recurso mais próximo
+10a	Território
+10b	Terrestres não alcançam inimigos
+10c	Ilha
+10d	Comparação das equipes (toque numa linha para ir à base)
+10f	Recursos compartilhados (
+10g	; quase à mesma distância das duas equipes mais próximas)
+10h	Esses recursos serão pontos disputados.
+10j	Mostrar territórios no mapa
+10k	Simulação de abertura
+10n	Abrir mapa
+10o	Escolher um arquivo .tmx
+10p	Tamanho e jogadores; bases colocadas para você
+10q	Abra um mapa primeiro
+10r	Autorizar a pasta de mapas uma vez
+10s	Transformar imagem em mapa
+10t	Siga os passos, aprenda em minutos
+10u	Como cada função funciona
+10v	Remover da lista
+10w	Recentes
+10y	Voltar ao mapa atual
+10z	etc.
+110	Base padrão
+112	Base rica
+114	Ponto de recurso
+116	Lago
+117	Um oval de água com praia e água rasa automáticas.
+118	Ilha de recursos no mar
+11a	Expansão
+11c	Centro rico
+11e	Defesa do gargalo
+11g	Cabeça de ponte
+11i	Forte elevado
+11k	Travessia por vau
+11l	Um vau para terrestres cruzarem o rio; coloque na vertical sobre o rio.
+11m	Bosque
+11n	Um bosque irregular que bloqueia visão e passagem.
+11o	Planalto com penhasco
+11p	Planalto cercado de penhascos com uma passagem.
+11q	Poço de lava
+11s	Lago congelado
+11t	Um lago congelado na neve.
+11u	tiles,
+11v	Não é arquivo de carimbo
+11w	Água
+11x	Neve
+11y	Penhasco de grama
+11z	Gelo
+120	Penhasco de terra
+121	Dunas
+122	Floresta congelada
+123	Chão de pedra
+124	Compressão não suportada:
+125	»: tamanho de dados errado (
+126	bytes, esperado
+127	Arquivo XML / TMX inválido:
+128	Não é mapa TMX (a raiz não é
+129	Mapas infinitos (infinite=1) não são suportados
+12a	»: tamanho diferente do mapa
+12b	Em quantos segundos cada equipe encontra o inimigo
+12d	Os números são estimativas
+12f	Junção de mapas
+12h	Os mapas devem usar os mesmos tiles.
+12i	Bom para fazer um mapa grande por partes.
+12j	Copiar de outro mapa
+12k	Trazer uma parte de outro mapa
+12m	Biblioteca de mapas
+12n	Todos os mapas que você fez ou abriu
+12p	Processamento em lote
+12q	Verificar e corrigir vários mapas de uma vez
+12t	Empacotar coleção de mapas
+12u	Crie um Mod para colocar direto no jogo
+12x	Comparar versões
+12y	Ver o que difere entre duas versões
+130	Suporte a Mods
+131	Usar unidades e tiles de Mods
+135	Terrestre (tanque)
+136	Unidades hover
+137	Simulando…
+138	Ainda não há bases no mapa
+139	min
+13a	s
+13b	Contato
+13c	Terrestre ao centro
+13e	Tempos de primeiro contato diferem em
+13g	Tempos de primeiro contato próximos (diferença
+13h	), abertura justa.
+13j	Mostrar linhas de frente
+13k	Calculando linhas de frente…
+13n	Colocar o mapa atual «
+13o	» primeiro
+13q	Por linha
+13r	Juntar
+13s	São necessários pelo menos dois mapas
+13t	Juntando…
+13u	Abrindo o mapa juntado…
+13v	junção-
+13w	Reparo da emenda
+13x	Juntado em
+13y	novo mapa
+13z	De «
+140	» copiar
+142	Copiar e colocar no mapa atual
+143	Selecione antes uma parte na miniatura
+145	J
+146	Enorme
+147	Grande
+148	Pequeno/médio
+149	Desafio
+14a	Favorito
+14b	Tags
+14c	Tags (separadas por vírgula)
+14g	Escaneando
+14h	mapas…
+14i	Adicionados
+14j	mapas
+14k	Buscar nomes ou tags
+14l	Só favoritos
+14m	Escanear pasta do jogo
+14n	Verificar e corrigir um lote de mapas.
+14o	Quais mapas
+14p	Todos os mapas da pasta do jogo
+14q	Arquivos que eu escolher
+14r	O que fazer
+14s	Adicionar map_info faltando
+14t	Adicionar propriedades de água e lava
+14u	Preencher chão vazio
+14v	Gerar capas (nomedomapa.png)
+14y	Começar
+14z	Autorize antes a pasta de mapas do jogo
+150	Nenhum mapa para processar
+151	Processando
+152	resultados-lote.zip
+153	Problemas
+154	Corrigidos
+155	Graves restantes
+156	Falha na leitura
+157	Resultados do lote
+158	Gravados
+159	arquivos.
+15a	Só verificado; nenhum arquivo mudou.
+15b	Minha coleção de mapas
+15d	Nome da coleção
+15e	Descrição
+15f	Incluir o mapa atual «
+15g	Escolher mais mapas (vários permitidos)
+15i	Empacotar
+15j	Empacotando…
+15k	É preciso pelo menos um mapa
+15l	Empacotado
+15m	mapas:
+15o	Escolha um snapshot para comparar
+15p	O snapshot tem tamanho
+15q	, diferente do atual; só lado a lado, não célula a célula
+15r	Comparar: agora ↔ «
+15t	Agora
+15u	Snapshot (vermelho = diferente)
+15v	Restaurar a área do snapshot
+15w	Selecione antes uma área no snapshot
+15x	Restaurar área do snapshot
+15y	Restaurado. Desfaça se não gostar.
+160	unidades ·
+161	tilesets
+162	Remover
+163	Adicionado ao mapa atual; use no modo «Tiles»
+164	Adicionar
+165	Lendo Mod…
+166	Lidos
+167	unidades,
+168	Importar Mod
+16b	Escala ×
+16c	Vazio = todas as equipes
+16d	Condições
+16e	Lógica
+16f	Ações
+16g	Detectar unidades
+16i	Tipo de unidade
+16j	Só um tipo; vazio = qualquer
+16k	Pelo menos
+16l	Padrão 1
+16m	No máximo
+16n	0 = «nenhuma na área»
+16o	Contar só construções
+16p	Contar só produção
+16q	Contar só construtores
+16r	Contar só construções em recursos
+16s	Contar só ociosas
+16t	Contar só atacantes
+16u	Contar só antiaéreas
+16v	Contar só um nível tecnológico
+16w	Contar só com tag
+16x	Incluir construções inacabadas
+16y	Detectar tag
+170	Tag
+171	Relé / temporizador
+173	Gerar unidades
+174	Gera unidades no centro da área.
+175	Quais unidades
+176	Remove unidades da área.
+177	Só transportes vazios
+178	Mudar créditos
+179	Somar, subtrair ou definir créditos de uma equipe.
+17a	Somar (negativo subtrai)
+17b	Definir como
+17c	Se ambos, «Definir» vem antes de «Somar»
+17d	Tags da equipe
+17f	Adicionar tags (vírgula)
+17g	Remover tags (vírgula)
+17h	Texto no mapa
+17i	Mostra texto no centro da área. Só enquanto «ativado».
+17j	Tamanho da fonte
+17k	Padrão 20
+17l	Estilo
+17m	Objetivo da missão
+17o	Texto do objetivo
+17p	Mover câmera
+17q	Move a câmera ao centro da área (para história).
+17r	Mover unidades
+17s	Envia unidades da área a um «ponto de destino».
+17t	Ponto de destino
+17u	Desembarcar ao chegar
+17w	Configurações da equipe
+17y	Créditos iniciais
+17z	Aliança (single player)
+180	Travar dificuldade da IA (-2~3)
+181	Desativar IA (single player)
+182	IA fácil (single player)
+183	Ponto de spawn inimigo
+184	Na sobrevivência os inimigos saem daqui; pode haver vários.
+185	Câmera inicial
+186	Posição da câmera no início.
+187	Atraso
+188	Quanto tempo após o início até poder disparar (uma vez)
+189	Duração
+18a	A condição deve valer esse tempo seguido
+18b	Pode disparar de novo
+18d	Intervalo de repetição
+18e	Depois de disparar, repetir a cada intervalo (sem rechecar)
+18f	Mensagem no registro de batalha
+18g	Cor da mensagem
+18h	Velocidade de digitação (ex. 0.05s)
+18i	Marcar no minimapa
+18j	Notas (o jogo ignora)
+18k	Ativado por
+18l	Só dispara quando estes gatilhos são verdadeiros
+18m	Também ativa
+18n	Quando este é verdadeiro, os de baixo contam como ativados
+18o	Desativado por
+18p	Quando estes são verdadeiros, este é desligado
+18q	Padrão
+18r	Destruir centro de comando
+18s	Destruir construções principais
+18t	Destruir todas as construções
+18u	Destruir todas as unidades e construções
+18v	Concluir todos os objetivos
+18w	Nenhuma (não termina sozinho)
+18x	Escaramuça (batalha normal)
+18y	Sobrevivência (ondas)
+18z	Missão (história)
+190	(sem nome)
+191	ms
+192	Todas as equipes
+193	Neutro hostil
+194	Equipe «
+195	:
+196	na área
+197	nenhum
+198	pelo menos
+199	área tem
+19a	tem a tag «
+19b	(nenhuma unidade escolhida)
+19c	dar a
+19d	gerar
+19e	todas
+19f	remover na área
+19g	créditos
+19h	definir como
+19i	(sem número)
+19j	adicionar tag «
+19k	remover tag «
+19l	mostrar texto «
+19m	objetivo «
+19n	» concluído
+19o	câmera aqui
+19p	enviar
+19q	unidades para «
+19r	marcar como verdadeiro
+19s	início
+19t	após
+19u	todos
+19v	qualquer
+19w	verdadeiro
+19x	Quando
+19y	, e
+19z	, ou
+1a0	(por
+1a1	No início,
+1a2	, e ativar
+1a3	, mensagem «
+1a4	; depois a cada
+1a5	repetir
+1a6	depois pode disparar de novo
+1a7	; dispara uma vez
+1a8	pausa quando verdadeiro
+1a9	«Todos devem valer» sem condições — nunca dispara
+1aa	»: o tipo está em class
+1ac	Mudar para type
+1ad	»: tipo «
+1ae	» desconhecido pelo jogo
+1af	O jogo vai ignorá-lo. Tipos válidos:
+1ag	Objeto «
+1ah	» sem tipo
+1ai	O jogo ignora (serve como comentário).
+1aj	» não tem propriedade nenhuma
+1ak	O jogo ignora gatilhos sem propriedades.
+1al	Adicionar id
+1am	) falta «
+1an	propriedade
+1ao	é obrigatória.
+1ap	»: «
+1aq	» não é inteiro
+1ar	Atualmente «
+1as	»: área de tamanho 0
+1at	Nada é detectado numa área de largura ou altura zero.
+1au	Definir 1×1 tile
+1av	» contém um «
+1ax	Remover este vínculo
+1ay	»: equipe «
+1az	» não é número
+1b1	»: equipe
+1b2	fora do intervalo
+1b3	Só -2, -1 ou 0–99.
+1b4	»: tempo «
+1b5	» não é entendido pelo jogo
+1b7	» é só
+1b8	Número puro significa milissegundos. Quis dizer segundos?
+1b9	»:
+1ba	é «
+1bc	Mudar para true
+1bd	»: unidades «
+1be	» podem estar escritas errado
+1bg	»: ponto de destino «
+1bh	» não existe
+1bj	»: não diz quantos créditos
+1bk	Preencha «Somar» ou «Definir como».
+1bl	» nunca vai disparar
+1bm	«Todos devem valer» marcado, mas sem condições.
+1bn	»: repeatCount não tem efeito
+1bo	A versão 1.15 lê mas não usa esta propriedade.
+1bp	gatilhos se chamam «
+1br	Condição de vitória «
+1bs	O jogo dará erro. Opções:
+1bt	O mapa não tem condição de vitória
+1bv	Definir como concluir objetivos
+1bw	Mapa de sobrevivência sem spawn inimigo
+1by	Mapa de sobrevivência sem ondas próprias
+1bz	Serão usadas as ondas padrão. Dá para editar em map_info.
+1c1	Adicione com «Novo → Objetivo da missão».
+1c2	Gatilhos usam a equipe
+1c4	gatilhos, nenhum problema
+1c5	O que são gatilhos
+1c6	Regras «quando… então…»
+1c7	Cada gatilho é uma regra:
+1c9	então
+1ca	faça algo (gerar unidades, créditos, texto).
+1ce	O «Mapa lógico» mostra como todos se ligam.
+1cf	Vínculos
+1cg	Como os gatilhos trabalham juntos
+1ci	: quando este é verdadeiro, os de baixo também ativam.
+1cj	: quando aqueles são verdadeiros, este pausa.
+1cl	Nomes não diferenciam maiúsculas.
+1cm	Tempo
+1cn	Atraso, duração, reinício, repetição
+1co	: quanto tempo após o início até poder disparar (uma vez).
+1cp	: quanto tempo a condição deve valer seguido.
+1cq	: quanto tempo após disparar ele reinicia.
+1cr	Vazio = dispara uma vez
+1cs	, e continua «verdadeiro».
+1ct	: repetir a cada intervalo após disparar.
+1cw	Área
+1cx	Onde o gatilho fica no mapa
+1cz	Modelo de captura de cidade
+1d0	Uma cidade para mapa de captura
+1d2	gera guarnição neutra quando ninguém domina;
+1d3	detecta se cada equipe domina;
+1d4	dá créditos ao dono em intervalos;
+1d5	nome da cidade muda de cor conforme o dono.
+1d6	Cada cidade pode ser editada à parte.
+1d7	A área da cidade deve cobrir suas construções.
+1d8	Mais equipes, mais gatilhos (3 por equipe).
+1d9	Modelo de sobrevivência
+1da	Enfrentar onda após onda
+1dc	Modelo de missão
+1dd	Cumprir objetivos passo a passo
+1df	Mapa lógico
+1dg	Ver como todos os gatilhos se ligam
+1dh	Cada caixa é um gatilho; a cor indica o tipo.
+1di	Azul
+1dj	=condição,
+1dk	Laranja
+1dl	=ação,
+1dm	Verde
+1do	Novo gatilho
+1dp	Condições: «Quando…»
+1dq	Ações: «Então…»
+1dr	Texto e objetivos
+1ds	Configurações e marcadores
+1dt	Novo
+1du	Novo objetivo
+1dv	‹ Voltar à lista
+1dw	Gatilhos (regras do mapa)
+1dx	Captura de cidades
+1dy	Sobrevivência
+1dz	Blocos comuns
+1e0	Desenhe uma área no mapa para criar
+1e1	Arraste uma área no mapa e escolha o tipo de gatilho
+1e2	Ainda não há gatilhos.
+1e3	Mapas normais não precisam de gatilhos
+1e4	, só das «Configurações do mapa» acima.
+1e6	Buscar
+1e7	gatilhos (nome, texto, unidade)
+1e8	Com problemas
+1e9	Mostrar mais
+1ea	(total
+1eb	Nenhum gatilho corresponde.
+1ed	Configurações do mapa (map_info)
+1ee	Tipo de mapa
+1ef	Condição de vitória
+1eg	Névoa de guerra
+1eh	Conforme a sala
+1ei	Visão
+1ej	Névoa do mapa
+1ek	Aliados compartilham visão
+1el	Introdução (introText)
+1em	Texto mostrado no início
+1en	Editar ondas inimigas…
+1eo	Duplicar
+1ep	Nome (destino de «Mover unidades»)
+1eq	Nome (outros gatilhos o referenciam)
+1er	Tipo
+1es	Mudar tipo
+1eu	Mudar «todos devem valer»
+1ev	Mensagens e notas
+1ew	Esquerda (tiles)
+1ex	Mudar área
+1ey	Topo (tiles)
+1ez	Largura (tiles)
+1f0	Altura (tiles)
+1f1	Arrastar nova área no mapa
+1f2	Redesenhar no mapa
+1f3	Ir até lá
+1f4	Mudar propriedade
+1f5	Apagar propriedade
+1f6	Nome da propriedade
+1f7	Valor
+1f8	Adicionar
+1f9	Adicionar propriedade
+1fa	Outras propriedades (avançado)
+1fb	(escolha)
+1fc	Neutro hostil (ataca sozinho)
+1fd	(precisa sala grande)
+1fe	Editar
+1ff	#RRGGBB ou red
+1fg	Limpar
+1fh	Normal
+1fi	Com seta para baixo
+1fj	ex. supplyDepot
+1fk	(escolha um destino)
+1fl	Toque no mapa para pôr um destino
+1fm	Definir destino
+1fn	Novo destino
+1fo	Chinês
+1fp	日本語
+1fq	(preenchidos
+1fr	)
+1fs	Versões em outros idiomas
+1ft	Vazio usa o de cima
+1fu	Vazio
+1fv	Formato errado
+1fw	Editar unidades geradas
+1fx	Nome da unidade, ex. tank
+1fy	Opções:
+1fz	Mais uma
+1g0	Gatilho não encontrado
+1g1	Mudar vínculos
+1g2	Escolher gatilhos «
+1g3	»
+1g4	+ Adicionar
+1g5	Buscar nomes
+1g7	Nomes não podem ter vírgula
+1g8	Renomear
+1g9	Também atualizadas
+1ga	referências
+1gb	Duplicar gatilho
+1gc	Apagar gatilho?
+1gd	gatilhos ligados a «
+1ge	». Esses vínculos também serão removidos.
+1gf	Apagar gatilho
+1gg	Cidade
+1gi	Depois de «Próximo», toque na posição da cidade.
+1gj	Nome da cidade
+1gk	Equipes participantes
+1gl	Guarnição neutra (quando ninguém domina)
+1gm	Vazio = nenhuma
+1gn	Intervalo da guarnição (s)
+1go	Renda de captura (0 = nenhuma)
+1gp	Pagamento a cada N segundos
+1gq	Tamanho da área da cidade (tiles)
+1gr	Nome colorido pelo dono
+1gt	3 gatilhos por equipe.
+1gu	Salas normais contam só as 10 primeiras equipes
+1gv	; mais só em salas grandes (servidor).
+1gw	Próximo: toque no mapa para pôr a cidade
+1gx	Toque no mapa para colocar «
+1gy	Modelo de cidade:
+1gz	_temConstrução
+1h0	Qualquer construção na área
+1h1	Guarnição neutra quando ninguém domina
+1h2	_guarnição
+1h3	_dono
+1h4	domina
+1h5	_renda
+1h6	_nome
+1h7	Gerado «
+1h8	gatilhos. Coloque as construções da cidade no modo Unidades.
+1h9	Onda 1
+1ha	Onda 2
+1hb	Onda final
+1hc	Cada linha é uma onda.
+1hd	Intervalo
+1he	é o tempo desde a onda anterior (min:seg);
+1hf	Inimigos
+1hg	escreva «quantidade unidade», separados por vírgula, ex.
+1hh	Título
+1hi	Vitória após esta
+1hj	onda
+1hk	Adicionar onda
+1hl	Ondas inimigas (survivalWaves)
+1hm	Ondas salvas
+1hn	Modelo de sobrevivência
+1ho	Define o mapa como
+1hr	Sobrevivência ativada, colocados
+1hs	pontos de spawn inimigo
+1ht	Chegar a um local
+1hu	Destruir CC inimigo
+1hv	Chegar a algum lugar
+1hw	Destruir o CC inimigo de lá
+1hx	Destruir todos os inimigos de lá
+1hy	Resistir até o segundo N
+1hz	Modo missão
+1i0	(vitória: concluir objetivos). Os objetivos
+1i1	aparecem em ordem
+1i3	Passo
+1i4	Segundo (desde o início)
+1i5	Equipe do jogador
+1i6	Equipe inimiga
+1i7	Adicionar passo
+1i8	Modelo de missão
+1i9	Objetivo
+1ia	_condição
+1ib	Concluído:
+1ic	_seta
+1id	Gerados
+1ie	objetivos (
+1ig	Créditos iniciais de cada equipe (team_info)
+1ih	Spawns temporizados
+1ij	Mensagem ao entrar
+1ik	Mostra uma mensagem quando unidades de uma equipe entram na área
+1il	Mostra uma linha de texto fixa no mapa
+1im	Renda por captura
+1in	Quem domina um ponto ganha créditos sem parar (um por equipe)
+1io	Mensagem de contagem
+1ip	Mensagem no registro no segundo N
+1iq	Reforços temporizados
+1ir	A base de cada equipe recebe reforços periodicamente
+1is	Domínio de fortaleza
+1it	Segure a fortaleza por um tempo: créditos e aviso no registro
+1iu	Acampamento neutro
+1iw	: chegaram reforços
+1ix	Reforços
+1iy	Dado a
+1j0	Créditos iniciais por equipe
+1j1	equipes com créditos iniciais definidos
+1j2	Toque no mapa para escolher o local
+1j3	Inimigos chegando!
+1j4	Você achou um lugar secreto!
+1j5	Entrar na área
+1j6	Aqui é…
+1j7	Faltam 5 minutos!
+1j8	Temporizador
+1j9	Fortaleza
+1ja	: a equipe segurou a fortaleza!
+1jb	Prêmio da fortaleza
+1jc	Nome da fortaleza
+1jd	Acampamento limpo
+1je	Guardas do acampamento
+1jf	Captura
+1jg	Somar créditos
+1jh	Ainda não há gatilhos
+1ji	━ ativa
+1jj	┅ desativa
+1jk	(mostrando só os primeiros
+1jl	Mapa lógico (
+1jm	gatilhos; toque numa caixa para editar)
+1jn	Texto a mostrar
+1jo	Escreva aqui
+1jp	Seta embaixo (aponta um alvo)
+1jr	Colocar
+1js	Colocar texto
+1jt	» é verdadeiro
+1ju	No início
+1jv	As mensagens que rolam no jogo. Por tempo:
+1jw	N segundos após o início
+1jx	primeiro,
+1jy	Quando as condições valem
+1jz	depois. Edite texto e cor direto.
+1k0	Quando
+1k1	Mensagem
+1k2	Velocidade de digitação
+1k3	Editar registro
+1k4	Mudar cor
+1k5	Mostrar de uma vez
+1k6	Rápido
+1k7	Médio
+1k8	Lento
+1k9	Mudar velocidade
+1ka	Remover esta mensagem
+1kb	Apagar entrada do registro
+1kc	Editar este gatilho
+1kd	Ainda não há mensagens. Adicione com os botões abaixo.
+1ke	Segundos
+1kf	Adicionar ao registro
+1kg	Registro
+1kh	N segundos após o início
+1ki	Toque no mapa para escolher a área
+1kj	Novo lugar descoberto!
+1kk	Quando alguém entra numa área
+1kl	Falar quando qual gatilho for verdadeiro?
+1km	Quando um gatilho é verdadeiro
+1kn	Redesenhar área
+1ko	O que esta área faz?
+1kp	Lição 1: um mapa jogável em cinco minutos
+1kq	Terreno, simetria, recursos, bases, verificar, salvar
+1kr	Este é o modo
+1kt	No mapa
+1ku	segure e arraste
+1kv	para pintar. Repare: as bordas ganham
+1kw	(praia, água rasa) — não precisa montar tiles.
+1kx	Errou? Toque em
+1ky	. No PC Ctrl+Z; no celular
+1kz	toque com dois dedos
+1l0	na tela também serve.
+1l1	Mapas de batalha costumam ser simétricos. Em «Simetria» escolha
+1l2	e pinte de novo — a outra metade é pintada junto.
+1l3	Vá para o modo
+1l4	e toque no mapa para colocar uma
+1l5	, toque no mapa para colocar uma
+1l7	Toque em
+1l9	Por fim
+1lb	Não salvar agora
+1lc	Lição 2: selecionar, copiar, carimbos
+1le	Escolha a ferramenta
+1lf	(atalho M).
+1lg	Arraste um retângulo
+1lh	para selecionar uma área.
+1li	Aparece uma barra abaixo:
+1lj	copiar, recortar, espelhar, girar
+1lk	. Toque em
+1ll	e depois em
+1ln	Com uma área selecionada, toque em «
+1lo	»; ela aparece no painel
+1lq	Lição 3: básico de gatilhos
+1ls	. Gatilhos são as regras do mapa:
+1lt	algo acontece,
+1lu	faça algo.
+1lv	O mais rápido é um modelo. Toque em
+1lw	, digite um nome e toque na posição da cidade.
+1ly	Toque em «
+1m0	Lição 4: gerar e remodelar o mapa todo
+1m4	Pular
+1m5	Próximo
+1m6	Sair do tutorial
+1m7	» concluída!
+1m8	Abra um mapa primeiro
+1ma	Começar tutorial
+1mc	Antes do tutorial
+1md	Treino do tutorial
+1me	· concluída
+1mf	A qualquer momento toque no
+1mg	ao lado da ferramenta para ajuda, ou pressione
+1mk	Não é arquivo zip / rwmod
+1ml	Método de compressão não suportado:
+1mm	Processando…
+1mn	Menu
+1mo	Barra de menus
+1mp	Toque para renomear
+1mq	Buscar funções (Ctrl+K)
+1mr	Verificar se o mapa é jogável
+1ms	Salvar (Ctrl+S)
+1mt	Mais formas de salvar
+1mu	Modo de edição
+1mv	Minimapa: toque ou arraste para ir

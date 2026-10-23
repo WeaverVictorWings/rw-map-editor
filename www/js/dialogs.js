@@ -64,7 +64,20 @@ export async function newMapDialog(preset = {}) {
   const startSeg = segmented([['blank', '空白地图'], ['gen', '随机生成地形']], st.start, (v) => { st.start = v; blankBox.classList.toggle('hidden', v !== 'blank'); genBox.classList.toggle('hidden', v !== 'gen'); });
   if (st.start === 'gen') { blankBox.classList.add('hidden'); genBox.classList.remove('hidden'); }
   refresh();
+  const LAYOUTS = [
+    ['1v1 对称', { name: '1v1', w: 160, h: 160, players: 2, start: 'gen', preset: 'continent', sym: 'lr', pools: 3, center: 2 }],
+    ['2v2', { name: '2v2', w: 220, h: 220, players: 4, start: 'gen', preset: 'continent', sym: 'lr', pools: 2, center: 4 }],
+    ['4 人四角', { name: '4人四角', w: 240, h: 240, players: 4, start: 'gen', preset: 'continent', sym: 'quad', pools: 2, center: 4 }],
+    ['8 人环形', { name: '8人环形', w: 320, h: 320, players: 8, start: 'blank', layout: 'ring', pools: 2, center: 6 }],
+    ['10 人大乱斗', { name: '10人大乱斗', w: 400, h: 400, players: 10, start: 'blank', layout: 'ring', pools: 2, center: 8 }],
+    ['海战图', { name: '海战', w: 300, h: 300, players: 4, start: 'gen', preset: 'islands', sym: 'lr', pools: 2, center: 4 }],
+    ['城夺图', { name: '城夺', w: 300, h: 300, players: 4, start: 'blank', layout: 'grid', pools: 1, center: 0, after: 'cityTemplate' }],
+    ['生存防守图', { name: '生存', w: 200, h: 200, players: 2, start: 'blank', layout: 'lr', pools: 3, center: 2, after: 'survivalTemplate' }],
+    ['任务关卡', { name: '任务', w: 160, h: 160, players: 1, start: 'blank', layout: 'lr', pools: 2, center: 0, after: 'missionTemplate' }],
+  ];
+  const tplRow = h('div', { class: 'presets', style: 'margin-bottom:6px' }, LAYOUTS.map(([lb, p]) => h('button', { class: preset.name === p.name ? 'on' : '', onclick: () => { closeModal(null); newMapDialog({ ...p, seed: st.seed }); } }, lb)));
   const r = await modal('新建地图', h('div', {},
+    h('label', {}, '从布局模板开始（点一下自动填好下面的设置）'), tplRow,
     h('label', {}, '地图名称'), h('input', { value: st.name, oninput: (e) => { st.name = e.target.value; } }),
     h('label', {}, '尺寸（格，每格 20 像素）'), pre,
     h('div', { class: 'grid2', style: 'margin-top:6px' }, h('div', {}, h('label', {}, '宽'), wI), h('div', {}, h('label', {}, '高'), hI)), tierEl,
@@ -77,6 +90,7 @@ export async function newMapDialog(preset = {}) {
   [{ label: '取消', value: null }, { label: '生成', value: () => ({ ...st }), primary: true }], { sticky: true });
   if (!r) return;
   await busy('正在生成地图…', () => createNewMap(r));
+  if (r.after) setTimeout(() => import('./triggers.js').then((T) => T[r.after]()), 400);
 }
 
 export async function createNewMap(st) {
@@ -581,6 +595,7 @@ export async function openChecks() {
             c.goto ? h('button', { onclick: () => { closeModal(); rend.centerOn(c.goto.x, c.goto.y, Math.max(rend.view.z, 1)); } }, '去看看') : null,
             c.fix ? h('button', { class: 'primary', onclick: () => { c.fix.run(); rend.invalidateAll(); A.mini.schedule(); A.autoDirty = true; ed.dirty = true; A.refresh(); const mb = modalBody(); mb.innerHTML = ''; mb.append(build()); } }, c.fix.label) : null) : null)));
     }
+    body.append(h('div', { class: 'row', style: 'margin-top:8px' }, h('button', { onclick: () => { closeModal(); import('./extras.js').then((m) => m.checklistDialog()); }, html: icon('batch') + ' 试玩检查清单' }), h('button', { onclick: () => { closeModal(); import('./extras.js').then((m) => m.scoreDialog()); }, html: icon('report') + ' 地图体检评分' })));
     body.append(h('p', { style: 'color:var(--muted);font-size:12px' }, '检查项来自社区整理的游戏规则，最终以游戏里实际打开为准。'));
     return body;
   };
@@ -591,9 +606,15 @@ export async function openChecks() {
 // ---------------- 设置 ----------------
 export async function settingsDialog() {
   const s = A.settings;
+  const I = await import('./i18n.js');
+  const langSel = h('select', { translate: 'no', onchange: (e) => { I.setLang(e.target.value); location.reload(); } },
+    I.LANGS.map(([k, n]) => h('option', { value: k, selected: k === I.getLang() }, n)));
   await modal('设置', h('div', {},
+    h('label', { translate: 'no' }, '界面语言 · Language'), langSel,
     toggle('显示网格（放大时）', s.grid, (v) => { s.grid = v; rend.showGrid = v; rend.request(); saveSettings(); }),
     toggle('保存时去掉没用到的图块集（地图更小）', s.prune, (v) => { s.prune = v; saveSettings(); }),
+    toggle('色盲友好配色（叠加图用橙 / 蓝代替红 / 绿）', !!s.colorblind, (v) => { s.colorblind = v; saveSettings(); if (A.overlayKind !== 'none') A.hooks.setOverlay(A.overlayKind); }),
+    h('div', { class: 'row', style: 'margin:6px 0' }, h('button', { onclick: () => import('./extras.js').then((m) => m.exportUserData()), html: icon('export') + ' 导出个人数据' }), h('button', { onclick: () => import('./extras.js').then((m) => m.importUserData()), html: icon('import') + ' 导入个人数据' }), helpBtn('tool.userdata')),
     toggle('保存地图时一起导出封面（地图名.png）', s.cover !== false, (v) => { s.cover = v; saveSettings(); }),
     slider('封面大小（长边像素）', 200, 1000, s.coverSize || 400, (v) => { s.coverSize = v; saveSettings(); }, { step: 50 }),
     h('label', {}, '资源池默认样式'), segmented([['1x1', '1 格（推荐）'], ['3x3', '3×3 带边框']], s.poolStyle || '1x1', (v) => { s.poolStyle = v; ed.poolStyle = v; saveSettings(); A.refresh('dock'); }),
@@ -601,7 +622,7 @@ export async function settingsDialog() {
     h('div', { class: 'row', style: 'margin-top:10px' },
       h('button', { onclick: async () => { const { forgetGameFolder } = await import('./files.js'); await forgetGameFolder(); toast('已忘记游戏文件夹'); } }, '重新选择游戏文件夹'),
       h('button', { onclick: async () => { await kvSet('tutorialDone', false); toast('下次打开会再次提示新手教程'); } }, '重置新手教程')),
-    h('p', { style: 'color:var(--muted);font-size:12px;margin-top:14px' }, '铁锈地图编辑器 2.0 · 非官方工具 · 图块素材来自你自己的地图文件')),
+    h('p', { style: 'color:var(--muted);font-size:12px;margin-top:14px' }, '铁锈地图编辑器 2.2 · 非官方工具 · 图块素材来自你自己的地图文件')),
   [{ label: '完成', value: 1, primary: true }]);
 }
 export async function loadSettings() { const s = await kvGet('settings'); if (s) Object.assign(A.settings, s); rend.showGrid = A.settings.grid; }

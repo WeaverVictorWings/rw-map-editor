@@ -7,7 +7,9 @@ import { rectSelection, wandSelection, copySelection, transformClip, pasteWithSy
 import { saveUserStamp } from './stamps.js';
 import { toast, h, promptBox, modalOpen, closeModal, closePopover, menu } from './ui.js';
 import { icon } from './icons.js';
-import { setMode, setTool, tool, MODES, TOOLS, renderStatus } from './panels.js';
+import { setMode, setTool, tool, MODES, TOOLS, renderStatus, unitRowPositions } from './panels.js';
+import * as PT from './paint.js';
+import * as DU from './detailui.js';
 import { ACTIONS, runAction } from './actions.js';
 
 const ed = A.ed, rend = A.rend;
@@ -80,18 +82,31 @@ function startAction(e) {
     if (T === 'brush') { ed.begin('画地形'); ed.paintTerrainAt(vx, vy, t); flushRecent(); act = { kind: 'stroke', last: [vx, vy], t, t0: performance.now(), moved: 0 }; rend.request(); return; }
     if (T === 'rect' || T === 'ellipse') { const a = [Math.round(vx), Math.round(vy)]; act = { kind: 'shape', shape: T, a, b: a, t }; return; }
     if (T === 'fill') { ed.begin('油漆桶'); const box = ed.fillTerrainAt(vx, vy, t, !!A.fillGlobal); commit('painted'); if (box) rend.invalidate(box.x0 - 1, box.y0 - 1, box.x1 + 1, box.y1 + 1); A.mini.schedule(); return; }
+    if (T === 'color') {
+      if (!ed.colorGid || !m.tilesetOf(ed.colorGid)) { toast('先在右边新建或选一个色块'); return; }
+      const shp = A.colorShape || 'brush', g = ed.colorGid;
+      if (shp === 'brush') { ed.begin('画色块'); PT.paintColorTiles(PT.brushTiles(tx, ty), g); flushRecent(); act = { kind: 'tileStroke', fn: 'color', last: [tx, ty] }; rend.request(); return; }
+      if (shp === 'fill') { ed.begin('油漆桶色块'); PT.paintColorTiles(PT.fillTiles(tx, ty, !!A.fillGlobal), g); commit('painted'); A.mini.schedule(); return; }
+      act = { kind: 'tshape', shape: shp, a: [tx, ty], b: [tx, ty], apply: (tiles) => PT.paintColorTiles(tiles, g), label: '画色块' }; return;
+    }
+    if (T === 'detail') { ed.begin('细节笔刷'); DU.detailDab(tx, ty, A.detailBrush || 'roughen', A.detailStrength ?? 60); flushRecent(); act = { kind: 'tileStroke', fn: 'detail', last: [tx, ty] }; rend.request(); return; }
+    if (T === 'height') { ed.begin((A.heightDir ?? 1) > 0 ? '抬高地面' : '压低地面'); const vis = new Set(); DU.heightDab(tx, ty, A.heightDir ?? 1, vis); flushRecent(); act = { kind: 'tileStroke', fn: 'height', last: [tx, ty], vis }; rend.request(); return; }
+    if (T === 'biome') { DU.biomeDab(tx, ty, A.biome ?? 1); act = { kind: 'tileStroke', fn: 'biome', last: [tx, ty] }; return; }
+    if (T === 'road') { act = { kind: 'road', pts: [[vx, vy]] }; return; }
     if (T === 'pick') { ed.pickTerrain(vx, vy); ed.tool.terrain = 'brush'; A.refresh('toolbar', 'dock'); toast('已选：' + ed.engine.cn(ed.terrain)); return; }
   }
   if (mode === 'items') {
     if (!ed.itemsTs) { toast('这张地图没有物品图块集'); return; }
     if (T === 'erase') { ed.begin('擦除物品'); ed.eraseAt(m.ensureLayer('Items'), tx, ty); flushRecent(); act = { kind: 'tileStroke', fn: 'erase', last: [tx, ty] }; rend.request(); return; }
     const it = ed.item();
-    if (T === 'random') { if (!ed.randomMix || !ed.randomMix.length) { toast('先在右边选几种物品'); return; } ed.begin('随机笔刷'); ed.placeItemAt(tx, ty, ed.randomMix[0].key); flushRecent(); act = { kind: 'tileStroke', fn: 'random', last: [tx, ty] }; rend.request(); return; }
+    if (T === 'random') { if (!ed.randomMix || !ed.randomMix.length) { toast('先在右边选几种物品'); return; } const ri = ed.item(ed.randomMix[0].key); ed.begin('随机笔刷'); PT.placeItems(PT.brushTiles(tx, ty), ri, { random: true }); flushRecent(); act = { kind: 'tileStroke', fn: 'random', last: [tx, ty] }; rend.request(); return; }
     if (!it) return;
-    const saved = ed.randomMix; ed.randomMix = null;
-    ed.begin('放' + it.cn); ed.placeItemAt(tx, ty); ed.randomMix = saved;
+    if (T === 'rect' || T === 'ellipse' || T === 'line') { act = { kind: 'tshape', shape: T, a: [tx, ty], b: [tx, ty], apply: (tiles) => PT.placeItems(tiles, it), label: '放' + it.cn }; return; }
+    if (T === 'fill') { ed.begin('油漆桶放' + it.cn); PT.placeItems(PT.fillTiles(tx, ty, !!A.fillGlobal), it); commit('item'); rend.pools = ed.poolTiles(); A.mini.schedule(); A.refresh('dock'); return; }
+    ed.begin('放' + it.cn);
+    if (it.stamp) PT.placeItems(ed.symPoints(tx, ty, 't').map(([x, y]) => Math.round(y) * m.width + Math.round(x)), it, { density: 1 });
+    else PT.placeItems(PT.brushTiles(tx, ty), it);
     flushRecent();
-    if (it.stamp) { commit('item'); rend.pools = ed.poolTiles(); A.mini.schedule(); A.refresh('dock'); return; }
     act = { kind: 'tileStroke', fn: 'item', last: [tx, ty] }; rend.request(); return;
   }
   if (mode === 'tiles') {
@@ -108,7 +123,13 @@ function startAction(e) {
       toast(`已放出生点：${added.map((t) => '第 ' + (t + 1) + ' 队').join('、')}`);
       return;
     }
-    if (T === 'unit') { ed.begin('放单位'); ed.addUnitAt(tx, ty); commit('unit'); return; }
+    if (T === 'unit') {
+      const pos = unitRowPositions(tx, ty).filter(([x, y]) => x >= 0 && y >= 0 && x < m.width && y < m.height);
+      ed.begin(pos.length > 1 ? `放 ${pos.length} 个单位` : '放单位');
+      for (const [x, y] of pos) ed.addUnitAt(x, y);
+      commit('unit'); A.mini.draw(); return;
+    }
+    if (T === 'text') { A.hooks.textAt && A.hooks.textAt(p.x, p.y); return; }
     if (T === 'region') { const a = [Math.round(p.x / TW) * TW, Math.round(p.y / TW) * TW]; act = { kind: 'region', a, b: a }; return; }
     if (T === 'select' || T === 'del') {
       // 先看是不是在拖已选中区域的右下角
@@ -193,12 +214,16 @@ function moveAction(e) {
     }
     case 'tileStroke': {
       if (tx === act.last[0] && ty === act.last[1]) break;
-      const step = Math.max(1, Math.floor(ed.size / 2));
+      const step = act.fn === 'item' && ed.item() && ed.item().stamp ? 1 : Math.max(1, Math.floor(ed.size / 2));
       const L = act.fn === 'rawErase' ? m.layer(ed.rawLayer) : act.fn === 'erase' ? m.ensureLayer('Items') : null;
       lineTiles(act.last, [tx, ty], step, (x, y) => {
         x = Math.round(x); y = Math.round(y);
-        if (act.fn === 'item') { const s = ed.randomMix; ed.randomMix = null; ed.placeItemAt(x, y); ed.randomMix = s; }
-        else if (act.fn === 'random') ed.placeItemAt(x, y, ed.randomMix[0].key);
+        if (act.fn === 'item') PT.placeItems(PT.brushTiles(x, y), ed.item());
+        else if (act.fn === 'random') PT.placeItems(PT.brushTiles(x, y), ed.item(ed.randomMix[0].key), { random: true });
+        else if (act.fn === 'color') PT.paintColorTiles(PT.brushTiles(x, y), ed.colorGid);
+        else if (act.fn === 'detail') DU.detailDab(x, y, A.detailBrush || 'roughen', A.detailStrength ?? 60);
+        else if (act.fn === 'height') DU.heightDab(x, y, A.heightDir ?? 1, act.vis);
+        else if (act.fn === 'biome') DU.biomeDab(x, y, A.biome ?? 1);
         else if (act.fn === 'raw') ed.rawPaintAt(x, y);
         else ed.eraseAt(L, x, y);
       });
@@ -207,6 +232,8 @@ function moveAction(e) {
       break;
     }
     case 'shape': act.b = [Math.round(vx), Math.round(vy)]; rend.request(); break;
+    case 'road': { const l = act.pts[act.pts.length - 1]; if (Math.hypot(vx - l[0], vy - l[1]) >= 1) { act.pts.push([vx, vy]); rend.request(); } break; }
+    case 'tshape': if (tx !== act.b[0] || ty !== act.b[1]) { act.b = [tx, ty]; rend.request(); } break;
     case 'marquee': if (tx !== act.b[0] || ty !== act.b[1]) { act.b = [tx, ty]; act.moved = true; rend.request(); } break;
     case 'region': act.b = [Math.round(p.x / TW) * TW, Math.round(p.y / TW) * TW]; rend.request(); break;
     case 'float': {
@@ -244,12 +271,24 @@ function endAction(e, cancelled = false) {
     case 'pick': if (!cancelled && A.pickPoint) A.pickPoint(a.tx, a.ty); break;
     case 'pan': A.hooks.coach && A.hooks.coach('pan'); break;
     case 'stroke': commit('painted'); A.mini.schedule(); break;
-    case 'tileStroke': commit(a.fn === 'erase' || a.fn === 'rawErase' ? 'erased' : 'item'); rend.pools = ed.poolTiles(); A.mini.schedule(); break;
+    case 'tileStroke': if (a.fn === 'biome') break; commit(a.fn === 'erase' || a.fn === 'rawErase' ? 'erased' : 'item'); rend.pools = ed.poolTiles(); A.mini.schedule(); break;
     case 'shape': {
       if (cancelled) break;
       ed.begin(a.shape === 'rect' ? '画矩形' : '画椭圆');
       ed.paintTerrainShape(a.shape, a.a, a.b, a.t);
       commit('painted'); A.mini.schedule();
+      break;
+    }
+    case 'road': {
+      if (cancelled || a.pts.length < 2) break;
+      ed.begin('画道路'); DU.applyRoad(a.pts, ed.size, !!A.roadPave); commit('painted'); A.mini.schedule();
+      break;
+    }
+    case 'tshape': {
+      if (cancelled) break;
+      ed.begin(a.label);
+      a.apply(PT.shapeTilesSym(a.shape, a.a, a.b, ed.size));
+      commit('item'); rend.pools = ed.poolTiles(); A.mini.schedule(); A.refresh('dock');
       break;
     }
     case 'marquee':
@@ -490,6 +529,18 @@ function drawOverlay(ctx) {
     ctx.restore();
     label(ctx, `${Math.abs(act.b[0] - act.a[0])}×${Math.abs(act.b[1] - act.a[1])}`, S(act.b[0] * TW, act.b[1] * TW).x + 8, S(act.b[0] * TW, act.b[1] * TW).y + 8);
   }
+  if (act && act.kind === 'road') {
+    ctx.save(); ctx.strokeStyle = '#ffb27a'; ctx.lineWidth = Math.max(2, ed.size * TW * z); ctx.globalAlpha = 0.45; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.beginPath(); act.pts.forEach(([x, y], i) => { const q = S(x * TW, y * TW); if (i) ctx.lineTo(q.x, q.y); else ctx.moveTo(q.x, q.y); }); ctx.stroke(); ctx.restore();
+  }
+  if (act && act.kind === 'tshape') {
+    ctx.save(); ctx.fillStyle = 'rgba(255,178,122,.28)';
+    const W = m.width;
+    const tiles = PT.shapeTilesSym(act.shape, act.a, act.b, ed.size);
+    if (tiles.length < 60000) for (const k of tiles) { const q = S((k % W) * TW, ((k / W) | 0) * TW); ctx.fillRect(q.x, q.y, TW * z + 0.5, TW * z + 0.5); }
+    ctx.restore();
+    label(ctx, act.shape === 'line' ? `${Math.round(Math.hypot(act.b[0] - act.a[0], act.b[1] - act.a[1]))} 格` : `${Math.abs(act.b[0] - act.a[0]) + 1}×${Math.abs(act.b[1] - act.a[1]) + 1}`, S((act.b[0] + 1) * TW, (act.b[1] + 1) * TW).x + 6, S((act.b[0] + 1) * TW, (act.b[1] + 1) * TW).y + 4);
+  }
   const reg = act && act.kind === 'region' ? { x: Math.min(act.a[0], act.b[0]), y: Math.min(act.a[1], act.b[1]), w: Math.abs(act.b[0] - act.a[0]), h: Math.abs(act.b[1] - act.a[1]) } : A.pendingRect;
   if (reg) { const a = S(reg.x, reg.y); ctx.fillStyle = 'rgba(88,166,255,.15)'; ctx.fillRect(a.x, a.y, reg.w * z, reg.h * z); ctx.strokeStyle = '#58a6ff'; ctx.lineWidth = 2; ctx.strokeRect(a.x, a.y, reg.w * z, reg.h * z); }
   // 选中的触发器区域：右下角拖柄
@@ -511,6 +562,7 @@ function ants(ctx, x, y, w, hh) {
   ctx.restore();
 }
 function label(ctx, t, x, y) {
+  t = (window.__rwT || String)(t);
   ctx.font = '12px system-ui, sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
   const w = ctx.measureText(t).width + 10;
   ctx.fillStyle = 'rgba(20,22,26,.9)'; ctx.fillRect(x, y, w, 18); ctx.fillStyle = '#ffb27a'; ctx.fillText(t, x + 5, y + 3);
@@ -519,8 +571,8 @@ function drawCursor(ctx, mp) {
   const m = ed.map, z = rend.view.z, T = tool();
   const S = (x, y) => rend.toScreen(x, y);
   ctx.save(); ctx.lineWidth = 1.5;
-  if (ed.mode === 'terrain' && ed.engine && (T === 'brush' || T === 'fill' || T === 'pick')) {
-    if (T === 'brush') {
+  if (ed.mode === 'terrain' && ed.engine && (T === 'brush' || T === 'fill' || T === 'pick' || T === 'detail' || T === 'height' || T === 'biome' || T === 'road')) {
+    if (T !== 'fill' && T !== 'pick') {
       const cx = ed.brushCenter(mp.x / TW), cy = ed.brushCenter(mp.y / TW);
       for (const [x, y] of ed.symPoints(cx, cy, 'v')) {
         const c = S(x * TW, y * TW), r = Math.max(3, ed.size / 2 * TW * z);
@@ -529,7 +581,7 @@ function drawCursor(ctx, mp) {
         ctx.strokeStyle = '#000'; ctx.stroke(); ctx.setLineDash([4, 3]); ctx.strokeStyle = '#fff'; ctx.stroke(); ctx.setLineDash([]);
       }
     } else { const c = S(Math.round(mp.x / TW) * TW, Math.round(mp.y / TW) * TW); ctx.beginPath(); ctx.arc(c.x, c.y, 5, 0, 7); ctx.strokeStyle = '#fff'; ctx.stroke(); }
-  } else if ((ed.mode === 'items' || ed.mode === 'tiles') && ['stamp', 'random', 'erase', 'brush'].includes(T)) {
+  } else if ((ed.mode === 'items' || ed.mode === 'tiles' || (ed.mode === 'terrain' && T === 'color' && (A.colorShape || 'brush') === 'brush')) && ['stamp', 'random', 'erase', 'brush', 'color'].includes(T)) {
     const it = ed.mode === 'items' ? ed.item() : null;
     const { tx, ty } = tileOf(mp);
     const r = it && it.stamp && T === 'stamp' ? (ed.stampCells(it).length > 1 ? 1 : 0) : Math.floor(ed.size / 2);

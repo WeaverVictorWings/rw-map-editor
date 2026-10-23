@@ -72,8 +72,9 @@ export function runChecks(ed, opts = {}) {
 
   // ---- 图块集 ----
   for (const ts of m.tilesets) {
-    if (ts.source) add('warn', '图块集', `图块集「${ts.name || ts.source}」引用了外部文件`, '游戏和本编辑器都可能找不到它，建议用内嵌图片的图块集。');
-    else if (!ts.embeddedPng) add('warn', '图块集', `图块集「${ts.name}」没有内嵌图片`, '它引用的是外部图片「' + (ts.imageSource || '') + '」，换设备后可能显示不出来。');
+    const fixMiss = { label: '补上地块图…', run: () => import('./assets.js').then((m2) => m2.missingDialog()) };
+    if (ts.source) add('warn', '图块集', `图块集「${ts.name || ts.source}」引用了外部文件`, '编辑器里会显示成紫色，换设备后游戏也可能找不到。选上对应的 .tsx 和 .png 就能嵌进地图。', { fix: fixMiss });
+    else if (!ts.embeddedPng) add('warn', '图块集', `图块集「${ts.name}」没有内嵌图片`, '它引用的是外部图片「' + (ts.imageSource || '') + '」，换设备后可能显示不出来。', { fix: fixMiss });
   }
   const gts = ed.groundTs;
   if (gts) {
@@ -89,6 +90,13 @@ export function runChecks(ed, opts = {}) {
       add(waterProps ? 'warn' : 'error', '图块集', `${waterTiles.length} 个水面图块没有 water 属性`, '没有这个属性，船不能在水上走，陆军反而能走过水面，还能在水上盖房。', {
         fix: { label: '给这些图块补上 water', run: () => { for (const id of waterTiles) m.setTileProp(gts, id, 'water', ''); } },
       });
+    }
+    // 岩浆：整格都是岩浆地形却没有 lava 属性
+    const lavaT = names.findIndex((n) => /^lava$/i.test(n || ''));
+    if (lavaT >= 0) {
+      const lavaTiles = [];
+      for (const [id, inf] of gts.tiles) if (inf.terrain && inf.terrain.every((t) => t === lavaT) && !('lava' in inf.props)) lavaTiles.push(id);
+      if (lavaTiles.length) add('warn', '图块集', `${lavaTiles.length} 个岩浆图块没有 lava 属性`, '没有这个属性，单位可以走过岩浆、在上面盖房。', { fix: { label: '补上 lava', run: () => { for (const id of lavaTiles) m.setTileProp(gts, id, 'lava', ''); } } });
     }
     if (upper.length) add('warn', '图块集', `${upper.length} 个图块属性名含大写字母`, '游戏只认小写属性名（例如 water，而不是 Water）。', {
       fix: { label: '全部改成小写', run: () => { for (const [id, k] of upper) { const v = gts.tiles.get(id).props[k]; m.setTileProp(gts, id, k, null); m.setTileProp(gts, id, k.toLowerCase(), v); } } },
@@ -219,13 +227,13 @@ export async function renderPoster(ed, rend, name, size = 1200) {
   c.fillText(name, pad, 56);
   const m = ed.map, sp = ed.spawns();
   c.fillStyle = '#9aa1ad'; c.font = '18px system-ui, "PingFang SC", "Microsoft YaHei", sans-serif';
-  c.fillText(`${m.width}×${m.height} 格 · ${new Set(sp.map((s) => s.team)).size} 支队伍 · ${ed.poolTiles().length} 个资源池`, pad, 84);
+  c.fillText((window.__rwT || String)(`${m.width}×${m.height} 格 · ${new Set(sp.map((s) => s.team)).size} 支队伍 · ${ed.poolTiles().length} 个资源池`), pad, 84);
   c.drawImage(pv, pad, head);
   c.strokeStyle = '#323743'; c.strokeRect(pad - 0.5, head - 0.5, pv.width + 1, pv.height + 1);
   c.fillStyle = '#ffd34d'; c.beginPath(); c.arc(pad + 8, H - pad + 2, 7, 0, 7); c.fill();
-  c.fillStyle = '#9aa1ad'; c.fillText('资源池', pad + 22, H - pad + 8);
+  c.fillStyle = '#9aa1ad'; c.fillText((window.__rwT || String)('资源池'), pad + 22, H - pad + 8);
   c.fillStyle = '#36c25b'; c.beginPath(); c.arc(pad + 110, H - pad + 2, 8, 0, 7); c.fill();
-  c.fillStyle = '#9aa1ad'; c.fillText('出生点（数字为队伍号）', pad + 126, H - pad + 8);
-  c.textAlign = 'right'; c.fillText('铁锈地图编辑器', W - pad, H - pad + 8);
+  c.fillStyle = '#9aa1ad'; c.fillText((window.__rwT || String)('出生点（数字为队伍号）'), pad + 126, H - pad + 8);
+  c.textAlign = 'right'; c.fillText((window.__rwT || String)('铁锈地图编辑器'), W - pad, H - pad + 8);
   return cv;
 }

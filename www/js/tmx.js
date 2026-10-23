@@ -320,7 +320,7 @@ export class RWMap {
       for (const o of [...G.el.querySelectorAll(':scope > object')]) G.el.removeChild(o);
       for (const o of objects) {
         const el = doc.createElement('object');
-        for (const [k, v] of Object.entries(o.attrs)) if (v !== undefined && v !== null) el.setAttribute(k, v);
+        for (const [k, v] of Object.entries(o.attrs)) if (v !== undefined && v !== null && !k.startsWith('data-rw-')) el.setAttribute(k, v);
         if (o.attrs.id) maxId = Math.max(maxId, +o.attrs.id);
         if (o.props.length) {
           const ps = doc.createElement('properties');

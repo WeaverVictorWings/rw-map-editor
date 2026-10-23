@@ -6,7 +6,7 @@ const { chromium } = require(process.env.PW || 'playwright');
 const [, , sample, outDir = '.'] = process.argv;
 const URL = process.env.URL || 'http://localhost:8765/index.html';
 const browser = await chromium.launch();
-const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+const ctx = await browser.newContext({ locale: 'zh-CN', viewport: { width: 1280, height: 800 } });
 const page = await ctx.newPage();
 const errors = [];
 page.on('pageerror', (e) => errors.push(e.message));

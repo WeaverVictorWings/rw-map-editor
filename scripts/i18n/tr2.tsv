@@ -1,0 +1,1177 @@
+jg	Mamut tank
+jh	Bombardıman uçağı
+ji	Önleyici
+jj	Füze tankı
+jk	Deneysel örümcek
+jl	Nakliye
+jm	Ağır topçu
+jn	Lazer savunma
+jo	Uçaksavar topu
+jp	Nükleer silo
+jq	Nükleer önleme silosu
+jr	Mech (makineli)
+js	Mech (füze)
+jt	Amfibi jet
+ju	Takım değiştir
+jv	Takımları yeniden numarala
+jw	map_info ekle
+jx	map_info düzenle
+jy	Oyunda ne test edilmeli
+k0	Harita sağlık kontrolü
+k1	Haritaya puan verir ve kaybedilen puanları gösterir
+k3	Kişisel verileri dışa / içe aktar
+k4	Yeni telefon ya da PC ve telefon eşitleme
+k6	Harita oyunda açılıyor, kapak seçim ekranında görünüyor
+k9	Kaynaklara çıkarıcı kurulabiliyor;
+ka	hepsi tamam
+kc	Gemiler suda gidiyor, kara birimleri giremiyor; sığ geçitten geçebiliyor
+ke	Birim çıkaran tetikleyiciler zamanında, doğru yer ve takımda çalışıyor
+kg	Kredi değişimi doğru (ne kadar, ne sıklıkla)
+kh	Harita yazısı doğru renk ve konumda görünüyor
+ki	Savaş günlüğü mesajları zamanında çıkıyor
+kk	Görevler sırayla çıkıyor; hepsi bitince zafer
+kl	Büyük harita telefonda kasmıyor, çökmüyor
+kn	Son test:
+ko	geçti.
+kp	Geçen sefer bulunan sorunlar:
+kq	Sorun varsa not yaz (isteğe bağlı)
+kr	Bu test kaydını sakla
+ks	Kaydedildi: hâlâ
+kt	geçmedi — düzelt ve tekrar test et
+ku	Hepsi geçti — yayınlamaya hazır!
+kv	Kontrol ediliyor…
+kw	oyunu etkileyen sorun
+kx	«Oynanabilir mi?»yi açıp tek tek düzelt; çoğu tek dokunuşla.
+ky	hatırlatma
+kz	«Oynanabilir mi?»deki sarı maddelere bak.
+l0	En yakın kaynağa mesafeler arasındaki fark
+l2	Yakın kaynak sayısı farkı
+l3	Kaynakları simetrik yerleştir ya da haritayı aynala.
+l4	En büyük bölge en küçüğün şu katı:
+l5	×
+l6	Üsleri daha simetrik yerlere taşı.
+l7	Bir takımın kara birimleri hiçbir düşmana ulaşamıyor
+l8	Deniz haritası değilse yol aracı ya da sığ geçitle yol aç.
+l9	2'den az üs
+la	Birimler modunda üs yerleştir.
+lb	Arazi türü çok az
+lc	«Otomatik detay»dan bir ön ayar dene.
+ld	Neredeyse hiç ağaç, taş ya da süs yok
+le	«Doğal süs» ya da nesne fırçasıyla serp.
+lf	Arazi kenarları fazla düzgün
+lg	«Doğal kenarlar»ı kullan.
+lh	Harika
+li	İyi
+lj	Geliştirilmeli
+lk	Çok sorun var
+ll	Kesinti yok.
+lm	rw-map-editor-kisisel-veri.json
+ln	Kişisel veri
+lo	Kişisel veri dosyası değil
+lp	İçe aktarıldı. Bazı ayarlar yeniden açınca geçerli olur.
+lq	İçe aktarma başarısız:
+lr	Rusted Warfare haritası
+ls	Kaydetme başarısız:
+lt	Orijinal dosyanın üzerine kaydedildi
+lu	«İndirilenler» klasörüne indirildi
+lv	Harita klasörü
+lx	Klasöre yazma izni yok
+ly	Oyun harita klasörü henüz seçilmedi
+lz	Kıta
+m0	Denizle çevrili büyük bir kıta; kara ağırlıklı savaş
+m1	Takımada deniz
+m2	Çok ada; deniz ve hava kuvveti daha önemli
+m3	İç deniz
+m4	Ortada bir deniz, çevresi kara
+m5	Nehir vadisi
+m6	Büyük bir nehir haritayı geçer; birkaç sığ geçit çekişme noktası
+m7	Yayla kalesi
+m8	Uçurumlarla çevrili, girişleri olan yayla
+m9	Ilıman
+ma	Paylaşım kodu biçimi yanlış (RWG1- ile başlamalı)
+mb	Çimen
+mc	Toprak
+md	Kum
+me	Arazi
+mf	Çimen, su, kum, uçurum ve dahasını boya
+mg	Bir arazi seç ve boya. Farklı araziler arasında editör
+mh	geçişleri kendisi ekler
+ml	Nesneler
+mm	Kaynak, ağaç, taş ve yerdeki diğer şeyler
+mo	Kaynak ile birimler arasında 1 karo boşluk bırak.
+mq	Birimler
+mr	Üsler ve önceden yerleştirilen birimler
+mt	Simetri açıkken üsler simetrik yerlere de konur.
+mv	Harita kuralları, birim çıkarma, yazı, zafer koşulları
+mx	Normal çatışma haritasına yalnız map_info yeter.
+my	Şehir, hayatta kalma ve görev haritaları şablondan başlayabilir.
+mz	Rastgele üret, görselden harita, ölçek, ayna
+n1	Bunların hepsi geri alınabilir.
+n2	Karolar (uzman)
+n3	Herhangi bir karoyu doğrudan koy, geçiş yok
+n5	Zemin boş olamaz, bu yüzden zemin katmanında silgi yok.
+n6	Arazi fırçası
+n7	Basılı tutup sürükleyerek boya
+nb	Dikdörtgen
+nc	Araziyle dolu dikdörtgen çiz
+ne	Elips
+nf	Araziyle dolu elips çiz
+nh	Kova
+ni	Bağlı aynı araziyi tek seferde değiştir
+nk	Örneğin bütün çölü tek seferde kara çevir.
+nl	Damlalık
+nm	Haritadan arazi al
+nn	Haritaya dokun, oradaki arazi fırçaya geçsin.
+no	Kaydır
+np	Görünümü kaydır
+nr	Nesne yerleştir
+ns	Dokun koy, sürükle art arda koy
+nu	Kaynak stili
+nv	1 karo ya da 3×3
+nx	1 karo
+ny	resmî editör gibi, daha esnek;
+o0	İki stil de oyunda aynı çıkarır.
+o1	Nesne silgisi
+o2	Nesneleri sil
+o4	Rastgele fırça
+o5	Tek darbede birkaç süs boya
+o7	Dokun: komuta merkezi + 2 inşaatçı
+o9	Birim yerleştir
+oa	Herhangi bir birim
+oc	Seç/taşı
+od	Birime dokun: taşı, takım değiştir ya da sil
+of	Sil
+og	Silmek için birimlere dokun
+oi	Kutu seçimi
+oj	Dikdörtgen seçim çiz
+ol	Sihirli değnek
+om	Bağlı aynı araziyi seç
+oo	Seçimdeki arazi, nesne ve birimleri kopyala.
+or	Yapıştırılan üsler yeni takım numarası alır.
+ot	Yatay çevir
+ou	Seçimi sol-sağ çevir
+ow	Dikey çevir
+ox	Seçimi üst-alt çevir
+oy	90° döndür
+oz	Seçimi saat yönünde 90° döndür
+p0	Damga olarak kaydet
+p1	Seçimi damgalara kaydet
+p3	Karo koy
+p4	Seçili karoyu doğrudan koy
+p5	Karo silgisi
+p6	Zemin dışı katmanlardaki hücreleri boşalt
+p7	Karo damlalığı
+p8	Haritadan karo al
+p9	Simetrik çizim
+pa	Bir yere çiz, simetrik yer de çizilsin
+pd	«4 yön» 4 oyunculu haritalara uygun.
+pe	«Çapraz» yalnız kare haritalara uygun.
+pf	Yalnız değiştir
+pg	Yalnız bir araziyi değiştir
+pi	Birincil / ikincil
+pj	İki arazi arasında hızlı geçiş
+pl	Düzenlediğin şeyi öne çıkar
+pn	Yürünebilen ve inşa edilebilen yerleri göster
+po	Haritaya renk katmanı bindirir:
+pq	• Deniz: mavi gemilerin gidebildiği su
+pr	• Hover: kırmızı hover için bile geçilmez
+ps	• İnşa: yeşil olur, kırmızı olmaz
+pt	• Bölge: her karo yürüyerek en yakın takıma ait
+pu	• Simetri farkı: kırmızı iki tarafın farklı olduğu yer
+pw	Takım kaynaklarını gerçek rotalarla karşılaştır
+py	Sayılar ne kadar yakınsa o kadar adil.
+q4	Tetikleyiciler kopyalanmaz.
+q5	İki tarafın farkını bul
+q7	Orantılı ölçek
+q8	Tüm haritayı büyüt ya da küçült
+qa	Birimler ve kaynaklar asla çoğaltılmaz
+qe	İçeriği ölçeklemeden harita boyutunu değiştir
+qg	Görselden harita, oranlar senin
+qh	1. Görseli ve harita boyutunu seç.
+qk	4. «Temizlik» ile kırıntı ve şeritleri sil.
+qn	JPG için «Bulanıklaştırma»yı 1 yap.
+qo	Görselin üstüne elle çizmek için «Yalnız çizim» kullan.
+qp	Ön ayar ve tohumla temel harita üret
+qs	Aynı rastgele haritayı veren bir kod
+qu	Haritaya görsel yapıştır
+qy	Yaygın kombinasyonlar tek dokunuşla
+r0	Damgalar dosyaya aktarılabilir.
+r1	Her işlemi gör, dokunup geri dön
+r3	.tmx dosyası olarak kaydet
+r5	Oyuna kaydet
+r6	Doğrudan oyunun harita klasörüne kaydet
+r9	Harita kapağı
+ra	Tüm haritanın fotoğrafını çek
+rc	Başlık, oyuncu ve açıklamalı büyük görsel
+rd	Haritanı gruplarda, forumlarda ya da atölyede paylaşmak için.
+re	Karolar
+rf	Yeni haritalar karoları nereden alır
+rh	Otomatik kayıt
+ri	30 saniyede bir kopya
+rk	Harita türü ve temel kurallar
+rm	Takımlar
+rn	En çok 100 (motor sınırı)
+ro	Motor en çok 100 takımı destekler.
+rp	Normal odalarda yalnız 10 takım var
+rt	Temeller
+ru	Telefon
+rw	PC
+ry	Renk blokları
+rz	Kendi renginde zemin; oyunda ne olacağını seç
+s1	komşu araziyle kaynaşmaz
+s4	Düzenlemek ya da silmek için bloğa sağ tık ya da uzun bas.
+s5	Nesne şekli ve yoğunluğu
+s6	Dikdörtgen, elips, çizgi, kova, yoğunluk ve aralık
+s9	En küçük aralık
+sa	, böylece fırça onları yığmaz, aralıklı koyar.
+sb	Birim paletinden seç, haritaya dokunup koy
+sd	Bir seferde kaç tane
+se	Otomatik sıra ya da blok
+sg	Yazı
+sh	Haritaya bir satır yaz
+sj	Savaş günlüğü
+sk	Oyunda akan mesajlar
+sm	Bu ne?
+sn	İpucu
+so	Anladım
+sp	Ara: ör. «simetri», «kaynak», «kaydet»
+sq	Bu harita otomatik arazi boyayamaz; «Karolar» modunu kullan
+sr	Arazi boya
+ss	Önce sağda bir renk bloğu oluştur ya da seç
+st	Renk bloğu boya
+su	Renk bloğu kovası
+sv	Zemini yükselt
+sw	Zemini alçalt
+sx	Seçili:
+sy	Bu haritada nesne tileset'i yok
+sz	Nesneleri sil
+t0	Önce sağdan birkaç nesne seç
+t1	Nesne kovası
+t2	Önce sağdan bir karoya dokun
+t4	Karoları sil
+t5	Üs yerleştir
+t6	Takım sayısı sınıra ulaştı
+t7	Takım
+t8	Üs yerleştirildi:
+t9	birim
+ta	Burada üst üste:
+tb	— birini seç:
+tc	Nesne
+td	Alanı yeniden boyutlandır
+te	Taşı
+tf	Dikdörtgen çiz
+tg	Elips çiz
+th	Yol çiz
+ti	, dahil
+tj	Kopyalandı
+tk	Kesildi. Boşalan yer ikincil araziyle dolduruldu
+tl	Seçimi boşalt
+tm	-90° döndür
+tn	Dönüştür
+to	Önce kutuyla bir alan seç
+tp	Damga adı
+tq	Damgalar
+ts	Damga olarak kaydedildi:
+tt	Yerine sürükle, sonra «Bırak»a dokun
+tv	Pano boş: önce seç ve kopyala
+tw	Bırak
+tx	Yatay çevir
+ty	Dikey çevir
+tz	90°
+u0	Seçim
+u1	Damga
+u2	Boşalt
+u3	İptal edildi
+u4	Fırça boyutu
+u5	Birincil/ikincil değiştir
+u8	Başka harita açılsın mı?
+ua	Yine de aç
+ub	Harita okunuyor…
+uc	Dosya açılamıyor
+ud	Bu kaydın süresi doldu
+ue	Açılıyor…
+uf	Bu cihaz klasörleri doğrudan okuyamıyor
+ug	Klasör okunuyor…
+uh	Okuma başarısız:
+ui	Oyun klasöründe henüz .tmx harita yok
+uj	Oyun klasöründen aç
+uk	Haritada hâlâ sorunlar var
+ul	Bulundu:
+um	oyunu etkileyen sorun:
+un	Önce bak
+uo	Yine de kaydet
+up	Harita dosyası oluşturuluyor…
+uq	Kaydetme başarısız
+us	Telefonda genelde
+uv	PC'de genelde oyun kurulum klasöründe:
+ux	Oyun harita klasörünü seç
+uy	Seç
+uz	Hatırlandı:
+v0	Seçme başarısız:
+v2	Oyun klasörüne yazılıyor…
+v3	ve kapak
+v4	Kaydedildi: «
+v5	. Hadi oyunda dene!
+v6	Oyuna kaydetme başarısız
+v8	Normal kaydet
+v9	Klasörü yeniden seç
+va	Harita ve
+vb	Kapak
+vc	Anlık görüntü kaydediliyor (her ihtimale karşı)…
+vd	Otomatik:
+ve	Otomatik kayıt başarısız: depolama dolu olabilir
+vf	Anlık görüntü kaydet
+vg	Anlık görüntü adı
+vi	Anlık görüntü kaydediliyor…
+vj	Anlık görüntü kaydedildi
+vk	Anlık görüntü geri yüklensin mi?
+vl	Şuna geri yükle: «
+vn	Önizleme
+vo	Tanıtım görseli oluşturuluyor…
+vp	_tanitim.png
+vq	Karolar
+vr	Fırça
+vs	Detay
+vt	Biyom
+vu	Yol
+vv	Çizgi
+vw	Silgi
+vx	Seç
+vy	Alan çiz
+vz	Yazı
+w0	Araçlar
+w1	Katmanlar
+w2	Geçmiş
+w3	Rapor
+w4	Otomatik yedeklendi
+w5	Kaydedilmedi
+w6	Geri al:
+w7	Geri al (Ctrl+Z)
+w8	Yinele:
+w9	Yinele (Ctrl+Y)
+wa	Özellik ara…
+wb	Yakınlaştır
+wc	Uzaklaştır
+wd	Dosya adı (.tmx olmadan)
+wf	Kaplama
+wg	İnşa edilebilir
+wh	Simetri farkı
+wi	Yardım için uzun bas ya da sağ tıkla
+wj	Yakınlaştırma
+wl	Yuvarlak
+wm	Kare
+wq	Tüm haritada aynı arazi
+wr	Yapıştırırken boş hücreler nesnelerin üstüne yazmaz
+ws	Panodakini yapıştır
+wv	Tık birincil; sağ tık ya da uzun bas ikincil
+ww	İkincil:
+wx	Arazi (birincil / ikincil)
+wy	Birincil ve ikincili değiştir (X)
+wz	⇄ Birincil/ikincil değiştir
+x0	İkincil ile boya
+x1	Sağ tık ikincili boyar
+x2	Bu araziyi tüm haritada değiştir
+x3	Herhangi (tüm araziler)
+x4	Yalnız değiştir
+x5	» çizilirken
+x6	İçi normal zemin
+x8	(yok)
+x9	Boyarken
+xa	» doğrudan bitişebilir:
+xb	. Diğer arazilerin yanına ara arazi halkası eklenir.
+xd	Rastgele fırça: birkaç nesne seç; kaydırıcılar oranı belirler
+xe	Boşluk oranı
+xf	Çizgi kalınlığı
+xg	Yoğunluk
+xh	En küçük aralık (karo)
+xi	Tüm haritada aynı zemine koy
+xj	Art arda koymak için basılı tutup sürükle
+xk	Dikdörtgen çiz
+xl	Elips çiz
+xm	Çizgi çiz
+xn	Aynı zemini doldurmak için dokun
+xo	Silmek için basılı tutup sürükle
+xq	«Yoğunluk» ne kadar düşükse o kadar seyrek ve doğal.
+xr	Haritada şu an
+xt	Sağ tık ya da uzun bas: düzenle / sil
+xu	Renk bloğunu düzenle
+xv	Renk blokları (kendi rengin, özellik seç)
+xx	Şekil
+xy	Renk blokları zemini doğrudan değiştirir ve komşu araziyle
+xz	kaynaşmaz
+y0	. Normal araziye dönmek için arazi fırçasıyla üstüne boya.
+y1	Renk ve özelliği düzenle
+y2	Sil (haritada kullanılmıyorsa)
+y3	Bu blok haritada hâlâ kullanılıyor; önce üstüne boya
+y4	Tarafsız
+y5	Düşman (-2)
+y6	Bir tane koymak için haritaya dokun
+y9	Seçili birim
+ya	Konum: karo (
+yb	Birimi sil
+yc	Üsler (
+yd	; gitmek için dokun)
+ye	Henüz üs yok.
+yf	Takımları 1, 2, 3… diye numarala
+yg	Tümü
+yh	Kara
+yi	Hava
+yj	Deniz
+yk	Binalar
+yl	Deneysel
+ym	Bulunamadı. Başka kelime ya da kategori dene.
+yn	Birim ara (Çince ya da İngilizce ad)
+yo	Birim seç
+yp	Takım
+yq	Aralık (karo)
+yr	Diziliş
+ys	Sıra
+yt	Sütun
+yu	Blok
+yw	Tetikleyici editörü yükleniyor…
+yx	Tüm harita
+yy	Birden çok harita
+yz	Görsel
+z0	Katmana boya
+z1	Karo seçmek için dokun
+z3	Gizle
+z4	Göster
+z5	Zemin
+z6	Karo katmanları
+z7	Nesne katmanları ·
+z8	Diğer katmanları karart (modun düzenlediğini öne çıkarır)
+z9	Izgarayı göster
+za	Ayarla…
+zb	Referans görsel seç…
+zc	karo ·
+zd	Kullanımda
+ze	Kullanılmıyor
+zf	Kaydederken kullanılmayan tileset'leri kaldır
+zg	Damga yerleştir:
+zh	Yerleşik damgalar (dokun koy, uzun bas bilgi)
+zi	Damgalarım
+zj	Seçimi damga olarak kaydet
+zk	İçe aktar
+zm	Dosyaya aktar
+zn	Damga silinsin mi?
+zo	Sil: «
+zp	Damgalar içe aktarıldı:
+zq	(açıldığı hali)
+zr	Geri alındı
+zs	Geçmiş (
+zt	adım; geri dönmek için dokun)
+zu	Anlık görüntüler
+zv	Anlık görüntü kaydet
+zy	Yürüme mesafeleri hesaplanıyor…
+zz	Yeniden hesapla
+100	Hesapla
+101	Üs yok; hesaplanamıyor.
+102	Oldukça dengeli görünüyor.
+103	Takımların mesafe ve kaynak sayıları birbirine yakın.
+104	; en büyük bölge en küçüğe göre:
+105	Dengesizlik var:
+106	En yakın kaynağa mesafe farkı
+107	karo; 30 karo içindeki kaynak farkı
+108	30 karo içinde kaynak
+109	En yakın kaynak
+10a	Bölge
+10b	Kara birimleri hiçbir düşmana ulaşamıyor
+10c	Ada
+10d	Takım karşılaştırması (satıra dokun, üsse git)
+10f	Ortak kaynaklar (
+10g	; en yakın iki takıma neredeyse eşit uzaklıkta)
+10h	Bu kaynaklar çekişme noktası olacak.
+10j	Takım bölgelerini haritada göster
+10k	Açılış simülasyonu
+10n	Harita aç
+10o	Bir .tmx dosyası seç
+10p	Boyut ve oyuncu; üsler otomatik
+10q	Önce bir harita aç
+10r	Oyun harita klasörüne bir kez izin ver
+10s	Görseli haritaya çevir
+10t	Adım adım, dakikalar içinde öğren
+10u	Her özellik nasıl çalışır
+10v	Listeden kaldır
+10w	Son açılanlar
+10y	Mevcut haritaya dön
+10z	vb.
+110	Standart üs
+112	Zengin üs
+114	Kaynak noktası
+116	Göl
+117	Oval su; kumsal ve sığ su otomatik eklenir.
+118	Deniz kaynak adası
+11a	Genişleme
+11c	Zengin merkez
+11e	Boğaz savunması
+11g	Köprübaşı
+11i	Yüksek kale
+11k	Sığ geçit
+11l	Kara birimlerinin nehri geçtiği sığ geçit; nehrin üstüne dikey koy.
+11m	Koru
+11n	Görüşü ve geçişi kapatan düzensiz koru.
+11o	Uçurumlu yayla
+11p	Uçurumlarla çevrili, inip çıkma girişi olan yayla.
+11q	Lav çukuru
+11s	Buz gölü
+11t	Kar içinde bir buz gölü.
+11u	karo,
+11v	Damga dosyası değil
+11w	Su
+11x	Kar
+11y	Çimen uçurumu
+11z	Buz
+120	Toprak uçurumu
+121	Kum tepeleri
+122	Donmuş orman
+123	Taş zemin
+124	Desteklenmeyen sıkıştırma:
+125	»: veri uzunluğu yanlış (
+126	bayt, beklenen
+127	Geçersiz XML / TMX dosyası:
+128	TMX haritası değil (kök öğe değil:
+129	Sonsuz haritalar (infinite=1) desteklenmiyor
+12a	»: boyut haritayla uyuşmuyor
+12b	Her takım kaç saniyede düşmanla karşılaşır
+12d	Sayılar tahminidir
+12f	Harita birleştirme
+12h	Haritalar aynı karoları kullanmalı.
+12i	Büyük haritayı parça parça yapmak için iyi.
+12j	Başka haritadan kopyala
+12k	Başka haritadan bir parça getir
+12m	Harita kitaplığı
+12n	Yaptığın ve açtığın tüm haritalar
+12p	Toplu işlem
+12q	Birçok haritayı birden kontrol et ve düzelt
+12t	Harita koleksiyonu paketle
+12u	Doğrudan oyuna konabilen bir Mod yap
+12x	Sürüm karşılaştırma
+12y	İki sürüm arasındaki farkı gör
+130	Mod desteği
+131	Mod birimlerini ve karolarını kullan
+135	Kara (tank)
+136	Hover birimler
+137	Simüle ediliyor…
+138	Haritada henüz üs yok
+139	dk
+13a	sn
+13b	Temas
+13c	Kara merkeze
+13e	İlk temas süreleri arasındaki fark
+13g	İlk temas süreleri yakın (fark
+13h	), adil açılış.
+13j	Cephe hatlarını haritada göster
+13k	Cephe hatları hesaplanıyor…
+13n	Mevcut haritayı «
+13o	» ilk sıraya koy
+13q	Satır başına
+13r	Birleştir
+13s	En az iki harita gerekir
+13t	Birleştiriliyor…
+13u	Birleşik harita açılıyor…
+13v	birlesik-
+13w	Dikiş onarımı
+13x	Birleştirildi:
+13y	yeni harita
+13z	Şuradan: «
+140	» kopyala
+142	Kopyala ve mevcut haritaya koy
+143	Önce küçük resimde bir parça seç
+145	O
+146	Çok büyük
+147	Büyük
+148	Küçük/orta
+149	Meydan okuma
+14a	Favori
+14b	Etiket ekle
+14c	Etiketler (virgülle ayır)
+14g	Taranıyor
+14h	harita…
+14i	Eklendi
+14j	harita
+14k	Ad ya da etiket ara
+14l	Yalnız favoriler
+14m	Oyun klasörünü tara
+14n	Bir grup haritayı birden kontrol et ve düzelt.
+14o	Hangi haritalar
+14p	Oyun klasöründeki tüm haritalar
+14q	Seçtiğim dosyalar
+14r	Ne yapılsın
+14s	Eksik map_info ekle
+14t	Su ve lav özelliklerini ekle
+14u	Boş zemini doldur
+14v	Kapak üret (haritaadi.png)
+14y	Başlat
+14z	Önce oyun harita klasörüne izin ver
+150	İşlenecek harita yok
+151	İşleniyor
+152	toplu-sonuc.zip
+153	Sorunlar
+154	Düzeltildi
+155	Kalan ciddi sorun
+156	Okuma başarısız
+157	Toplu işlem sonucu
+158	Yazıldı
+159	dosya.
+15a	Yalnız kontrol edildi; hiçbir dosya değişmedi.
+15b	Harita koleksiyonum
+15d	Koleksiyon adı
+15e	Açıklama
+15f	Mevcut haritayı dahil et: «
+15g	Başka haritalar seç (birden fazla olabilir)
+15i	Paketle
+15j	Paketleniyor…
+15k	En az bir harita gerekir
+15l	Paketlendi
+15m	harita:
+15o	Karşılaştırmak için bir anlık görüntü seç
+15p	Anlık görüntü boyutu
+15q	, şimdikinden farklı; yalnız yan yana, hücre hücre değil
+15r	Karşılaştır: şimdi ↔ «
+15t	Şimdi
+15u	Anlık görüntü (kırmızı = farklı)
+15v	Seçili alanı anlık görüntüden geri yükle
+15w	Önce anlık görüntüde bir alan seç
+15x	Anlık görüntüden alan geri yükle
+15y	Geri yüklendi. Beğenmezsen geri al.
+160	birim ·
+161	tileset
+162	Kaldır
+163	Mevcut haritaya eklendi; «Karolar» modunda kullan
+164	Ekle
+165	Mod okunuyor…
+166	Okundu
+167	birim,
+168	Mod içe aktar
+16b	Ölçek ×
+16c	Boş = tüm takımlar
+16d	Koşullar
+16e	Mantık
+16f	Eylemler
+16g	Birim algılama
+16i	Birim türü
+16j	Yalnız bir tür; boş = herhangi
+16k	En az
+16l	Varsayılan 1
+16m	En çok
+16n	0 = «alanda yok»
+16o	Yalnız binaları say
+16p	Yalnız üretim binalarını say
+16q	Yalnız inşaatçıları say
+16r	Yalnız kaynak üstü binaları say
+16s	Yalnız boştaki birimleri say
+16t	Yalnız saldıranları say
+16u	Yalnız uçaksavarları say
+16v	Yalnız bir teknoloji seviyesini say
+16w	Yalnız etiketlileri say
+16x	Bitmemiş binaları da say
+16y	Etiket algılama
+170	Etiket
+171	Röle / zamanlayıcı
+173	Birim çıkar
+174	Alanın ortasında birim çıkarır.
+175	Hangi birimler
+176	Alandaki birimleri kaldırır.
+177	Yalnız boş nakliyeler
+178	Kredi değiştir
+179	Bir takıma kredi ekle, çıkar ya da ayarla.
+17a	Ekle (eksi çıkarır)
+17b	Şuna ayarla
+17c	İkisi de doluysa önce «Ayarla», sonra «Ekle»
+17d	Takım etiketleri
+17f	Etiket ekle (virgül)
+17g	Etiket kaldır (virgül)
+17h	Harita yazısı
+17i	Alanın ortasında yazı gösterir. Yalnız «etkinken».
+17j	Yazı boyutu
+17k	Varsayılan 20
+17l	Stil
+17m	Görev hedefi
+17o	Hedef yazısı
+17p	Kamerayı taşı
+17q	Kamerayı alanın ortasına taşır (hikâye için).
+17r	Birimleri taşı
+17s	Alandaki birimleri bir «hedef noktaya» gönderir.
+17t	Hedef nokta
+17u	Varınca indir
+17w	Takım ayarları
+17y	Başlangıç kredisi
+17z	İttifak grubu (tek oyunculu)
+180	YZ zorluğunu kilitle (-2~3)
+181	YZ'yi kapat (tek oyunculu)
+182	Kolay YZ (tek oyunculu)
+183	Düşman çıkış noktası
+184	Hayatta kalmada düşmanlar buradan çıkar; birkaç tane olabilir.
+185	Başlangıç kamerası
+186	Başlangıçtaki kamera konumu.
+187	Gecikme
+188	Başlangıçtan ne kadar sonra tetiklenebilir (bir kez)
+189	Süre
+18a	Koşul bu kadar süre kesintisiz sağlanmalı
+18b	Yeniden tetiklenebilir
+18d	Tekrar aralığı
+18e	Tetiklendikten sonra aralıkla tekrarla (koşul bakılmadan)
+18f	Savaş günlüğü mesajı
+18g	Mesaj rengi
+18h	Yazma hızı (ör. 0.05s)
+18i	Mini haritada işaretle
+18j	Not (oyun okumaz)
+18k	Etkinleştiren
+18l	Yalnız bu tetikleyiciler doğruyken çalışır
+18m	Ayrıca etkinleştirir
+18n	Bu doğruyken alttakiler de etkin sayılır
+18o	Kapatan
+18p	Bunlar doğruyken bu kapanır
+18q	Varsayılan
+18r	Komuta merkezini yok et
+18s	Ana binaları yok et
+18t	Tüm binaları yok et
+18u	Tüm birim ve binaları yok et
+18v	Tüm hedefleri tamamla
+18w	Yok (kendiliğinden bitmez)
+18x	Çatışma (normal savaş)
+18y	Hayatta kalma (dalgalar)
+18z	Görev (hikâye)
+190	(adsız)
+191	ms
+192	Tüm takımlar
+193	Düşman tarafsız
+194	Takım «
+195	:
+196	alanda
+197	yok
+198	en az
+199	alanda var
+19a	etiketi var: «
+19b	(birim seçilmedi)
+19c	ver:
+19d	çıkar
+19e	tümü
+19f	alanda kaldır
+19g	kredi
+19h	ayarla
+19i	(sayı yok)
+19j	etiket ekle «
+19k	etiket kaldır «
+19l	yazı göster «
+19m	hedef «
+19n	» tamamlandı
+19o	kamera buraya
+19p	gönder
+19q	birimi şuraya: «
+19r	doğru olarak işaretle
+19s	başlangıç
+19t	sonra
+19u	tümü
+19v	herhangi biri
+19w	doğru
+19x	Ne zaman
+19y	, ve
+19z	, veya
+1a0	(süresince
+1a1	Başlangıçta,
+1a2	, ve etkinleştir
+1a3	, mesaj «
+1a4	; sonra her
+1a5	tekrarla
+1a6	sonra yeniden tetiklenebilir
+1a7	; bir kez tetiklenir
+1a8	doğruyken duraklat
+1a9	«Hepsi sağlanmalı» ama koşul yok — asla tetiklenmez
+1aa	»: tür class içinde
+1ac	type yap
+1ad	»: tür «
+1ae	» oyunca bilinmiyor
+1af	Oyun bunu atlar. Geçerli türler:
+1ag	Nesne «
+1ah	» türsüz
+1ai	Oyun yok sayar (yorum olarak kullanılabilir).
+1aj	» hiç özelliği yok
+1ak	Oyun özelliksiz tetikleyicileri atlar.
+1al	id ekle
+1am	) eksik: «
+1an	özelliği
+1ao	zorunlu.
+1ap	»: «
+1aq	» tam sayı değil
+1ar	Şu an «
+1as	»: alan boyutu 0
+1at	Genişliği ya da yüksekliği 0 olan alanda hiçbir şey algılanmaz.
+1au	1×1 karo yap
+1av	» olmayan birini içeriyor: «
+1ax	Bu bağlantıyı kaldır
+1ay	»: takım «
+1az	» sayı değil
+1b1	»: takım
+1b2	aralık dışında
+1b3	Yalnız -2, -1 ya da 0–99.
+1b4	»: süre «
+1b5	» oyun tarafından anlaşılmıyor
+1b7	» yalnızca
+1b8	Düz sayı milisaniyedir. Saniye mi demek istedin?
+1b9	»:
+1ba	değeri «
+1bc	true yap
+1bd	»: birimler «
+1be	» yanlış yazılmış olabilir
+1bg	»: hedef nokta «
+1bh	» yok
+1bj	»: ne kadar kredi yazmıyor
+1bk	«Ekle» ya da «Şuna ayarla»dan birini doldur.
+1bl	» asla tetiklenmez
+1bm	«Hepsi sağlanmalı» işaretli ama koşul yok.
+1bn	»: repeatCount etkisiz
+1bo	1.15 sürümü bu özelliği okur ama kullanmaz.
+1bp	tetikleyicinin adı aynı: «
+1br	Zafer koşulu «
+1bs	Oyun hata verir. Seçenekler:
+1bt	Haritada zafer koşulu yok
+1bv	Tüm hedefleri tamamla yap
+1bw	Hayatta kalma haritasında düşman çıkışı yok
+1by	Hayatta kalma haritasında özel dalga yok
+1bz	Oyunun varsayılan dalgaları kullanılır. map_info'da düzenlenebilir.
+1c1	«Yeni → Görev hedefi» ile ekle.
+1c2	Tetikleyiciler şu takımı kullanıyor:
+1c4	tetikleyici, sorun yok
+1c5	Tetikleyici nedir
+1c6	«Ne zaman… o zaman…» kuralları
+1c7	Her tetikleyici bir kuraldır:
+1c9	o zaman
+1ca	bir şey yap (birim, kredi, yazı).
+1ce	«Mantık haritası» tüm bağlantıları gösterir.
+1cf	Bağlantılar
+1cg	Tetikleyiciler birlikte nasıl çalışır
+1ci	: bu doğruyken alttakiler de etkinleşir.
+1cj	: onlar doğruyken bu duraklar.
+1cl	Adlar büyük/küçük harf ayırmaz.
+1cm	Zaman
+1cn	Gecikme, süre, sıfırlama, tekrar
+1co	: başlangıçtan ne kadar sonra tetiklenebilir (bir kez).
+1cp	: koşul ne kadar süre kesintisiz sağlanmalı.
+1cq	: tetiklendikten ne kadar sonra sıfırlanır.
+1cr	Boş = bir kez tetiklenir
+1cs	, sonra «doğru» kalır.
+1ct	: tetiklendikten sonra aralıkla tekrarla.
+1cw	Alan
+1cx	Tetikleyicinin haritadaki yeri
+1cz	Şehir ele geçirme şablonu
+1d0	Ele geçirme haritası için bir şehir
+1d2	kimse tutmuyorsa tarafsız garnizon çıkar;
+1d3	her takımın tutup tutmadığını algılar;
+1d4	tutana aralıklarla kredi verir;
+1d5	şehir adı tutanın rengini alır.
+1d6	Her şehir ayrı düzenlenebilir.
+1d7	Şehir alanı binalarını kapsamalı.
+1d8	Takım arttıkça tetikleyici artar (takım başı 3).
+1d9	Hayatta kalma şablonu
+1da	Dalga dalga düşmanla savaş
+1dc	Görev şablonu
+1dd	Hedefleri adım adım tamamla
+1df	Mantık haritası
+1dg	Tüm tetikleyicilerin bağlantısını gör
+1dh	Her kutu bir tetikleyici; renk türü gösterir.
+1di	Mavi
+1dj	=koşul,
+1dk	Turuncu
+1dl	=eylem,
+1dm	Yeşil
+1do	Yeni tetikleyici
+1dp	Koşullar: «Ne zaman…»
+1dq	Eylemler: «O zaman…»
+1dr	Yazı ve hedefler
+1ds	Ayarlar ve işaretler
+1dt	Yeni
+1du	Yeni hedef
+1dv	‹ Listeye dön
+1dw	Tetikleyiciler (harita kuralları)
+1dx	Şehir ele geçirme
+1dy	Hayatta kalma
+1dz	Sık bloklar
+1e0	Oluşturmak için haritada alan çiz
+1e1	Haritada alan çek, sonra tetikleyici türünü seç
+1e2	Henüz tetikleyici yok.
+1e3	Normal savaş haritaları tetikleyici gerektirmez
+1e4	, yalnız yukarıdaki «Harita ayarları».
+1e6	Ara
+1e7	tetikleyici (ad, yazı, birim)
+1e8	Sorunlu
+1e9	Göster
+1ea	tane daha (toplam
+1eb	Eşleşen tetikleyici yok.
+1ed	Harita ayarları (map_info)
+1ee	Harita türü
+1ef	Zafer koşulu
+1eg	Savaş sisi
+1eh	Odaya göre
+1ei	Görüş
+1ej	Harita sisi
+1ek	Müttefikler görüş paylaşır
+1el	Giriş (introText)
+1em	Başlangıçta gösterilen yazı
+1en	Düşman dalgalarını düzenle…
+1eo	Çoğalt
+1ep	Ad («Birimleri taşı» hedefi bu)
+1eq	Ad (diğer tetikleyiciler buna başvurur)
+1er	Tür
+1es	Türü değiştir
+1eu	«Hepsi sağlanmalı»yı değiştir
+1ev	Mesajlar ve notlar
+1ew	Sol (karo)
+1ex	Alanı değiştir
+1ey	Üst (karo)
+1ez	Genişlik (karo)
+1f0	Yükseklik (karo)
+1f1	Haritada yeni alan çek
+1f2	Haritada yeniden çiz
+1f3	Oraya git
+1f4	Özelliği değiştir
+1f5	Özelliği sil
+1f6	Özellik adı
+1f7	Değer
+1f8	Ekle
+1f9	Özellik ekle
+1fa	Diğer özellikler (ileri)
+1fb	(seç)
+1fc	Düşman tarafsız (kendiliğinden saldırır)
+1fd	(büyük oda gerekli)
+1fe	Düzenle
+1ff	#RRGGBB ya da red
+1fg	Temizle
+1fh	Normal
+1fi	Aşağı oklu
+1fj	ör. supplyDepot
+1fk	(bir hedef nokta seç)
+1fl	Hedef nokta koymak için haritaya dokun
+1fm	Hedef nokta ayarla
+1fn	Yeni hedef nokta
+1fo	Çince
+1fp	日本語
+1fq	(dolu
+1fr	)
+1fs	Diğer dil sürümleri
+1ft	Boşsa üstteki kullanılır
+1fu	Boş
+1fv	Biçim hatalı
+1fw	Çıkan birimleri düzenle
+1fx	Birim adı, ör. tank
+1fy	Seçenekler:
+1fz	Bir tane daha
+1g0	Tetikleyici bulunamadı
+1g1	Bağlantıları değiştir
+1g2	Seç: «
+1g3	» tetikleyicileri
+1g4	+ Ekle
+1g5	Ad ara
+1g7	Adda virgül olamaz
+1g8	Yeniden adlandır
+1g9	Ayrıca güncellendi
+1ga	başvuru
+1gb	Tetikleyiciyi çoğalt
+1gc	Tetikleyici silinsin mi?
+1gd	tetikleyici bağlı: «
+1ge	». Bu bağlantılar da kaldırılacak.
+1gf	Tetikleyiciyi sil
+1gg	Şehir
+1gi	«İleri»den sonra haritada şehrin yerine dokun.
+1gj	Şehir adı
+1gk	Katılan takım sayısı
+1gl	Tarafsız garnizon (kimse tutmuyorsa)
+1gm	Boş = yok
+1gn	Garnizon aralığı (sn)
+1go	Ele geçirme geliri (0 = yok)
+1gp	Her N saniyede ödeme
+1gq	Şehir alanı boyutu (karo)
+1gr	Ad tutanın rengini alsın
+1gt	Takım başı 3 tetikleyici.
+1gu	Normal odalar yalnız ilk 10 takımı sayar
+1gv	; fazlası yalnız büyük (sunucu) odalarda.
+1gw	İleri: şehri koymak için haritaya dokun
+1gx	Koymak için haritaya dokun: «
+1gy	Şehir şablonu:
+1gz	_binaVar
+1h0	Alanda herhangi bir bina
+1h1	Kimse tutmuyorsa tarafsız garnizon
+1h2	_garnizon
+1h3	_sahip
+1h4	tutuyor
+1h5	_gelir
+1h6	_ad
+1h7	Oluşturuldu: «
+1h8	tetikleyici. Şehrin binalarını Birimler modunda koy.
+1h9	1. dalga
+1ha	2. dalga
+1hb	Son dalga
+1hc	Her satır bir dalga.
+1hd	Aralık
+1he	önceki dalgadan beri geçen süre (dk:sn);
+1hf	Düşmanlar
+1hg	«sayı birimadı» yaz, virgülle ayır, ör.
+1hh	Başlık
+1hi	Bundan sonra zafer
+1hj	dalga
+1hk	Dalga ekle
+1hl	Düşman dalgaları (survivalWaves)
+1hm	Dalgalar kaydedildi
+1hn	Hayatta kalma şablonu
+1ho	Haritayı şuna çevirir:
+1hr	Hayatta kalma açıldı, konuldu:
+1hs	düşman çıkış noktası
+1ht	Bir yere ulaş
+1hu	Düşman KM'yi yok et
+1hv	Bir yere ulaş
+1hw	Oradaki düşman KM'yi yok et
+1hx	Oradaki tüm düşmanları yok et
+1hy	N. saniyeye kadar dayan
+1hz	Görev modu
+1i0	(zafer: tüm hedefleri tamamla). Hedefler
+1i1	sırayla çıkar
+1i3	Adım
+1i4	Saniye (başlangıçtan)
+1i5	Oyuncu takımı
+1i6	Düşman takımı
+1i7	Adım ekle
+1i8	Görev şablonu
+1i9	Hedef
+1ia	_kosul
+1ib	Tamamlandı:
+1ic	_ok
+1id	Oluşturuldu
+1ie	hedef (
+1ig	Her takımın başlangıç kredisi (team_info)
+1ih	Zamanlı birim çıkarma
+1ij	Alana girince mesaj
+1ik	Bir takımın birimleri alana girince mesaj göster
+1il	Haritada kalıcı bir satır yazı
+1im	Nokta geliri
+1in	Bir noktayı tutan sürekli kredi kazanır (takım başı bir)
+1io	Geri sayım mesajı
+1ip	N. saniyede günlük mesajı
+1iq	Zamanlı takviye
+1ir	Her takımın üssüne düzenli takviye gelir
+1is	Kale tutma
+1it	Kaleyi bir süre tut: kredi ve günlükte duyuru
+1iu	Tarafsız kamp
+1iw	: takviye geldi
+1ix	Takviye
+1iy	Verildi:
+1j0	Takım başı başlangıç kredisi
+1j1	takımın başlangıç kredisi ayarlandı
+1j2	Yer seçmek için haritaya dokun
+1j3	Düşman geliyor!
+1j4	Gizli bir yer buldun!
+1j5	Alana giriş
+1j6	Burası…
+1j7	5 dakika kaldı!
+1j8	Zamanlayıcı
+1j9	Kale
+1ja	: takım kaleyi tuttu!
+1jb	Kale ödülü
+1jc	Kale adı
+1jd	Kamp temizlendi
+1je	Kamp muhafızları
+1jf	Ele geçir
+1jg	Kredi ekle
+1jh	Henüz tetikleyici yok
+1ji	━ etkinleştirir
+1jj	┅ kapatır
+1jk	(yalnız ilk
+1jl	Mantık haritası (
+1jm	tetikleyici; düzenlemek için kutuya dokun)
+1jn	Gösterilecek yazı
+1jo	Buraya yaz
+1jp	Altında ok (hedefi gösterir)
+1jr	Yerleştir
+1js	Yazı yerleştir
+1jt	» doğruyken
+1ju	Başlangıçta
+1jv	Oyunda akan mesajlar. Zamana göre:
+1jw	Başlangıçtan N saniye sonra
+1jx	olanlar önce,
+1jy	Koşullar sağlanınca
+1jz	olanlar sonra. Yazı ve rengi doğrudan düzenle.
+1k0	Ne zaman
+1k1	Mesaj
+1k2	Yazma hızı
+1k3	Günlüğü düzenle
+1k4	Rengi değiştir
+1k5	Hemen göster
+1k6	Hızlı
+1k7	Orta
+1k8	Yavaş
+1k9	Hızı değiştir
+1ka	Bu mesajı kaldır
+1kb	Günlük kaydını sil
+1kc	Bu tetikleyiciyi düzenle
+1kd	Henüz mesaj yok. Aşağıdaki düğmelerle ekle.
+1ke	Saniye
+1kf	Günlüğe ekle
+1kg	Günlük
+1kh	Başlangıçtan N saniye sonra
+1ki	Alan seçmek için haritaya dokun
+1kj	Yeni yer keşfedildi!
+1kk	Biri alana girince
+1kl	Hangi tetikleyici doğruyken konuşsun?
+1km	Bir tetikleyici doğruyken
+1kn	Alanı yeniden çiz
+1ko	Bu alan ne yapar?
+1kp	Ders 1: beş dakikada oynanabilir harita
+1kq	Arazi, simetri, kaynak, üs, kontrol, kayıt
+1kr	Bu
+1kt	Haritada
+1ku	basılı tutup sürükle
+1kv	ve bir çizgi boya. Dikkat: kenarlar
+1kw	(kumsal, sığ su) — karoları kendin birleştirmen gerekmez.
+1kx	Yanlış mı oldu? Dokun:
+1ky	. PC'de Ctrl+Z; telefonda
+1kz	iki parmakla dokunmak
+1l0	da olur.
+1l1	Savaş haritaları genelde simetriktir. «Simetri»de seç:
+1l2	, sonra tekrar boya — öbür yarı da boyanır.
+1l3	Geç:
+1l4	modu, sonra haritaya dokunup koy:
+1l5	modu, haritaya dokunup koy:
+1l7	Dokun:
+1l9	Son olarak
+1lb	Şimdilik kaydetme
+1lc	Ders 2: seç, kopyala, damga
+1le	Seç:
+1lf	aracı (kısayol M).
+1lg	Bir kutu çek
+1lh	ve bir alan seç.
+1li	Altta bir çubuk çıktı:
+1lj	kopyala, kes, çevir, döndür
+1lk	. Dokun:
+1ll	, sonra dokun:
+1ln	Bir alan seçiliyken dokun: «
+1lo	»; sağdaki şu panelde görünür:
+1lq	Ders 3: tetikleyici temelleri
+1ls	modu. Tetikleyiciler harita kurallarıdır:
+1lt	bir şey olur,
+1lu	bir şey yap.
+1lv	En hızlısı şablon. Dokun:
+1lw	, ad yaz, sonra haritada şehrin yerine dokun.
+1ly	Dokun: «
+1m0	Ders 4: tüm haritayı üret ve yeniden şekillendir
+1m4	Atla
+1m5	İleri
+1m6	Eğitimden çık
+1m7	» tamamlandı!
+1m8	Önce bir harita aç
+1ma	Eğitime başla
+1mc	Eğitim öncesi
+1md	Eğitim alıştırması
+1me	· tamamlandı
+1mf	İstediğin an araç yanındaki
+1mg	simgesine dokun ya da bas:
+1mk	zip / rwmod dosyası değil
+1ml	Desteklenmeyen sıkıştırma yöntemi:
+1mm	İşleniyor…
+1mn	Menü
+1mo	Menü çubuğu
+1mp	Yeniden adlandırmak için dokun
+1mq	Özellik ara (Ctrl+K)
+1mr	Haritanın oynanabilir olup olmadığını kontrol et
+1ms	Kaydet (Ctrl+S)
+1mt	Diğer kaydetme yolları
+1mu	Düzenleme modu
+1mv	Mini harita: gitmek için dokun ya da sürükle

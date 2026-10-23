@@ -33,7 +33,7 @@ async function setOverlay(kind) {
   if (!ed.map || kind === 'none') { rend.setTint(null); A.refresh('modes', 'dock'); return; }
   if (kind === 'symdiff') {
     if (!A.symDiff) A.symDiff = symmetryDiff(ed, A.settings.symDiffKind);
-    const d = A.symDiff.diff, red = rgbaOf('#f2545b', 170);
+    const d = A.symDiff.diff, red = rgbaOf(A.settings.colorblind ? '#e69f00' : '#f2545b', 170);
     rend.setTint({ kind, fn: (i) => (d[i] ? red : 0), opacity: 1 });
   } else if (kind === 'territory') {
     if (!A.report) A.report = await busy('正在计算各队地盘…', async () => balanceReport(ed, 30));
@@ -41,7 +41,8 @@ async function setOverlay(kind) {
     rend.setTint({ kind, fn: (i) => (own[i] >= 0 ? cols[own[i]] : 0), opacity: 1 });
   } else {
     const pass = passability(ed);
-    rend.setTint({ kind, fn: (i) => overlayColor(kind, pass[i]), opacity: 1 });
+    const cb = !!A.settings.colorblind;
+    rend.setTint({ kind, fn: (i) => overlayColor(kind, pass[i], cb), opacity: 1 });
   }
   A.refresh('modes', 'dock');
   A.hooks.coach && A.hooks.coach('overlay:' + kind);
@@ -123,6 +124,7 @@ function setupBack() {
 }
 
 async function init() {
+  await (await import('./i18n.js')).initI18n();
   await D.loadSettings();
   rend.showGrid = A.settings.grid;
   rend.dimOthers = A.settings.dim;
@@ -158,6 +160,8 @@ async function init() {
   P.setMode('terrain');
   A.refresh();
   P.renderStatus(null);
+  import('./tools2.js').then((m) => m.loadModUnits()).catch(() => {});
+  if (navigator.storage && navigator.storage.estimate) navigator.storage.estimate().then((e) => { if (e.quota && e.usage / e.quota > 0.85) toast('本机存储快满了：可以在“历史”里删掉旧快照，或清理最近打开的大地图', 6000); }).catch(() => {});
   await startup();
   // 给自动测试用
   window.__rw = {
