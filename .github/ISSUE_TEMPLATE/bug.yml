@@ -1,0 +1,19 @@
+name: 报告 bug / Bug report
+description: 编辑器出错、功能不对、游戏里表现异常 / Something is broken
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes: { label: 版本 / Version, placeholder: "2.3（设置页底部可以看到）" }
+    validations: { required: true }
+  - type: dropdown
+    id: platform
+    attributes: { label: 平台 / Platform, options: [安卓 Android, 电脑 PC (web zip), 其他 Other] }
+    validations: { required: true }
+  - type: textarea
+    id: steps
+    attributes: { label: 怎么出现的 / Steps, description: "做了哪些操作，期望什么，实际发生了什么", placeholder: "1. 打开地图…\n2. 点了…\n3. 结果…" }
+    validations: { required: true }
+  - type: textarea
+    id: extra
+    attributes: { label: 截图或地图文件 / Screenshots or map, description: "可以直接拖进来；地图 .tmx 打包成 zip 再上传" }

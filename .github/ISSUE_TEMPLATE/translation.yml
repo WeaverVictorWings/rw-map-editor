@@ -1,0 +1,15 @@
+name: 翻译问题 / Translation
+description: 界面文字翻译不对、不通顺或没翻译 / Wrong or missing UI text
+labels: [translation]
+body:
+  - type: dropdown
+    id: lang
+    attributes: { label: 语言 / Language, options: [English, Русский, Português (BR), Español, Bahasa Indonesia, Türkçe, 繁體中文, Українська, Français, 日本語] }
+    validations: { required: true }
+  - type: textarea
+    id: where
+    attributes: { label: 在哪里 / Where, description: "哪个菜单、对话框或提示；最好附截图 / Which menu or dialog; a screenshot helps" }
+    validations: { required: true }
+  - type: textarea
+    id: better
+    attributes: { label: 更好的译法 / Suggested text }

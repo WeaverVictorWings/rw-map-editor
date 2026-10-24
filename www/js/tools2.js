@@ -303,7 +303,7 @@ export async function libraryDialog() {
       grid.append(h('div', { class: 'rcard' },
         h('button', { class: 'fav' + (e.fav ? ' on' : ''), title: '收藏', onclick: async () => { e.fav = !e.fav; await kvSet('library', lib); draw(); } }, '★'),
         h('button', { class: 'thumbbtn', onclick: () => openEntry(e) }, h('img', { src: e.thumb || '', alt: '' })),
-        h('b', {}, e.name), h('small', {}, `${e.w}×${e.h} · ${e.time ? new Date(e.time).toLocaleDateString() : ''}`),
+        h('b', { translate: 'no' }, e.name), h('small', {}, `${e.w}×${e.h} · ${e.time ? new Date(e.time).toLocaleDateString() : ''}`),
         h('div', { class: 'tags' }, tags.map((t) => h('span', { class: 'badge', onclick: () => { st.tag = st.tag === t ? '' : t; draw(); } }, t))),
         h('button', { class: 'ib', title: '加标签', onclick: async () => { const t = await promptBox('加标签', '标签（逗号分隔）', (e.tags || []).join(',')); if (t !== null) { e.tags = t.split(/[,，]/).map((s) => s.trim()).filter(Boolean); await kvSet('library', lib); draw(); } }, html: icon('flag') })));
     }
@@ -401,7 +401,7 @@ export async function batchDialog() {
     }
   });
   const tb = h('table', { class: 'rep' }, h('tr', {}, h('th', {}, '地图'), h('th', {}, '尺寸'), h('th', {}, '问题'), h('th', {}, '已修'), h('th', {}, '还剩的严重问题')));
-  for (const r of report) tb.append(h('tr', {}, h('td', {}, r.name), h('td', {}, r.error ? '—' : `${r.w}×${r.h}`), h('td', {}, r.error ? '读取失败' : r.problems), h('td', {}, r.fixed ?? '—'), h('td', { class: r.left && r.left.length ? 'bad' : '' }, r.error || (r.left.length ? r.left.join('；') : '无'))));
+  for (const r of report) tb.append(h('tr', {}, h('td', { translate: 'no' }, r.name), h('td', {}, r.error ? '—' : `${r.w}×${r.h}`), h('td', {}, r.error ? '读取失败' : r.problems), h('td', {}, r.fixed ?? '—'), h('td', { class: r.left && r.left.length ? 'bad' : '' }, r.error || (r.left.length ? r.left.join('；') : '无'))));
   modal('批量处理结果', h('div', { style: 'overflow:auto' }, tb, st.write ? h('p', { class: 'hint' }, `已写回 ${outFiles.length} 个文件。`) : h('p', { class: 'hint' }, '只做了检查，没有改动文件。')), [{ label: '关闭', value: 1, primary: true }], { wide: true });
 }
 
@@ -443,7 +443,7 @@ export async function diffDialog() {
   const IO = await import('./io.js');
   const snaps = await IO.snapshots();
   if (!snaps.length) { toast('这张地图还没有快照。先在“历史”里存一个快照，或者做一次缩放、镜像（会自动存）。'); return; }
-  const pick = await modal('选一个快照来对比', h('div', { class: 'menulist' }, snaps.map((s, i) => h('button', { class: 'mitem', onclick: () => closeModal(i) }, h('span', { class: 'ml' }, s.name), h('kbd', {}, new Date(s.time).toLocaleString())))), [{ label: '取消', value: null }]);
+  const pick = await modal('选一个快照来对比', h('div', { class: 'menulist' }, snaps.map((s, i) => h('button', { class: 'mitem', onclick: () => closeModal(i) }, h('span', { class: 'ml', translate: 'no' }, s.name), h('kbd', {}, new Date(s.time).toLocaleString())))), [{ label: '取消', value: null }]);
   if (pick === null || pick === undefined) return;
   const t = await busy('正在对比…', () => loadTemp(snaps[pick].text, 'snapshot.tmx'));
   const m = ed.map, m2 = t.map;

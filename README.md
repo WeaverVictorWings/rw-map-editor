@@ -1,8 +1,36 @@
-# 铁锈地图编辑器 2.2
+# 铁锈地图编辑器 · Rusted Warfare Map Editor
 
-一个专门编辑 **铁锈战争（Rusted Warfare）** 地图的编辑器（非官方）。安卓 App 为主，电脑上用浏览器打开同样能用。
+[![最新版本](https://img.shields.io/github/v/release/WeaverVictorWings/rw-map-editor?label=%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC)](https://github.com/WeaverVictorWings/rw-map-editor/releases/latest)
+[![下载量](https://img.shields.io/github/downloads/WeaverVictorWings/rw-map-editor/total?label=%E4%B8%8B%E8%BD%BD)](https://github.com/WeaverVictorWings/rw-map-editor/releases)
+[![许可证](https://img.shields.io/github/license/WeaverVictorWings/rw-map-editor)](LICENSE)
+![平台](https://img.shields.io/badge/%E5%B9%B3%E5%8F%B0-Android%20%7C%20Windows%20%7C%20%E6%B5%8F%E8%A7%88%E5%99%A8-orange)
+![语言](https://img.shields.io/badge/%E7%95%8C%E9%9D%A2%E8%AF%AD%E8%A8%80-11-blue)
 
-目标：**新手几分钟能做出一张能玩的图，老手能做大图、城夺、生存、任务图。**
+**中文** · [English](README.en.md) · [更新日志](CHANGELOG.md) · [反馈问题](https://github.com/WeaverVictorWings/rw-map-editor/issues/new/choose)
+
+专门编辑 **铁锈战争（Rusted Warfare）** 地图的编辑器（非官方）。安卓 App 为主，电脑上用浏览器同样能用。
+
+> 新手几分钟做出一张能玩的图；老手能做大图、城夺、生存、任务图。
+
+![编辑器主界面](docs/screenshot.png)
+
+## 三步上手
+
+1. 在 [Releases](https://github.com/WeaverVictorWings/rw-map-editor/releases/latest) 下载：手机装 `rw-map-editor.apk`，电脑解压 `rw-map-editor-web.zip` 后双击 `Start-Editor.bat`。
+2. 第一次打开一张你已有的铁锈战争地图（.tmx），编辑器会从里面取出图块素材。
+3. 新建地图或继续编辑，点“能玩吗？”检查，再“保存到游戏文件夹”，进游戏就能玩。
+
+不会用？打开后点“新手教程”，4 课跟着做；每个工具旁边的 **?** 都有说明。
+
+## 为什么用它
+
+| | 本编辑器 | 通用地图编辑器（Tiled / NotTiled） |
+| --- | --- | --- |
+| 地形过渡 | 选“草地”直接画，海岸、悬崖自动接好 | 手动拼图块或配置自动图块 |
+| 触发器 | “当……就……”卡片 + 模板，不用记属性名 | 手写对象属性 |
+| 检查 | 一键检查 map_info、空格、出生点、触发器错误，多数一键修 | 进游戏才知道 |
+| 平衡 | 按真实步行路线比较各队资源、推演开局遇敌时间 | 无 |
+| 手机 | 为触屏设计，双指撤销、底部工具栏 | 手机上难用 |
 
 ## 主要功能
 
@@ -56,11 +84,42 @@
 
 ## 下载
 
-在仓库的 **Releases** 页面下载：
+在 [Releases](https://github.com/WeaverVictorWings/rw-map-editor/releases) 页面下载：
 
 - `rw-map-editor.apk`：安卓版。2.0 起使用**固定签名**，包名不变，新版可以直接覆盖安装。
   > 从 1.x 测试版升级到 2.0 需要先卸载一次旧版（旧版每次构建签名都不同）。
 - `rw-map-editor-web.zip`：电脑版。解压后双击 `Start-Editor.bat`，会自动用浏览器打开编辑器（不用装任何东西；关掉黑色窗口就停止）。推荐 Chrome 或 Edge。
+
+编辑器每天最多检查一次新版本（可在设置里关掉），也可以在“帮助 → 检查更新”手动检查。
+
+<img src="docs/screenshot-phone.png" width="260" alt="手机界面">
+
+## 常见问题
+
+**打开地图后很多格子是紫色的？**
+这张图引用了游戏目录里的外部图块集（.tsx）。点“地图 → 补上缺少的地块图”，选上对应的 .tsx 和 .png，图片会嵌进地图。
+
+**新建地图提示“需要图块素材”？**
+编辑器不附带游戏素材，先打开任意一张游戏导出的地图，它会自动取出素材。
+
+**地图在手机上很卡？**
+超过 1500×1500 的地图很吃内存，建议在电脑上编辑；“能玩吗？”里会提示尺寸风险。
+
+**第 11 队以后的出生点没用？**
+普通房间只有 10 队，见下方“关于玩家人数”。
+
+**界面语言怎么换？**
+“设置 → 界面语言 · Language”。第一次打开会按系统语言自动选择。
+
+## 参与贡献
+
+- 发现 bug、翻译不对、想要新功能：[提交 Issue](https://github.com/WeaverVictorWings/rw-map-editor/issues/new/choose)。
+- 帮忙改翻译：译文是 `scripts/i18n/*.tsv` 里“编号 + 一行译文”的简单格式，详见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+- 觉得好用，点个 ⭐ Star，让更多玩家看到。
+
+## 作者
+
+[@WeaverVictorWings](https://github.com/WeaverVictorWings)
 
 ## 图块素材
 
@@ -113,3 +172,7 @@ node tests/v2m.mjs 地图.tmx 输出目录        # 手机触屏手势
 - 游戏规则来自游戏代码和社区整理，检查结果以游戏里实际打开为准。
 - 超过 1500×1500 的地图在手机上很吃内存；5000×5000 在电脑浏览器里约占 0.7GB。
 - 签名密钥是公开的，只用来保证每次构建签名一致；如需私有签名，在仓库 Secrets 里配置 `ANDROID_KEYSTORE_BASE64` 等即可自动改用。
+
+## 许可证
+
+[MIT](LICENSE)。编辑器代码可以自由使用和修改，保留版权声明即可。铁锈战争的游戏素材属于其开发商，本仓库不包含任何游戏素材。

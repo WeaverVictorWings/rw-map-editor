@@ -405,3 +405,9 @@ canvas.pick { max-width: 100%; image-rendering: pixelated; cursor: crosshair; to
 /* 2.2 多语言：长单词不撑破网格 */
 .swatches > *, .stamps > *, .grid2 > *, .grid3 > *, .kinds > *, .recents > * { min-width: 0; overflow-wrap: anywhere; }
 @media (max-width: 760px) { .tool .tl { max-width: 76px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }
+/* 2.3 手机顶栏：给地图名留出位置，长按钮文字截断 */
+@media (max-width: 760px) {
+  #title { min-width: 70px; }
+  #btnCheck, #btnSave { max-width: 104px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+@media (max-width: 430px) { #mapSize { display: none; } #btnUndo, #btnRedo { width: 34px; } }

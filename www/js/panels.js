@@ -488,7 +488,7 @@ let stampCache = null;
 function dockStamps(body) {
   const grid = h('div', { class: 'stamps' });
   const add = (s) => {
-    const b = h('button', { class: 'stamp', title: s.desc, onclick: () => A.hooks.startFloating(s.clip, { label: '放置印章：' + s.cn }) }, stampThumb(ed, rend, s.clip), s.cn);
+    const b = h('button', { class: 'stamp', title: s.desc, onclick: () => A.hooks.startFloating(s.clip, { label: '放置印章：' + s.cn }) }, stampThumb(ed, rend, s.clip), s.builtin === false ? h('span', { translate: 'no' }, s.cn) : s.cn);
     if (!s.builtin) b.addEventListener('contextmenu', (e) => { e.preventDefault(); stampMenu(b, s); });
     let tm = 0; b.addEventListener('pointerdown', () => { tm = setTimeout(() => { tm = -1; s.builtin ? toast(s.desc, 4000) : stampMenu(b, s); }, 550); });
     b.addEventListener('pointerup', () => clearTimeout(tm)); b.addEventListener('pointerleave', () => clearTimeout(tm));
@@ -503,7 +503,7 @@ function dockStamps(body) {
   userStamps().then((list) => {
     if (!list.length) { ugrid.replaceWith(h('div', { class: 'hint' }, '用“框选”选中一块区域，再点“存为印章”，以后就能一键放出同样的内容。')); return; }
     for (const s of list) {
-      const b = h('button', { class: 'stamp', title: s.desc, onclick: () => A.hooks.startFloating(s.clip, { label: '放置印章：' + s.cn }) }, stampThumb(ed, rend, s.clip), s.cn);
+      const b = h('button', { class: 'stamp', title: s.desc, onclick: () => A.hooks.startFloating(s.clip, { label: '放置印章：' + s.cn }) }, stampThumb(ed, rend, s.clip), s.builtin === false ? h('span', { translate: 'no' }, s.cn) : s.cn);
       b.addEventListener('contextmenu', (e) => { e.preventDefault(); stampMenu(b, s); });
       let tm = 0; b.addEventListener('pointerdown', () => { tm = setTimeout(() => stampMenu(b, s), 550); });
       b.addEventListener('pointerup', () => clearTimeout(tm)); b.addEventListener('pointerleave', () => clearTimeout(tm));
@@ -536,7 +536,7 @@ function dockHistory(body) {
   body.append(sec('快照', null, h('button', { onclick: () => IO.takeSnapshot(), html: icon('save') + ' 存一个快照' }), snapBox));
   IO.snapshots().then((ss) => {
     if (!ss.length) { snapBox.append(h('div', { class: 'hint', style: 'margin-top:8px' }, '快照会保存整张地图，任何时候都能恢复。适合做大改动之前存一下。')); return; }
-    for (const s of ss) snapBox.append(h('div', { class: 'layerrow' }, h('span', { class: 'nm' }, s.name, ' ', h('small', {}, new Date(s.time).toLocaleString())),
+    for (const s of ss) snapBox.append(h('div', { class: 'layerrow' }, h('span', { class: 'nm' }, h('span', { translate: 'no' }, s.name), ' ', h('small', {}, new Date(s.time).toLocaleString())),
       h('button', { onclick: () => IO.restoreSnapshot(s) }, '恢复'), h('button', { class: 'ib', title: '删除', onclick: () => IO.deleteSnapshot(s), html: icon('del') })));
   });
 }
@@ -599,7 +599,7 @@ export async function showWelcome(force = false) {
   if (recent.length) {
     const grid = h('div', { class: 'recents' });
     for (const r of recent) {
-      const card = h('button', { class: 'rcard', title: `${r.w}×${r.h}，${r.teams} 支队伍`, onclick: () => IO.openRecent(r) }, h('img', { src: r.thumb, alt: '' }), h('b', {}, r.name), h('small', {}, `${r.w}×${r.h} · ${new Date(r.time).toLocaleDateString()}`));
+      const card = h('button', { class: 'rcard', title: `${r.w}×${r.h}，${r.teams} 支队伍`, onclick: () => IO.openRecent(r) }, h('img', { src: r.thumb, alt: '' }), h('b', { translate: 'no' }, r.name), h('small', {}, `${r.w}×${r.h} · ${new Date(r.time).toLocaleDateString()}`));
       card.addEventListener('contextmenu', (e) => { e.preventDefault(); menu(card, [{ label: '从列表移除', run: async () => { await removeRecent(r.id); showWelcome(force); } }]); });
       grid.append(card);
     }

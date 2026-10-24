@@ -83,6 +83,8 @@ export const ACTIONS = [
   // 帮助
   { id: 'tutorial', group: '帮助', label: '新手教程', icon: 'tutorial', desc: '跟着做，几分钟学会基本操作', run: () => A.hooks.tutorial() },
   { id: 'helpCenter', group: '帮助', label: '帮助中心', icon: 'help', keys: 'F1', run: () => helpCenter() },
+  { id: 'feedback', group: '帮助', label: '反馈问题…', icon: 'globe', desc: '在 GitHub 上报告 bug、翻译问题或提建议', kw: 'bug 建议 翻译', run: () => import('./version.js').then((m) => m.feedback()) },
+  { id: 'update', group: '帮助', label: '检查更新', icon: 'import', kw: '新版本 升级', run: () => import('./version.js').then((m) => m.checkUpdate(true)) },
   { id: 'gestures', group: '帮助', label: '手势与快捷键', icon: 'book', run: () => showHelp('gestures') },
   { id: 'search', group: '帮助', label: '搜索功能', icon: 'search', keys: 'Ctrl+K', hidden: true, run: () => A.hooks.palette() },
 ];

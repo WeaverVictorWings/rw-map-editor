@@ -124,7 +124,15 @@ function setupBack() {
 }
 
 async function init() {
-  await (await import('./i18n.js')).initI18n();
+  const I18N = await import('./i18n.js');
+  // 地图里玩家自己写的名字和文字不参与界面翻译
+  I18N.setUserStrings(() => {
+    const out = [A.mapName];
+    const m = ed.map;
+    if (m) for (const G of m.groups) for (const o of G.objects) { out.push(o.attrs.name); for (const p of o.props) if (typeof p.value === 'string') out.push(p.value); }
+    return out;
+  });
+  await I18N.initI18n();
   await D.loadSettings();
   rend.showGrid = A.settings.grid;
   rend.dimOthers = A.settings.dim;
@@ -170,6 +178,7 @@ async function init() {
     triggerIssues, setMode: P.setMode, setTool: P.setTool, scaleMap, mirrorMap, symmetryDiff, copySelection, pasteClip, rectSelection, generateMap, balanceReport, createNewMap: D.createNewMap, setOverlay,
   };
   window.__rwReady = true;
+  setTimeout(() => import('./version.js').then((m) => m.checkUpdate(false)), 4000);
 }
 
 init().catch((e) => { console.error(e); document.body.insertAdjacentHTML('beforeend', `<pre style="position:fixed;bottom:0;left:0;right:0;background:#400;color:#fff;padding:8px;z-index:99;white-space:pre-wrap">启动失败：${e && e.stack || e}</pre>`); });

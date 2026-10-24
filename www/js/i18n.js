@@ -9,6 +9,18 @@ const CJK = /[一-鿿]/;
 const ATTRS = ['title', 'placeholder', 'aria-label'];
 let D = null, lang = 'zh', multiRe = null, singleRe = null, spaced = true;
 const cache = new Map();
+// 玩家自己起的名字、写的文字（触发器名、地图文字……）不翻译：由 app 提供，翻译前先遮住
+let userProvider = null, userKey = '', userSet = new Set(), userRe = null, userAt = 0;
+export function setUserStrings(fn) { userProvider = fn; }
+function refreshUser() {
+  if (!userProvider || Date.now() - userAt < 400) return;
+  userAt = Date.now();
+  let list; try { list = [...new Set(userProvider())].filter((x) => x && CJK.test(x) && !(D && x in D)).sort((a, b) => b.length - a.length); } catch { return; }
+  const key = list.join('\u0000');
+  if (key === userKey) return;
+  userKey = key; userSet = new Set(list); cache.clear();
+  userRe = list.length ? new RegExp(list.slice(0, 3000).map(esc).join('|'), 'g') : null;
+}
 
 export function detectLang() {
   const ls = (navigator.languages && navigator.languages[0]) || navigator.language || 'zh';
@@ -36,6 +48,13 @@ export async function initI18n() {
     const base = lang === 'en' || lang === 'zht' ? {} : (await import('./i18n/en.js')).default;
     D = Object.assign({}, base, own);
   } catch (e) { console.warn('i18n load failed', e); return; }
+  // 带数字的原文再登记一份“数字换成 #”的写法，版本号、数量变了也能查到
+  for (const k of Object.keys(D)) {
+    if (!/\d/.test(k)) continue;
+    const nk = k.replace(/\d+(?:\.\d+)?/g, '#'), kn = k.match(/\d+(?:\.\d+)?/g), v = D[k], vn = v.match(/\d+(?:\.\d+)?/g) || [];
+    if (nk in D || kn.length !== vn.length || kn.join() !== vn.join()) continue;
+    D[nk] = v.replace(/\d+(?:\.\d+)?/g, '#');
+  }
   spaced = !['ja', 'zht'].includes(lang);
   const keys = Object.keys(D);
   multiRe = new RegExp(keys.filter((k) => k.length > 1).sort((a, b) => b.length - a.length).map(esc).join('|'), 'g');
@@ -43,6 +62,7 @@ export async function initI18n() {
   // 单个汉字只在两边都不是汉字时才替换（“第 3 队”里的“第”“队”），免得把别的词拆碎
   singleRe = singles.length ? new RegExp(`(^|[^\\u4e00-\\u9fff])(${singles.map(esc).join('|')})(?=[^\\u4e00-\\u9fff]|$)`, 'g') : null;
   window.__rwT = t;
+  refreshUser();
   document.title = t(document.title);
   apply(document.body);
   new MutationObserver(onMut).observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ATTRS });
@@ -56,16 +76,21 @@ const join = (before, word, after) => {
   return w;
 };
 function tr(s) {
-  const lead = s.match(/^\s*/)[0], trail = s.slice(lead.length).match(/\s*$/)[0], core = s.trim();
+  const lead = s.match(/^\s*/)[0], trail = s.slice(lead.length).match(/\s*$/)[0];
+  let core = s.trim();
+  if (userSet.has(core)) return s;
+  const kept = [];
+  if (userRe) core = core.replace(userRe, (m) => { kept.push(m); return `\u0001${String.fromCharCode(0xe000 + kept.length - 1)}\u0002`; });
+  const back = (x) => (kept.length ? x.replace(/\u0001([\ue000-\uf8ff])\u0002/g, (m, c) => kept[c.charCodeAt(0) - 0xe000]) : x);
   let v = D[core];
-  if (v !== undefined) return lead + v + trail;
+  if (v !== undefined) return lead + back(v) + trail;
   const nums = [];
   const norm = core.replace(/\d+(?:\.\d+)?/g, (m) => { nums.push(m); return '#'; });
-  if (nums.length && (v = D[norm]) !== undefined) { let i = 0; return lead + v.replace(/#/g, () => nums[i++] ?? '#') + trail; }
+  if (nums.length && (v = D[norm]) !== undefined) { let i = 0; return lead + back(v.replace(/#/g, () => nums[i++] ?? '#')) + trail; }
   let out = core.replace(multiRe, (m, off, str) => join(str.slice(0, off), D[m], str.slice(off + m.length)));
   if (singleRe) out = out.replace(singleRe, (m, pre, ch, off, str) => pre + join(str.slice(0, off + pre.length), D[ch], str.slice(off + m.length)));
   if (spaced) out = out.replace(/ {2,}/g, ' ').replace(lang === 'fr' ? / ([,.)])/g : / ([,.:;!?)，。：）])/g, '$1');
-  return lead + out.trim() + trail;
+  return lead + back(out.trim()) + trail;
 }
 export function t(s) {
   if (!D || typeof s !== 'string' || !CJK.test(s)) return s;
@@ -102,6 +127,7 @@ function apply(root) {
   for (let n = w.nextNode(); n; n = w.nextNode()) n.nodeType === 3 ? doText(n) : doAttrs(n);
 }
 function onMut(list) {
+  refreshUser();
   for (const m of list) {
     if (m.type === 'childList') m.addedNodes.forEach(apply);
     else if (m.type === 'characterData') doText(m.target);

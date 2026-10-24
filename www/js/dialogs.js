@@ -611,6 +611,7 @@ export async function settingsDialog() {
     I.LANGS.map(([k, n]) => h('option', { value: k, selected: k === I.getLang() }, n)));
   await modal('设置', h('div', {},
     h('label', { translate: 'no' }, '界面语言 · Language'), langSel,
+    toggle('启动时自动检查新版本', (() => { try { return localStorage.getItem('rwNoUpdate') !== '1'; } catch { return true; } })(), (v) => { try { localStorage.setItem('rwNoUpdate', v ? '0' : '1'); } catch { /* */ } }),
     toggle('显示网格（放大时）', s.grid, (v) => { s.grid = v; rend.showGrid = v; rend.request(); saveSettings(); }),
     toggle('保存时去掉没用到的图块集（地图更小）', s.prune, (v) => { s.prune = v; saveSettings(); }),
     toggle('色盲友好配色（叠加图用橙 / 蓝代替红 / 绿）', !!s.colorblind, (v) => { s.colorblind = v; saveSettings(); if (A.overlayKind !== 'none') A.hooks.setOverlay(A.overlayKind); }),
@@ -622,7 +623,7 @@ export async function settingsDialog() {
     h('div', { class: 'row', style: 'margin-top:10px' },
       h('button', { onclick: async () => { const { forgetGameFolder } = await import('./files.js'); await forgetGameFolder(); toast('已忘记游戏文件夹'); } }, '重新选择游戏文件夹'),
       h('button', { onclick: async () => { await kvSet('tutorialDone', false); toast('下次打开会再次提示新手教程'); } }, '重置新手教程')),
-    h('p', { style: 'color:var(--muted);font-size:12px;margin-top:14px' }, '铁锈地图编辑器 2.2 · 非官方工具 · 图块素材来自你自己的地图文件')),
+    h('p', { style: 'color:var(--muted);font-size:12px;margin-top:14px' }, `铁锈地图编辑器 ${(await import('./version.js')).VERSION} · 非官方工具 · 图块素材来自你自己的地图文件`)),
   [{ label: '完成', value: 1, primary: true }]);
 }
 export async function loadSettings() { const s = await kvGet('settings'); if (s) Object.assign(A.settings, s); rend.showGrid = A.settings.grid; }
