@@ -651,6 +651,7 @@ export async function settingsDialog() {
     I.LANGS.map(([k, n]) => h('option', { value: k, selected: k === I.getLang() }, n)));
   await modal('设置', h('div', {},
     h('label', { translate: 'no' }, '界面语言 · Language'), langSel,
+    h('div', { class: 'row', style: 'margin:6px 0' }, h('button', { onclick: () => import('./feel.js').then((m) => m.feelDialog()) }, '外观与手感…（主题、文字大小、专注模式、防误触…）')),
     toggle('启动时自动检查新版本', (() => { try { return localStorage.getItem('rwNoUpdate') !== '1'; } catch { return true; } })(), (v) => { try { localStorage.setItem('rwNoUpdate', v ? '0' : '1'); } catch { /* */ } }),
     toggle('显示网格（放大时）', s.grid, (v) => { s.grid = v; rend.showGrid = v; rend.request(); saveSettings(); }),
     toggle('保存时去掉没用到的图块集（地图更小）', s.prune, (v) => { s.prune = v; saveSettings(); }),

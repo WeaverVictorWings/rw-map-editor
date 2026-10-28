@@ -67,7 +67,7 @@ function onEditorEvent(ev) {
     A.refresh();
     return;
   }
-  if (ev === 'edit') { A.autoDirty = true; A.lastEditTime = Date.now(); A.report = null; A.refresh('top'); refreshOverlaySoon(); if (A.dockTab === 'history' || ed.mode === 'triggers' || ed.mode === 'units') A.refresh('dock'); return; }
+  if (ev === 'edit') { import('./feel.js').then((m) => m.buzz(8)); A.autoDirty = true; A.lastEditTime = Date.now(); A.report = null; A.refresh('top'); refreshOverlaySoon(); if (A.dockTab === 'history' || ed.mode === 'triggers' || ed.mode === 'units') A.refresh('dock'); return; }
   if (ev === 'palette') { A.refresh('dock'); return; }
   if (ev && ev.type === 'changed') {
     A.autoDirty = true;
@@ -134,6 +134,9 @@ async function init() {
   });
   await I18N.initI18n();
   await D.loadSettings();
+  import('./feel.js').then((m) => m.applyLook());
+  import('./safety.js').then((m) => m.installErrorCapture());
+  import('./backup.js').then((m) => m.startAutoBackup(A.settings.backupMin ?? 5));
   rend.showGrid = A.settings.grid;
   rend.dimOthers = A.settings.dim;
   ed.poolStyle = A.settings.poolStyle || '1x1';
@@ -187,7 +190,7 @@ async function init() {
   $('dockHandle').parentElement.addEventListener('dblclick', () => $('dock').classList.toggle('collapsed'));
   setupBack();
   resetAutosave();
-  addEventListener('beforeunload', (e) => { if (ed.dirty && !isNative()) { e.preventDefault(); e.returnValue = ''; } });
+  addEventListener('beforeunload', (e) => { if ((ed.dirty || window.__modDirty) && !isNative()) { e.preventDefault(); e.returnValue = ''; } });
   document.addEventListener('visibilitychange', () => { if (document.hidden && A.autoDirty) IO.autosave(true); });
   P.setMode('terrain');
   A.refresh();
@@ -195,6 +198,7 @@ async function init() {
   import('./tools2.js').then((m) => m.loadModUnits()).catch(() => {});
   if (navigator.storage && navigator.storage.estimate) navigator.storage.estimate().then((e) => { if (e.quota && e.usage / e.quota > 0.85) toast('本机存储快满了：可以在“历史”里删掉旧快照，或清理最近打开的大地图', 6000); }).catch(() => {});
   await startup();
+  setTimeout(() => import('./feel.js').then((m) => m.whatsNew(false)), 1500);
   // 给自动测试用
   window.__rw = {
     A, ed, rend, loadMapFromText: IO.loadMapFromText, serialize: () => IO.serializeOnce(), runChecks: () => runChecks(ed, { triggerIssues: triggerIssues() }),

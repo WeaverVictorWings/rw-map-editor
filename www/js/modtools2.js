@@ -5,7 +5,7 @@ import { readZip } from './zip.js';
 import { getVal, setVal, parseIni } from './ini.js';
 import * as L from './modlogic.js';
 import * as M from './modlogic2.js';
-import { Mod, checkMod } from './modedit.js';
+import { Mod, checkMod, markDirty } from './modedit.js';
 
 const fld = (label, el) => h('div', { style: 'margin:6px 0' }, h('label', {}, label), el);
 const OK = [{ label: '取消', value: false }, { label: '确定', value: true, primary: true }];
@@ -24,6 +24,7 @@ export const TOOLS2 = [
   ['描述与多语言名称', '按数值生成描述；填各语言的名字', names],
   ['动画与旋转', '逐帧播放，旋转预览', anim],
   ['弹道预览', '弹道飞行距离、射程、爆炸范围', proj],
+  ['回收站', '找回被删除的单位', trash],
 ];
 
 async function shareCode(ctx) {
@@ -51,7 +52,7 @@ async function project(ctx) {
     const ni = h('input', { placeholder: '快照名，如 平衡前' });
     box.append(ni, h('button', { onclick: () => { m.snaps.push(M.snapshot(m, ni.value.trim() || '快照 ' + (m.snaps.length + 1))); draw(); toast('已记录'); } }, '拍快照'));
     box.append(h('p', { class: 'hint' }, '快照只记录单位 ini 文本（不含图片）。笔记、待办和快照保存在 .rwproj 项目文件里，打包 .rwmod 时不会带进去。'));
-    box.append(h('button', { class: 'primary', onclick: async () => { await saveFile((m.name || 'mod') + '.rwproj', M.projectFiles(m), 'application/octet-stream'); } }, '保存项目文件 .rwproj'));
+    box.append(h('button', { class: 'primary', onclick: async () => { await saveFile((m.name || 'mod') + '.rwproj', M.projectFiles(m), 'application/octet-stream'); markDirty(false); } }, '保存项目文件 .rwproj'));
   };
   draw(); modal('项目、笔记与快照', box, CLOSE, { wide: true });
 }
@@ -196,4 +197,14 @@ async function proj(ctx) {
     box.append(h('h4', { translate: 'no' }, `[turret_${w.turret}] → projectile_${w.projectile}`), cv, h('div', { class: 'hint' }, `红线=射程 ${Math.round(range)}；绿线=飞行距离 ${Math.round(p.travel)}（寿命 ${p.life} × 速度 ${p.speed}）；橙圈=爆炸半径 ${p.radius}。伤害 ${p.dd}${p.ad ? ' + 范围 ' + p.ad : ''}，间隔 ${w.frames} 帧${p.ballistic ? '，抛物线' : ''}${p.instant ? '，瞬发' : ''}。`), warn ? h('div', { style: 'color:#d90' }, warn) : null);
   }
   modal('弹道预览 — ' + ctx.mod.unitName(u), box, CLOSE);
+}
+
+async function trash(ctx) {
+  const t = ctx.mod.trash || [], box = h('div', {});
+  if (!t.length) box.append(h('p', { class: 'hint' }, '回收站是空的。删除的单位会先放在这里，直到你关闭编辑器。'));
+  for (const it of t.slice().reverse()) box.append(h('div', { style: 'margin:4px 0' }, h('b', { translate: 'no' }, it.file), ' ', h('small', {}, new Date(it.time).toLocaleTimeString()), ' ', h('button', { onclick: () => {
+    const ini = parseIni(it.text), nm = L.uniqueName(ctx.mod, getVal(ini, 'core', 'name') || 'restored'); setVal(ini, 'core', 'name', nm);
+    const u = L.addUnit(ctx.mod, ini, nm); ctx.mod.trash.splice(ctx.mod.trash.indexOf(it), 1); ctx.cur = u; closeModal(); closeModal(); ctx.refresh(); toast('已找回为 ' + nm);
+  } }, '找回')));
+  modal('回收站', box, CLOSE);
 }

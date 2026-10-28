@@ -9,7 +9,7 @@ import { balanceReport } from './pathing.js';
 import { builtinStamps, userStamps, deleteUserStamp, exportStamp, importStampText, saveUserStamp, stampThumb } from './stamps.js';
 import { encodeStamp, copyCode, shareCodeDialog } from './share.js';
 import { listRecent, removeRecent, gameFolder, gameFolderSupported, saveFile, pickFile } from './files.js';
-import { kvGet } from './util.js';
+import { kvGet, kvSet } from './util.js';
 import { opStatsText, canDrop, confirmDropOp } from './historyx.js';
 import { h, menu, toast, segmented, slider, toggle, select, promptBox, confirmBox, busy } from './ui.js';
 import { icon } from './icons.js';
@@ -43,7 +43,12 @@ const DOCK_TABS = [['tool', '工具', 'settings'], ['layers', '图层', 'layers'
 
 export const tool = () => ed.tool[ed.mode];
 
+const sizeMem = () => (A.settings.toolSizes = A.settings.toolSizes || {});
+let sizeSaveT = 0;
+function rememberSize() { if (!ed.mode) return; const m = sizeMem(), k = ed.mode + ':' + ed.tool[ed.mode]; if (ed.size && m[k] !== ed.size) { m[k] = ed.size; clearTimeout(sizeSaveT); sizeSaveT = setTimeout(() => import('./util.js').then((u) => u.kvSet('settings', A.settings)), 1500); } }
+function recallSize() { const v = sizeMem()[ed.mode + ':' + ed.tool[ed.mode]]; if (v) ed.size = v; }
 export function setMode(mode) {
+  rememberSize();
   ed.mode = mode;
   ed.showTriggers = mode === 'triggers';
   ed.selected = null;
@@ -51,6 +56,7 @@ export function setMode(mode) {
   rend.activeLayer = m ? m.layer : null;
   if (A.settings.dim) rend.invalidateAll();
   if (!TOOLS[mode].some((t) => Array.isArray(t) && t[0] === ed.tool[mode])) ed.tool[mode] = TOOLS[mode][0][0];
+  recallSize();
   A.dockTab = 'tool';
   dropBiomeTint();
   document.getElementById('dock').classList.remove('collapsed');
@@ -59,7 +65,7 @@ export function setMode(mode) {
   A.hooks.coach && A.hooks.coach('mode:' + mode);
 }
 function dropBiomeTint() { if (rend.tint && rend.tint.kind === 'biome' && !(ed.mode === 'terrain' && ed.tool.terrain === 'biome')) rend.setTint(null); }
-export function setTool(t) { ed.tool[ed.mode] = t; dropBiomeTint(); A.refresh('toolbar', 'dock'); rend.request(); A.hooks.coach && A.hooks.coach('tool:' + t); }
+export function setTool(t) { rememberSize(); ed.tool[ed.mode] = t; recallSize(); dropBiomeTint(); A.refresh('toolbar', 'dock'); rend.request(); A.hooks.coach && A.hooks.coach('tool:' + t); }
 
 // ---------------- 顶栏 ----------------
 export function renderTop() {
@@ -632,7 +638,8 @@ function dockReport(body) {
 export async function showWelcome(force = false) {
   const w = $('welcome');
   const tpl = await kvGet('template');
-  const recent = await listRecent();
+  const pins = (await kvGet('pins')) || [];
+  const recent = (await listRecent()).sort((a, b) => (pins.includes(b.id) - pins.includes(a.id)));
   const canGame = gameFolderSupported();
   const gf = canGame ? await gameFolder() : null;
   w.innerHTML = '';
@@ -647,12 +654,13 @@ export async function showWelcome(force = false) {
       canGame ? big('folder', '从游戏文件夹打开', gf ? gf.name : '授权一次游戏地图文件夹', () => IO.openFromGame()) : big('image', '图片转地图', '把一张图变成地图', () => D.imageToMapDialog(), !tpl),
       canGame ? big('image', '图片转地图', '把一张图变成地图', () => D.imageToMapDialog(), !tpl) : null,
       big('tutorial', '新手教程', '跟着做，几分钟学会', () => A.hooks.tutorial()),
+      big('import', 'Mod 编辑器', '改单位和数值、打包 Mod', () => { w.classList.add('hidden'); runAction(action('modedit')); }),
       big('help', '帮助中心', '每个功能怎么用', () => import('./help.js').then((m) => m.helpCenter()))));
   if (recent.length) {
     const grid = h('div', { class: 'recents' });
     for (const r of recent) {
-      const card = h('button', { class: 'rcard', title: `${r.w}×${r.h}，${r.teams} 支队伍`, onclick: () => IO.openRecent(r) }, h('img', { src: r.thumb, alt: '' }), h('b', { translate: 'no' }, r.name), h('small', {}, `${r.w}×${r.h} · ${new Date(r.time).toLocaleDateString()}`));
-      card.addEventListener('contextmenu', (e) => { e.preventDefault(); menu(card, [{ label: '从列表移除', run: async () => { await removeRecent(r.id); showWelcome(force); } }]); });
+      const card = h('button', { class: 'rcard', title: `${r.w}×${r.h}，${r.teams} 支队伍`, onclick: () => IO.openRecent(r) }, h('img', { src: r.thumb, alt: '' }), h('b', { translate: 'no' }, (pins.includes(r.id) ? '★ ' : '') + r.name), h('small', {}, `${r.w}×${r.h} · ${new Date(r.time).toLocaleDateString()}`));
+      card.addEventListener('contextmenu', (e) => { e.preventDefault(); menu(card, [{ label: pins.includes(r.id) ? '取消固定' : '固定在最前', run: async () => { await kvSet('pins', pins.includes(r.id) ? pins.filter((x) => x !== r.id) : [...pins, r.id]); showWelcome(force); } }, { label: '从列表移除', run: async () => { await removeRecent(r.id); showWelcome(force); } }]); });
       grid.append(card);
     }
     box.append(h('div', { class: 'recent' }, h('h3', {}, '最近打开'), grid));

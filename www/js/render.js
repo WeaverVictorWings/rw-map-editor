@@ -27,7 +27,7 @@ export class Renderer {
     this.reference = null;        // 描图参考图 {img, opacity, x, y, w, h}（地图像素坐标）
     this.dimOthers = false;       // 非当前层变暗
     this.activeLayer = null;      // 'ground' | 'items' | 'units'
-    this.showGrid = true;
+    this.showGrid = true; this.showRuler = false; this.gridMajor = 0;
     this.colors = null;
     this.overview = null;
     this.pools = [];
@@ -332,6 +332,7 @@ export class Renderer {
     const tl = this.toScreen(0, 0), br = this.toScreen(m.width * m.tw, m.height * m.th);
     ctx.strokeRect(tl.x, tl.y, br.x - tl.x, br.y - tl.y);
     if (this.showGrid && tileScreen >= 14) this.drawGrid();
+    if (this.showRuler) this.drawRuler();
     this.drawPools(tileScreen);
     this.drawObjects(tileScreen);
     if (this.overlay) this.overlay(ctx);
@@ -350,6 +351,25 @@ export class Renderer {
     ctx.strokeStyle = 'rgba(0,0,0,0.18)';
     ctx.lineWidth = 1;
     ctx.stroke();
+    const N = this.gridMajor | 0;
+    if (N > 0) {
+      ctx.beginPath();
+      for (let x = Math.ceil(gx0 / N) * N; x <= gx1; x += N) { const s = (x * tw - v.ox) * v.z; ctx.moveTo(s, (gy0 * th - v.oy) * v.z); ctx.lineTo(s, (gy1 * th - v.oy) * v.z); }
+      for (let y = Math.ceil(gy0 / N) * N; y <= gy1; y += N) { const s = (y * th - v.oy) * v.z; ctx.moveTo((gx0 * tw - v.ox) * v.z, s); ctx.lineTo((gx1 * tw - v.ox) * v.z, s); }
+      ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = 1.5; ctx.stroke();
+    }
+  }
+
+  drawRuler() {
+    const ctx = this.ctx, m = this.map, v = this.view, tw = m.tw, th = m.th, ts = tw * v.z;
+    let step = 1; for (const s of [1, 2, 5, 10, 20, 50, 100, 200, 500]) { step = s; if (ts * s >= 44) break; }
+    ctx.save();
+    ctx.font = '10px system-ui, sans-serif'; ctx.textBaseline = 'top';
+    ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.fillRect(0, 0, this.cw, 14); ctx.fillRect(0, 0, 28, this.ch);
+    ctx.fillStyle = '#fff';
+    for (let x = Math.max(0, Math.ceil(v.ox / tw / step) * step); x <= m.width && x * tw <= v.ox + this.cw / v.z; x += step) { const sx = (x * tw - v.ox) * v.z; ctx.fillText(String(x), sx + 2, 2); ctx.fillRect(sx, 10, 1, 4); }
+    for (let y = Math.max(0, Math.ceil(v.oy / th / step) * step); y <= m.height && y * th <= v.oy + this.ch / v.z; y += step) { const sy = (y * th - v.oy) * v.z; ctx.fillText(String(y), 2, sy + 2); ctx.fillRect(24, sy, 4, 1); }
+    ctx.restore();
   }
 
   drawPools(tileScreen) {

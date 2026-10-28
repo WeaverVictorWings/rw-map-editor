@@ -6,6 +6,7 @@ import { runChecks, renderPreview, renderPoster } from './check.js';
 import { pickFile, saveFile, gameFolder, pickGameFolder, saveToGame, addRecent, recentText, listGameMaps, readGameMap, gameFolderSupported, isNative } from './files.js';
 import { kvGet, kvSet, kvDel } from './util.js';
 import { toast, busy, h, modal, confirmBox, promptBox, closeModal } from './ui.js';
+import { captureSaved, saveSummary } from './safety.js';
 
 const ed = A.ed, rend = A.rend;
 
@@ -33,6 +34,7 @@ export async function loadMapFromText(text, name, handle = null, opts = {}) {
   if (healed.length) toast('这张地图的图块集没有地形标注，已用本机保存的图块素材补全（' + healed.join('、') + '），保存时会写进地图', 5200);
   else if (!ed.engine) toast('这张地图的地面图块没有地形标注，自动过渡不可用，可以用“图块”模式直接画', 4200);
   A.refresh();
+  captureSaved();
   if (!opts.noRecent) rememberRecent(text).catch(() => {});
   return map;
 }
@@ -120,11 +122,14 @@ export async function saveMap(saveAs = false) {
   try {
     const text = await busy('正在生成地图文件…', () => serializeOnce());
     const handle = (!saveAs && A.handleName === A.mapName) ? A.fileHandle : null;
+    if (handle && handle.getFile) { try { const prev = await (await handle.getFile()).text(); if (prev) (await import('./backup.js')).saveBak(A.mapName, prev); } catch { /* 读不到旧文件就算了 */ } }
     const r = await saveFile(A.mapName + '.tmx', text, 'application/xml', handle);
     if (r.ok) {
       if (r.handle) { A.fileHandle = r.handle; A.handleName = A.mapName; }
-      markSaved(text);
-      toast(r.where + `：${A.mapName}.tmx`);
+      let verify = '';
+      if (r.handle && r.handle.getFile) { try { const back = await (await r.handle.getFile()).text(); if (back !== text) verify = '（警告：写回的文件和要保存的不一致，请另存一份）'; } catch { /* 无法校验 */ } }
+      const sum = markSaved(text);
+      toast(r.where + `：${A.mapName}.tmx` + (sum ? '。' + sum : '') + verify, verify ? 7000 : 2400);
       if (A.settings.cover !== false) await exportCover(true);
       A.hooks.coach && A.hooks.coach('saved');
     }
@@ -134,10 +139,13 @@ export async function saveMap(saveAs = false) {
 }
 
 function markSaved(text) {
+  const sum = saveSummary();
+  captureSaved();
   ed.dirty = false; A.autoDirty = false;
   kvDel('autosave');
   rememberRecent(text).catch(() => {});
   A.refresh('top');
+  return sum;
 }
 
 export async function chooseGameFolder() {
@@ -164,9 +172,12 @@ export async function saveToGameFlow() {
     const text = await busy('正在生成地图文件…', () => serializeOnce());
     const files = [{ name: A.mapName + '.tmx', data: text, mime: 'application/octet-stream' }];
     if (A.settings.cover !== false) files.push({ name: A.mapName + '.png', data: await coverBytes(), mime: 'image/png' });
+    try { const prev = await readGameMap(A.mapName + '.tmx'); if (prev) (await import('./backup.js')).saveBak(A.mapName, prev); } catch { /* 之前没有这个文件 */ }
     const where = await busy('正在写入游戏文件夹…', () => saveToGame(files));
-    markSaved(text);
-    toast(`已存进「${where}」：${A.mapName}.tmx${files.length > 1 ? ` 和封面 ${A.mapName}.png` : ''}。去游戏里试玩吧`, 4200);
+    let verify = '';
+    try { const back = await readGameMap(A.mapName + '.tmx'); if (back !== text) verify = '（警告：游戏文件夹里的文件和刚保存的不一致，请重新保存）'; } catch { /* 无法校验 */ }
+    const sum = markSaved(text);
+    toast(`已存进「${where}」：${A.mapName}.tmx${files.length > 1 ? ` 和封面 ${A.mapName}.png` : ''}。去游戏里试玩吧` + (sum ? '。' + sum : '') + verify, verify ? 8000 : 4800);
     A.hooks.coach && A.hooks.coach('saved');
   } catch (e) {
     const again = await modal('保存到游戏失败', h('div', {}, h('p', {}, e.message || String(e)), h('p', { class: 'hint' }, '可能是文件夹权限过期了。可以重新选择文件夹，或者改用普通保存。')),

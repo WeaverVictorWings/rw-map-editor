@@ -1,0 +1,98 @@
+n28_0	Units used by the map…
+n28_1	List the units used by triggers and tilesets, compared with the open Mod
+n28_9	Save a version with a note…
+n28_10	Add a note to this version and back it up so you can find it later
+n28_11	Self-check panel (copy diagnostics)…
+n28_12	Version, storage, backups and recent errors — send to the author when something breaks
+n28_74	Look and feel…
+n28_75	Theme, text size, focus mode, ruler, major grid lines, palm rejection, haptics
+n28_76	Focus mode (hide all panels)
+n28_77	Canvas only; an exit button stays at the top right
+n28_78	Fullscreen / exit fullscreen
+n28_79	Fullscreen
+n28_80	View bookmarks…
+n28_81	Save the current position and zoom; jump back with one click
+n28_82	Zoom to selection
+n28_83	What's new in this version…
+n28_85	Installed to desktop / home screen; it will open offline from now on
+n28_86	Back online
+n28_87	Offline: the web version keeps using its local cache, nothing is lost
+n28_88	Install requested; if nothing happens use “Install app / Add to home screen” in the browser menu
+n28_89	Already running in its own window; works offline
+n28_90	Every N minutes the current map is quietly saved in the browser (the latest few are kept). If you refresh by accident, the app crashes or you forget the last save, you can get it back here. <b>Only the map itself is stored, not the undo history.</b> Very large maps are saved less often.
+n28_91	Manual
+n28_92	Backup failed: local storage may be full. You can clean up in the self-check panel
+n28_93	Add a note to this version
+n28_94	Note
+n28_95	Saved together with a backup; you will see it in the auto-backup list.
+n28_96	Backup with note saved
+n28_97	Moved to background
+n28_98	Auto-backup interval (minutes, 0 = off)
+n28_99	Versions to keep
+n28_100	Restore this backup?
+n28_101	Unsaved changes will be replaced (tap “Back up now” first if unsure).
+n28_102	Backup restored
+n28_103	No backups yet. They are made automatically after you edit, or tap “Back up now” below.
+n28_104	Backup saved
+n28_105	Could not save
+n28_106	Back up with a note
+n28_107	Delete all
+n28_108	Delete all backups?
+n28_109	This cannot be undone.
+n28_134	Unsaved Mod found:
+n28_135	Restored
+n28_136	Discard
+n28_137	Open
+n28_139	Trash
+n28_140	Get back deleted units
+n28_141	The trash is empty. Deleted units are kept here until you close the editor.
+n28_142	Recovered as 
+n28_143	Recover
+n28_157	Edit units and values, pack a Mod
+n28_158	Unpin
+n28_159	Pin to front
+n28_160	Exit focus mode
+n28_161	Fullscreen is not allowed here; try focus mode
+n28_162	Fullscreen is not supported here; try focus mode
+n28_163	Theme
+n28_164	Dark
+n28_165	Light
+n28_166	Follow system
+n28_167	Text size
+n28_168	Show a coordinate ruler along the canvas edge
+n28_169	Draw a thicker grid line every few cells (visible when zoomed in)
+n28_170	Off
+n28_171	Draw with pen / mouse only; fingers just pan and zoom (palm rejection)
+n28_172	Haptics (a light buzz on drawing and undo; phones only)
+n28_173	Fullscreen works in desktop browsers; on phones the system bars depend on the OS. Focus mode hides the editor's own panels.
+n28_174	Look and feel
+n28_175	Save what you are looking at now and jump back to it with one click.
+n28_176	Go to
+n28_177	No bookmarks yet.
+n28_178	View bookmarks
+n28_179	Save current view
+n28_180	Bookmark name
+n28_181	View 
+n28_182	This map has no spawn points yet
+n28_183	Select an area first
+n28_184	Auto-backup now uses IndexedDB, so big maps are backed up too; saving keeps the previous file and verifies the write.
+n28_185	The Mod editor autosaves and recovers after a refresh; it has recent files and a trash.
+n28_186	New: save summary, version notes, self-check panel, look and feel (light theme, text size, focus mode, ruler, major grid, palm rejection, haptics).
+n28_187	View bookmarks, jump to spawn, zoom to selection; “Units used by the map” compares with the open Mod.
+n28_188	Pin maps on the home screen; the function search accepts pinyin initials.
+n28_189	What's new in this version · 
+n28_190	Not in this Mod (may be a built-in unit)
+n28_191	In the Mod · 
+n28_192	No Mod is open in the Mod editor yet. Open one, then come back to see which of the map's units are in it.
+n28_193	No named units were found in this map's triggers or tilesets.
+n28_194	Units used by the map
+n28_195	Since last save: 
+n28_196	Something went wrong (logged). Copy the diagnostics from Help → Self-check panel and send them to the author
+n28_197	Storage: unknown
+n28_198	No map is open
+n28_199	Recent errors:\n
+n28_200	Recent errors: none
+n28_201	Self-check panel
+n28_202	Only version, device, storage and recent errors — no map content. Tap Copy and send it to the author when something breaks.
+n28_203	Open backups
+n28_204	Please copy the selected text by hand

@@ -1,6 +1,7 @@
 // Mod 编辑器（第一阶段）：浏览单位、表单编辑、源码、mod-info、检查、打包
 import { h, toast, busy, modal, closeModal, confirmBox, select } from './ui.js';
 import { pickFile, saveFile } from './files.js';
+import { kvGet, kvSet, kvDel } from './util.js';
 import { readZip, writeZip } from './zip.js';
 import { parseIni, serializeIni, getVal, setVal, getSec, sectionNames, addSection, removeSection } from './ini.js';
 import { SCHEMA, SECTION_LABEL, schemaKey, KNOWN_SECTIONS } from './modschema.js';
@@ -160,7 +161,26 @@ export function checkMod(mod) {
 // ---- 界面 ----
 let mod = null, cur = null, ui = {};
 // 撤销：每个单位存最近 60 份文本快照
-export function snap(u) { (u.undo = u.undo || []).push(serializeIni(u.ini)); if (u.undo.length > 60) u.undo.shift(); u.redo = []; }
+export function currentMod() { return mod; }
+export function markDirty(v = true) { if (mod) mod.dirty = v; window.__modDirty = !!(mod && mod.dirty); }
+// 自动保存：每 20 秒把当前 Mod（含笔记、快照）存进本机，刷新后可恢复
+let autoT = 0, autoSig = '';
+async function autoSaveMod() {
+  if (!mod || !mod.dirty) return;
+  try { const bytes = (await import('./modlogic2.js')).projectFiles(mod); const sig = bytes.length + ':' + mod.units.length; if (sig === autoSig) return; if (await kvSet('modAuto', { name: mod.name, time: Date.now(), bytes })) autoSig = sig; } catch (e) { console.warn('Mod 自动保存失败', e); }
+}
+async function rememberRecentMod(name, bytes) {
+  const l = ((await kvGet('modRecents')) || []).filter((x) => x.name !== name); l.unshift({ name, time: Date.now(), bytes });
+  let total = 0; await kvSet('modRecents', l.filter((x, i) => i < 5 && (total += x.bytes.length) < 60e6 || i === 0));
+}
+async function loadFromBytes(name, bytes) {
+  const ent = readZip(bytes), pr = splitProject(ent);
+  mod = await Mod.fromEntries(pr.rest, name);
+  if (pr.meta) { try { const o = JSON.parse(await pr.meta.text()); mod.notes = o.notes; mod.todos = o.todos; mod.snaps = o.snaps; mod.unitNotes = o.unitNotes; } catch { /* 项目信息坏了就只要文件 */ } }
+  mod.dirty = false; window.__modDirty = false;
+  cur = mod.realUnits()[0] || null; render();
+}
+export function snap(u) { markDirty(); (u.undo = u.undo || []).push(serializeIni(u.ini)); if (u.undo.length > 60) u.undo.shift(); u.redo = []; }
 function undo(u, back) {
   const from = back ? u.undo : u.redo, to = back ? (u.redo = u.redo || []) : (u.undo = u.undo || []);
   if (!from || !from.length) { toast(back ? '没有可撤销的' : '没有可重做的'); return; }
@@ -168,17 +188,20 @@ function undo(u, back) {
 }
 async function delUnit() {
   if (!cur || !(await confirmBox('删除单位', '从 Mod 里删除 ' + mod.unitName(cur) + '？（打包时不再包含）', '删除', '取消', true))) return;
+  (mod.trash = mod.trash || []).push({ file: cur.file, text: serializeIni(cur.ini), time: Date.now() }); markDirty();
   mod.units = mod.units.filter((x) => x !== cur); mod.files.delete(cur.file); mod.lower.delete(cur.file.toLowerCase());
   cur = mod.realUnits()[0] || null; render();
 }
-const ctx = { get mod() { return mod; }, get cur() { return cur; }, set cur(u) { cur = u; }, refresh: () => render(), snap, visible: () => { const q = (ui.q || '').toLowerCase(); return mod.realUnits().filter((u) => !q || (mod.unitName(u) + ' ' + (getVal(u.ini, 'core', 'displayText') || '') + ' ' + u.file).toLowerCase().includes(q)); } };
+const ctx = { get mod() { return mod; }, get cur() { return cur; }, set cur(u) { cur = u; }, refresh: () => { markDirty(); render(); }, snap, visible: () => { const q = (ui.q || '').toLowerCase(); return mod.realUnits().filter((u) => !q || (mod.unitName(u) + ' ' + (getVal(u.ini, 'core', 'displayText') || '') + ' ' + u.file).toLowerCase().includes(q)); } };
 export async function modEditorDialog() {
   const body = h('div', { class: 'modedit' });
   ui = { body };
   const style = h('style', {}, `.modedit{display:flex;flex-direction:column;gap:8px;min-height:60vh}.me-bar{display:flex;flex-wrap:wrap;gap:6px}.me-main{display:flex;gap:10px;min-height:50vh}.me-list{flex:0 0 38%;max-height:62vh;overflow:auto;border:1px solid var(--line,#8884);border-radius:8px}.me-row{display:flex;gap:8px;align-items:center;padding:6px;cursor:pointer;border-bottom:1px solid #8882}.me-row.on{background:#4a8cff33}.me-row canvas{width:36px;height:36px;image-rendering:pixelated;flex:none}.me-row small{opacity:.7;display:block}.me-form{flex:1;max-height:62vh;overflow:auto}.me-sec{border:1px solid #8884;border-radius:8px;margin:0 0 8px;padding:6px 8px}.me-sec h4{margin:0 0 6px;display:flex;justify-content:space-between;align-items:center}.me-f{display:grid;grid-template-columns:9em 1fr;gap:4px 8px;align-items:center;margin:3px 0}.me-f label{font-size:12px;opacity:.85}.me-f input,.me-f select{width:100%;box-sizing:border-box}.me-src{width:100%;min-height:50vh;font-family:monospace;font-size:12px;box-sizing:border-box}.me-chk div{padding:4px 0;border-bottom:1px solid #8882;font-size:13px}.me-chk .error{color:#e55}.me-chk .warn{color:#d90}.me-chk .info{opacity:.75}@media(max-width:700px){.me-main{flex-direction:column}.me-list{flex:none;max-height:26vh}.me-f{grid-template-columns:7em 1fr}}`);
   body.append(style);
   render();
-  modal('Mod 编辑器', body, [{ label: '关闭', value: true }], { wide: true, full: true });
+  if (!autoT) autoT = setInterval(autoSaveMod, 20000);
+  await modal('Mod 编辑器', body, [{ label: '关闭', value: true }], { wide: true, full: true });
+  autoSaveMod();
 }
 
 function render() {
@@ -192,7 +215,16 @@ function render() {
     mod ? h('button', { onclick: showCheck }, '检查') : null,
     mod ? h('button', { class: 'primary', onclick: pack }, '打包 .rwmod') : null);
   body.append(bar);
-  if (!mod) { body.append(h('p', { class: 'hint' }, '打开一个 Mod（.rwmod 或 zip，或解压后的文件夹），就能浏览里面的单位、改数值、检查问题并重新打包。')); return; }
+  if (!mod) {
+    body.append(h('p', { class: 'hint' }, '打开一个 Mod（.rwmod 或 zip，或解压后的文件夹），就能浏览里面的单位、改数值、检查问题并重新打包。'));
+    const box = h('div', {}); body.append(box);
+    (async () => {
+      const auto = await kvGet('modAuto'), rec = (await kvGet('modRecents')) || [];
+      if (auto) box.append(h('div', { class: 'me-sec' }, h('b', {}, '发现未保存的 Mod：' + auto.name), h('div', { class: 'hint' }, new Date(auto.time).toLocaleString() + ' 自动保存'), h('button', { class: 'primary', onclick: () => loadFromBytes(auto.name, auto.bytes).then(() => { mod.dirty = true; window.__modDirty = true; toast('已恢复'); }) }, '恢复'), h('button', { onclick: async () => { await kvDel('modAuto'); box.firstChild.remove(); } }, '丢弃')));
+      if (rec.length) box.append(h('h4', {}, '最近打开'), ...rec.map((x) => h('div', { class: 'hrow', style: 'display:flex;gap:8px;align-items:center;margin:4px 0' }, h('span', { translate: 'no' }, x.name), h('small', {}, new Date(x.time).toLocaleString()), h('button', { onclick: () => loadFromBytes(x.name, x.bytes) }, '打开'))));
+    })();
+    return;
+  }
   const q = h('input', { type: 'search', placeholder: '搜索单位…', value: ui.q || '', oninput: (e) => { ui.q = e.target.value; fillList(); } });
   const list = h('div', { class: 'me-list' });
   const form = h('div', { class: 'me-form' });
@@ -299,7 +331,9 @@ async function openMod() {
   const r = await pickFile('.rwmod,.zip,.rwproj'); if (!r) return;
   try {
     await busy('读取 Mod…', async () => { const buf = new Uint8Array(await r.file.arrayBuffer()); const ent = readZip(buf), pr = splitProject(ent); mod = await Mod.fromEntries(pr.rest, r.file.name); if (pr.meta) { try { const o = JSON.parse(await pr.meta.text()); mod.notes = o.notes; mod.todos = o.todos; mod.snaps = o.snaps; mod.unitNotes = o.unitNotes; toast('已载入项目（笔记、待办、快照）'); } catch {} } });
+    mod.dirty = false; window.__modDirty = false;
     cur = mod.realUnits()[0] || null; render();
+    if (r.file.size < 60e6) rememberRecentMod(r.file.name, new Uint8Array(await r.file.arrayBuffer())).catch(() => {});
   } catch (e) { toast(e.message || String(e), 5000); }
 }
 async function openFolder() {
@@ -320,7 +354,7 @@ async function newMod() {
   const unit = '[core]\nname: my_unit\nclass: CustomUnitMetadata\nprice: 200\nmaxHp: 300\nradius: 15\nbuildSpeed: 5\ntechLevel: 1\n\n[graphics]\ntotal_frames: 1\n\n[movement]\nmovementType: LAND\nmoveSpeed: 1.0\n\n[attack]\nmaxAttackRange: 150\n\n[turret_main]\nprojectile: bullet\nbarrelX: 0\nbarrelY: 10\nturnSpeed: 4\ndelay: 40\n\n[projectile_bullet]\nlife: 60\ndirectDamage: 10\nspeed: 8\n';
   mod.files.set('mod-info.txt', { bytes: new TextEncoder().encode('[mod]\ntitle: 我的 Mod\ndescription: \n') });
   mod.files.set('my_unit.ini', { bytes: new TextEncoder().encode(unit) });
-  mod.index(); cur = mod.realUnits()[0]; render();
+  mod.index(); cur = mod.realUnits()[0]; mod.dirty = true; window.__modDirty = true; render();
 }
 
 // ---- Mod 信息 / 检查 / 打包 ----
@@ -353,5 +387,5 @@ async function pack() {
   const bytes = writeZip(files);
   const title = (getVal(mod.info, 'mod', 'title') || mod.name).replace(/[\\/:*?"<>|]/g, '_');
   const res = await saveFile(title + '.rwmod', bytes, 'application/octet-stream');
-  if (res && res.ok !== false) toast('已打包 ' + files.length + ' 个文件');
+  if (res && res.ok !== false) { toast('已打包 ' + files.length + ' 个文件'); markDirty(false); kvDel('modAuto'); }
 }

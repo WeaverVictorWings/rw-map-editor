@@ -105,6 +105,23 @@ export function menu(anchor, items, opts = {}) {
   return popover(anchor, list, opts);
 }
 
+// ---- 拼音首字母（用浏览器自带的拼音排序，查不到就当没有） ----
+let pyCol = null; const pyCache = new Map();
+const PY_B = ['阿','芭','擦','搭','蛾','发','噶','哈','击','喀','垃','妈','拿','哦','啪','期','然','撒','塌','挖','昔','压','匝'], PY_L = 'abcdefghjklmnopqrstwxyz';
+export function pinyinInitials(str) {
+  if (pyCache.has(str)) return pyCache.get(str);
+  let out = '';
+  try {
+    pyCol = pyCol || new Intl.Collator('zh-Hans-CN-u-co-pinyin');
+    for (const ch of str) {
+      if (ch < '\u4e00' || ch > '\u9fff') { out += ch.toLowerCase(); continue; }
+      let k = -1; for (let i = 0; i < PY_B.length; i++) if (pyCol.compare(ch, PY_B[i]) >= 0) k = i;
+      out += k >= 0 ? PY_L[k] : '';
+    }
+  } catch { out = ''; }
+  pyCache.set(str, out); return out;
+}
+
 // ---- 功能搜索（Ctrl+K） ----
 export function commandPalette(actions, onRun) {
   const tr = window.__rwT || ((x) => x);
@@ -113,7 +130,7 @@ export function commandPalette(actions, onRun) {
   let sel = 0, shown = [];
   const render = () => {
     const q = input.value.trim().toLowerCase();
-    shown = actions.filter((a) => !a.hidden && (!q || (a.label + (a.kw || '') + (a.desc || '') + tr(a.label) + tr(a.desc || '')).toLowerCase().includes(q))).slice(0, 40);
+    shown = actions.filter((a) => !a.hidden && (!q || ((a.label + (a.kw || '') + (a.desc || '') + tr(a.label) + tr(a.desc || '')).toLowerCase().includes(q) || pinyinInitials(a.label).includes(q)))).slice(0, 40);
     sel = Math.min(sel, Math.max(0, shown.length - 1));
     list.innerHTML = '';
     shown.forEach((a, i) => list.append(h('button', { class: 'cpitem' + (i === sel ? ' on' : ''), disabled: a.enabled && !a.enabled(), onclick: () => { closeModal(); onRun(a); } },

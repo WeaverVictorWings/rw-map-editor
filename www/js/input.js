@@ -604,6 +604,7 @@ function drawCursor(ctx, mp) {
 }
 
 // ---------------- 指针事件 ----------------
+let panOnly = null;
 function onDown(e) {
   if (!ed.map) return;
   closePopover();
@@ -611,6 +612,8 @@ function onDown(e) {
   P.set(e.pointerId, { x: e.clientX, y: e.clientY, sx: e.clientX, sy: e.clientY, t: performance.now() });
   if (P.size === 1) tapInfo = { n: 1, t: performance.now(), moved: false };
   else if (tapInfo) tapInfo.n = Math.max(tapInfo.n, P.size);
+  if (P.size === 1 && A.settings.penOnly && e.pointerType === 'touch') { panOnly = { x: e.clientX, y: e.clientY }; return; }
+  panOnly = null;
   if (P.size >= 2) {
     // 第二根手指：刚开始的笔画撤掉，其他动作结束
     if (act) {
@@ -636,6 +639,7 @@ function onMove(e) {
     if (tapInfo && Math.hypot(e.clientX - pt.sx, e.clientY - pt.sy) > 12) tapInfo.moved = true;
     pt.x = e.clientX; pt.y = e.clientY;
   }
+  if (panOnly && P.size === 1) { const v = rend.view; v.ox -= (e.clientX - panOnly.x) / v.z; v.oy -= (e.clientY - panOnly.y) / v.z; panOnly.x = e.clientX; panOnly.y = e.clientY; rend.request(); A.mini.draw(); return; }
   if (gesture && P.size >= 2) {
     const pts = [...P.values()];
     if (pts.length !== gesture.n) { beginGesture(); return; }
@@ -662,6 +666,7 @@ function onUp(e, cancelled = false) {
   const had = P.has(e.pointerId);
   P.delete(e.pointerId);
   if (!had) return;
+  if (panOnly && P.size === 0) { panOnly = null; tapInfo = null; return; }
   if (gesture) {
     if (P.size === 0) {
       // 多指轻点：两指撤销，三指重做
