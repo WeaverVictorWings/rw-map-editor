@@ -11,6 +11,8 @@ const ed = A.ed, rend = A.rend;
 
 export async function loadMapFromText(text, name, handle = null, opts = {}) {
   const map = await RWMap.parse(text, name);
+  let healed = [];
+  try { healed = await (await import('./heal.js')).healTerrain(map); } catch (e) { console.warn('heal terrain failed', e); }
   ed.setMap(map);
   // 画在图块层里的单位统一成单位对象来编辑（保存时会写回原来的图层）
   A.tileUnits = ed.unitsTs ? unitTilesToObjects(ed) : 0;
@@ -25,8 +27,11 @@ export async function loadMapFromText(text, name, handle = null, opts = {}) {
     await kvSet('template', { ...tpl, from: A.mapName, time: Date.now() });
     toast('已从这张地图取出图块素材，以后新建地图会用它');
   }
-  if (map.tilesets.some((t) => !t.image)) setTimeout(() => import('./assets.js').then((m2) => m2.missingDialog()), 400);
-  if (!ed.engine) toast('这张地图的地面图块没有地形标注，自动过渡不可用，可以用“图块”模式直接画', 4200);
+  // 缺图片的地块集：不再每次打开都弹窗，用同色色块代替，需要时在“地图 → 补上缺少的地块图”里补
+  const noImg = map.tilesets.filter((t) => !t.image && !t.builtin);
+  if (noImg.length && !(map.tilesets.some((t) => t.builtin) && !noImg.length)) toast(`${noImg.length} 个地块集找不到图片，先用同色色块代替；要补图在“地图 → 补上缺少的地块图”`, 5200);
+  if (healed.length) toast('这张地图的图块集没有地形标注，已用本机保存的图块素材补全（' + healed.join('、') + '），保存时会写进地图', 5200);
+  else if (!ed.engine) toast('这张地图的地面图块没有地形标注，自动过渡不可用，可以用“图块”模式直接画', 4200);
   A.refresh();
   if (!opts.noRecent) rememberRecent(text).catch(() => {});
   return map;

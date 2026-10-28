@@ -1,6 +1,6 @@
 // 自动生成：scripts/build-sw.mjs —— 不要手改这个文件（改完网页资源后重新生成）
 // 离线优先：所有资源走缓存，网络只用来补新东西；换版本时旧缓存自动清掉。
-const CACHE = 'rw-map-editor-2.4.0-c9a093fa';
+const CACHE = 'rw-map-editor-2.4.1-755a250a';
 const ASSETS = [
   './icon-192.png',
   './icon-512.png',
@@ -33,6 +33,7 @@ const ASSETS = [
   './js/files.js',
   './js/finder.js',
   './js/gen.js',
+  './js/heal.js',
   './js/help.js',
   './js/helpstatic.js',
   './js/hint.js',

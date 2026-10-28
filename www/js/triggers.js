@@ -272,7 +272,9 @@ function computeIssues() {
     if (!o.props.length && (TYPES[k] || SPECIAL[k])) add('warn', o, `「${label(o)}」一个属性都没有`, '游戏会跳过没有任何属性的触发器。', fixEdit('补上 id', o, (x) => setP(x, 'id', label(x))));
     for (const [p, cn, kind, req] of def.fields || []) {
       const v = objProp(o, p);
-      if (req && (v === undefined || v === '')) add('error', o, `「${label(o)}」（${def.cn}）缺少“${cn}”`, `属性 ${p} 必须填写。`);
+      // 游戏里刷兵 / 地图文字可以只带全局消息（globalMessage）：常见于只发通告的触发器，不算缺少
+      const msgOnly = (k === 'unitAdd' || k === 'mapText') && (p === 'spawnUnits' || p === 'text') && o.props.some((q) => /^(globalMessage|text|message)/.test(q.name) && q.value);
+      if (req && (v === undefined || v === '') && !msgOnly) add('error', o, `「${label(o)}」（${def.cn}）缺少“${cn}”`, `属性 ${p} 必须填写。`);
       if (kind === 'int' && v !== undefined && v !== '' && !/^-?\d+$/.test(v.trim())) add('error', o, `「${label(o)}」的“${cn}”不是整数`, `现在是「${v}」。`);
     }
     if (SPECIAL[k] || BY_NAME[k]) {
@@ -284,7 +286,7 @@ function computeIssues() {
     if (first.get(key) !== o) dupSeen.set(key, (dupSeen.get(key) || 1) + 1);
     if ((def.area === 'rect') && (+(o.attrs.width || 0) <= 0 || +(o.attrs.height || 0) <= 0)) add('error', o, `「${label(o)}」的区域大小是 0`, '宽或高为 0 的区域里什么都检测不到。', fixEdit('设为 1×1 格', o, (x) => { x.attrs.width = String(TW); x.attrs.height = String(TW); }));
     for (const [p, cn] of LINKS) for (const ref of links(o, p)) {
-      if (!first.has(lc(ref))) add('error', o, `「${label(o)}」的“${cn}”里有不存在的「${ref}」`, '游戏会忽略这条连接。可能是名字打错了，或者那个触发器被删了。', fixEdit('去掉这条连接', o, (x) => setP(x, p, listOf(objProp(x, p)).filter((r) => lc(r) !== lc(ref)).join(','))));
+      if (!first.has(lc(ref))) add('warn', o, `「${label(o)}」的“${cn}”里有不存在的「${ref}」`, '游戏会忽略这条连接，不会出错（有些地图故意留着不用的名字）。如果是名字打错了或那个触发器被删了，可以一键去掉。', fixEdit('去掉这条连接', o, (x) => setP(x, p, listOf(objProp(x, p)).filter((r) => lc(r) !== lc(ref)).join(','))));
     }
     const t = objProp(o, 'team');
     if (t !== undefined && t !== '') {

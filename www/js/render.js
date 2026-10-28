@@ -1,5 +1,5 @@
 // 渲染：64×64 格一块缓存；缩小时用整图概览；叠加层（通行图、地盘、对称差异）也分块缓存
-import { objProp } from './tmx.js';
+import { objProp, placeholderRGB } from './tmx.js';
 
 const C = 64;
 const BASE_COLORS = ['#36c25b', '#e5484d', '#3e8ef7', '#f5c518', '#00bcd4', '#b36cf0', '#2b2b2b', '#ffffff', '#ff8c1a', '#8bc34a'];
@@ -84,6 +84,14 @@ export class Renderer {
     const m = this.map;
     const col = new Uint8Array((m.maxGid + 2) * 4);
     for (const ts of m.tilesets) {
+      if (!ts.image && ts.tilecount) {   // 没有图片的地块集：小地图、概览也用同色色块
+        for (let id = 0; id < ts.tilecount; id++) {
+          const k = (ts.firstgid + id) * 4; if (k + 3 >= col.length) break;
+          const [pr, pg, pb] = placeholderRGB(ts.name || ts.imageSource || ts.source, id);
+          col[k] = pr; col[k + 1] = pg; col[k + 2] = pb; col[k + 3] = 255;
+        }
+        continue;
+      }
       if (!ts.image || !ts.columns) continue;
       const oc = new OffscreenCanvas(ts.image.width, ts.image.height);
       const c = oc.getContext('2d', { willReadFrequently: true });
@@ -184,7 +192,11 @@ export class Renderer {
           if (!gid) continue;
           const ts = m.tilesetOf(gid);
           const dx = x * dw;
-          if (!ts || !ts.image) { c.fillStyle = '#ff00ff'; c.fillRect(dx, y * dh, dw, dh); continue; }
+          if (!ts || !ts.image) {
+            if (ts) { const [pr, pg, pb] = placeholderRGB(ts.name || ts.imageSource || ts.source, gid - ts.firstgid); c.fillStyle = `rgb(${pr},${pg},${pb})`; }
+            else c.fillStyle = '#ff00ff';
+            c.fillRect(dx, y * dh, dw, dh); continue;
+          }
           const id = gid - ts.firstgid;
           const sx = (id % ts.columns) * ts.tw, sy = Math.floor(id / ts.columns) * ts.th;
           const w = ts.tw * s, h = ts.th * s;

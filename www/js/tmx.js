@@ -26,6 +26,31 @@ function propList(el) {
   return out;
 }
 
+
+// 找不到图片的地块集：游戏自带的（图片在游戏安装目录里）和别人电脑上的外部图片。
+// 编辑器没有这些图片，就按名字给每个图块一个同色色块，地图至少能看懂、能编辑；游戏里不受影响。
+export const BUILTIN_PATH = /(^|[\\/])(terrain|ridges|bitmaps)[\\/]|^(ridges|terrain)\/.*\.tsx$/i;
+const PH_WORDS = [
+  [/shallow/i, [86, 150, 196]], [/water|lake|sea/i, [40, 84, 150]], [/lava/i, [196, 70, 30]],
+  [/snow/i, [232, 238, 242]], [/ice/i, [160, 208, 232]], [/sand|beach|desert/i, [216, 196, 140]],
+  [/grass|forest|tree|meadow/i, [74, 128, 52]], [/mountain|stone|rock|hill|ridge|cliff/i, [120, 112, 100]],
+  [/dirt|mud|road|soil/i, [128, 100, 70]],
+];
+export function placeholderRGB(name, id = 0) {
+  const n = String(name || '');
+  const hit = PH_WORDS.filter(([re]) => re.test(n)).map(([, c]) => c);
+  let c;
+  if (hit.length) c = [0, 1, 2].map((k) => Math.round(hit.reduce((a, x) => a + x[k], 0) / hit.length));
+  else {
+    let h = 0; for (let i = 0; i < n.length; i++) h = (h * 31 + n.charCodeAt(i)) >>> 0;
+    const hue = (h % 360) / 60, f = 0.35, v = 0.5, x = v * (1 - Math.abs((hue % 2) - 1)), m0 = v - v * f * 0;
+    const rgb = [[v, x, 0], [x, v, 0], [0, v, x], [0, x, v], [x, 0, v], [v, 0, x]][Math.floor(hue) % 6];
+    c = rgb.map((q) => Math.round((q * 0.7 + 0.18) * 255));
+  }
+  const d = ((id * 37) % 5 - 2) * 5;   // 同一个地块集里的相邻图块略有深浅，过渡图块能看出区别
+  return c.map((q) => Math.max(0, Math.min(255, q + d)));
+}
+
 export class Tileset {
   constructor(el) {
     this.el = el;
@@ -65,6 +90,7 @@ export class Tileset {
     this.image = null; // ImageBitmap，异步加载
     this.layerTag = (this.props.layer || '').toLowerCase();
   }
+  get builtin() { return !this.embeddedPng && BUILTIN_PATH.test((this.imageSource || this.source || '').replace(/\\/g, '/')); }
   get lastgid() { return this.firstgid + Math.max(this.tilecount, 1) - 1; }
   async loadImage() {
     if (!this.embeddedPng) return null;

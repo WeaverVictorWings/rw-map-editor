@@ -1,0 +1,9 @@
+n241_0	2 tilesets are built into the game (their pictures are in the game folder)
+n241_1	They display normally in the game. The editor does not have these pictures and uses same-color blocks instead; editing and saving are not affected. To see the real pictures, pick the .png (and .tsx) files from the game's assets/tilesets.
+n241_2	They reference external files and may not show on another device or for other people. Pick the matching .tsx and .png to embed them into the map.
+n241_3	The editor uses same-color blocks instead, and the game may not find it on another device. Pick the matching .tsx and .png to embed it into the map.
+n241_4	This map's tilesets had no terrain annotations; they were completed from the tile assets saved on this device (export_ground) and will be written into the map when saved
+n241_5	2 tilesets have no picture and are shown as same-color blocks for now; to add pictures use "Map → Fill in missing tile pictures"
+n241_6	No command center spawns (units come from triggers)
+n241_7	This map has 3 "spawn units" triggers, so units may be handed out by triggers at the start. Make sure every team starts with units, otherwise it loses at once.
+n241_8	The game ignores this link and nothing breaks (some maps deliberately keep unused names). If it is a typo or the trigger was deleted, you can remove it in one tap.

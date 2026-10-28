@@ -1,4 +1,5 @@
 // 界面面板：顶栏、菜单栏、模式栏、工具栏、右侧停靠面板、状态栏、欢迎页
+import { placeholderRGB } from './tmx.js';
 import { A } from './state.js';
 import { objProp } from './tmx.js';
 import { UNIT_CN, MAX_TEAMS } from './editor.js';
@@ -427,27 +428,43 @@ function toolGenerate(body) {
 function toolTiles(body) {
   const m = ed.map;
   if (!m.layer(ed.rawLayer) && m.layers[0]) ed.rawLayer = m.layers[0].name;
-  const sets = m.tilesets.filter((t) => t.image);
-  if (!ed.rawTs || !sets.includes(ed.rawTs)) ed.rawTs = sets[0] || null;
+  // 没有图片的地块集（游戏自带的、外部引用的）也能选：图块用同色色块代替
+  const sets = m.tilesets.filter((t) => t.image || t.tilecount);
+  if (!ed.rawTs || !sets.includes(ed.rawTs)) {
+    // 默认选当前图层里用得最多的地块集，比如地面层默认就是地面图块，不是第一个地块集
+    const Lr = m.layer(ed.rawLayer), use = new Map();
+    if (Lr) { const d = Lr.data, step = Math.max(1, Math.floor(d.length / 20000)); for (let i = 0; i < d.length; i += step) if (d[i]) { const t0 = m.tilesetOf(d[i]); if (t0) use.set(t0, (use.get(t0) || 0) + 1); } }
+    const best = [...use].filter(([t0]) => sets.includes(t0)).sort((a, b) => b[1] - a[1])[0];
+    ed.rawTs = (best && best[0]) || sets[0] || null;
+  }
   body.append(sec('图块', 'mode.tiles', h('div', { class: 'grid2' },
-    h('div', {}, h('label', {}, '画到图层'), select(m.layers.map((L) => [L.name, L.name]), ed.rawLayer, (v) => { ed.rawLayer = v; })),
+    h('div', {}, h('label', {}, '画到图层'), select(m.layers.map((L) => [L.name, L.name]), ed.rawLayer, (v) => { ed.rawLayer = v; ed.rawTs = null; A.refresh('dock'); })),
     h('div', {}, h('label', {}, '图块集'), select(sets.map((t, i) => [i, `${t.name}（${t.tilecount}）`]), sets.indexOf(ed.rawTs), (v) => { ed.rawTs = sets[+v]; A.refresh('dock'); })))));
   if (ed.rawTs) {
     const ts = ed.rawTs;
-    const scale = Math.max(1, Math.min(2, Math.floor(280 / ts.image.width) || 1));
+    const cols = ts.columns || 8, iw = ts.image ? ts.image.width : cols * ts.tw, ih = ts.image ? ts.image.height : Math.ceil(ts.tilecount / cols) * ts.th;
+    const scale = Math.max(1, Math.min(2, Math.floor(280 / iw) || 1));
     const c = h('canvas', { class: 'tilegrid' });
-    c.width = ts.image.width * scale; c.height = Math.min(ts.image.height, 4000) * scale;
+    c.width = iw * scale; c.height = Math.min(ih, 4000) * scale;
     const x = c.getContext('2d');
     const mark = () => {
-      x.imageSmoothingEnabled = false; x.clearRect(0, 0, c.width, c.height); x.drawImage(ts.image, 0, 0, c.width, c.height);
+      x.imageSmoothingEnabled = false; x.clearRect(0, 0, c.width, c.height);
+      if (ts.image) x.drawImage(ts.image, 0, 0, c.width, c.height);
+      else for (let k = 0; k < ts.tilecount; k++) {   // 没有图片：同色色块 + 图块编号
+        const [pr, pg, pb] = placeholderRGB(ts.name || ts.imageSource || ts.source, k);
+        const px = (k % cols) * ts.tw * scale, py = Math.floor(k / cols) * ts.th * scale;
+        if (py > c.height) break;
+        x.fillStyle = `rgb(${pr},${pg},${pb})`; x.fillRect(px, py, ts.tw * scale, ts.th * scale);
+        x.fillStyle = 'rgba(0,0,0,.45)'; x.font = `${6 * scale}px sans-serif`; x.fillText(String(k), px + 2, py + 8 * scale);
+      }
       const id = ed.rawGid - ts.firstgid;
-      if (id >= 0 && id < ts.tilecount) { x.strokeStyle = '#ffb27a'; x.lineWidth = 2; x.strokeRect((id % ts.columns) * ts.tw * scale + 1, Math.floor(id / ts.columns) * ts.th * scale + 1, ts.tw * scale - 2, ts.th * scale - 2); }
+      if (id >= 0 && id < ts.tilecount) { x.strokeStyle = '#ffb27a'; x.lineWidth = 2; x.strokeRect((id % cols) * ts.tw * scale + 1, Math.floor(id / cols) * ts.th * scale + 1, ts.tw * scale - 2, ts.th * scale - 2); }
     };
     mark();
     c.onclick = (e) => {
       const r = c.getBoundingClientRect();
       const px = (e.clientX - r.left) * c.width / r.width / scale, py = (e.clientY - r.top) * c.height / r.height / scale;
-      const id = Math.floor(py / ts.th) * ts.columns + Math.floor(px / ts.tw);
+      const id = Math.floor(py / ts.th) * cols + Math.floor(px / ts.tw);
       if (id >= 0 && id < ts.tilecount) { ed.rawGid = ts.firstgid + id; ed.tool.tiles = 'brush'; mark(); A.refresh('toolbar'); }
     };
     body.append(sec('点选一个图块', null, c));

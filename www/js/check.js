@@ -75,10 +75,17 @@ export function runChecks(ed, opts = {}) {
   if (badFloat) add('error', '格式', `${badFloat} 个浮点属性的值不是数字`, '旧版本游戏遇到无效浮点属性会崩溃。');
 
   // ---- 图块集 ----
-  for (const ts of m.tilesets) {
+  {
     const fixMiss = { label: '补上地块图…', run: () => import('./assets.js').then((m2) => m2.missingDialog()) };
-    if (ts.source) add('warn', '图块集', `图块集「${ts.name || ts.source}」引用了外部文件`, '编辑器里会显示成紫色，换设备后游戏也可能找不到。选上对应的 .tsx 和 .png 就能嵌进地图。', { fix: fixMiss });
-    else if (!ts.embeddedPng) add('warn', '图块集', `图块集「${ts.name}」没有内嵌图片`, '它引用的是外部图片「' + (ts.imageSource || '') + '」，换设备后可能显示不出来。', { fix: fixMiss });
+    const noImg = m.tilesets.filter((ts) => !ts.image && !ts.embeddedPng);
+    const builtin = noImg.filter((ts) => ts.builtin);
+    const other = noImg.filter((ts) => !ts.builtin);
+    if (builtin.length) add('info', '图块集', `${builtin.length} 个地块集是游戏自带的（图片在游戏安装目录里）`, '游戏里能正常显示；编辑器没有这些图片，用同色色块代替，不影响编辑和保存。想看真实图案，选游戏 assets/tilesets 里的 .png（和 .tsx）补上。', { fix: fixMiss });
+    if (other.length > 3) add('warn', '图块集', `${other.length} 个地块集没有内嵌图片（${other.slice(0, 3).map((t) => '「' + (t.name || t.source) + '」').join('')}等）`, '它们引用的是外部文件，换设备或发给别人后可能显示不出来。选上对应的 .tsx 和 .png 就能嵌进地图。', { fix: fixMiss });
+    else for (const ts of other) {
+      if (ts.source) add('warn', '图块集', `图块集「${ts.name || ts.source}」引用了外部文件`, '编辑器里用同色色块代替，换设备后游戏也可能找不到。选上对应的 .tsx 和 .png 就能嵌进地图。', { fix: fixMiss });
+      else add('warn', '图块集', `图块集「${ts.name}」没有内嵌图片`, '它引用的是外部图片「' + (ts.imageSource || '') + '」，换设备后可能显示不出来。', { fix: fixMiss });
+    }
   }
   const gts = ed.groundTs;
   if (gts) {
@@ -110,7 +117,12 @@ export function runChecks(ed, opts = {}) {
   // ---- 队伍与出生点 ----
   const sp = ed.spawns();
   const teams = [...new Set(sp.map((s) => s.team).filter((t) => t >= 0))].sort((a, b) => a - b);
-  if (!sp.length) add('error', '出生点', '没有任何出生点', '每支队伍至少需要一个指挥中心。到“单位”里点“出生点”添加。');
+  if (!sp.length) {
+    // 有些地图（战略图、剧情图）不摆指挥中心，开局靠“刷兵”触发器把单位发给各队：只提醒，不报错
+    const spawnTrig = (m.group && m.group('Triggers') ? m.group('Triggers').objects : []).filter((o) => (o.attrs.type || '') === 'unitAdd' && (o.props || []).some((q) => q.name === 'spawnUnits' && q.value)).length;
+    if (spawnTrig) add('warn', '出生点', '没有指挥中心出生点（靠触发器刷单位）', `这张图有 ${spawnTrig} 个“刷兵”触发器，可能是开局靠触发器发单位。请确认每支队伍开局都有单位，否则会直接判负。`);
+    else add('error', '出生点', '没有任何出生点', '每支队伍至少需要一个指挥中心。到“单位”里点“出生点”添加。');
+  }
   else {
     const gap = teams.some((t, i) => t !== i);
     add(gap ? 'warn' : 'ok', '出生点', `${teams.length} 支队伍有出生点`, gap ? '队伍编号不连续：' + teams.slice(0, 30).map((t) => t + 1).join('、') + (teams.length > 30 ? '…' : '') : '',
