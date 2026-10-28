@@ -49,7 +49,7 @@ export const SCHEMA = {
   ai: [f('useAsBuilder', '当建造者', 'b'), f('buildPriority', '建造优先级', 'n'), f('maxGlobal', '全局上限', 'n'), f('maxEachBase', '每基地上限', 'n')],
   canBuild: [f('name', '可建造单位', 's'), f('pos', '位置', 's'), f('tech', '科技', 's'), f('forceNano', '强制纳米', 'b'), f('isLocked', '锁定', 'b'), f('price', '价格', 'n')],
   action: [f('text', '按钮文字', 's'), f('description', '说明', 's'), f('displayType', '显示类型', 's'), f('price', '价格', 'n'), f('buildSpeed', '时间', 'n'), f('convertTo', '转换为', 's'), f('spawnUnits', '生成单位', 's')],
-  effect: [], resource: [], animation: [], attachment: [], leg: [],
+  effect: [], resource: [], animation: [], attachment: [], leg: [], comment: [], template: [], global_resource: [], global: [],
 };
 export const SECTION_LABEL = {
   core: '基本', graphics: '图像', movement: '移动', attack: '攻击', turret: '炮塔', projectile: '弹道',

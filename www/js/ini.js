@@ -17,7 +17,7 @@ export function parseIni(text) {
 export function serializeIni(ini) {
   const out = [];
   for (const s of ini.sections) {
-    if (s.name) out.push(s.raw && /^\[/.test(s.raw.trim()) && !s.dirtyName ? s.raw : '[' + s.name + ']');
+    if (s.name || s.raw !== undefined) out.push(s.raw && /^\[/.test(s.raw.trim()) && !s.dirtyName ? s.raw : '[' + s.name + ']');
     for (const l of s.lines) out.push(l.dirty ? l.key + ': ' + l.val : l.raw);
   }
   return out.join('\n');

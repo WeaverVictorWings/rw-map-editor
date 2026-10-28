@@ -4,7 +4,7 @@ import { pickFile, saveFile } from './files.js';
 import { readZip, writeZip } from './zip.js';
 import { parseIni, serializeIni, getVal, setVal, getSec, sectionNames, addSection, removeSection } from './ini.js';
 import { SCHEMA, SECTION_LABEL, schemaKey, KNOWN_SECTIONS } from './modschema.js';
-import { assetIssues } from './modlogic.js';
+import { assetIssues, eff } from './modlogic.js';
 import { extraChecks, splitProject } from './modlogic2.js';
 
 const dec = new TextDecoder();
@@ -135,8 +135,9 @@ export function checkMod(mod) {
       }
     }
     // 炮塔引用的弹道
-    const projs = new Set(secs.filter((s) => s.name.startsWith('projectile_')).map((s) => s.name.slice(11)));
-    for (const s of secs.filter((x) => x.name.startsWith('turret_'))) {
+    const E = eff(mod, u), esecs = E.sections.filter((s) => s.name);
+    const projs = new Set(esecs.filter((s) => s.name.startsWith('projectile_')).map((s) => s.name.slice(11)));
+    for (const s of esecs.filter((x) => x.name.startsWith('turret_'))) {
       const p = (s.lines.find((l) => l.key === 'projectile') || {}).val;
       if (!p) add('warn', '[' + s.name + '] 没有设置 projectile', u.file);
       else if (!projs.has(p.trim()) && !/^[0-9]+$/.test(p.trim())) add('error', '[' + s.name + '] 引用了不存在的弹道 projectile_' + p, u.file);

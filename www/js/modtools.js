@@ -94,7 +94,7 @@ async function turret(ctx) {
     const c = cv.getContext('2d'); c.clearRect(0, 0, 340, 340); c.imageSmoothingEnabled = false;
     c.strokeStyle = '#8886'; c.beginPath(); c.moveTo(170, 0); c.lineTo(170, 340); c.moveTo(0, 170); c.lineTo(340, 170); c.stroke();
     if (img) { const fw = ic.fw && ic.fw <= img.width ? ic.fw : Math.min(img.width, img.height), fh = ic.fh && ic.fh <= img.height ? ic.fh : Math.min(img.height, fw); c.drawImage(img, 0, 0, fw, fh, 170 - fw * zoom / 2, 170 - fh * zoom / 2, fw * zoom, fh * zoom); }
-    if (circle) { const rg = L.unitStats(u.ini).range; if (rg > 0) { c.strokeStyle = '#e55'; c.beginPath(); c.arc(170, 170, rg * zoom, 0, 7); c.stroke(); } }
+    if (circle) { const rg = L.unitStats(L.eff(ctx.mod, u)).range; if (rg > 0) { c.strokeStyle = '#e55'; c.beginPath(); c.arc(170, 170, rg * zoom, 0, 7); c.stroke(); } }
     tur().forEach((s, i) => { const [x, y] = toScr(...pos(s)); c.fillStyle = ['#4a8cff', '#e8a', '#4c4', '#fa0'][i % 4]; c.beginPath(); c.arc(x, y, 6, 0, 7); c.fill(); c.fillStyle = '#000'; c.fillText(s.name.slice(7), x + 8, y - 6); });
   };
   const xy = (e) => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * 340 / r.width, (e.clientY - r.top) * 340 / r.height]; };
@@ -150,7 +150,7 @@ async function battle(ctx) {
   let a = Math.max(0, us.indexOf(ctx.cur)), b = Math.min(us.length - 1, a + 1), na = 1, nb = 1, dist = 400, eq = false;
   const res = h('div', { style: 'margin-top:8px;white-space:pre-wrap' });
   const run = () => {
-    const A = L.unitStats(us[a].ini), B = L.unitStats(us[b].ini);
+    const A = L.unitStats(L.eff(ctx.mod, us[a])), B = L.unitStats(L.eff(ctx.mod, us[b]));
     let x = na, y = nb; if (eq && A.price > 0 && B.price > 0) { y = Math.max(1, Math.round(A.price * na / B.price)); }
     const r = L.simulate(A, x, B, y, { dist });
     const nm = (u) => ctx.mod.unitName(u);

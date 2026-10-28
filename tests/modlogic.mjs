@@ -45,4 +45,11 @@ ok(sc.score >= 0 && sc.score <= 100, '评分 ' + sc.score);
 const m2 = await Mod.fromEntries(readZip(writeZip([{ name: 'a b.ini', data: '[core]\nprice: 1\n\n[turret_x]\n\n[projectile_y]\ndirectDamage: 1\n' }])), 'z');
 const log = L.autoFix(m2);
 ok(log.length >= 3 && getVal(m2.realUnits()[0].ini, 'core', 'name') === 'a_b', '一键修复：' + log.join(' / '));
+// copyFrom 继承：子单位只写差异，统计、检查要按继承后的结果算
+const mi = await Mod.fromEntries(readZip(writeZip([{ name: 'mod-info.txt', data: '[mod]\ntitle: I\n' }, { name: 'base.ini', data: '[core]\nname: base\nprice: 100\nmaxHp: 200\n\n[movement]\nmoveSpeed: 1\n\n[turret_a]\nprojectile: p\ndelay: 60\n\n[projectile_p]\ndirectDamage: 20\n' }, { name: 'kid.ini', data: '[core]\nname: kid\ncopyFrom: base\nprice: 150\n[movement]\nmoveSpeed: 2\n' }])), 'i');
+const kid = mi.realUnits().find((u) => mi.unitName(u) === 'kid'), ks = L.unitStats(L.eff(mi, kid));
+ok(ks.hp === 200 && ks.price === 150 && ks.speed === 2 && ks.dps === 20, '继承：血量、弹道从父单位来，价格和速度被覆盖');
+const kr = checkMod(mi).map((r) => r.msg).join('|');
+ok(!/不存在的弹道/.test(kr) && !/生命为 0/.test(kr), '继承：不误报弹道引用和生命为 0');
+ok(L.compareRows(mi).find((r) => r.name === 'kid').dps === 20, '继承：对比表按继承后的数值');
 process.exit(fail ? 1 : 0);

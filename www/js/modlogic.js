@@ -7,6 +7,17 @@ export function num(v) { const m = /^\s*(-?\d+(?:\.\d+)?)/.exec(String(v ?? ''))
 const lineVal = (s, k) => { for (let i = s.lines.length - 1; i >= 0; i--) if (s.lines[i].key === k) return s.lines[i].val; return undefined; };
 const isFalse = (v) => String(v).trim().toLowerCase() === 'false';
 
+// ---------- copyFrom 继承：把父单位的段和键合并进来（只读副本，不改原文件） ----------
+export function eff(mod, u, depth = 0) {
+  const cf = String(getVal(u.ini, 'core', 'copyFrom') || '').split(',').map((x) => x.trim()).filter(Boolean);
+  if (!cf.length || depth > 8) return u.ini;
+  const out = cloneIni(u.ini); out.sections = [];
+  const put = (src) => { for (const s of src.sections) { if (!s.name) continue; let t = out.sections.find((x) => x.name === s.name); if (!t) { t = { name: s.name, lines: [] }; out.sections.push(t); } for (const l of s.lines) if (l.key) { const ex = t.lines.find((x) => x.key === l.key); if (ex) ex.val = l.val; else t.lines.push({ raw: '', key: l.key, val: l.val }); } } };
+  for (const n of cf) { const par = mod.realUnits().find((x) => x !== u && mod.unitName(x).toLowerCase() === n.toLowerCase()); if (par) put(eff(mod, par, depth + 1)); }
+  put(u.ini);
+  return out;
+}
+
 // ---------- 单位数值 ----------
 export function unitStats(ini) {
   const g = (s, k) => getVal(ini, s, k);
@@ -131,7 +142,7 @@ export function addWeapon(ini, key, name) {
 export function powerOf(s) { return Math.sqrt(Math.max(1, s.hp + s.shield) * Math.max(s.dps, 1)); }
 export function compareRows(mod) {
   return mod.realUnits().map((u) => {
-    const s = unitStats(u.ini), power = powerOf(s);
+    const s = unitStats(eff(mod, u)), power = powerOf(s);
     return { u, ...s, power, eff: s.price > 0 ? power / s.price : NaN, hpPerCost: s.price > 0 ? s.hp / s.price : NaN, dpsPerCost: s.price > 0 ? s.dps / s.price : NaN };
   });
 }
@@ -288,6 +299,7 @@ export function autoFix(mod) {
     else if (/\s/.test(nm)) { const n2 = nm.replace(/\s+/g, '_'); renameUnit(mod, u, n2); log.push(`${u.file}：名字去掉空格 ${nm} → ${n2}`); nm = n2; }
     if (seen.has(nm.toLowerCase())) { const n2 = uniqueName(mod, nm); renameUnit(mod, u, n2); log.push(`${u.file}：重名改为 ${n2}`); nm = n2; }
     seen.add(nm.toLowerCase());
+    if (getVal(u.ini, 'core', 'copyFrom')) continue; // 继承来的炮塔和弹道不在本文件里，别乱改
     const projs = u.ini.sections.filter((s) => s.name.startsWith('projectile_')).map((s) => s.name.slice(11));
     for (const s of u.ini.sections.filter((x) => x.name.startsWith('turret_'))) {
       const p = (lineVal(s, 'projectile') || '').trim();

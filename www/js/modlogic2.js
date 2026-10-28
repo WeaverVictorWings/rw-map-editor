@@ -106,16 +106,16 @@ export function extraChecks(mod) {
   for (const u of units) {
     const nm = mod.unitName(u);
     if (nm && !/^[A-Za-z0-9_\-]+$/.test(nm)) add('warn', `单位代号“${nm}”含有字母数字以外的字符，建议只用英文、数字、下划线`, u.file);
-    const hp = num(getVal(u.ini, 'core', 'maxHp')), pr = num(getVal(u.ini, 'core', 'price')), sp = num(getVal(u.ini, 'movement', 'moveSpeed'));
+    const E = L.eff(mod, u), hp = num(getVal(E, 'core', 'maxHp')), pr = num(getVal(E, 'core', 'price')), sp = num(getVal(E, 'movement', 'moveSpeed'));
     if (pr < 0) add('error', '造价是负数', u.file);
-    if (hp <= 0 && !/true/i.test(getVal(u.ini, 'core', 'isBuilding') || '')) add('warn', '生命为 0 或负数', u.file);
+    if (hp <= 0 && !/true/i.test(getVal(E, 'core', 'isBuilding') || '')) add('warn', '生命为 0 或负数', u.file);
     if (hp > 100000) add('info', `生命 ${hp} 非常大，确认没多写个零`, u.file);
     if (sp > 20) add('warn', `移动速度 ${sp} 很大，常见单位在 0.3~4 左右`, u.file);
     const projUsed = new Set();
-    for (const s of u.ini.sections) {
+    for (const s of E.sections) {
       if (s.name.startsWith('turret_')) { const p = (s.lines.find((l) => l.key === 'projectile') || {}).val; if (p) projUsed.add(p.trim()); const d = num((s.lines.find((l) => l.key === 'delay') || {}).val); if (d < 1) add('warn', `[${s.name}] 的 delay 小于 1，会每帧开火`, u.file); }
     }
-    for (const s of u.ini.sections) if (s.name.startsWith('projectile_') && !projUsed.has(s.name.slice(11))) add('info', `[${s.name}] 没有炮塔使用（可能被别的单位或 mutator 引用）`, u.file);
+    for (const s of E.sections) if (s.name.startsWith('projectile_') && !projUsed.has(s.name.slice(11))) add('info', `[${s.name}] 没有炮塔使用（可能被别的单位或 mutator 引用）`, u.file);
     // copyFrom 循环
     const seen = new Set([nm.toLowerCase()]); let cur = u;
     for (let i = 0; i < 20 && cur; i++) {
@@ -160,7 +160,7 @@ export const ROLES = {
 };
 export function roleAdvice(mod, u, role) {
   const rows = compareRows(mod), m = { speed: med(rows.map((r) => r.speed)), hp: med(rows.map((r) => r.hp)), price: med(rows.map((r) => r.price)), dps: med(rows.map((r) => r.dps)), range: med(rows.map((r) => r.range)) };
-  return ROLES[role][1](unitStats(u.ini), m).map(([t, ok]) => ({ t, ok }));
+  return ROLES[role][1](unitStats(L.eff(mod, u)), m).map(([t, ok]) => ({ t, ok }));
 }
 export function autoDescription(ini) {
   const s = unitStats(ini), p = [];

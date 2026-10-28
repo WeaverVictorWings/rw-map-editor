@@ -144,7 +144,7 @@ async function helper(ctx) {
   if (ctx.cur) {
     box.append(h('h4', {}, '灵敏度：' + ctx.mod.unitName(ctx.cur) + '（各项 ±10% 对战力和性价比的影响）'));
     const tb = h('table', { style: 'font-size:13px;border-collapse:collapse' }, h('tr', {}, ...['项目', '变化', '战力', '性价比'].map((x) => h('th', { style: 'padding:3px 8px;text-align:left' }, x))));
-    for (const s of M.sensitivity(ctx.cur.ini)) tb.append(h('tr', {}, h('td', { style: 'padding:3px 8px' }, L.SCALE_GROUPS[s.g][0]), h('td', { style: 'padding:3px 8px' }, (s.f > 1 ? '+' : '-') + '10%'), h('td', { style: 'padding:3px 8px' }, (s.power >= 0 ? '+' : '') + s.power.toFixed(1) + '%'), h('td', { style: 'padding:3px 8px' }, Number.isFinite(s.eff) ? (s.eff >= 0 ? '+' : '') + s.eff.toFixed(1) + '%' : '—')));
+    for (const s of M.sensitivity(L.eff(ctx.mod, ctx.cur))) tb.append(h('tr', {}, h('td', { style: 'padding:3px 8px' }, L.SCALE_GROUPS[s.g][0]), h('td', { style: 'padding:3px 8px' }, (s.f > 1 ? '+' : '-') + '10%'), h('td', { style: 'padding:3px 8px' }, (s.power >= 0 ? '+' : '') + s.power.toFixed(1) + '%'), h('td', { style: 'padding:3px 8px' }, Number.isFinite(s.eff) ? (s.eff >= 0 ? '+' : '') + s.eff.toFixed(1) + '%' : '—')));
     box.append(tb);
     const out = h('div', {}), rs = select(Object.entries(M.ROLES).map(([k, v]) => [k, v[0]]), 'scout', (v) => show(v)), show = (role) => { out.replaceChildren(...M.roleAdvice(ctx.mod, ctx.cur, role).map((a) => h('div', {}, (a.ok ? '符合：' : '不符：') + a.t))); };
     show('scout'); box.append(h('h4', {}, '定位参考'), rs, out, h('p', { class: 'hint' }, '“中位数”指本 Mod 里所有单位的中位数，只是和自己的单位比，不代表游戏标准。'));
@@ -183,10 +183,10 @@ async function anim(ctx) {
 
 async function proj(ctx) {
   if (!need(ctx)) return;
-  const u = ctx.cur, st = L.unitStats(u.ini), box = h('div', {});
+  const u = ctx.cur, E = L.eff(ctx.mod, u), st = L.unitStats(E), box = h('div', {});
   if (!st.weapons.length) box.append(h('p', { class: 'hint' }, '这个单位没有炮塔。'));
   for (const w of st.weapons) {
-    const p = M.projectileInfo(u.ini, w.projectile), range = st.range || w.range || 0, scale = 300 / Math.max(range, p.travel, p.radius * 2, 50);
+    const p = M.projectileInfo(E, w.projectile), range = st.range || w.range || 0, scale = 300 / Math.max(range, p.travel, p.radius * 2, 50);
     const cv = h('canvas', { width: 320, height: 90, style: 'width:100%;max-width:320px' }), c = cv.getContext('2d');
     c.fillStyle = '#8883'; c.fillRect(0, 0, 320, 90); c.fillStyle = '#4a8cff'; c.fillRect(10, 40, 6, 10);
     c.strokeStyle = '#e55'; c.beginPath(); c.moveTo(13 + range * scale, 15); c.lineTo(13 + range * scale, 75); c.stroke();
