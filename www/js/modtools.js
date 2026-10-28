@@ -4,6 +4,7 @@ import { saveFile } from './files.js';
 import { getVal, setVal } from './ini.js';
 import * as L from './modlogic.js';
 import { checkMod } from './modedit.js';
+import { TOOLS2 } from './modtools2.js';
 
 const need = (ctx) => { if (!ctx.cur) { toast('先在左边选一个单位'); return false; } return true; };
 const fld = (label, el) => h('div', { style: 'margin:6px 0' }, h('label', {}, label), el);
@@ -27,7 +28,7 @@ export function toolsDialog(ctx) {
     ['查找替换', '在所有单位的数值里查找并替换', findRep],
     ['评分与一键修复', '给 Mod 打分，并自动修复常见问题', score],
     ['素材检查', '未使用的图片音效、帧数是否对得上', assets],
-  ];
+  ].concat(TOOLS2);
   const box = h('div', { class: 'me-tools' });
   for (const [t, d, fn] of T) box.append(h('button', { style: 'display:block;width:100%;text-align:left;margin:4px 0', onclick: () => fn(ctx) }, h('b', {}, t), h('div', { class: 'hint' }, d)));
   modal('工具', box, [{ label: '关闭', value: true }]);
@@ -112,7 +113,8 @@ async function turret(ctx) {
 const f1 = (v) => Number.isFinite(v) ? (Math.abs(v) >= 100 ? Math.round(v) : Math.round(v * 100) / 100) : '—';
 function compare(ctx) {
   const rows = L.compareRows(ctx.mod), out = L.outliers(rows);
-  let key = 'power', dir = -1;
+  let key = 'power', dir = -1, formula = 'sqrt((hp+shield)*max(dps,1))';
+  const recalc = () => { try { const fn = new Function('hp', 'shield', 'dps', 'price', 'speed', 'range', 'sqrt', 'max', 'min', 'pow', 'return (' + formula + ')'); for (const r of rows) { const v = fn(r.hp, r.shield, r.dps, r.price, r.speed, r.range, Math.sqrt, Math.max, Math.min, Math.pow); r.power = Number.isFinite(v) ? v : NaN; r.eff = r.price > 0 ? r.power / r.price : NaN; } return true; } catch { return false; } };
   const cols = [['name', '单位'], ['price', '造价'], ['hp', '生命'], ['speed', '速度'], ['range', '射程'], ['dps', 'DPS*'], ['hpPerCost', '生命/造价'], ['dpsPerCost', 'DPS/造价'], ['power', '战力*'], ['eff', '性价比']];
   const body = h('div', { style: 'overflow:auto;max-height:60vh' });
   const draw = () => {
@@ -122,7 +124,8 @@ function compare(ctx) {
     body.replaceChildren(t);
   };
   draw();
-  modal('对比表', h('div', {}, body, h('p', { class: 'hint' }, '* DPS 按“伤害 × 60 ÷ 炮塔间隔(默认 60)”估算；战力 = √(生命 × DPS)；性价比 = 战力 ÷ 造价 ×100。点表头排序，点行跳到该单位。')), [{ label: '关闭', value: true }], { wide: true });
+  const fi = h('input', { value: formula, translate: 'no', style: 'width:100%', onchange: (e) => { if (!/^[\w\s+\-*/().,<>=?:%]*$/.test(e.target.value)) { toast('公式里只能用数字、变量和 + - * / ( ) , sqrt max min pow'); return; } const old = formula; formula = e.target.value; if (!recalc()) { formula = old; toast('公式写错了'); } draw(); } });
+  modal('对比表', h('div', {}, h('label', {}, '战力公式（可改；变量 hp shield dps price speed range）'), fi, body, h('p', { class: 'hint' }, '* DPS 按“伤害 × 60 ÷ 炮塔间隔(默认 60)”估算；战力 = √(生命 × DPS)；性价比 = 战力 ÷ 造价 ×100。点表头排序，点行跳到该单位。')), [{ label: '关闭', value: true }], { wide: true });
 }
 function scatter(ctx) {
   const rows = L.compareRows(ctx.mod).filter((r) => r.price > 0), out = L.outliers(rows);

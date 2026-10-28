@@ -5,6 +5,7 @@ import { readZip, writeZip } from './zip.js';
 import { parseIni, serializeIni, getVal, setVal, getSec, sectionNames, addSection, removeSection } from './ini.js';
 import { SCHEMA, SECTION_LABEL, schemaKey, KNOWN_SECTIONS } from './modschema.js';
 import { assetIssues } from './modlogic.js';
+import { extraChecks, splitProject } from './modlogic2.js';
 
 const dec = new TextDecoder();
 const norm = (p) => String(p || '').trim().replace(/^ROOT:[\\/]*/i, '').replace(/\\/g, '/').replace(/^\/+/, '').toLowerCase();
@@ -36,6 +37,7 @@ export class Mod {
     const mi = this.files.get(this.lower.get('mod-info.txt') || '');
     this.infoText = mi ? dec.decode(mi.bytes) : '';
     this.info = parseIni(this.infoText || '[mod]\ntitle: ' + this.name + '\n');
+    this.infoOrig = this.infoText ? serializeIni(this.info) : null;
     this.units = [];
     for (const [k, v] of this.files) {
       if (!/\.ini$/i.test(k) || /(^|\/)mod-info\.txt$/i.test(k)) continue;
@@ -69,8 +71,16 @@ export class Mod {
   collect() {
     const out = [];
     const written = new Set();
-    this.files.set(this.lower.get('mod-info.txt') || 'mod-info.txt', { bytes: new TextEncoder().encode(serializeIni(this.info)) });
-    for (const u of this.units) if (!u.notUnit || u.edited) this.files.set(u.file, { bytes: new TextEncoder().encode(u.text !== undefined && u.srcDirty ? u.text : serializeIni(u.ini)) });
+    // 没改过的文件原样保留字节（换行、BOM 都不动），只写回改过的
+    const infoNow = serializeIni(this.info);
+    if (infoNow !== this.infoOrig) this.files.set(this.lower.get('mod-info.txt') || 'mod-info.txt', { bytes: new TextEncoder().encode(infoNow) });
+    for (const u of this.units) {
+      if (u.notUnit && !u.edited) continue;
+      const now = u.srcDirty && u.text !== undefined ? u.text : serializeIni(u.ini);
+      const was = this.orig && this.orig.get(u.file);
+      if (was === now && this.files.has(u.file)) continue;
+      this.files.set(u.file, { bytes: new TextEncoder().encode(now) });
+    }
     for (const [k, v] of this.files) { if (!written.has(k)) out.push({ name: k, data: v.bytes }); written.add(k); }
     return out;
   }
@@ -141,6 +151,7 @@ export function checkMod(mod) {
   }
   const A = assetIssues(mod);
   for (const x of A.issues) R.push(x);
+  for (const x of extraChecks(mod)) R.push(x);
   if (A.unused.length) add('info', `有 ${A.unused.length} 个图片/音效没被任何地方引用（可在“工具 → 素材检查”里清理）`);
   return R;
 }
@@ -172,7 +183,7 @@ export async function modEditorDialog() {
 function render() {
   const body = ui.body; [...body.children].forEach((c) => { if (c.tagName !== 'STYLE') c.remove(); });
   const bar = h('div', { class: 'me-bar' },
-    h('button', { onclick: openMod }, '打开 .rwmod / zip'),
+    h('button', { onclick: openMod }, '打开 .rwmod / zip / 项目'),
     h('button', { onclick: openFolder }, '打开文件夹'),
     h('button', { onclick: newMod }, '新建 Mod'),
     mod ? h('button', { onclick: () => import('./modtools.js').then((m) => m.toolsDialog(ctx)) }, '工具') : null,
@@ -206,7 +217,7 @@ function fillList() {
   for (const u of mod.realUnits()) {
     const nm = mod.unitName(u);
     const disp = getVal(u.ini, 'core', 'displayText') || '';
-    if (q && !(nm + ' ' + disp + ' ' + u.file).toLowerCase().includes(q)) continue;
+    if (q && !(nm + ' ' + disp + ' ' + u.file + ' ' + (getVal(u.ini, 'core', 'tags') || '')).toLowerCase().includes(q)) continue;
     const cv = h('canvas', { width: 36, height: 36 });
     const stat = ['price', 'maxHp'].map((k) => { const v = getVal(u.ini, 'core', k); return v ? ({ price: '$', maxHp: '♥' })[k] + v : ''; }).concat(getVal(u.ini, 'movement', 'moveSpeed') ? '»' + getVal(u.ini, 'movement', 'moveSpeed') : '').filter(Boolean).join('  ');
     l.append(h('div', { class: 'me-row' + (cur === u ? ' on' : ''), onclick: () => { cur = u; ui.sec = null; fillList(); fillForm(); } }, cv, h('div', {}, h('b', { translate: 'no' }, nm), h('small', { translate: 'no' }, disp ? disp + ' · ' + stat : stat))));
@@ -284,9 +295,9 @@ async function addSecDialog() {
 
 // ---- 打开 ----
 async function openMod() {
-  const r = await pickFile('.rwmod,.zip'); if (!r) return;
+  const r = await pickFile('.rwmod,.zip,.rwproj'); if (!r) return;
   try {
-    await busy('读取 Mod…', async () => { const buf = new Uint8Array(await r.file.arrayBuffer()); mod = await Mod.fromEntries(readZip(buf), r.file.name); });
+    await busy('读取 Mod…', async () => { const buf = new Uint8Array(await r.file.arrayBuffer()); const ent = readZip(buf), pr = splitProject(ent); mod = await Mod.fromEntries(pr.rest, r.file.name); if (pr.meta) { try { const o = JSON.parse(await pr.meta.text()); mod.notes = o.notes; mod.todos = o.todos; mod.snaps = o.snaps; mod.unitNotes = o.unitNotes; toast('已载入项目（笔记、待办、快照）'); } catch {} } });
     cur = mod.realUnits()[0] || null; render();
   } catch (e) { toast(e.message || String(e), 5000); }
 }

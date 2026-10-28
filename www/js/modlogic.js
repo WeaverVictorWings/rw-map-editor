@@ -66,7 +66,7 @@ export const VARIANTS = {
 };
 
 // ---------- 新建 / 复制 ----------
-function addUnit(mod, ini, name) {
+export function addUnit(mod, ini, name) {
   let file = name + '.ini', i = 2;
   while (mod.lower.has(file.toLowerCase())) file = name + '_' + i++ + '.ini';
   const u = { file, ini };
@@ -205,11 +205,11 @@ export function renameUnit(mod, u, newName) {
 }
 
 // ---------- 差异与更新日志 ----------
-export function diffMod(mod) {
+export function diffMod(mod, orig0 = mod.orig) {
   const res = []; const seen = new Set();
   for (const u of mod.realUnits()) {
     seen.add(u.file);
-    const cur = serializeIni(u.ini), orig = mod.orig && mod.orig.get(u.file);
+    const cur = serializeIni(u.ini), orig = orig0 && orig0.get(u.file);
     if (orig === undefined) { res.push({ kind: 'add', name: mod.unitName(u), file: u.file }); continue; }
     if (orig === cur) continue;
     const a = parseIni(orig), changes = [];
@@ -219,7 +219,7 @@ export function diffMod(mod) {
     for (const [k, v] of fa) if (!fb.has(k)) changes.push({ k, from: v, t: 'del' });
     if (changes.length) res.push({ kind: 'mod', name: mod.unitName(u), file: u.file, changes });
   }
-  if (mod.orig) for (const [f, t] of mod.orig) if (!seen.has(f) && /\.ini$/i.test(f) && /\[core\]/i.test(t) ) res.push({ kind: 'del', name: f.replace(/\.ini$/i, ''), file: f });
+  if (orig0) for (const [f, t] of orig0) if (!seen.has(f) && /\.ini$/i.test(f) && /\[core\]/i.test(t) ) res.push({ kind: 'del', name: f.replace(/\.ini$/i, ''), file: f });
   return res;
 }
 export function changelogMd(d, title = 'Mod') {

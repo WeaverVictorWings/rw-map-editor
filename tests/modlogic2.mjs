@@ -1,0 +1,45 @@
+// Mod 编辑器逻辑（二）：分享码、项目、导入拆分、发布包、额外检查、平衡建议等
+import { Mod, checkMod } from '../www/js/modedit.js';
+import * as L from '../www/js/modlogic.js';
+import * as M from '../www/js/modlogic2.js';
+import { getVal, setVal } from '../www/js/ini.js';
+import { writeZip, readZip } from '../www/js/zip.js';
+let fail = 0; const ok = (c, m) => { if (!c) { fail++; console.log('FAIL', m); } else console.log('ok  ', m); };
+const png = (w, h, tag = 0) => { const b = new Uint8Array(40); b.set([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]); new DataView(b.buffer).setUint32(16, w); new DataView(b.buffer).setUint32(20, h); b[33] = tag; return b; };
+const unit = (n, price, hp, dmg, img, extra = '') => `[core]\nname: ${n}\nprice: ${price}\nmaxHp: ${hp}\ntechLevel: 1\n\n[graphics]\nimage: ROOT:\\${img}\n\n[movement]\nmoveSpeed: 1\n\n[attack]\nmaxAttackRange: 150\n\n[turret_m]\nprojectile: p\ndelay: 60\n\n[projectile_p]\ndirectDamage: ${dmg}\nlife: 50\nspeed: 8\n${extra}`;
+const mk = async (files) => Mod.fromEntries(readZip(writeZip(files)), 'x.rwmod');
+const A = await mk([{ name: 'mod-info.txt', data: '[mod]\ntitle: A\n' }, { name: 'a.png', data: png(32, 32) }, { name: 'b.png', data: png(32, 32) },
+  { name: 'u1.ini', data: unit('u1', 100, 100, 10, 'a.png') }, { name: 'u2.ini', data: unit('u2', 100, 100, 10, 'b.png') }, { name: 'u3.ini', data: unit('u3', 100, 100, 40, 'a.png') }, { name: 'u4.ini', data: unit('u4', 100, 100, 3, 'a.png') }]);
+const u1 = A.realUnits()[0];
+const code = await M.unitToCode(A, u1);
+ok(/^RWU1-/.test(code) && code.length < 600, '分享码生成 ' + code.length + ' 字符');
+const imp = await M.importCode(A, code);
+ok(A.unitName(imp) === 'u1_2' && getVal(imp.ini, 'core', 'maxHp') === '100', '分享码导入（重名自动改名）');
+let bad = false; try { await M.codeToIni('nope'); } catch { bad = true; } ok(bad, '坏分享码报错');
+A.notes = '备注'; A.snaps = [M.snapshot(A, 's1')]; A.todos = [{ t: 'x', done: false }];
+const zp = M.projectFiles(A);
+const ent = readZip(zp), { meta, rest } = M.splitProject(ent);
+ok(meta && JSON.parse(await meta.text()).snaps.length === 1 && !rest.some((e) => e.name === '_rwproj.json'), '项目文件含笔记和快照');
+setVal(A.realUnits()[0].ini, 'core', 'price', '999');
+const dsnap = L.diffMod(A, M.snapshotMap(A.snaps[0]));
+ok(dsnap.some((d) => d.kind === 'mod' && d.name === 'u1'), '与快照比较');
+const B = await mk([{ name: 'mod-info.txt', data: '[mod]\ntitle: B\n' }, { name: 'a.png', data: png(32, 32, 9) }, { name: 'z.ini', data: unit('u1', 5, 5, 5, 'a.png') }]);
+const ex = M.extractUnits(A, [A.realUnits()[1]]);
+ok(ex.some((f) => f.name === 'u2.ini') && ex.some((f) => f.name === 'b.png') && !ex.some((f) => f.name === 'a.png'), '拆分：只带用到的素材');
+const r = M.importUnits(A, B, B.realUnits());
+ok(r.added.length === 1 && A.unitName(r.added[0]).startsWith('u1_') && r.notes.some((n) => /重名/.test(n)) && r.notes.some((n) => /另存/.test(n)), '导入：重名改名、素材冲突另存 ' + r.notes.join('/'));
+ok(/_imp/.test(getVal(r.added[0].ini, 'graphics', 'image')) && A.has(getVal(r.added[0].ini, 'graphics', 'image')), '导入：引用已改写且文件存在');
+const pub = M.publishFiles(A, { version: '1.1', changelog: '# log' });
+const pf = readZip(pub.bytes);
+ok(pf.some((f) => /\.rwmod$/.test(f.name)) && pf.some((f) => f.name === 'CHANGELOG.md'), '发布包内容');
+const C = await mk([{ name: 'mod-info.txt', data: '[mod]\n' }, { name: 'bad.ini', data: unit('bad name', 1, 0, 1, 'x.png', '') .replace('moveSpeed: 1', 'moveSpeed: 50') + '\n[core]\ncopyFrom: loopB\n' }, { name: 'a.ini', data: '[core]\nname: loopA\ncopyFrom: loopB\n' }, { name: 'b.ini', data: '[core]\nname: loopB\ncopyFrom: loopA\n' }]);
+const X = M.extraChecks(C).map((x) => x.msg).join('|');
+ok(/字母数字以外/.test(X) && /移动速度 50/.test(X) && /绕成了圈/.test(X) && /生命为 0/.test(X), '额外检查');
+ok(checkMod(C).length > 3, 'checkMod 已接入额外检查');
+const bs = M.balanceSuggest(A);
+ok(Array.isArray(bs), '平衡建议 ' + bs.map((b) => b.name + b.tag + '×' + b.mult.toFixed(2)).join(','));
+if (bs.length) { const p0 = L.unitStats(bs[0].u.ini).price; M.applyBalance(bs); ok(L.unitStats(bs[0].u.ini).price !== p0, '应用平衡建议后造价变化'); }
+const sen = M.sensitivity(u1.ini); ok(sen.length === 10 && sen.find((s) => s.g === 'hp' && s.f === 1.1).power > 0, '灵敏度：血量+10% 战力上升');
+ok(M.techRows(A).length === 1 && M.roleAdvice(A, u1, 'scout').length === 3 && /生命/.test(M.autoDescription(u1.ini)), '科技/定位/描述');
+const pi = M.projectileInfo(u1.ini, 'p'); ok(pi.travel === 400, '弹道射程 life×speed');
+process.exit(fail ? 1 : 0);

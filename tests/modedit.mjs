@@ -23,4 +23,11 @@ setVal(m.realUnits()[0].ini, 'core', 'price', '999');
 const files = m.collect();
 const back = await Mod.fromEntries(readZip(writeZip(files)), 'y');
 ok(back.realUnits().some((u) => getVal(u.ini, 'core', 'price') === '999'), '打包往返保留编辑');
+// 没改过的文件打包后字节完全一致（CRLF、BOM 不被破坏）
+const crlf = new TextEncoder().encode('\uFEFF[core]\r\nname: a\r\nprice: 5\r\n');
+const mm = await Mod.fromEntries(readZip(writeZip([{ name: 'a.ini', data: crlf }, { name: 'mod-info.txt', data: '[mod]\r\ntitle: X\r\n' }])), 'q');
+const same = mm.collect().find((f) => f.name === 'a.ini').data;
+ok(same.length === crlf.length && same.every((b, i) => b === crlf[i]), '未改动的文件字节不变（CRLF+BOM）');
+setVal(mm.realUnits()[0].ini, 'core', 'price', '6');
+ok(/price: 6/.test(new TextDecoder().decode(mm.collect().find((f) => f.name === 'a.ini').data)), '改过的文件会写回');
 process.exit(fail ? 1 : 0);

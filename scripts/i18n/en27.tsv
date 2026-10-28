@@ -1,0 +1,117 @@
+n27_0	Copy failed; select and copy it by hand
+n27_1	Unit share code
+n27_2	Pack one unit into an RWU1- code you can send to others
+n27_3	Project, notes and snapshots
+n27_4	Save .rwproj; write notes and to-dos; take snapshots to compare or restore later
+n27_5	Import / split
+n27_6	Bring units with their assets from another mod; split some units into a new pack
+n27_7	Release pack
+n27_8	Pre-flight check + version + changelog, packed as a zip
+n27_9	Generate thumbnail
+n27_10	Compose a mod cover from unit images
+n27_11	Comparison charts
+n27_12	Size, range and speed side by side
+n27_13	Balance helper
+n27_14	Balance suggestions, tech stages, sensitivity, role reference
+n27_15	Descriptions and multilingual names
+n27_16	Generate a description from the numbers; fill in names per language
+n27_17	Animation and rotation
+n27_18	Play frame by frame, preview rotation
+n27_19	Projectile preview
+n27_20	Flight distance, range and blast radius
+n27_21	Share code of the current unit (ini only, no images or sounds):
+n27_22	Pick a unit first to make a share code; you can import someone else's code below.
+n27_23	Paste a share code starting with RWU1-
+n27_24	Imported 
+n27_25	Import as a new unit
+n27_26	Notes
+n27_27	To-do
+n27_28	New to-do, press Enter to add
+n27_29	Compare with now
+n27_30	Restore
+n27_31	Snapshot name, e.g. before balancing
+n27_32	Snapshot 
+n27_33	Recorded
+n27_34	Take snapshot
+n27_35	Snapshots only record unit ini text (no images). Notes, to-dos and snapshots live in the .rwproj project file and are not packed into the .rwmod.
+n27_36	Save project file .rwproj
+n27_37	Relative to "
+n27_38	Compare with snapshot
+n27_39	Restored 
+n27_40	 units (new units that are not in the snapshot are left alone)
+n27_41	Import: pick another mod, tick the units to bring over; assets are copied too and clashing names are renamed. Split: tick units in the current mod and export them as a new .rwmod.
+n27_42	Source: 
+n27_43	Tick some units first
+n27_44	Import finished
+n27_45	 units.
+n27_46	Import ticked units
+n27_47	Choose a mod to import...
+n27_48	Current mod
+n27_49	Export ticked units as a new mod
+n27_50	Split current mod
+n27_51	There are still errors; deal with them in Check first.
+n27_52	Changelog (editable)
+n27_53	Create zip
+n27_54	Built from the first frame of the first 9 units. OK saves it as thumbnail.png and writes it into mod-info.
+n27_55	Added thumbnail.png
+n27_56	All units side by side at original pixel size to compare their bodies.
+n27_57	Balance suggestions (adjust price so value moves toward the median)
+n27_58	No clear outliers (at least 3 units with DPS and a price are needed).
+n27_59	Adjusted 
+n27_60	 unit prices; can be undone
+n27_61	Apply all (can be undone)
+n27_62	Tech stages
+n27_63	Average price
+n27_64	Average power
+n27_65	Average build seconds
+n27_66	Burn / s
+n27_67	Check whether average power grows with each tech level and whether there are gaps. Burn = average price ÷ build seconds, the spending rate of continuous production.
+n27_68	Sensitivity: 
+n27_69	 (effect of ±10% on power and value)
+n27_70	Item
+n27_71	Change
+n27_72	Power
+n27_73	Matches: 
+n27_74	Does not match: 
+n27_75	Role reference
+n27_76	"Median" means the median of all units in this mod; it only compares against your own units, not a game standard.
+n27_77	The game picks displayText_lang / displayDescription_lang by the player's language; otherwise it uses the default.
+n27_78	Default name
+n27_79	Default description
+n27_80	Generate from numbers
+n27_81	Name · 
+n27_82	Descriptions and multilingual names — 
+n27_83	Updated
+n27_84	This unit has no image to show
+n27_85	The image could not be read
+n27_86	Rotation
+n27_87	 Play
+n27_88	Animation and rotation — 
+n27_89	This unit has no turret.
+n27_90	Flight distance is shorter than range, so the far end cannot be hit (speed × life = 
+n27_91	Projectile preview — 
+n27_92	Not a unit share code (it should start with RWU1-)
+n27_93	Price is negative
+n27_94	Health is 0 or negative
+n27_95	copyFrom forms a loop: 
+n27_96	Scout: fast, fragile, cheap
+n27_97	Speed ≥ 1.3× the median
+n27_98	Health ≤ median
+n27_99	Price ≤ median
+n27_100	Assault: tough with firepower
+n27_101	Health ≥ 1.2× the median
+n27_102	DPS ≥ median
+n27_103	Artillery: long range, fragile
+n27_104	Range ≥ 1.5× the median
+n27_105	Anti-air: can hit air
+n27_106	Can attack air
+n27_107	Has DPS
+n27_108	Health 
+n27_109	Price 
+n27_110	Speed 
+n27_111	Range 
+n27_112	Only numbers, variables and + - * / ( ) , sqrt max min pow are allowed in the formula
+n27_113	The formula is wrong
+n27_114	Power formula (editable; variables hp shield dps price speed range)
+n27_115	Open .rwmod / zip / project
+n27_116	Project loaded (notes, to-dos, snapshots)
