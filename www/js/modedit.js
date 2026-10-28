@@ -4,6 +4,7 @@ import { pickFile, saveFile } from './files.js';
 import { readZip, writeZip } from './zip.js';
 import { parseIni, serializeIni, getVal, setVal, getSec, sectionNames, addSection, removeSection } from './ini.js';
 import { SCHEMA, SECTION_LABEL, schemaKey, KNOWN_SECTIONS } from './modschema.js';
+import { assetIssues } from './modlogic.js';
 
 const dec = new TextDecoder();
 const norm = (p) => String(p || '').trim().replace(/^ROOT:[\\/]*/i, '').replace(/\\/g, '/').replace(/^\/+/, '').toLowerCase();
@@ -40,6 +41,8 @@ export class Mod {
       if (!/\.ini$/i.test(k) || /(^|\/)mod-info\.txt$/i.test(k)) continue;
       const text = dec.decode(v.bytes);
       const ini = parseIni(text);
+      if (!this.orig) this.orig = new Map();
+      if (!this.orig.has(k)) this.orig.set(k, serializeIni(ini));
       if (!getSec(ini, 'core') && !getSec(ini, 'graphics') && !getSec(ini, 'movement')) { this.units.push({ file: k, ini, text, notUnit: true }); continue; }
       this.units.push({ file: k, ini, text });
     }
@@ -136,12 +139,27 @@ export function checkMod(mod) {
       if (bn && !unitNames.has(bn.toLowerCase()) && !/^(c_|)/.test('')) add('info', '[' + s.name + '] 建造 ' + bn + ' 不在本 Mod 内（原版单位可忽略）', u.file);
     }
   }
-  // 没被任何单位用到的图片
+  const A = assetIssues(mod);
+  for (const x of A.issues) R.push(x);
+  if (A.unused.length) add('info', `有 ${A.unused.length} 个图片/音效没被任何地方引用（可在“工具 → 素材检查”里清理）`);
   return R;
 }
 
 // ---- 界面 ----
 let mod = null, cur = null, ui = {};
+// 撤销：每个单位存最近 60 份文本快照
+export function snap(u) { (u.undo = u.undo || []).push(serializeIni(u.ini)); if (u.undo.length > 60) u.undo.shift(); u.redo = []; }
+function undo(u, back) {
+  const from = back ? u.undo : u.redo, to = back ? (u.redo = u.redo || []) : (u.undo = u.undo || []);
+  if (!from || !from.length) { toast(back ? '没有可撤销的' : '没有可重做的'); return; }
+  to.push(serializeIni(u.ini)); u.ini = parseIni(from.pop()); u.srcDirty = false; u.text = undefined; fillForm(); fillList();
+}
+async function delUnit() {
+  if (!cur || !(await confirmBox('删除单位', '从 Mod 里删除 ' + mod.unitName(cur) + '？（打包时不再包含）', '删除', '取消', true))) return;
+  mod.units = mod.units.filter((x) => x !== cur); mod.files.delete(cur.file); mod.lower.delete(cur.file.toLowerCase());
+  cur = mod.realUnits()[0] || null; render();
+}
+const ctx = { get mod() { return mod; }, get cur() { return cur; }, set cur(u) { cur = u; }, refresh: () => render(), snap, visible: () => { const q = (ui.q || '').toLowerCase(); return mod.realUnits().filter((u) => !q || (mod.unitName(u) + ' ' + (getVal(u.ini, 'core', 'displayText') || '') + ' ' + u.file).toLowerCase().includes(q)); } };
 export async function modEditorDialog() {
   const body = h('div', { class: 'modedit' });
   ui = { body };
@@ -157,6 +175,7 @@ function render() {
     h('button', { onclick: openMod }, '打开 .rwmod / zip'),
     h('button', { onclick: openFolder }, '打开文件夹'),
     h('button', { onclick: newMod }, '新建 Mod'),
+    mod ? h('button', { onclick: () => import('./modtools.js').then((m) => m.toolsDialog(ctx)) }, '工具') : null,
     mod ? h('button', { onclick: infoDialog }, 'Mod 信息') : null,
     mod ? h('button', { onclick: showCheck }, '检查') : null,
     mod ? h('button', { class: 'primary', onclick: pack }, '打包 .rwmod') : null);
@@ -202,6 +221,8 @@ function fillForm() {
   const mode = ui.mode || 'form';
   f.append(h('div', { class: 'me-bar' },
     h('b', { translate: 'no' }, u.file),
+    h('button', { onclick: () => undo(u, true), title: '撤销' }, '↶'), h('button', { onclick: () => undo(u, false), title: '重做' }, '↷'),
+    h('button', { onclick: delUnit }, '删除单位'),
     h('button', { onclick: () => { if (mode === 'form') { u.text = serializeIni(u.ini); } else { applySource(u); } ui.mode = mode === 'form' ? 'src' : 'form'; fillForm(); } }, mode === 'form' ? '源码' : '回到表单'),
     mode === 'form' ? h('button', { onclick: addSecDialog }, '+ 添加段') : null));
   if (mode === 'src') {
@@ -217,11 +238,11 @@ function secBox(u, s) {
   const k = schemaKey(s.name);
   const defs = k ? SCHEMA[k] : [];
   const box = h('div', { class: 'me-sec' });
-  box.append(h('h4', {}, h('span', {}, (SECTION_LABEL[k] || '未知') + ' [' + s.name + ']'), h('button', { class: 'ib', title: '删除这一段', onclick: async () => { if (await confirmBox('删除段', '删除 [' + s.name + '] ？', '删除', '取消', true)) { removeSection(u.ini, s.name); fillForm(); fillList(); } } }, '×')));
+  box.append(h('h4', {}, h('span', {}, (SECTION_LABEL[k] || '未知') + ' [' + s.name + ']'), h('button', { class: 'ib', title: '删除这一段', onclick: async () => { if (await confirmBox('删除段', '删除 [' + s.name + '] ？', '删除', '取消', true)) { snap(u); removeSection(u.ini, s.name); fillForm(); fillList(); } } }, '×')));
   const known = new Set(defs.map((d) => d.key));
   const row = (key, label, type, help, val) => {
     let inp;
-    const set = (v) => { setVal(u.ini, s.name, key, v); if (key === 'name' || key === 'displayText' || key === 'price' || key === 'maxHp' || key === 'moveSpeed') fillListSoft(); };
+    const set = (v) => { snap(u); setVal(u.ini, s.name, key, v); if (key === 'name' || key === 'displayText' || key === 'price' || key === 'maxHp' || key === 'moveSpeed') fillListSoft(); };
     if (type === 'b') inp = select([['', '—'], ['true', '是'], ['false', '否']], val || '', set);
     else if (type.startsWith('e:')) inp = select([['', '—']].concat(type.slice(2).split('|')), val || '', set);
     else inp = h('input', { type: 'text', inputmode: type === 'n' ? 'decimal' : 'text', value: val || '', translate: 'no', title: help, onchange: (e) => set(e.target.value.trim()) });
@@ -241,7 +262,7 @@ function secBox(u, s) {
   // 添加字段
   const missing = defs.filter((d) => !s.lines.some((l) => l.key === d.key));
   if (missing.length) {
-    const sel = select([['', '+ 添加字段…']].concat(missing.map((d) => [d.key, d.label + ' (' + d.key + ')'])), '', (v) => { if (!v) return; const d = defs.find((x) => x.key === v); setVal(u.ini, s.name, v, d.type === 'b' ? 'true' : d.type === 'n' ? '0' : ' '); const ln = s.lines.find((l) => l.key === v); if (ln && ln.val === ' ') ln.val = ''; fillForm(); });
+    const sel = select([['', '+ 添加字段…']].concat(missing.map((d) => [d.key, d.label + ' (' + d.key + ')'])), '', (v) => { if (!v) return; const d = defs.find((x) => x.key === v); snap(u); setVal(u.ini, s.name, v, d.type === 'b' ? 'true' : d.type === 'n' ? '0' : ' '); const ln = s.lines.find((l) => l.key === v); if (ln && ln.val === ' ') ln.val = ''; fillForm(); });
     box.append(grid, sel);
   } else box.append(grid);
   return box;
@@ -257,7 +278,7 @@ async function addSecDialog() {
   const r = await modal('添加段', h('div', {}, h('label', {}, '类型'), sel, h('label', {}, '名字（需要后缀的类型才用）'), inp), [{ label: '取消', value: false }, { label: '添加', value: true, primary: true }]);
   if (!r) return;
   const sname = ['turret', 'projectile', 'canBuild', 'action'].includes(kind) ? kind + '_' + (nm || 'new') : kind;
-  addSection(cur.ini, sname);
+  snap(cur); addSection(cur.ini, sname);
   fillForm();
 }
 

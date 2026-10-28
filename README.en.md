@@ -46,6 +46,9 @@ The built-in 4-lesson tutorial and the **?** next to every tool explain everythi
 - Playtest checklist with a test log, map health score, version diff against snapshots.
 - Save straight into the game folder with a same-name cover image; map library; batch processing; pack a collection as `.rwmod`; import Mods' units and tilesets.
 
+**New in 2.6**
+- **Mod editor tools**: copy / variants / value scaling / wizard / weapon templates, comparison table, scatter plot, battle simulation, build tree, rename with references, turret position dragging, changelog, score and fix, asset check.
+
 **New in 2.5**
 - **Mod editor (phase 1)**: open `.rwmod`/zip/folder, browse units, edit by form or source, check for problems, pack `.rwmod`.
 

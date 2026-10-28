@@ -1,0 +1,134 @@
+n26_0	Pick a unit on the left first
+n26_1	New unit (wizard)
+n26_2	Tank, infantry, aircraft, ship, factory, builder and turret templates
+n26_3	Copy current unit
+n26_4	Make a duplicate and rename it automatically
+n26_5	Generate variants
+n26_6	Light, heavy, fast, elite, cheap
+n26_7	Scale values
+n26_8	Scale health, damage, price, speed and range by a multiplier (×2 and so on)
+n26_9	Add weapon template
+n26_10	Machine gun, cannon, rocket, howitzer, laser
+n26_11	Turret position
+n26_12	Drag the barrel on the unit image and view the range circle
+n26_13	Comparison table
+n26_14	Price, health, DPS and speed of every unit side by side, sortable
+n26_15	Value scatter plot
+n26_16	Price × power; find units that are too strong or too weak
+n26_17	Battle simulation
+n26_18	Two units fight (rough estimate)
+n26_19	Build tree
+n26_20	Who can build whom; find units nobody can build
+n26_21	References and rename
+n26_22	Who refers to the current unit; renaming updates the references
+n26_23	Changes and changelog
+n26_24	Compare with when it was opened; export Markdown
+n26_25	Find and replace
+n26_26	Find and replace in the values of all units
+n26_27	Score and one-click fix
+n26_28	Score the mod and fix common problems automatically
+n26_29	Asset check
+n26_30	Unused images and sounds; whether frame counts add up
+n26_31	New unit
+n26_32	Created. Fill in the sprite yourself under [graphics]
+n26_33	Copy unit
+n26_34	New name
+n26_35	 (copy)
+n26_36	Each variant is a copy of the current unit with values scaled by preset multipliers. You can edit it afterwards.
+n26_37	Generated 
+n26_38	 variants
+n26_39	Apply to
+n26_40	Current unit
+n26_41	All units in the list (respects the search filter)
+n26_42	Example: health ×2, damage ×1.5. Only numbers change; unit suffixes are kept. Use Undo to revert.
+n26_43	Add weapon
+n26_44	Name (shared by turret and projectile)
+n26_45	Turret and projectile added
+n26_46	Drag the coloured dots to move the barrel.
+n26_47	This unit has no turret; add a weapon template first.
+n26_48	Turret position — 
+n26_49	 Show range circle (same scale as the image)
+n26_50	 Unit image faces right (default assumes up, positive Y = forward); I have not verified the orientation in game, so go by what you see
+n26_51	Range
+n26_52	Health/price
+n26_53	DPS/price
+n26_54	Power*
+n26_55	Value
+n26_56	* DPS is estimated as damage × 60 ÷ turret delay (default 60); power = √(health × DPS); value = power ÷ price × 100. Click a header to sort, click a row to jump to that unit.
+n26_57	At least 2 units with a price are needed
+n26_58	Price →
+n26_59	Power ↑
+n26_60	Strong
+n26_61	Weak
+n26_62	The dashed line is the median value. Red dots are too strong, blue too weak (1.6× or more away from the median). Click a dot to jump to the unit.
+n26_63	Result: draw, or too weak to finish (time up)
+n26_64	Winner: 
+n26_65	Unit A
+n26_66	A count
+n26_67	Unit B
+n26_68	B count
+n26_69	Starting distance
+n26_70	 Match B's count by price (A's total price ÷ B's unit price)
+n26_71	Run simulation
+n26_72	Rough estimate: units charge the nearest enemy in a straight line; armour subtracts from each shot (at least 10% remains); no firing arcs, projectile speed, terrain or overkill. Use it to compare, not to conclude.
+n26_73	  ↻ loop
+n26_74	 (not in this mod; ignore for stock units)
+n26_75	There is no canBuild section, so the build relations are empty.
+n26_76	Nobody builds it and it builds nothing (isolated)
+n26_77	Every unit is built by another, so there is no starting point (maybe a loop).
+n26_78	"Isolated" is not necessarily a problem: starting units and units spawned by triggers are not built by anyone.
+n26_79	No other unit refers to it.
+n26_80	New name (references follow)
+n26_81	A unit with that name already exists
+n26_82	Renamed; updated 
+n26_83	 references
+n26_84	No changes since it was opened.
+n26_85	Save .md
+n26_86	Only change this key (empty = all keys)
+n26_87	e.g. image or price
+n26_88	Find
+n26_89	Replace with
+n26_90	Applies to all units in the list (respects the search filter). Only the value part is replaced, never key names. Can be undone.
+n26_91	 pts
+n26_92	One-click fix only does safe things: adds mod-info / title / name, removes spaces in names, renames duplicates, links the only projectile, fixes projectile letter case. For everything else see Check.
+n26_93	One-click fix
+n26_94	Fix results
+n26_95	Nothing could be fixed automatically.
+n26_96	OK
+n26_97	Remove unused files from the pack
+n26_98	Remove unused assets
+n26_99	Removed 
+n26_100	Health / shield
+n26_101	Damage
+n26_102	Range / blast radius
+n26_103	Size
+n26_104	Light
+n26_105	Heavy
+n26_106	Fast
+n26_107	Elite
+n26_108	Cheap
+n26_109	Tank (land)
+n26_110	Infantry
+n26_111	Aircraft (air)
+n26_112	Ship (water)
+n26_113	Factory (building)
+n26_114	Defence turret (building)
+n26_115	Machine gun
+n26_116	Cannon
+n26_117	Rocket
+n26_118	Howitzer (ballistic)
+n26_119	Laser (instant)
+n26_120	 changelog
+n26_121	- Added unit: 
+n26_122	- Removed unit: 
+n26_123	 added 
+n26_124	 removed
+n26_125	No changes.
+n26_126	Image is not a valid PNG: 
+n26_127	No thumbnail (-3)
+n26_128	Added mod-info.txt
+n26_129	Added a title to mod-info
+n26_130	Nothing to undo
+n26_131	Nothing to redo
+n26_132	Delete from the mod: 
+n26_133	? (it will no longer be packed)
