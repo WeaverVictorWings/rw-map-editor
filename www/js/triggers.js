@@ -286,7 +286,7 @@ function computeIssues() {
     if (first.get(key) !== o) dupSeen.set(key, (dupSeen.get(key) || 1) + 1);
     if ((def.area === 'rect') && (+(o.attrs.width || 0) <= 0 || +(o.attrs.height || 0) <= 0)) add('error', o, `「${label(o)}」的区域大小是 0`, '宽或高为 0 的区域里什么都检测不到。', fixEdit('设为 1×1 格', o, (x) => { x.attrs.width = String(TW); x.attrs.height = String(TW); }));
     for (const [p, cn] of LINKS) for (const ref of links(o, p)) {
-      if (!first.has(lc(ref))) add('warn', o, `「${label(o)}」的“${cn}”里有不存在的「${ref}」`, '游戏会忽略这条连接，不会出错（有些地图故意留着不用的名字）。如果是名字打错了或那个触发器被删了，可以一键去掉。', fixEdit('去掉这条连接', o, (x) => setP(x, p, listOf(objProp(x, p)).filter((r) => lc(r) !== lc(ref)).join(','))));
+      if (!first.has(lc(ref)) && !/^(无|暂无|none|null|nil|-+)$/i.test(ref.trim())) add('warn', o, `「${label(o)}」的“${cn}”里有不存在的「${ref}」`, '游戏会忽略这条连接，不会出错（有些地图故意留着不用的名字）。如果是名字打错了或那个触发器被删了，可以一键去掉。', fixEdit('去掉这条连接', o, (x) => setP(x, p, listOf(objProp(x, p)).filter((r) => lc(r) !== lc(ref)).join(','))));
     }
     const t = objProp(o, 'team');
     if (t !== undefined && t !== '') {
@@ -310,6 +310,11 @@ function computeIssues() {
     const o = first.get(k);
     const merge = objs.filter((x) => tkey(x) === k).every((x) => links(x, 'alsoActivate').some((r) => lc(r) === k));
     if (!merge) add('warn', o, `有 ${n} 个触发器都叫「${label(o)}」`, '别处引用这个名字时，游戏只认第一个。如果是有意用“同名 + 同时激活自己”合并条件，可以忽略。');
+  }
+  // 大型地图同类提示成百上千条：超过 6 条的同类合并成一条，免得淹没真问题
+  for (const [re, mk] of [[/^有 \d+ 个触发器都叫/, (n) => [`${n} 组触发器同名`, '别处引用这个名字时，游戏只认第一个。战略图里常有意这样用，确认没有写错即可。']], [/的时间「.*」只有 .* 毫秒$/, (n) => [`${n} 个触发器的时间写成了小于 1000 的纯数字`, '纯数字表示毫秒。如果本来想写秒，请加上 s（如 20s）。']], [/的“.*”里有不存在的「/, (n) => [`${n} 条触发器连接指向不存在的名字`, '游戏会忽略这些连接，不会出错。如果是打错了名字，请逐个检查。']]]) {
+    const idx = []; out.forEach((x, i) => { if (x.level === 'warn' && re.test(x.title)) idx.push(i); });
+    if (idx.length > 6) { const first = out[idx[0]]; const [t, d] = mk(idx.length); const merged = { ...first, title: t, detail: d, fix: undefined }; const drop = new Set(idx); const rest = out.filter((_, i) => !drop.has(i)); out.length = 0; out.push(...rest, merged); }
   }
   const mi = ed.mapInfo();
   if (mi) {
