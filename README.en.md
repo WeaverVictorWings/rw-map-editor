@@ -46,6 +46,9 @@ The built-in 4-lesson tutorial and the **?** next to every tool explain everythi
 - Playtest checklist with a test log, map health score, version diff against snapshots.
 - Save straight into the game folder with a same-name cover image; map library; batch processing; pack a collection as `.rwmod`; import Mods' units and tilesets.
 
+**New in 2.5**
+- **Mod editor (phase 1)**: open `.rwmod`/zip/folder, browse units, edit by form or source, check for problems, pack `.rwmod`.
+
 **New in 2.4**
 - Resource pools are truly 1×1 (they can sit side by side), **one-tap balance**, design wizard, curve tool for rivers and roads, smooth / erode / noise brushes, feathered paste, snapping and precision drawing.
 - **Trigger simulator** (see when each trigger fires without launching the game), trigger template library, firepower coverage analysis, passage bottleneck map, naval check, distance and range circles.

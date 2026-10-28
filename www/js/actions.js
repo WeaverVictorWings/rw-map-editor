@@ -26,6 +26,7 @@ export const ACTIONS = [
   { id: 'library', group: '文件', label: '地图库…', icon: 'library', desc: '所有做过、打开过的地图，带缩略图和标签', help: 'tool.library', run: () => import('./tools2.js').then((m) => m.libraryDialog()) },
   { id: 'batch', group: '文件', label: '批量处理…', icon: 'batch', desc: '一次检查、修复一堆地图，生成封面', help: 'tool.batch', run: () => import('./tools2.js').then((m) => m.batchDialog()) },
   { id: 'pack', group: '文件', label: '打包地图合集（Mod）…', icon: 'package', desc: '把几张地图打包成 .rwmod', help: 'tool.pack', run: () => import('./tools2.js').then((m) => m.packDialog()) },
+  { id: 'modedit', group: '文件', label: 'Mod 编辑器…', icon: 'import', desc: '浏览、编辑、检查并打包 .rwmod：单位表单、炮塔和弹道', kw: 'mod 单位 武器 弹道 打包 rwmod 编辑器', run: () => import('./modedit.js').then((m) => m.modEditorDialog()) },
   { id: 'mods', group: '文件', label: 'Mod 支持…', icon: 'import', desc: '导入 Mod 的单位和图块集', help: 'tool.mod', run: () => import('./tools2.js').then((m) => m.modDialog()) },
   { sep: true, group: '文件' },
   { id: 'sharecode', group: '文件', label: '分享码（印章 / 风格）…', icon: 'share', desc: '用一段短文本互换印章和自动细节风格', help: 'sharecode', kw: '分享 印章 互换 发群里', run: () => import('./share.js').then((m) => m.shareCodeDialog()) },

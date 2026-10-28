@@ -1,0 +1,26 @@
+// Mod 编辑器：ini 往返、检查、打包往返（纯 Node，不开浏览器）
+import { parseIni, serializeIni, setVal, getVal } from '../www/js/ini.js';
+import { Mod, checkMod } from '../www/js/modedit.js';
+import { writeZip, readZip } from '../www/js/zip.js';
+let fail = 0; const ok = (c, m) => { if (!c) { fail++; console.log('FAIL', m); } else console.log('ok  ', m); };
+const src = '# 注释\n[core]\nname: tank\nprice: 100\n# keep me\nweirdKey: 1\n\n[graphics]\nimage: ROOT:\\t.png\n\n[turret_a]\nprojectile: missing\n\n[bogus]\nx: 1\n';
+const ini = parseIni(src);
+ok(serializeIni(ini) === src, '未改动时原样写回');
+setVal(ini, 'core', 'price', '250'); setVal(ini, 'core', 'maxHp', '300');
+const out = serializeIni(ini);
+ok(/price: 250/.test(out) && /maxHp: 300/.test(out) && /# keep me/.test(out) && /weirdKey: 1/.test(out), '改值、加键、保留注释和未知键');
+setVal(ini, 'core', 'maxHp', ''); ok(getVal(ini, 'core', 'maxHp') === undefined, '空值删除键');
+const zip = writeZip([{ name: 'mod-info.txt', data: '[mod]\ntitle: T\n' }, { name: 'tank.ini', data: src }, { name: 'sub/u2.ini', data: '[core]\nname: tank\n' }]);
+const m = await Mod.fromEntries(readZip(zip), 'x.rwmod');
+ok(m.realUnits().length === 2, '读出 2 个单位');
+const R = checkMod(m).map((r) => r.msg).join('|');
+ok(/图片|不存在的文件/.test(R) && /t\.png/.test(R), '检查：缺图');
+ok(/不存在的弹道/.test(R), '检查：弹道引用');
+ok(/不认识的段：\[bogus\]/.test(R), '检查：未知段');
+ok(/单位代号重复/.test(R), '检查：重名');
+ok(/缩略图|thumbnail/.test(R), '检查：缩略图提示');
+setVal(m.realUnits()[0].ini, 'core', 'price', '999');
+const files = m.collect();
+const back = await Mod.fromEntries(readZip(writeZip(files)), 'y');
+ok(back.realUnits().some((u) => getVal(u.ini, 'core', 'price') === '999'), '打包往返保留编辑');
+process.exit(fail ? 1 : 0);

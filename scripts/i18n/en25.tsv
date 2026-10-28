@@ -1,0 +1,189 @@
+n25_0	Missing mod-info.txt; the game will not treat this as a mod
+n25_1	mod-info.txt has no title
+n25_2	Thumbnail file does not exist: 
+n25_3	No thumbnail set (thumbnail)
+n25_4	[core] is missing name
+n25_5	Duplicate unit name: 
+n25_6	 (same as 
+n25_7	Unit name contains spaces: 
+n25_8	Duplicate section: [
+n25_9	Unknown section: [
+n25_10	] (typo?)
+n25_11	] needs a _name suffix
+n25_12	No [core] section
+n25_13	 points to a file that does not exist: 
+n25_14	] has a key that is not in the list: 
+n25_15	 should be a number: 
+n25_16	] has no projectile set
+n25_17	] refers to a projectile that does not exist: projectile_
+n25_18	copyFrom refers to something outside this mod: 
+n25_19	 (may be a stock unit)
+n25_20	] builds 
+n25_21	 is not in this mod (ignore for stock units)
+n25_22	Mod Editor
+n25_23	Close
+n25_24	Open .rwmod / zip
+n25_25	Open folder
+n25_26	New mod
+n25_27	Mod info
+n25_28	Check
+n25_29	Pack .rwmod
+n25_30	Open a mod (.rwmod or zip, or an unpacked folder) to browse its units, edit values, check for problems and pack it again.
+n25_31	Search units…
+n25_32	 units · 
+n25_33	 files
+n25_34	No units
+n25_35	Pick a unit on the left.
+n25_36	Source
+n25_37	Back to form
+n25_38	+ Add section
+n25_39	Unknown
+n25_40	Delete this section
+n25_41	Delete section
+n25_42	Delete [
+n25_43	Delete
+n25_44	Cancel
+n25_45	Yes
+n25_46	No
+n25_47	Key not in the list; kept as is
+n25_48	+ Add field…
+n25_49	Turret turret_
+n25_50	Projectile projectile_
+n25_51	Can build canBuild_
+n25_52	Action action_
+n25_53	Graphics
+n25_54	Movement
+n25_55	Attack
+n25_56	Add section
+n25_57	Type
+n25_58	Name (only for types that need a suffix)
+n25_59	Add
+n25_60	Reading mod…
+n25_61	Reading folder…
+n25_63	Title
+n25_64	Description
+n25_65	Thumbnail file
+n25_66	Minimum game version
+n25_67	Tags
+n25_68	Mod info (mod-info.txt)
+n25_69	Save
+n25_71	No problems found ✓
+n25_72	Check results
+n25_73	There are still 
+n25_74	 errors
+n25_75	Pack anyway? Run “Check” first if unsure.
+n25_76	Pack anyway
+n25_77	Packed 
+n25_78	Unit name
+n25_79	Internal name used by the game; must be unique, no spaces
+n25_80	Class
+n25_81	Usually CustomUnitMetadata
+n25_82	Price
+n25_83	Credits
+n25_84	Mass
+n25_85	Affects collision pushing
+n25_86	Tech level
+n25_87	Build time (s)
+n25_88	Radius
+n25_89	Collision / selection radius
+n25_90	Health
+n25_91	Self-heal per second
+n25_92	Shield
+n25_93	Shield regen
+n25_94	Armour
+n25_95	Energy max
+n25_96	Energy regen
+n25_97	Organic
+n25_98	Bug
+n25_99	Can build
+n25_100	Building
+n25_101	Footprint
+n25_102	e.g. 0,0,1,1
+n25_103	Sight range
+n25_104	Display name
+n25_105	Description
+n25_106	Copy from
+n25_107	Build range
+n25_108	Image
+n25_109	e.g. ROOT:\\sprites\\tank.png
+n25_110	Wreck image
+n25_111	Shadow image
+n25_112	Total frames
+n25_113	Frame width
+n25_114	Frame height
+n25_115	Scale to
+n25_116	Image scale
+n25_117	Turret image
+n25_118	Team colour on turret
+n25_119	Dust
+n25_120	Splash
+n25_121	Movement type
+n25_122	Speed
+n25_123	Acceleration
+n25_124	Deceleration
+n25_125	Max turn speed
+n25_126	Turn acceleration
+n25_127	Reverse speed ratio
+n25_128	Height
+n25_129	Max attack range
+n25_130	Can attack
+n25_131	Hits air
+n25_132	Hits ground
+n25_133	Hits underwater
+n25_134	Melee
+n25_135	Turret follows body
+n25_136	Attack movement
+n25_137	Projectile
+n25_138	Matches the X of [projectile_X]
+n25_139	Barrel X
+n25_140	Barrel Y
+n25_141	Size
+n25_142	Turn speed
+n25_143	Idle direction
+n25_144	Attached to
+n25_145	Interval (frames)
+n25_146	Warm-up
+n25_147	Limiting range
+n25_148	Min range
+n25_149	Limiting angle
+n25_150	Shoot sound
+n25_151	Muzzle flame
+n25_152	Recoil
+n25_153	Energy use
+n25_154	Resource use
+n25_155	Can fire
+n25_156	Life (frames)
+n25_157	Direct damage
+n25_158	Area damage
+n25_159	Area radius
+n25_160	Target speed
+n25_161	Ballistic
+n25_162	Instant
+n25_163	Building damage ratio
+n25_164	Friendly fire
+n25_165	Draw type
+n25_166	Trail
+n25_167	Act as builder
+n25_168	Build priority
+n25_169	Global cap
+n25_170	Per-base cap
+n25_171	Buildable unit
+n25_172	Position
+n25_173	Tech
+n25_174	Force nano
+n25_175	Locked
+n25_176	Price
+n25_177	Button text
+n25_178	Description
+n25_179	Display type
+n25_180	Time
+n25_181	Convert to
+n25_182	Spawn units
+n25_183	Basic
+n25_184	Turret
+n25_185	Button action
+n25_186	Effect
+n25_187	Resource
+n25_188	Animation
+n25_189	Attachment
+n25_190	Leg
