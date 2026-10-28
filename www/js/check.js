@@ -1,8 +1,12 @@
 // “能玩吗？”检查、预览图、展示图
 import { objProp } from './tmx.js';
 import { teamColor } from './render.js';
-import { passability, BUILD, LAND } from './pathing.js';
+import { passability, BUILD, LAND, NAVAL, HOVER } from './pathing.js';
 import { NONE } from './terrain.js';
+import { bfsFrom } from './bottleneck.js';
+
+const lc = (s) => String(s || '').trim().toLowerCase();
+
 
 export const MAP_TYPES = ['skirmish', 'mission', 'challenge', 'survival', 'endless'];
 const WATERISH = /^(deep water|water|shallow water|lake|ice lake)$/i;
@@ -118,6 +122,24 @@ export function runChecks(ed, opts = {}) {
   }
   const pass = opts.pass || passability(ed);
   const ptile = (x, y) => (x >= 0 && y >= 0 && x < W && y < H) ? pass[y * W + x] : 0;
+  // 资源池自己会把所在格的 BUILD 位遮掉（pathing.js 里 'res_pool' → ~BUILD），
+  // 所以判断“池子下面的地”必须看地面本身，不能看被池子遮过的那一份
+  const gpassFor = (() => {
+    const m2 = ed.map, G2 = m2.ground, cache2 = new Map();
+    const cls = (gid) => {
+      if (cache2.has(gid)) return cache2.get(gid);
+      const info = m2.tileInfo(gid), p2 = (info && info.props) || {};
+      let c = LAND | HOVER | BUILD;
+      if ('water' in p2) c = NAVAL | HOVER;
+      if ('water-bridge' in p2) c = LAND | NAVAL | HOVER;
+      if ('lava' in p2) c = 0;
+      if ('large-cliff' in p2 || 'cliff-soft' in p2 || 'lava-cliff' in p2 || 'cliff' in p2 || 'block-land' in p2) c = c & ~(LAND | BUILD);
+      if ('large-cliff' in p2 || 'lava-cliff' in p2) c = 0;
+      cache2.set(gid, c);
+      return c;
+    };
+    return (x, y) => (x >= 0 && y >= 0 && x < W && y < H) ? cls(G2 ? G2.data[y * W + x] : 0) : 0;
+  })();
   for (const s of sp) {
     const tx = Math.floor(s.cx / 20), ty = Math.floor(s.cy / 20);
     if (!(ptile(tx, ty) & BUILD)) add('warn', '出生点', `第 ${s.team + 1} 队的指挥中心压在水面、悬崖或障碍上`, '可能无法正常开局。', { goto: { x: tx, y: ty } });
@@ -142,16 +164,25 @@ export function runChecks(ed, opts = {}) {
   if (!pools.length) add('warn', '资源', '地图上没有资源池', '到“物品”里选“资源池”放置，或用印章库里的“标准基地”。');
   else {
     add('info', '资源', `共有 ${pools.length} 个资源池`);
-    const bad = pools.filter(([x, y]) => !(ptile(x, y) & LAND) || x < 1 || y < 1 || x > W - 2 || y > H - 2);
+    const bad = pools.filter(([x, y]) => !(gpassFor(x, y) & LAND) || x < 1 || y < 1 || x > W - 2 || y > H - 2);
     if (bad.length) add('warn', '资源', `${bad.length} 个资源池在水里、悬崖上或地图边缘`, '单位可能够不着。', { goto: { x: bad[0][0], y: bad[0][1] } });
-    // 资源池与单位之间留 1 格
+    // 资源池按 1×1 算：只有“正上下左右紧贴单位”（或压在单位上）才提醒
     const units = [];
     for (const g of m.groups) for (const o of g.objects) if (o.attrs.gid) {
       const x = +o.attrs.x, y = +o.attrs.y, w = +(o.attrs.width || 20), h = +(o.attrs.height || 20);
-      units.push([Math.floor(x / 20), Math.floor((y - h) / 20), Math.floor((x + w - 1) / 20), Math.floor((y - 1) / 20)]);
+      // 单位位置是「左上角 + 宽高」，坐标可能是小数（toFixed(1) 存的 400.5）。
+      // 覆盖哪几格要看它实际压住的像素区间 [x, x+w)：上边界减 1e-6，而不是减整 1 格。
+      // 减 1 会把 x=400.5、w=20（真的压满第 20、21 两列）算成只占第 20 列，左边紧贴的池子就漏报了。
+      units.push([
+        Math.floor(x / 20), Math.floor((y - h) / 20),
+        Math.floor((x + w - 1e-6) / 20), Math.floor((y - 1e-6) / 20),
+      ]);
     }
-    const tight = pools.filter(([px, py]) => units.some(([a, b, c, d]) => c >= px - 2 && a <= px + 2 && d >= py - 2 && b <= py + 2));
-    if (tight.length) add('warn', '资源', `${tight.length} 个资源池和单位挨得太近`, '社区经验：资源池和单位之间留 1 格空隙，否则可能显示异常。', { goto: { x: tight[0][0], y: tight[0][1] } });
+    const tight = pools.filter(([px, py]) => units.some(([a, b, c, d]) => {
+      const nx = Math.max(a, Math.min(px, c)), ny = Math.max(b, Math.min(py, d));
+      return Math.abs(px - nx) + Math.abs(py - ny) <= 1;   // 0 = 压在单位上，1 = 正上下左右紧贴
+    }));
+    if (tight.length) add('warn', '资源', `${tight.length} 个资源池紧贴单位`, '资源池按 1 格算，可以紧挨着放；只有正上下左右贴着单位（或压在单位上）时才提醒，挪开 1 格就好。', { goto: { x: tight[0][0], y: tight[0][1] } });
   }
 
   // ---- 尺寸与体积 ----
@@ -164,6 +195,81 @@ export function runChecks(ed, opts = {}) {
     add('info', '尺寸', `${unused.length} 个图块集没有用到（约 ${kb} KB）`, '联机时主机要把地图传给所有人，去掉它们可以让地图更小。', { fix: { label: '保存时去掉', run: () => { ed.pruneOnSave = true; } } });
   }
   if (opts.triggerIssues) for (const t of opts.triggerIssues) add(t.level, '触发器', t.title, t.detail || '', { goto: t.goto, fix: t.fix });
+
+  // ---- 道路连通（按地面判据，不看资源池遮罩） ----
+  {
+    const totalLand = (() => { let n = 0; for (let i = 0; i < W * H; i++) if (gpassFor(i % W, (i / W) | 0) & LAND) n++; return n; })();
+    if (totalLand && sp.length) {
+      // bfsFrom 的 sources 是格子索引（不是 [x,y] 坐标），传坐标对会让它一格都找不到
+      const dm = bfsFrom(pass, W, H, sp.map((s) => Math.floor(s.cy / 20) * W + Math.floor(s.cx / 20)), LAND | BUILD);
+      let unreach = 0, firstUn = null;
+      for (let i = 0; i < W * H; i++) {
+        if (!(gpassFor(i % W, (i / W) | 0) & LAND)) continue;
+        if (dm[i] < 0) { unreach++; if (!firstUn) firstUn = [i % W, (i / W) | 0]; }
+      }
+      if (unreach) {
+        const pct = (unreach / totalLand) * 100;
+        add(pct > 2 ? 'warn' : 'info', '道路', `${unreach.toLocaleString()} 格陆地走不到出生点（占陆地 ${pct.toFixed(1)}%）`,
+          '这些地方单位过不去，放在那的资源池会被浪费，效果区域也踩不到。', { goto: firstUn ? { x: firstUn[0], y: firstUn[1] } : undefined });
+      } else add('ok', '道路', '所有陆地都能从出生点走到');
+    }
+  }
+
+  // ---- 空投点与建造空间 ----
+  {
+    const builds = [];
+    for (let i = 0; i < W * H; i++) if (pass[i] & BUILD) builds.push(i);
+    if (sp.length && builds.length) {
+      for (const s of sp) {
+        let n = 0;
+        const R = 9;   // 约 8 格半径内
+        const tx0 = Math.max(0, Math.floor(s.cx / 20) - R), ty0 = Math.max(0, Math.floor(s.cy / 20) - R);
+        const tx1 = Math.min(W - 1, Math.floor(s.cx / 20) + R), ty1 = Math.min(H - 1, Math.floor(s.cy / 20) + R);
+        for (let y = ty0; y <= ty1; y++) for (let x = tx0; x <= tx1; x++) if (pass[y * W + x] & BUILD) n++;
+        if (n < 60) add('warn', '空投', `第 ${s.team + 1} 队出生点附近可建造的空地只有 ${n} 格`, '开局展不开，建议半径 8 格内至少留 60 格空地。', { goto: { x: Math.floor(s.cx / 20), y: Math.floor(s.cy / 20) } });
+      }
+      const ratio = builds.length / (W * H);
+      if (ratio < 0.08) add('warn', '空投', `整张图可建造的格子只占 ${(ratio * 100).toFixed(1)}%`, '单位几乎没地方落脚，检查一下是不是水面/悬崖画太多了。');
+      else add('ok', '空投', `可建造面积占 ${(ratio * 100).toFixed(1)}%`);
+    }
+    const ap = m.group('Triggers');
+    const hasAttack = ap ? ap.objects.some((o) => lc(o.attrs.name) === 'attack_point') : false;
+    const isSurvival = (() => { const mt = ed.mapInfo(); return mt && lc(objProp(mt, 'type')) === 'survival'; })();
+    if (isSurvival && !hasAttack) add('error', '空投', '生存模式没有 attack_point 敌军出生点', '敌人没有地方刷出来。用“新建 → 敌军出生点”放一个。');
+  }
+
+  // ---- 传送门配对 ----
+  {
+    const TG = m.group('Triggers');
+    const objs = TG ? TG.objects : [];
+    const points = new Set(objs.filter((o) => lc(objProp(o, 'type')) === 'point' || lc(objProp(o, 'kind')) === 'point').map((o) => lc(o.attrs.name)));
+    const moves = objs.filter((o) => ['unitmove', 'move'].includes(lc(objProp(o, 'type'))));
+    const badTg = moves.filter((o) => { const tg = lc(objProp(o, 'target')); return tg && !points.has(tg); });
+    if (badTg.length) add('error', '传送门', `${badTg.length} 个“移动单位”指向了不存在的目标点`, '目标点要先放好、名字要一模一样。', { goto: badTg[0].attrs ? { x: Math.floor(+badTg[0].attrs.x / 20), y: Math.floor(+badTg[0].attrs.y / 20) } : undefined });
+    const byPoint = new Map();
+    for (const o of moves) { const tg = lc(objProp(o, 'target')); if (tg && points.has(tg)) byPoint.set(tg, (byPoint.get(tg) || 0) + 1); }
+    const dup = [...byPoint].filter(([, n]) => n > 2);
+    if (dup.length) add('warn', '传送门', `${dup.length} 个目标点被 3 个以上“移动单位”当终点`, '可能是复制触发器时忘了改目的地，单位会被同时往几个方向拽。');
+    if (moves.length && !badTg.length) add('ok', '传送门', `${moves.length} 条“移动单位”的目标点都对得上`);
+  }
+
+  // ---- 地形可破坏性 ----
+  {
+    const gts2 = ed.groundTs;
+    if (gts2) {
+      const hard = [];
+      for (const [id, inf] of gts2.tiles) {
+        const p2 = inf.props || {};
+        if (!('lava' in p2) && !('water' in p2) && !('water-bridge' in p2)
+          && (('large-cliff' in p2) || ('lava-cliff' in p2) || ('cliff' in p2))) hard.push(id);
+      }
+      if (hard.length) add('info', '地形', `${hard.length} 种悬崖图块不能被打掉`, '想让工兵能开山的话，把它们换成带 cliff-soft 属性的图块。');
+    }
+    const soft = [];
+    if (gts2) for (const [id, inf] of gts2.tiles) if ('cliff-soft' in (inf.props || {})) soft.push(id);
+    if (soft.length) add('info', '地形', `${soft.length} 种图块可以被工兵打掉（cliff-soft）`, '这些格子是“可破坏地形”，画地图时留意别把必经之路做成这里。');
+  }
+
   return out;
 }
 

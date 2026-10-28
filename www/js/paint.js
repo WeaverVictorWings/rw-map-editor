@@ -60,7 +60,9 @@ export function fillTiles(tx, ty, global = false) {
   return out;
 }
 
-// 放物品：density 0~1（每格出现的概率），spacing 资源池等 3×3 物品之间的最小间距（格）
+// 放物品：density 0~1（每格出现的概率），spacing = 两个物品之间至少空出的格数（0 = 可以紧挨着）
+// 占地按实际放下的格子算：资源池默认只占 1 格（半径 0）；3×3 样式和 3×3 大岩石按 3×3 算（半径 1），
+// 只是为了别让两个 3×3 边框互相覆盖（检查、自动细节、随机布点另按 1 格算）。
 export function placeItems(tiles, it, opts = {}) {
   const m = ed.map, W = m.width, L = m.ensureLayer('Items');
   const density = opts.density ?? (A.itemDensity ?? 1);
@@ -68,14 +70,32 @@ export function placeItems(tiles, it, opts = {}) {
   if (!it) return 0;
   let n = 0;
   if (it.stamp) {
-    const spacing = Math.max(1, opts.spacing ?? (A.itemSpacing ?? 4));
-    const big = ed.stampCells(it).length > 1;
-    // 已有的同类物品中心
-    const centers = new Set(it.pool ? (ed.poolGids ? [...tilesWith(L, (g) => ed.poolGids.has(g))] : []) : [...tilesWith(L, (g) => g === it.stamp[1][1])]);
+    const gap = Math.max(0, opts.spacing ?? (A.itemSpacing ?? 0));
+    const cells = ed.stampCells(it);
+    const r = cells.some(([dx, dy]) => dx || dy) ? 1 : 0;   // 占地半径：1×1 → 0，3×3 → 1
+    // gap = 两个物品之间空出的格数（界面上“最小间距”；0 = 可以紧挨着）。
+    // 两物品中心距必须 > 2r + gap：1×1 时 r=0，gap=0 可紧挨（中心距 1）、gap=1 要隔 1 格（中心距 2）；
+    // 3×3 时 r=1，两个印章边缘贴住就是“紧挨着”（中心距 3），再留 gap 就从 3+gap 起。
+    const block = 2 * r + gap;                              // 判定用的切比雪夫扫描半径
+    const minC = 2 * r + gap + 1;                           // 允许的最小中心距（含端点）
+    // 已有的同类物品所占的全部格子（3×3 印章要把 9 格都算进来，否则看不出“这一印章会盖到已有物品”）
+    const occ = new Set(it.pool ? [...tilesWith(L, (g) => g && isPoolGid(g))] : [...tilesWith(L, (g) => g === it.stamp[1][1])]);
+    const stampCells = cells;
+    const hitsExisting = (x, y) => stampCells.some(([dx, dy]) => occ.has((y + dy) * W + (x + dx)));
     const near = (x, y) => {
-      for (let dy = -spacing + 1; dy < spacing; dy++) for (let dx = -spacing + 1; dx < spacing; dx++) {
+      if (hitsExisting(x, y)) return true;   // 3×3 印章别盖掉已有物品
+      // 资源池按 1 格算，但它自己的 stampCells 只有 1 格；中心格已被占用时也要跳过
+      // （density/间距扫描救不了这一点：两个池中心重合时 minC 判的是“距离 0 < minC”，要单独挡）
+      if (it.pool && occ.has(y * W + x)) return true;
+      if (minC <= 0) return false;
+      for (let dy = -block; dy <= block; dy++) for (let dx = -block; dx <= block; dx++) {
+        if (!dx && !dy) continue;
+        // 3×3 印章：占的是 “中心 -1..+1” 这块，两个印章中心距 d 时
+        // 一个格子的重叠条件是 |d| <= 2；要留 gap 就 |d| <= 2+gap
+        const d = Math.max(Math.abs(dx), Math.abs(dy));
+        if (d >= minC) continue;
         const X = x + dx, Y = y + dy;
-        if (X >= 0 && Y >= 0 && X < W && centers.has(Y * W + X)) return true;
+        if (X >= 0 && Y >= 0 && X < W && occ.has(Y * W + X)) return true;
       }
       return false;
     };
@@ -83,10 +103,11 @@ export function placeItems(tiles, it, opts = {}) {
     for (const k of order) {
       const x = k % W, y = (k - x) / W;
       if (density < 1 && hash(y, x, seed + 9) > density) continue;
-      if (big && (x < 1 || y < 1 || x >= W - 1 || y >= m.height - 1)) continue;
+      if (r && (x < r || y < r || x >= W - r || y >= m.height - r)) continue;
       if (near(x, y)) continue;
       ed.placeItemOne(L, it, x, y);
-      centers.add(k); n++;
+      for (const [dx, dy] of stampCells) occ.add((y + dy) * W + (x + dx));
+      n++;
     }
     return n;
   }
@@ -121,4 +142,11 @@ export function paintColorTiles(tiles, gid) {
     ed.setTile(G, x, y, gid);
     if (ed.engine) ed.engine.syncRect(ed.op, x, y, x, y);
   }
+}
+
+// 这一格算不算“已经是资源池”：按图块的 res_pool 属性认，不依赖 ed.poolGids 是否已经算好，
+// 也不依赖 1×1 / 3×3 样式的中心图块具体是哪一个
+function isPoolGid(gid) {
+  const info = ed.map.tileInfo(gid);
+  return !!(info && info.props && 'res_pool' in info.props);
 }

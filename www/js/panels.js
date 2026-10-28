@@ -6,8 +6,10 @@ import { teamColor } from './render.js';
 import { sizeTier } from './check.js';
 import { balanceReport } from './pathing.js';
 import { builtinStamps, userStamps, deleteUserStamp, exportStamp, importStampText, saveUserStamp, stampThumb } from './stamps.js';
+import { encodeStamp, copyCode, shareCodeDialog } from './share.js';
 import { listRecent, removeRecent, gameFolder, gameFolderSupported, saveFile, pickFile } from './files.js';
 import { kvGet } from './util.js';
+import { opStatsText, canDrop, confirmDropOp } from './historyx.js';
 import { h, menu, toast, segmented, slider, toggle, select, promptBox, confirmBox, busy } from './ui.js';
 import { icon } from './icons.js';
 import { helpBtn, HELP, showHelp } from './help.js';
@@ -288,12 +290,12 @@ function toolItems(body, T) {
   if (T !== 'erase') {
     const dens = slider('密度', 5, 100, Math.round((A.itemDensity ?? 1) * 100), (v) => { A.itemDensity = v / 100; }, { fmt: (v) => v + '%', step: 5 });
     body.append(sec('疏密', 'items.shape', dens,
-      it && it.stamp ? slider('最小间距（格）', 1, 30, A.itemSpacing ?? 4, (v) => { A.itemSpacing = v; }, { fmt: (v) => v + ' 格' }) : null,
+      it && it.stamp ? slider('最小间距（格，0 = 可以紧挨着）', 0, 30, A.itemSpacing ?? 0, (v) => { A.itemSpacing = v; }, { fmt: (v) => (v ? v + ' 格' : '紧挨着') }) : null,
       T === 'fill' ? toggle('全图同种地面一起放', !!A.fillGlobal, (v) => { A.fillGlobal = v; }) : null));
   }
   const ss = symSec(); if (ss) body.append(ss);
   const how = { stamp: '按住拖动连续放', rect: '拖出一个矩形', ellipse: '拖出一个椭圆', line: '拖出一条线', fill: '点一下，填满同一种地面', erase: '按住拖动擦除' }[T] || '';
-  body.append(h('div', { class: 'hint', html: `${how}。` + (it && it.stamp ? `「${it.cn}」之间至少隔开“最小间距”，不会铺成一片。` : '“密度”越低越稀疏，看起来更自然。') + `<br>地图上现在有 <b>${rend.pools.length}</b> 个资源池。资源池和单位之间最好留 1 格空隙。` }));
+  body.append(h('div', { class: 'hint', html: `${how}。` + (it && it.stamp ? `「${it.cn}」按 1 格算：间距 0 就是挨着放，想排密一点直接画。` : '“密度”越低越稀疏，看起来更自然。') + `<br>地图上现在有 <b>${rend.pools.length}</b> 个资源池。资源池可以紧挨着放，只有正上下左右贴着单位时检查才会提醒。` }));
 }
 
 // ---- 色块 ----
@@ -356,6 +358,7 @@ function toolUnits(body, T) {
   }
   body.append(sec(`出生点（${sp.length} 个，点一下跳过去）`, 'teams', sp.length ? list : h('div', { class: 'hint' }, '还没有出生点。'),
     sp.length ? h('button', { style: 'margin-top:8px', onclick: () => ed.renumberTeams() }, '队伍号重新编号为 1、2、3…') : null));
+  body.append(sec('批量编辑单位属性', 'unitprops', h('button', { onclick: () => import('./unitprops.js').then((m) => m.unitPropsDialog()) }, '批量编辑单位属性…')));
 }
 
 // ---- 单位面板：图标 + 中文名 + 分类 + 搜索；可以一次放一排 ----
@@ -499,7 +502,8 @@ function dockStamps(body) {
   const ugrid = h('div', { class: 'stamps' });
   body.append(sec('我的印章', null, ugrid, h('div', { class: 'row', style: 'margin-top:8px' },
     h('button', { disabled: !ed.selection, onclick: () => A.hooks.selToStamp(), html: icon('stamp') + ' 选区存为印章' }),
-    h('button', { onclick: importStamp, html: icon('import') + ' 导入' }))));
+    h('button', { onclick: importStamp, html: icon('import') + ' 导入' }),
+    h('button', { onclick: () => shareCodeDialog('stamp'), html: icon('share') + ' 分享码…' }))));
   userStamps().then((list) => {
     if (!list.length) { ugrid.replaceWith(h('div', { class: 'hint' }, '用“框选”选中一块区域，再点“存为印章”，以后就能一键放出同样的内容。')); return; }
     for (const s of list) {
@@ -513,6 +517,13 @@ function dockStamps(body) {
 }
 function stampMenu(anchor, s) {
   menu(anchor, [
+    { label: '复制分享码', iconHtml: icon('share'), run: async () => {
+      try {
+        const code = await encodeStamp(s);
+        const ok = await copyCode(code);
+        toast(ok ? `分享码已复制（${code.length} 个字符），发到群里就能导入` : `分享码（手动复制）：${code.slice(0, 120)}…`, ok ? 3000 : 6000);
+      } catch (e) { toast('生成分享码失败：' + e.message); }
+    } },
     { label: '导出成文件', iconHtml: icon('export'), run: () => saveFile(s.cn + '.rwstamp.json', exportStamp(s), 'application/json') },
     { label: '删除', iconHtml: icon('del'), run: async () => { if (await confirmBox('删除印章？', `删除「${s.cn}」？`, '删除', '取消', true)) { await deleteUserStamp(s.id); A.refresh('dock'); } } },
   ]);
@@ -527,11 +538,33 @@ async function importStamp() {
 // ---- 历史 ----
 function dockHistory(body) {
   const list = h('div', { class: 'hist' });
+  const q = h('input', { placeholder: '搜索操作（比如“画地形”“填满空格”）…' });
   const n = ed.undoStack.length;
-  list.append(h('button', { class: 'hitem' + (n === 0 ? ' cur' : ''), onclick: () => { ed.jumpTo(0); } }, '（打开时的样子）'));
-  ed.undoStack.forEach((op, i) => list.append(h('button', { class: 'hitem' + (i === n - 1 ? ' cur' : ''), onclick: () => ed.jumpTo(i + 1) }, op.label, h('small', {}, new Date(op.time).toLocaleTimeString().slice(0, 5)))));
-  [...ed.redoStack].reverse().forEach((op, i) => list.append(h('button', { class: 'hitem future', onclick: () => ed.jumpTo(n + i + 1) }, op.label, h('small', {}, '已撤销'))));
-  body.append(sec(`操作记录（${n} 步，点一下回到那一步）`, 'history', list));
+  const total = ed.undoStack.length;
+  const draw = () => {
+    const kw = q.value.trim().toLowerCase();
+    list.innerHTML = '';
+    const rows = [];
+    if (!kw) rows.push(h('button', { class: 'hitem' + (n === 0 ? ' cur' : ''), onclick: () => ed.jumpTo(0) }, '（打开时的样子）'));
+    ed.undoStack.forEach((op, i) => {
+      if (kw && !op.label.toLowerCase().includes(kw)) return;
+      rows.push(h('div', { class: 'hrow' },
+        h('button', { class: 'hitem' + (i === n - 1 ? ' cur' : ''), style: 'flex:1;text-align:left', onclick: () => ed.jumpTo(i + 1) },
+          h('span', {}, op.label),
+          h('small', {}, ' ' + new Date(op.time).toLocaleTimeString().slice(0, 5)),
+          h('small', { class: 'hstat' }, opStatsText(i))),
+        h('button', { class: 'ib hdrop', title: '只撤销这一步（保留后面的步骤）', 'aria-label': '单独撤销', disabled: !canDrop(i), onclick: async (e) => { e.stopPropagation(); if (await confirmDropOp(i)) { q.value = ''; A.refresh('dock'); } }, html: icon('del') })));
+    });
+    [...ed.redoStack].reverse().forEach((op, i) => {
+      if (kw && !op.label.toLowerCase().includes(kw)) return;
+      rows.push(h('button', { class: 'hitem future', onclick: () => ed.jumpTo(n + i + 1) }, op.label, h('small', {}, '已撤销')));
+    });
+    if (!rows.length) rows.push(h('div', { class: 'hint' }, kw ? '没有匹配的操作' : '还没有操作。画一笔、挪一个东西，这里就会出现记录。'));
+    list.append(...rows);
+  };
+  draw();
+  q.addEventListener('input', draw);
+  body.append(sec(`操作记录（${total} 步 · 点一下回到那一步 · ✕ 只撤销这一步）`, 'history', q, list));
   const snapBox = h('div', { class: 'hist' });
   body.append(sec('快照', null, h('button', { onclick: () => IO.takeSnapshot(), html: icon('save') + ' 存一个快照' }), snapBox));
   IO.snapshots().then((ss) => {
@@ -554,7 +587,8 @@ function dockReport(body) {
   if (f) {
     const ok = f.nearestSpread <= 3 && f.nearSpread <= 1 && (!f.areaRatio || f.areaRatio < 1.3);
     body.append(h('div', { class: 'hint' + (ok ? '' : ' warnh'), style: 'margin-bottom:10px', html: ok ? '<b>看起来比较公平。</b>各队最近资源池的距离和附近资源数量接近。' :
-      `<b>有不平衡的地方：</b>最近资源池距离相差 ${f.nearestSpread} 格，30 格内资源池数量相差 ${f.nearSpread} 个${f.areaRatio ? `，地盘最大是最小的 ${f.areaRatio.toFixed(1)} 倍` : ''}。` }));
+      `<b>有不平衡的地方：</b>最近资源池距离相差 ${f.nearestSpread} 格，30 格内资源池数量相差 ${f.nearSpread} 个${f.areaRatio ? `，地盘最大是最小的 ${f.areaRatio.toFixed(1)} 倍` : ''}。可以点下面的“一键平衡”。` }));
+    if (!ok) body.append(h('button', { class: 'primary', style: 'margin-bottom:10px', onclick: () => import('./balance.js').then((m) => m.balanceDialog()).catch((e) => toast('一键平衡不可用：' + e.message)), html: icon('report') + ' 一键平衡…' }));
   }
   const near = rows.map((r) => r.near).filter((v) => v !== null), nst = rows.map((r) => r.nearest).filter((v) => v !== null);
   const minNear = Math.min(...near), maxNst = Math.max(...nst);
@@ -592,6 +626,7 @@ export async function showWelcome(force = false) {
     h('div', { class: 'acts' },
       big('open', '打开地图', '选择一个 .tmx 文件', () => IO.openMap()),
       big('newfile', '新建地图', tpl ? '选尺寸和人数，自动布点' : '需要先打开一张地图', () => D.newMapDialog(), !tpl),
+      big('wand2', '设计向导', tpl ? '回答几个问题，自动做一张能玩的图' : '需要先打开一张地图', () => import('./wizard.js').then((m) => m.wizardDialog()), !tpl),
       canGame ? big('folder', '从游戏文件夹打开', gf ? gf.name : '授权一次游戏地图文件夹', () => IO.openFromGame()) : big('image', '图片转地图', '把一张图变成地图', () => D.imageToMapDialog(), !tpl),
       canGame ? big('image', '图片转地图', '把一张图变成地图', () => D.imageToMapDialog(), !tpl) : null,
       big('tutorial', '新手教程', '跟着做，几分钟学会', () => A.hooks.tutorial()),

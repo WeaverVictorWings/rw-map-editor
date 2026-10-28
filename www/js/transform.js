@@ -357,7 +357,9 @@ export function mirrorMap(ed, kind) {
       case 'rl': return x < W / 2 ? [W - x, y] : null;
       case 'tb': return y > H / 2 ? [x, H - y] : null;
       case 'bt': return y < H / 2 ? [x, H - y] : null;
-      case 'rot': return x > W / 2 ? [W - x, H - y] : null;
+      // rot 是中心对称：中轴角点 x=W/2 也要翻（它对应 y 方向镜像的那一半），
+      // 否则 (W/2, y>H/2) 这一列角点不翻，中轴两侧地形差一排
+      case 'rot': return x >= W / 2 ? [W - x, H - y] : null;
       case 'quad': { const r = x > W / 2, b = y > H / 2; if (!r && !b) return null; return [r ? W - x : x, b ? H - y : y]; }
     }
     return null;
@@ -419,18 +421,39 @@ export function mirrorMap(ed, kind) {
 
 // ---------------- 对称差异检查 ----------------
 // 返回 {diff: Uint8Array(W*H) 1=不对称, count, spawns: 不对称的出生点数}
+// 地形按“角点”比较（左右镜像时四个角要交叉对应）：这样不会因为一个格子里两种地形各占两角、
+// 谁先谁后（tileTerrain 的平局规则）而误报，修完对称之后能真正归零。
 export function symmetryDiff(ed, kind) {
   const m = ed.map, eng = ed.engine, W = m.width, H = m.height;
   const mirror = (x, y) => kind === 'lr' ? [W - 1 - x, y] : kind === 'tb' ? [x, H - 1 - y] : [W - 1 - x, H - 1 - y];
   const diff = new Uint8Array(W * H);
   let count = 0;
   const I = m.items;
+  // 镜像后的四个角点在原格里的顺序
+  // 角点镜像：lr 左右翻（tl↔tr、bl↔br）、tb 上下翻（tl↔bl、tr↔br）、rot 中心对称（tl↔br、tr↔bl）
+  const swap = kind === 'lr' ? [1, 0, 3, 2] : kind === 'tb' ? [2, 3, 0, 1] : [3, 2, 1, 0];
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
     const [mx, my] = mirror(x, y);
     const i = y * W + x, j = my * W + mx;
+    if (i === j) continue;   // 镜像轴上的格子：左右/上下对折时它和自己对称，不用比
     let bad = false;
-    if (eng) bad = eng.tileTerrain(i) !== eng.tileTerrain(j);
-    else bad = m.ground.data[i] !== m.ground.data[j];
+    // 只看角点会漏报：两块地的主地形不同、交界却正好落在同一组角点上时角点完全相同。
+    // 也不能只比 gid：同一地形的不同朝向变体 gid 不同、角点相同，镜像后会误报一大片。
+    // 所以比「两个角点中较小的那个地形」——每个格子里必然同时存在这两种地形（或只有一种），
+    // 它不随朝向变体和解析顺序变化；同为 NONE 的变体一视同仁。
+    // （不直接用 tileTerrain：一个格里两种地形各占两角时它按平局规则挑一个，镜像前后可能挑到不同的那个。）
+    if (eng) {
+      // 按镜像关系一一对应比较四个角（不是排序后比集合：一个格里两种地形各占两角时，
+      // 集合相同但左右镜像过来是反的，必须看位置）
+      const W1 = eng.W1, V = eng.V, a = y * W1 + x, b = my * W1 + mx;
+      const off = [0, 1, W1, W1 + 1];   // tl, tr, bl, br 在角点数组里的偏移
+      const ca = off.map((o) => V[a + o]);
+      const cb = off.map((o, k) => V[b + off[swap[k]]]);
+      bad = ca[0] !== cb[0] || ca[1] !== cb[1] || ca[2] !== cb[2] || ca[3] !== cb[3];
+      // 角点一样时还要看“主地形”：一个格里两种地形各占两角（对角）时，
+      // 主地形取哪个由平局规则决定，左右镜像过去可能挑到不同的那个——这种也算不对称
+      if (!bad) bad = eng.tileTerrain(i) !== eng.tileTerrain(j);
+    } else bad = (m.ground ? m.ground.data[i] : 0) !== (m.ground ? m.ground.data[j] : 0);
     if (!bad && I) bad = !!I.data[i] !== !!I.data[j];
     if (bad) { diff[i] = 1; count++; }
   }

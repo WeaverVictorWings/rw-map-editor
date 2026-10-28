@@ -71,7 +71,7 @@ r = await R(async () => {
   return res;
 });
 console.log('  ', JSON.stringify(r));
-expect(r.length === 10, '10 个预设都能跑');
+expect(r.length >= 10, '全部风格预设都能跑（' + r.length + ' 个）');
 r = await R(async () => {
   const D = await import('./js/detail.js'); const { ed, balanceReport } = window.__rw;
   const w = D.makeWork({}); await D.runStack(w, D.STYLE_PRESETS.find((p) => p.id === 'delta').stack, { seed: 5, sym: 'none' }); D.applyWork(w, 'x', { connect: true });

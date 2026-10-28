@@ -1,0 +1,26 @@
+import { createRequire } from 'module'; import fs from 'fs';
+const require = createRequire(import.meta.url);
+const { chromium } = require(process.env.PW || 'playwright');
+const browser = await chromium.launch();
+const page = await (await browser.newContext({ locale: 'zh-CN' })).newPage();
+const errs = []; page.on('pageerror', (e) => errs.push(e.message));
+await page.goto((process.env.URL || 'http://localhost:8765/index.html')); await page.waitForFunction(() => window.__rwReady);
+await page.evaluate(async (t) => { await window.__rw.loadMapFromText(t, 's.tmx'); }, fs.readFileSync(process.argv[2], 'utf8'));
+const r = await page.evaluate(async () => {
+  await window.__rw.createNewMap({ name: 't', w: 80, h: 60, players: 2, start: 'blank', layout: '1v1', base: -1, pools: 0, center: 0 });
+  const H = await import('./js/historyx.js'); const { ed } = window.__rw; const it = ed.items.find((i) => i.pool); const W = 80;
+  const poolsAt = () => ed.poolTiles().map(([x, y]) => x + ',' + y).sort().join(' ');
+  const base = JSON.stringify([...ed.map.items.data]);
+  const n0 = ed.undoStack.length;
+  ed.begin('A'); for (const x of [10, 11, 12]) ed.placeItemAt(x, 10, it.key); ed.commit();
+  ed.begin('B'); ed.setTile(ed.map.items, 11, 10, 0); ed.placeItemAt(20, 20, it.key); ed.commit();
+  ed.begin('C'); ed.placeItemAt(30, 30, it.key); ed.commit();
+  const full = poolsAt(); const ia = n0;
+  const dropped = H.dropOp(ia); const afterDrop = poolsAt();
+  ed.undo(); const u1 = poolsAt(); ed.undo(); const u2 = poolsAt();
+  ed.redo(); ed.redo(); const redone = poolsAt();
+  ed.undo(); ed.undo(); const baseBack = JSON.stringify([...ed.map.items.data]) === base;
+  return { full, dropped, afterDrop, u1, u2, redone, baseBack, stack: ed.undoStack.map((o) => o.label).slice(-4) };
+});
+console.log(JSON.stringify(r, null, 1)); console.log('errs', errs);
+await browser.close();

@@ -104,7 +104,14 @@ export class TerrainEngine {
     const c = [V[a], V[a + 1], V[a + this.W1], V[a + this.W1 + 1]];
     if (c[0] === c[1] && c[1] === c[2]) return c[0];
     let best = c[0], bn = 0;
-    for (const v of c) { if (v === NONE) continue; let n = 0; for (const w of c) if (w === v) n++; if (n > bn) { bn = n; best = v; } }
+    // 平局时（两种地形各占两角）按地形编号取小的那个：和角点的排列顺序无关，
+    // 镜像/旋转之后仍然是同一个答案（早先取“第一个非 NONE 的角”，镜像过去会换人，
+    // 导致对称检查误报一整片）
+    for (const v of c) {
+      if (v === NONE) continue;
+      let n = 0; for (const w of c) if (w === v) n++;
+      if (n > bn || (n === bn && v < best)) { bn = n; best = v; }
+    }
     return best;
   }
 

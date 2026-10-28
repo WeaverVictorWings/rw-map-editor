@@ -39,7 +39,9 @@ export async function pickFile(accept = '.tmx') {
 }
 export async function pickImage() { const r = await pickFile('image/*'); return r ? r.file : null; }
 
-export async function saveFile(name, data, mime, handle = null) {
+// opts.quiet：不走系统“另存为”对话框，直接下载（保存地图时顺手导出封面用，免得连弹两次）
+export async function saveFile(name, data, mime, handle = null, opts = null) {
+  const quiet = !!(opts && opts.quiet);
   const bytes = toBytes(data);
   const sf = nativePlugin('SaveFile');
   if (sf) {
@@ -59,7 +61,7 @@ export async function saveFile(name, data, mime, handle = null) {
       return { ok: true, handle, where: '已覆盖保存到原文件' };
     } catch (e) { console.warn('原地保存失败，改用另存为', e); }
   }
-  if (window.showSaveFilePicker && !isNative()) {
+  if (window.showSaveFilePicker && !isNative() && !quiet) {
     try {
       const ext = name.slice(name.lastIndexOf('.'));
       const h = await window.showSaveFilePicker({ suggestedName: name, types: [{ description: name, accept: { [mime || 'application/octet-stream']: [ext] } }] });

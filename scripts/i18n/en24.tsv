@@ -1,0 +1,703 @@
+n24_0	0 buttons
+n24_1	0 items
+n24_2	All 10 resource pools are on land
+n24_3	16 tile types can be destroyed by builders (cliff-soft)
+n24_4	180 s / step 0.25 s:
+n24_5	1v1 duel · Continent
+n24_6	1v1 match
+n24_7	2. Answer questions
+n24_8	3-player free-for-all · Archipelago
+n24_9	3. Confirm and create
+n24_10	Within 30 tiles
+n24_11	3–4 player team battle
+n24_12	4-player team battle · Inland sea
+n24_13	4 items
+n24_14	47 tiles · route of team 3
+n24_15	49 tiles · route of team 1
+n24_16	49 tiles · route of team 3
+n24_17	51 tiles · route of team 1
+n24_18	64 tiles, 7 inside firepower
+n24_19	64 tiles, 9 inside firepower
+n24_20	8 spawns scattered over the map, no allies, everyone for themselves
+n24_21	8-player free-for-all
+n24_22	81 cliff tile types cannot be destroyed
+n24_23	97 tiles · routes of team 1, team 2, team 3, team 4
+n24_24	Mod unit library
+n24_25	README.md introduction
+n24_26	builder · builds/repairs, fastest, cannot fight
+n24_27	changelog.md release notes
+n24_28	commandCenter · starting main base, losing it means defeat (default win condition)
+n24_29	cover.png cover image (shown in the Workshop list)
+n24_30	health: health percentage, usually 100 / 50
+n24_31	heavyTank · heavy armor, head-on fighter
+n24_32	hoverTank · can cross water, flanking unit
+n24_33	invulnerable: invincible, usually true / false
+n24_34	map.tmx the map itself
+n24_35	map_info form
+n24_36	map_info form (match rules)
+n24_37	mechGun · mech class
+n24_38	rank: level, usually 1, 2, 3
+n24_39	Missing tilesets and external images in "Map dependency check" are problems of the asset files themselves and are not handled here.
+n24_40	① A set of stamps
+n24_41	① Choose the units to replace
+n24_42	② Import a set of stamps
+n24_43	② Replace with
+n24_44	③ A full detail style
+n24_45	⚠ Firepower dead zone (sneak route)
+n24_46	✓ No broken tile IDs found, and no units with missing tiles.
+n24_47	. Start/end taper = how thin the tail gets.
+n24_48	After "Add to map", press Esc / right-click to cancel placing; the map is not changed.
+n24_49	One table showing which units this map uses and each unit's health and price
+n24_50	One table for all zones: rename, move together, see who uses them
+n24_51	How many at once
+n24_52	One action counts as a single undo step; unit types (the unit property) are not changed here.
+n24_53	Swap stamps and auto-detail styles as short text
+n24_54	Pack a set of stamps or a whole detail style into one code
+n24_55	A row of custom buttons above the map
+n24_56	One-tap health fix
+n24_57	One-tap map description
+n24_58	One-tap balance
+n24_59	Three islands, no symmetry; it is a contest of who learns the neighbors' positions first. Island maps do not guarantee land connectivity and suit naval play.
+n24_60	Three parameter sets, generate one as a reference in one tap
+n24_61	Three parameter sets; one tap generates into the editor using your own imported tiles, as a reference image or starting point.
+n24_62	Previous
+n24_63	Next
+n24_64	Download .md
+n24_65	Do not change
+n24_66	No fighting and units never die: units in a zone = those already on the map + those spawned by the simulation − those removed; "closed by" is treated as "that trigger is currently true": closed while true, released automatically when false; credits / team tags / text / objectives / camera only record events; "tag check" looks at tags added in this simulation; conditions inside one time step use the snapshot at the start of the step, so spawned units are only detected on the next step
+n24_67	Do not change unit type
+n24_68	Do not change team
+n24_69	See at which second triggers fire and where mistakes are, without playing the game
+n24_70	Unlimited
+n24_71	Two players face off left and right, fastest pace, good for making a playable map first
+n24_72	will fire, out of
+n24_73	placeholder issues
+n24_74	in triggers
+n24_75	issues, simulation took 1.9 ms.
+n24_76	, curve length
+n24_77	A city in the center; whoever holds it keeps earning money, good for multiplayer point fights
+n24_78	Spawn units in the center
+n24_79	Neutral (belongs to nobody)
+n24_80	then spawn another batch every few seconds
+n24_81	Also delete extra resource pools
+n24_82	Event table (0)
+n24_83	Players / teams: 2 players
+n24_84	Players / teams: 3 players
+n24_85	Players / teams: 4 players
+n24_86	Top-to-bottom order is the display order (lower is drawn first).
+n24_87	Unit tiles read from this map's tilesets. Click a row to make it the current brush, switch to "Tiles" mode and draw.
+n24_88	Exports 3 transparent PNGs of 2400×1800 pixels. You can post them in a group so others drag them in as layers to trace.
+n24_89	Will generate 1 item (after "Add to map", click once on the map and the zone is placed there):
+n24_90	Size, teams, resource pools and check results are included automatically
+n24_91	Will fire 0
+n24_92	Portal
+n24_93	Estimated total cost
+n24_94	Say something in the battle log
+n24_95	Author
+n24_96	Your saved stamps (share-code form)
+n24_97	Your configured favorite buttons
+n24_98	For example: fixed the crowded right spawn, added two resource pools in the middle
+n24_99	Path used for saving to the game folder
+n24_100	The fix mirrors spawns and resource pools too (same logic as "Mirror whole map") and can be undone.
+n24_101	x; territory is decided by terrain, only resource pools are adjusted here, terrain is not changed.
+n24_102	Countdown announcements
+n24_103	Leave a value empty = delete that property; rows with an empty property name are ignored.
+n24_104	First select an area on the map, or drag a line with the "Measure distance" tool.
+n24_105	Choose a game style first. One tap goes straight to the next step; every answer can be changed later.
+n24_106	Select none
+n24_107	Select all filtered results
+n24_108	0 total
+n24_109	1098 tiles with a unit property in total, 86 unit types, spread over 2 tilesets
+n24_110	12 units / 0 selected
+n24_111	27 objects in total: units 12 · triggers 1 · resource pools 10 · spawns 4
+n24_112	85 units in total. Click a row to set that unit as the current brush. Prices are approximate in-game values, for comparing strength.
+n24_113	Share layers
+n24_114	Share layers (split ground / items / units into transparent PNGs)
+n24_115	Turn off all backups
+n24_116	Write something, e.g.: base goes here / leave this pool alone / art to be added
+n24_117	Decides which match rules the game uses. For a normal multiplayer match choose "Skirmish".
+n24_118	Kill bounty (money for clearing)
+n24_119	Show/hide ground, items, units and triggers separately, and lock layers you do not want to paint on
+n24_120	Tiled generation only lays terrain; spawns, resource pools and connectivity are handled together at the end; the whole process is one action and can be undone at once. Small maps (single tile) use the original whole-map generation directly with identical results.
+n24_121	Analysis · Firepower coverage (what turrets can cover)
+n24_122	Category
+n24_123	Delete selected
+n24_124	To team 0, 64 tiles
+n24_125	To team 1, 64 tiles
+n24_126	Arrival area notice
+n24_127	Which units to spawn
+n24_128	Spawning, point capture and portals: fill in a few numbers and you have them
+n24_129	Spam shows only the first 20
+n24_130	Add a feature
+n24_131	Add a marker
+n24_132	Add test triggers to check logic, remove them all in one tap before publishing
+n24_133	Add to map
+n24_134	Tick the box on the left to select units; clicking a row closes this window and locates it on the map (ticks are kept).
+n24_135	Tick the debug triggers to add. Added ones are all tagged "rwDebug"; before publishing click "Remove all" to delete them cleanly without touching your own triggers.
+n24_136	Zone manager
+n24_137	Zone manager (rename, move in bulk, find references)
+n24_138	Zone covers the whole map, outputs coordinate info together with team tags
+n24_139	Four in a cross
+n24_140	Radius
+n24_141	Health each
+n24_142	Units · Unit tile library
+n24_143	Units · Unit guide (what is used, who is strong or weak)
+n24_144	Units · Unit stats and cost table
+n24_145	Units and spawns
+n24_146	Unit guide
+n24_147	Unit guide (which units this map uses, who is strong or weak)
+n24_148	Total units (2 types)
+n24_149	Unit shadow
+n24_150	Unit composition (12)
+n24_151	Unit stats and cost
+n24_152	Placeholder / misplaced tile
+n24_153	Capture reward (money + announcement)
+n24_154	Capture income (continuous money)
+n24_155	Capture victory
+n24_156	Choke point
+n24_157	Stamp pack / style pack
+n24_158	Stamps: 0 on this device (merged by id on import, duplicates removed)
+n24_159	Reference images (multiple)
+n24_160	Reference image: none
+n24_161	Invert selection
+n24_162	Variation
+n24_163	Only picks pools that are "near this team and far from other spawns"; untouched by default
+n24_164	Only those used in this map
+n24_165	Show only:
+n24_166	Static range only: ignores whether turrets get destroyed first, whether units move, or whether terrain blocks. Range is read from the unit's range property (pixels ÷ 20); if unavailable a common value is estimated.
+n24_167	Read-only comparison: does not change the current map. Highlights are drawn on the editor overlay and the previous overlay is restored when the window closes.
+n24_168	Read-only check, does not change the map. Click an item to jump to it on the map and highlight it; "Select all overlapping units" creates a selection covering those units which you can then cut / clear with the selection tool.
+n24_169	Read-only: generation does not change the map and creates no undo step.
+n24_170	Read-only: statistics do not change the map. Cost only totals units with a reference value; others show "—".
+n24_171	Only lays the base map and places spawns; draw the terrain yourself
+n24_172	Buildable area 99.9%
+n24_173	Optional, shown in the map info.
+n24_174	How long each team needs to reach the enemy
+n24_175	Resource distribution per team
+n24_176	2 types in total
+n24_177	Also erase items in the zone (decoration / resource pools)
+n24_178	Lay several reference images at once, with scale and rotation calibration
+n24_179	Lay several reference images at once: opacity, visibility and lock are set per image; use two-point calibration when positions do not match.
+n24_180	Snapping and precision drawing
+n24_181	Matched 12 units: builder×8, commandCenter×4 (teams: team 1, team 2, team 3, team 4)
+n24_182	Noise
+n24_183	Spawns in the four corners with an inland sea in the middle, good for 2v2 / 4-player free-for-all. Resource pools line the corners and navies can cut in through the middle.
+n24_184	Answer a few questions and a playable map is made automatically
+n24_185	Answer a few questions and a playable map is generated automatically
+n24_186	Ring around
+n24_187	Around spawns
+n24_188	Tile 372 (10 on the whole map)
+n24_189	Broken tile IDs? Automatically swap back the ones that are safe to replace
+n24_190	Tilesets (3)
+n24_191	Layer comparison
+n24_192	Layer panel
+n24_193	Layer panel (what is visible, what must not be changed)
+n24_194	Icon name, may be empty
+n24_195	Circle
+n24_196	Long-press (right-click on PC) your own stamp in the "Stamps" panel → "Copy share code", send the text to a friend, and they paste it here to import.
+n24_197	Pin notes on the map: base goes here, leave this pool alone, art to be added
+n24_198	Always show on the map
+n24_199	Click control points on the map in order, the curve passes through each point; press Esc to close the panel.
+n24_200	Hold the left button on the map to paint; one drag is one step, painting again after release is a new step.
+n24_201	Paint on the map to round terrain edges, add an eroded look or sprinkle noise
+n24_202	Click a few control points on the map and they join into a smooth, tapered river or road
+n24_203	Highlight differences on the map
+n24_204	Highlight these tiles on the map
+n24_205	Map · map_info form (match rules)
+n24_206	Map · One-tap health fix (graded)
+n24_207	Map · One-tap balance
+n24_208	Map · Layer comparison (against another map)
+n24_209	Map · Map dependency check
+n24_210	Map · Map statistics charts
+n24_211	Map · Symmetry difference check / one-tap fix
+n24_212	Map · Command overview
+n24_213	Map · Find and jump
+n24_214	Map · Measure distance and range circles
+n24_215	Map · Naval check
+n24_216	Map · See what else can be improved
+n24_217	Map · Asset repair (fill in missing tiles)
+n24_218	Map · Auto backup
+n24_219	Map · Trigger simulator
+n24_220	Map · Resource pool layout generator
+n24_221	Map · Passage bottleneck map
+n24_222	Map · Team and faction helper
+n24_223	Map · Team colors and alliances
+n24_224	There are no debug triggers on the map right now.
+n24_225	Map dependency check
+n24_226	Map name
+n24_227	Map name (also written into the README)
+n24_228	Map markers / notes
+n24_229	Map type: Skirmish · Win condition: default · Objectives: 0 · Units already on the map: 12 (counted)
+n24_230	Map statistics charts
+n24_231	Map design wizard
+n24_232	Terrain · Terrain erase and restore brush
+n24_233	Terrain · Smooth / erode / noise brushes
+n24_234	Terrain · Curve tool (draw river / road)
+n24_235	Terrain share
+n24_236	Terrain share, resource distribution, unit composition
+n24_237	Terrain erase and restore
+n24_238	Terrain generation method
+n24_239	Terrain brushes (smooth / erode / noise)
+n24_240	Ground highlight
+n24_241	Ground (main terrain)
+n24_242	Coordinate check
+n24_243	Copy text
+n24_244	Copy this unit's properties (without unit / team)
+n24_245	Copy selected (offset 1 tile)
+n24_246	Tiled big-map generation
+n24_247	Tiled big-map generation (1000×1000 no longer freezes)
+n24_248	Large buttons / left-hand mode / long-press menu
+n24_249	Large buttons (easier for fingers)
+n24_250	If the current tileset has no tile for the target team, the original tile is kept (the in-game look follows the actual result).
+n24_251	If you mirror left-right now, 5405 non-empty cells will be written to the map (5400 ground + 5 items).
+n24_252	Stored on this device in IndexedDB under the references key (images are stored as dataURL). Reference images are only tracing underlays, are not saved into the TMX and do not affect playability.
+n24_253	Survive N minutes to win
+n24_254	Saved in the map file's EditorMarks object group and stored with the map; the game ignores this group, so playability is unaffected. Clearing markers only deletes markers, not terrain / units / triggers.
+n24_255	Lessons completed
+n24_256	Hold one base while enemies spawn in waves from the map edges
+n24_257	Install to desktop / use offline
+n24_258	Install to desktop / use offline…
+n24_259	Locate
+n24_260	Saves periodically so you can recover after a crash
+n24_261	Spots that are easy to get stuck (0)
+n24_262	Dense forest ridge
+n24_263	Symmetry difference check / one-tap fix
+n24_264	Symmetric drawing helper
+n24_265	Symmetric drawing helper (mirror preview + difference heatmap)
+n24_266	Object group · Triggers
+n24_267	Object group · UnitObjects
+n24_268	Overlapping units
+n24_269	Importing replaces the current map and restores the settings, reference images and selection in the package; a failed import automatically returns to the state before.
+n24_270	Import a full style
+n24_271	Overwrite existing settings on import (if unchecked, only fills empty ones)
+n24_272	Export
+n24_273	Export .rwproj
+n24_274	Export .txt
+n24_275	Export .zip
+n24_276	Export post / Workshop text
+n24_277	Export post / Workshop text…
+n24_278	Export selected layers
+n24_279	Pack cover, description, release notes and map into one zip
+n24_280	Will pack 4 files, about 1.30 MB (cover.png 10 KB, README.md 1.1 KB, changelog.md 120 B, map.tmx 1.29 MB)
+n24_281	Will place 12 resource pools: team 0 3, team 1 3, team 2 3, team 3 3
+n24_282	Will replace 10 tiles (whole map)
+n24_283	Small block
+n24_284	Fill in property names following game / Mod conventions.
+n24_285	Workshop package
+n24_286	Project file
+n24_287	One team on each side, fight over resources in the middle; works for 2v2 / 3v3
+n24_288	Left-hand mode (swap toolbar and panels left/right)
+n24_289	Known total health
+n24_290	Already fairly even: each team's nearest pool differs by 3 tiles or less and counts within 30 tiles differ by 1 or less
+n24_291	Has a property (health / rank / invulnerable…)
+n24_292	Help · Report an issue
+n24_293	Average health
+n24_294	Shift
+n24_295	Balance report, one-tap balance, bottlenecks
+n24_296	Apply
+n24_297	Apply changes
+n24_298	Builder · Infantry
+n24_299	Start painting
+n24_300	5 seconds after start, spawns a builder in the exact center to verify the spawn chain works
+n24_301	Second after start for the first batch
+n24_302	At second N after start, spawns a batch of units here, then another batch every M seconds (interval 0 = only once). The most common "enemy attack".
+n24_303	Starting resources
+n24_304	Strength (0 = turn this item off)
+n24_305	Current map 120×90 will be cut into 1 column × 1 row = 1 block (each about 120×90 tiles, blocks overlap by 24 tiles to avoid seams). Rough estimate 0.2 s.
+n24_306	Current buttons
+n24_307	Like tank*2, builder; leave empty to use the units already placed on the map.
+n24_308	Move up one layer
+n24_309	Move down one layer
+n24_310	Quick toolbar
+n24_311	Write anything, may be left empty
+n24_312	Total health
+n24_313	Total cost
+n24_314	To let builders dig through mountains, replace them with tiles that have the cliff-soft property.
+n24_315	Screenshot export
+n24_316	Screenshot export (large image rendered with real tiles)
+n24_317	All units are placed on tiles that can be stood on / built on
+n24_318	Money every team gets at the start. Leave empty to use the game default (usually 4000). To give teams different amounts, set them separately with the "Team credits" trigger.
+n24_319	All land can be reached from the spawns
+n24_320	On phones: enlarge buttons, move the toolbar to the other side, long-press the map for a quick menu. Changes apply immediately and are remembered next time.
+n24_321	Phone experience
+n24_322	Open the team and faction helper
+n24_323	Files packed in
+n24_324	Bulk edit (applies to ticked units)
+n24_325	Bulk change team, health, invulnerability, rank and other properties
+n24_326	Bulk change team, health, invulnerability, rank and other properties without writing them by hand
+n24_327	Bulk replace
+n24_328	Bulk replace units
+n24_329	Bulk replace (terrain / items / units)
+n24_330	Bulk move terrain
+n24_331	Find where the two sides differ, or simply fill them in symmetrically
+n24_332	Find units that are stacked or in wrong tiles
+n24_333	Cut a 1000×1000 map into blocks and generate block by block so the interface does not freeze for long
+n24_334	Push an area one tile as a whole, edges are handled automatically
+n24_335	Replace one terrain or item with another as a whole, optionally only in the selection
+n24_336	Pack a set of stamps or a full detail style into one code; others paste it in a group chat to import everything at once. Old RWS1- / RWD1- codes still work.
+n24_337	Take your own tuned habits and assets with you (without the map itself). After importing on a new device, stamps, presets and settings are back.
+n24_338	Shift the ticked zones
+n24_339	Take stamps, presets and settings with you
+n24_340	Paste the stamp share code here, then click "Import stamps"
+n24_341	Take the map, settings, reference images, stamps and selection with you
+n24_342	Packs the map, settings, reference images, stamp library and current selection into one .rwproj so you can continue editing on another device.
+n24_343	Count the units already on the map
+n24_344	List what is on the map in a table; click an entry to jump to it
+n24_345	Turn the map info into text that can be pasted directly
+n24_346	Compare the map with its symmetric version and mark differences in red; or simply fill it in symmetrically.
+n24_347	Render the map with real tiles into a sharp large PNG, optionally with grid and annotations
+n24_348	Split ground, items and units into transparent PNGs, easy to share in a group and trace over
+n24_349	Cut large grassland into dark patches of varying size, then dot some tufts and rubble so it does not look monotonous from afar
+n24_350	Turn size, teams, resources, check results and triggers into text that can be pasted directly
+n24_351	Erase wrongly painted terrain back to the unpainted default, and restore areas you just erased
+n24_352	Bite small bays and peninsulas into straight terrain edges so they look naturally formed
+n24_353	Install the web version as an app that opens even offline
+n24_354	Draw the activation links between triggers as a graph
+n24_355	List resource pools, units and triggers; click an entry to jump to it
+n24_356	List all trigger commands of this map grouped by type
+n24_357	Turn this map into a zip ready to upload to the Workshop: cover, description, release notes and the map itself.
+n24_358	Turn this map's size, teams, resources, check results and triggers into text you can send straight to a group / Workshop page / forum. You can edit it afterwards.
+n24_359	Compare against the asset set stored in "Tile asset source"
+n24_360	When taken to another computer or sent to others, missing tiles become blank. To make sure it is complete use "Save to game folder" or "Pack map collection".
+n24_361	Command overview
+n24_362	Command center destroyed (notice)
+n24_363	Shortest path by land (4-neighbour, avoiding impassable terrain). The first spawn of each team and the pools currently on the map are used.
+n24_364	Fix check issues graded by "safe / risky / manual", each one undoable independently
+n24_365	Filter by unit name or property, e.g. tank, health
+n24_366	Filter by unit property (health / rank / invulnerable etc.); units without health are not matched by the "health" condition.
+n24_367	By unit type
+n24_368	Filter by unit type
+n24_369	Generate automatically from the map
+n24_370	Scatter trees, tufts, rubble and cacti by terrain: clustered, denser at forest edges, sparse in the open
+n24_371	Render a finished picture with lighting, water shine and vignette using real tiles, looking like an in-game screenshot
+n24_372	Filter a group of units by type, team and health and replace unit / team in one go
+n24_373	Filter by team
+n24_374	Lay resource pools in bulk by team and shape; spacing may be 0
+n24_375	Pick the most used ones to place above the map, one tap runs them; you can also rename and change icons.
+n24_376	Replacing unit / team also changes the object name (
+n24_377	Change to
+n24_378	Control points
+n24_379	Note: differences are compared by "main terrain", so the same area with a different orientation or a different connecting tile does not count as different (they look the same in game).
+n24_380	Note: trigger descriptions are plain-language text translated by the editor; after saving the map, remember to send the .tmx together with the same-name .png cover.
+n24_381	Search unit names, trigger names, coordinates…
+n24_382	Search unit names (Chinese or English)
+n24_383	Search units, properties or coordinates, e.g. "tank", "health", "12,30"
+n24_384	Search actions (e.g. "paint terrain", "fill empty cells")…
+n24_385	Action history (0 steps · click to go back to that step · ✕ undo only this step)
+n24_386	Erase to terrain
+n24_387	Erase to default terrain
+n24_388	Erasing sets the terrain corners of this area directly to the uniform default terrain, then re-lays the affected tiles; one action is one undo step.
+n24_389	Scale factor
+n24_390	Put in
+n24_391	Hostile neutral (creeps / enemies)
+n24_392	Tutorial progress
+n24_393	File · Share layers (split into transparent PNGs)
+n24_394	File · Stamp pack / style pack
+n24_395	File · Save as
+n24_396	File · Install to desktop / use offline
+n24_397	File · Export post / Workshop text
+n24_398	File · Export preview / showcase image
+n24_399	File · Workshop package
+n24_400	File · Project file (.rwproj)
+n24_401	File · Screenshot export (high-res)
+n24_402	File · Game-like export look
+n24_403	File · Settings and presets: import / export
+n24_404	File · Design wizard (Q&A new map)
+n24_405	New group
+n24_406	Square
+n24_407	Rotation angle
+n24_408	Endless (endless)
+n24_409	Invulnerable (invulnerable)
+n24_410	Timeline (click a row to jump to that trigger)
+n24_411	Showing 0 · click a row to jump to that trigger
+n24_412	Display name, may be empty
+n24_413	A normal match map needs no triggers, just correct map settings.
+n24_414	A normal skirmish can have no triggers. For missions, survival or point capture, use "Triggers → Template library" to add them quickly.
+n24_415	Smart hints
+n24_416	Curve tool
+n24_417	Curve tool (river / road)
+n24_418	Replace
+n24_419	Replace matches
+n24_420	The classic one-on-one: one spawn on each side with a contested resource pool in the middle. Practice "reading symmetry and distance" on this one first.
+n24_421	Has a property, e.g. health
+n24_422	One line toward the center
+n24_423	No stamps stored on this device yet. Save a few in the "Stamps" panel first.
+n24_424	Mech mechGun
+n24_425	events, none fired even once. Found
+n24_426	Minimal
+n24_427	Denser forest edges
+n24_428	Find and jump
+n24_429	Find and jump…
+n24_430	View every action, click to jump back; you can also undo only a step in the middle
+n24_431	View every step, click to jump back; you can also undo only a step in the middle
+n24_432	Mark intersections
+n24_433	Mark resource pools and spawns
+n24_434	An introduction written automatically from this map's terrain, teams, spawns, resource pools and check results; edit it and then copy.
+n24_435	tiles / 10800 in total (0.2%)
+n24_436	Tile X
+n24_437	Tile Y
+n24_438	Tiles adjacent 0px²
+n24_439	Fix automatically after checking
+n24_440	Check finished in 2 ms
+n24_441	Simulation length (seconds)
+n24_442	Template
+n24_443	The template contains
+n24_444	Official
+n24_445	Step (seconds)
+n24_446	Dead zone
+n24_447	Auto-saves a copy every 0 minutes, keeping at most 5. The map itself is saved, without undo history.
+n24_448	Announces the time on screen every 10 seconds, to verify when triggers fire
+n24_449	200×200 tiles per block
+n24_450	300×300 tiles per block
+n24_451	400×400 tiles per block
+n24_452	500×500 tiles per block
+n24_453	800×800 tiles per block
+n24_454	Forces per team
+n24_455	How far each team has to go to the resource pools and to attack the opponent, drawn on the map
+n24_456	Count per team
+n24_457	For example pin a note such as "base goes here" or "nobody touch this resource pool".
+n24_458	Water 0 tiles (0.0%), land 10,800 tiles
+n24_459	Water shine
+n24_460	No units are placed on impassable or unbuildable tiles.
+n24_461	No obvious bottlenecks found; the paths are fairly wide.
+n24_462	No problems that need fixing were found
+n24_463	No real overlaps, 4 are only adjacent tiles
+n24_464	Has no property, e.g. invulnerable
+n24_465	Lively
+n24_466	Measure distance and range circles
+n24_467	Measure distance and range circles…
+n24_468	Browse the tiles with a unit property in the map's tilesets
+n24_469	Naval check
+n24_470	Destroy all enemies (destroyAll)
+n24_471	Add marker
+n24_472	Clear markers
+n24_473	Clear highlight
+n24_474	Whether ports can reach the sea and how wide the exit is
+n24_475	Game map path
+n24_476	Game-feel preview (lighting / water waves / vignette)
+n24_477	Lakeside grassland
+n24_478	Firepower hot zones
+n24_479	Firepower coverage analysis
+n24_480	Firepower coverage analysis (turret range × attack routes)
+n24_481	How much of the attack routes the turret ranges cover, and where the sneak dead zones are
+n24_482	Click to locate on the map
+n24_483	Click to lock
+n24_484	Click to hide
+n24_485	Version
+n24_486	Save a copy now
+n24_487	Tile layer · Ground
+n24_488	Tile layer · Items
+n24_489	Generate · Tiled big-map generation
+n24_490	Generate · Symmetric drawing helper
+n24_491	Generate · Sample map recipes
+n24_492	Generate into the editor
+n24_493	Generate a Chinese description for groups / the Workshop
+n24_494	Generate style code
+n24_495	Swap stamps and auto-detail styles with a short text
+n24_496	Overwrite bottom with top
+n24_497	Overwrite top with bottom
+n24_498	Which tiles and units are used, and whether anything goes missing on another computer
+n24_499	Units used (2 types)
+n24_500	Overwrite left with right
+n24_501	Which side is the standard
+n24_502	Overwrite the right half with the left half rotated 180°
+n24_503	Overwrite right with left
+n24_504	Use the browser menu → "Install app / Add to home screen". Ignore this if the Android app is already installed
+n24_505	Edit the match rules with a form, no need to write properties by hand
+n24_506	Drew 16 routes and 1 junction (numbers in the yellow circle are tiles, 129 in total). Solid = to resource pools, dashed = to enemy spawns, yellow circle = where several teams collide.
+n24_507	Draw those to enemy spawns
+n24_508	Draw those to resource pools
+n24_509	Draw river
+n24_510	Draw grid
+n24_511	Draw road
+n24_512	Image grain
+n24_513	Interface settings
+n24_514	Leave empty for no announcement
+n24_515	Ally
+n24_516	View the middle section
+n24_517	What to look for: check whether all four spawns have a land connection to the inland sea; if a corner is enclosed by water, turn on "Connect spawns" and generate again.
+n24_518	What to look for: after finishing compare the tile counts from both sides to the central resource pool; if one side is clearly closer, change the seed or move a pool by one tile manually.
+n24_519	What to look for: run "Playable?"; for island maps a "spawns not connected" report is normal, so add naval units or change to shallows; for pure land armies switch the style to "Continent".
+n24_520	See which places are choke points and which team is forced to detour
+n24_521	See range circles
+n24_522	See what else can be improved on this map
+n24_523	Samples give parameters only and contain no game assets; all tiles come from the map templates you have opened. After generating you can keep using auto detail, triggers and the other features.
+n24_524	Sample maps
+n24_525	Airdrop
+n24_526	Blank custom
+n24_527	No water near team 0's spawn, so this map has no naval combat (ignore if it should be a pure land map)
+n24_528	Team 1 · 12 tiles to the nearest pool · 64 tiles to team 2, 64 to team 3, 64 to team 4
+n24_529	No water near team 1's spawn, so this map has no naval combat (ignore if it should be a pure land map)
+n24_530	Team 1 (red)
+n24_531	Team 2 · 12 tiles to the nearest pool · 64 tiles to team 1, 64 to team 3, 64 to team 4
+n24_532	No water near team 2's spawn, so this map has no naval combat (ignore if it should be a pure land map)
+n24_533	Team 3 · 12 tiles to the nearest pool · 64 tiles to team 1, 64 to team 2, 64 to team 4
+n24_534	No water near team 3's spawn, so this map has no naval combat (ignore if it should be a pure land map)
+n24_535	Team 3 (yellow)
+n24_536	Team 4 · 12 tiles to the nearest pool · 64 tiles to team 1, 64 to team 2, 64 to team 3
+n24_537	Lesson 7: Check, pack and publish
+n24_538	Lesson 5: Make the map look good (auto detail)
+n24_539	Lesson 6: Check whether the game is fair
+n24_540	Rank (rank)
+n24_541	Description (README body)
+n24_542	Computing routes among 4 teams took 8 ms
+n24_543	When pasting terrain the edge fades smoothly, leaving no straight seam
+n24_544	Paste a set of stamp share codes (RWS2- or the old RWS1-); several lines at once also work
+n24_545	Paste onto selected units
+n24_546	Paste a style share code (RWD2- or the old RWD1-)
+n24_547	Asset repair
+n24_548	Adjacent
+n24_549	Purple: art / detail
+n24_550	Red: pitfall / do not touch
+n24_551	Spawn for which team
+n24_552	Pick a color for each team and group teams into alliances (the same group counts as allies on the map).
+n24_553	Green: usable / done
+n24_554	Edit · One-tap map description
+n24_555	Edit · Bulk replace units
+n24_556	Edit · Bulk replace (terrain / items / units)
+n24_557	Edit · Blend paste (feathered edges)
+n24_558	Edit · Overlap and placement check
+n24_559	Scale factor
+n24_560	Missing a property
+n24_561	Grid, unit size, theme and so on
+n24_562	Install the web version as an app that opens even offline
+n24_563	Playable?, screenshot export, post text, Workshop package
+n24_564	Can reach 3 teams
+n24_565	Presets you tuned in auto detail
+n24_566	Auto backup
+n24_567	Automatically shift resource pools to make the game fair for every team
+n24_568	Custom run buttons only work for the page opened this time; saving to this device stores them as ordinary buttons by id. They are stored under the IndexedDB quickbar key and travel with import / export.
+n24_569	Custom team colors and alliance groups
+n24_570	Natural sand belt
+n24_571	Lay grass, forest, riverbanks and beaches in one go, with adjustable strength
+n24_572	Grass texture
+n24_573	Pen down
+n24_574	On pen down snap to tile center, tile corner or tenth points
+n24_575	Blue: pending / ideas
+n24_576	Zerg tank c_tank
+n24_577	Winding river
+n24_578	Blend paste (feathered edges)
+n24_579	Health 3,900 · cost 600
+n24_580	Health 1400 · price 1200
+n24_581	Health 3000
+n24_582	Health 450 · price 300
+n24_583	Health 800 · price 1100
+n24_584	Health 900 · price 1000
+n24_585	Health (health)
+n24_586	Health —
+n24_587	Health ≤
+n24_588	Health ≥
+n24_589	Health / cost are community-compiled values; the game / Mod is authoritative
+n24_590	Supply depot supplyDepot
+n24_591	Which team to change to
+n24_592	Which unit to change to
+n24_593	Overlay
+n24_594	Coverage 7.3% (land tiles) · 4 turrets · 12 routes · 5 dead zones (293 tiles without firepower) · 0 choke points
+n24_595	View · Reference image manager (multiple / calibration)
+n24_596	View · Layer panel (show / lock)
+n24_597	View · Map markers / notes
+n24_598	View · Quick toolbar settings
+n24_599	View · Phone experience (large buttons / left-hand)
+n24_600	View · Path / route annotations
+n24_601	Triggers · Zone manager (rename / bulk move / references)
+n24_602	Triggers · Template library (with parameters)
+n24_603	Triggers · Debug triggers
+n24_604	Triggers and zones
+n24_605	Trigger simulator
+n24_606	Trigger simulator (check logic without the game)
+n24_607	Trigger template library
+n24_608	Trigger link graph
+n24_609	Timer announcement
+n24_610	Settings and presets import / export
+n24_611	Settings and presets: import / export
+n24_612	Settings: 8 items (grid, overlay, autosave, cover size…)
+n24_613	Design wizard
+n24_614	Design wizard (Q&A new map)…
+n24_615	Debug triggers
+n24_616	Resource pool layout generator
+n24_617	Resource pool layout generator…
+n24_618	Resource pools are laid 1×1; only resource pools move, terrain and units are not changed. After applying you can undo at once (Ctrl+Z).
+n24_619	Resource pools: 2 per team · 1 in the center
+n24_620	Resource pools: 2 per team · 4 in the center
+n24_621	Resource pools: 3 per team · 2 in the center
+n24_622	Start/end taper
+n24_623	Path / route annotations
+n24_624	Path and route annotations
+n24_625	Jump to spawn
+n24_626	Output 3840×2880 pixels (actual scale ×1.60). Map 120×90 tiles.
+n24_627	Edge vignette
+n24_628	Restore last erase
+n24_629	Restore: only restores the corners and items covered by the most recent erase; if there is no record use Ctrl+Z.
+n24_630	No properties copied yet: click "Copy properties" to the right of a unit in the list, then paste onto the ticked units.
+n24_631	No reference images yet. You can pick several at once.
+n24_632	No backups yet. Wait a while for the auto backup, or click "Save a copy now" above.
+n24_633	No buttons yet, pick one from below to add.
+n24_634	No markers yet. Click a row to jump to it; text changes are saved immediately.
+n24_635	No alliance groups yet: choose "New group" from the "Ally" dropdown above.
+n24_636	No selection, so only the whole map can be replaced
+n24_637	Not painted yet
+n24_638	No trigger fired in these 180 seconds. Increase the simulation length, or look at the issue list below first.
+n24_639	What this version updates (written into changelog.md)
+n24_640	This page only does an "overlay" and does not change any cell of the map. The effect is stored locally in the browser (rwGameLook) and still applies next time.
+n24_641	No triggers under this filter.
+n24_642	These are only suggestions and do not affect export. For a more thorough check, click "Playable?" on the toolbar.
+n24_643	These tiles are "destructible terrain"; when drawing the map take care not to make a must-pass route out of them.
+n24_644	This map has 1 command in total
+n24_645	Markers on this map
+n24_646	How many troops this map has, which team is richest, and roughly how much a match costs
+n24_647	This map has no naval spawns, naval check skipped
+n24_648	This map uses 4 (teams 0/1/2/3)
+n24_649	This map uses 8 (teams 0/1/2/3)
+n24_650	Not used on this map yet
+n24_651	Where this map can still be improved
+n24_652	This map has no zones (conditions such as "zone check" in triggers bring their own zone).
+n24_653	This map has no triggers
+n24_654	This is a sharp screenshot rendered with real tiles, larger and clearer than the "Showcase image", good for zooming in on details or pasting into a guide. To avoid running out of memory the longest side is at most 4096 pixels; above that the scale is lowered automatically.
+n24_655	Preview only here, the map is not changed; to really change it go to "Generate → Mirror whole map".
+n24_656	Distances here are "theoretical shortest paths" and ignore buildings blocking the way and units crowding each other. For exact choke points see "Bottleneck analysis".
+n24_657	When "Complete all mission objectives" is chosen, the map must really contain mission objective triggers, otherwise the match can never end.
+n24_658	Pick a symmetry direction and see where the two sides differ. Red cells are the differences, the blue dashed line is the axis of symmetry.
+n24_659	Pick another .tmx to open for a read-only comparison; the current map is not changed.
+n24_660	Pick another .tmx and see tile by tile where the two maps differ
+n24_661	Pick another map
+n24_662	Choose images to add…
+n24_663	Choose another .tmx file…
+n24_664	Choose the layers to export separately
+n24_665	Choose a type and answer a few questions to generate terrain, spawns, resource pools and basic triggers automatically
+n24_666	Passage bottleneck map
+n24_667	Passage bottleneck map
+n24_668	Cost
+n24_669	Skirmish (skirmish)
+n24_670	Shown on the match screen in some game versions. Chinese can usually just go in the map name; this can stay empty.
+n24_671	Overlap and placement check
+n24_672	Overlapping units
+n24_673	Recompute
+n24_674	Redraw
+n24_675	Creep camp respawn
+n24_676	Measure the distance between two points, estimate march time and draw turret ranges
+n24_677	Measure distance
+n24_678	See at a glance what mirroring would look like and where the two sides differ now
+n24_679	The menu only pops up after a 0.5 s long press without the finger moving; one-finger pan and two-finger zoom are unaffected.
+n24_680	Long-press the map for a quick menu
+n24_681	Issues (0 important, 1 for reference)
+n24_682	Team overview
+n24_683	Team and faction helper
+n24_684	Team numbers are consecutive: 0, 1, 2, 3
+n24_685	Team number checks (missing numbers, duplicate spawns, only one team) use the "Team and faction helper"; this page only handles colors and alliances.
+n24_686	Team count (to be spread out along the spawn direction)
+n24_687	Team colors, team number check, one-tap tidy
+n24_688	Team colors and alliances
+n24_689	Land speed (tiles/second)
+n24_690	Time limit (timeLimit)
+n24_691	Hiding only affects what you can see; when saving every layer is still written completely and nothing is deleted. The brush will not change a locked layer.
+n24_692	Preview 520×390 pixels (×0.22), 4 unit shadows. These effects are only overlaid on export / preview; the map data does not change.
+n24_693	Preview (highlight on the map)
+n24_694	Yellow: important / key points
+n24_695	(not specified, use default)
+n24_696	(invulnerable true / false) is only a common community notation; what actually takes effect in the game is authoritative.
+n24_697	(empty)
+n24_698	(rank),
+n24_699	(health percentage),
+n24_700	) and tiles; x / y / size / rotation are not changed.
+n24_701	+ Custom property
+n24_702	🔓 Editable

@@ -176,11 +176,26 @@ export class Editor {
     const op = this.op; this.op = null;
     if (op && !op.empty) { op.apply(true); this.emit({ type: 'changed', box: op.box, full: !!op.meta }); }
   }
-  undo() { this.step(this.undoStack, this.redoStack, true); }
-  redo() { this.step(this.redoStack, this.undoStack, false); }
+  undo() { return this.step(this.undoStack, this.redoStack, true); }
+  redo() { return this.step(this.redoStack, this.undoStack, false); }
+  // 重做这一步，但重做后重新拍一遍对象快照（单独撤销中间一步时，后面步骤的 after 是按“丢掉的
+  // 那步还在”的画面记的，必须在新画面上重拍，否则被丢弃的内容会被重做带回来）
+  redoAsNew() {
+    if (this.op) this.commit();
+    const op = this.redoStack.pop(); if (!op) return null;
+    if (op.snapAfterNow) op.snapAfterNow();   // 先按“重做前的画面”算出这步改完后的对象快照
+    op.apply(false);
+    op.resnap();                              // 把算好的快照落成 after（内部不会再用重做后的现场去推）
+    this.undoStack.push(op);
+    this.dirty = true;
+    this.selected = null;
+    this.emit({ type: 'changed', box: op.box, objs: !!op.objs, full: !!op.meta || op.snaps.size > 0 });
+    return op;
+  }
   step(from, to, undo) {
     if (this.op) this.commit();
     const op = from.pop(); if (!op) return null;
+    if (undo && op.objs) op.finish();   // 撤销前先把对象快照的 after 补全（此时地图还是改完的样子）
     op.apply(undo); to.push(op);
     this.dirty = true;
     this.selected = null;
@@ -278,9 +293,12 @@ export class Editor {
   // ---- 物品 ----
   // 3×3 物品要放的格子 [dx, dy, gid]；资源池默认只放中间那 1 格（游戏只认带 res_pool 的那格）
   stampCells(it, style = this.poolStyle) {
-    if (it.pool && style !== '3x3') return [[0, 0, it.stamp[1][1]]];
+    // 没有 3×3 印章的物品（例如图块集里只有一个资源池图块）一律按 1 格放，避免读 undefined 崩掉
+    const st = it && it.stamp;
+    if (it && it.pool && (style !== '3x3' || !st || !st[1])) return [[0, 0, st && st[1] ? st[1][1] : (it.rep || 0)]];
+    if (!st || !st[0]) return [[0, 0, it && it.rep ? it.rep : 0]];
     const out = [];
-    for (let dy = 0; dy < 3; dy++) for (let dx = 0; dx < 3; dx++) out.push([dx - 1, dy - 1, it.stamp[dy][dx]]);
+    for (let dy = 0; dy < 3; dy++) for (let dx = 0; dx < 3; dx++) out.push([dx - 1, dy - 1, st[dy][dx]]);
     return out;
   }
   item(key = this.itemKey) { return this.items.find((i) => i.key === key) || null; }

@@ -148,6 +148,30 @@ async function init() {
     palette() { commandPalette(ACTIONS, runAction); },
   });
   P.initChrome();
+  // 帮助条目静态化：懒加载模块里的 HELP 要等用户点开才注册，这里预先补上
+  import('./helpstatic.js').catch(() => {});
+  // 快捷工具栏：用户配过才显示（mountQuickbar 自己判断列表是否为空）
+  import('./quickbar.js').then((m) => m.mountQuickbar()).catch(() => {});
+  // 图层面板锁定的判断挂到 A 上（input.js 按下鼠标时会问一句）
+  import('./layers.js').then((m) => m.installLayerHooks()).catch(() => {});
+  // ---- 离线网页版（PWA）与“安装到桌面” ----
+  let deferredInstall = null;
+  addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredInstall = e; A.hooks.canInstall = true; });
+  addEventListener('appinstalled', () => { A.hooks.canInstall = false; toast('已安装到桌面 / 主屏幕，以后可以离线打开'); });
+  addEventListener('online', () => toast('网络恢复了'));
+  addEventListener('offline', () => toast('已离线：网页版会继续用本地缓存，功能不受影响', 4000));
+  A.hooks.installApp = async () => {
+    if (deferredInstall) {
+      deferredInstall.prompt();
+      try { await deferredInstall.userChoice; } catch { /* 用户取消也没关系 */ }
+      deferredInstall = null; A.hooks.canInstall = false;
+      toast('已请求安装；没反应的话用浏览器菜单里的“安装应用 / 添加到主屏幕”', 4200);
+    } else if (matchMedia('(display-mode: standalone)').matches || navigator.standalone) {
+      toast('已经在独立窗口里运行了，可以离线用');
+    } else {
+      toast('用浏览器菜单 →“安装应用 / 添加到主屏幕”。安卓 App 版已经装好就不用管这条', 5200);
+    }
+  };
   initInput();
   initTriggers();
   initTutorial();

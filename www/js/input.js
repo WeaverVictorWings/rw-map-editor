@@ -64,6 +64,8 @@ function startAction(e) {
   const { tx, ty } = tileOf(p), { vx, vy } = vertOf(p);
   // 在地图上点位置（模板等）
   if (A.pickPoint) { act = { kind: 'pick', tx, ty }; return; }
+  // 图层面板里锁住的层不吃画笔（只挡会改数据的工具，平移/取色/框选照样能用）
+  if (A.layerLocked && A.layerLocked(ed.mode, T)) { toast(A.layerLockedText || '这一层在图层面板里锁住了，先解锁再画'); return; }
   // 浮动内容（粘贴 / 印章 / 贴图）
   if (ed.floating) {
     const f = ed.floating;

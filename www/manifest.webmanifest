@@ -1,10 +1,22 @@
 {
+  "id": "./index.html",
   "name": "铁锈地图编辑器",
   "short_name": "铁锈地图",
-  "description": "非官方的铁锈战争（Rusted Warfare）地图编辑器",
+  "description": "非官方的铁锈战争（Rusted Warfare）地图编辑器，断网也能用",
+  "lang": "zh-CN",
+  "dir": "ltr",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
   "background_color": "#16181d",
   "theme_color": "#16181d",
-  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+  "categories": ["games", "productivity", "utilities"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
 }

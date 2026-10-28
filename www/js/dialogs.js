@@ -95,7 +95,13 @@ export async function newMapDialog(preset = {}) {
 
 export async function createNewMap(st) {
   const tpl = await kvGet('template');
-  const map = await newMapFromTemplate(tpl.xml, st.w, st.h, { name: st.name });
+  // 没有素材模板就没法新建（图块集得从一张现成的铁锈地图里取）
+  if (!tpl || !tpl.xml) { toast('先打开一张铁锈战争 .tmx 地图，编辑器要用它的图块素材'); return null; }
+  // 尺寸不合法时别一路传下去变成 width="undefined"，会在解析时报“图层尺寸与地图不一致”这种看不懂的错
+  const w = Math.round(Number(st.w)), h = Math.round(Number(st.h));
+  if (!Number.isFinite(w) || !Number.isFinite(h) || w < 20 || h < 20) { toast('地图尺寸不对（至少 20×20）'); return null; }
+  st = { ...st, w, h };
+  const map = await newMapFromTemplate(tpl.xml, w, h, { name: st.name });
   ed.setMap(map);
   A.mapName = (st.name || '新地图').replace(/[\\/:*?"<>|]/g, '_');
   A.fileHandle = null; A.handleName = '';
@@ -120,6 +126,9 @@ export async function createNewMap(st) {
     }
     const op = ed.begin('生成');
     const G = ed.unitsGroup();
+    // 新建的图里本来不该有单位；但模板/上一次操作可能在 UnitObjects 留下对象，
+    // 不清空的话白图会带着别人家的出生点（实测：旧图 2 队指挥中心 + 4 个建造者残留在 60x60 新图上）
+    G.objects = G.objects.filter((o) => !o.props.some((q) => q.name === 'unit'));
     const tiles = spots.map(([x, y]) => [Math.round(clamp(x, 2, W - 3)), Math.round(clamp(y, 2, H - 6))]);
     tiles.forEach(([x, y], k) => ed.spawnAtCenter(G, x * 20 + 10, y * 20 + 10, k));
     placePoolsAround(ed, op, tiles, st.pools, st.center);
@@ -226,15 +235,35 @@ export async function mirrorDialog() {
 
 export async function symDiffDialog() {
   if (!ed.map) return;
-  const r = await modal('对称差异检查', h('div', {}, h('p', {}, '把地图和它的对称版本对比，用红色标出不一样的地方。'),
-    h('label', {}, '对称方式'), select([['lr', '左右'], ['tb', '上下'], ['rot', '中心旋转']], A.settings.symDiffKind, (v) => { A.settings.symDiffKind = v; })),
-  [{ label: '取消', value: null }, { label: '检查', value: 1, primary: true }]);
+  let fix = false, dir = 'lr';
+  const fixBox = h('div', { style: 'display:none;margin-top:6px' },
+    h('label', {}, '用哪一边当标准'),
+    select([['lr', '用左边覆盖右边'], ['rl', '用右边覆盖左边'], ['tb', '用上边覆盖下边'], ['bt', '用下边覆盖上边'], ['rot', '用左半边旋转 180° 覆盖右半边']], dir, (v) => { dir = v; }),
+    h('div', { class: 'hint', style: 'margin-top:6px' }, '修复会连同出生点、资源池一起镜像（和“整图镜像”同一套逻辑），可以撤销。'));
+  const tg = toggle('检查完就顺手修好', false, (v) => { fix = v; fixBox.style.display = v ? '' : 'none'; });
+  const r = await modal('对称差异检查 / 一键修复', h('div', {},
+    h('p', {}, '把地图和它的对称版本对比，用红色标出不一样的地方；也可以直接一键补成对称。'),
+    h('label', {}, '对称方式'), select([['lr', '左右'], ['tb', '上下'], ['rot', '中心旋转']], A.settings.symDiffKind, (v) => { A.settings.symDiffKind = v; }),
+    tg, fixBox),
+  [{ label: '取消', value: null }, { label: '开始', value: 1, primary: true }]);
   if (!r) return;
-  const res = await busy('正在对比…', async () => symmetryDiff(ed, A.settings.symDiffKind));
+  const kind = A.settings.symDiffKind;
+  if (fix) {
+    await autoSnapshot('对称修复前');
+    const useDir = kind === 'rot' ? 'rot' : dir;
+    const mr = await busy('正在修复…', async () => mirrorMap(ed, useDir));
+    afterWhole();
+    const res2 = await busy('正在对比…', async () => symmetryDiff(ed, kind));
+    A.symDiff = res2; A.hooks.setOverlay('symdiff');
+    const pct2 = (res2.count / res2.total * 100).toFixed(1);
+    toast(res2.count ? `修复后还有 ${res2.count.toLocaleString()} 格（${pct2}%）不对称（图宽高是奇数时中间那行/列对不上）` : `已修复成对称图${mr && mr.converted ? `；${mr.converted} 个图块单位已转成对象` : ''}`, 5000);
+    return;
+  }
+  const res = await busy('正在对比…', async () => symmetryDiff(ed, kind));
   A.symDiff = res;
   A.hooks.setOverlay('symdiff');
   const pct = (res.count / res.total * 100).toFixed(1);
-  toast(res.count ? `有 ${res.count.toLocaleString()} 格（${pct}%）不对称，已用红色标出${res.spawns ? `；${res.spawns} 个出生点没有对称位置` : ''}` : (res.spawns ? `地形完全对称，但有 ${res.spawns} 个出生点没有对称位置` : '完全对称'), 4500);
+  toast(res.count ? `有 ${res.count.toLocaleString()} 格（${pct}%）不对称，已用红色标出${res.spawns ? `；${res.spawns} 个出生点没有对称位置` : ''}。想直接修好：再打开一次，勾上“检查完就顺手修好”。` : (res.spawns ? `地形完全对称，但有 ${res.spawns} 个出生点没有对称位置` : '完全对称'), 5200);
 }
 
 // ---------------- 随机生成（在当前地图上） ----------------
@@ -596,6 +625,17 @@ export async function openChecks() {
             c.fix ? h('button', { class: 'primary', onclick: () => { c.fix.run(); rend.invalidateAll(); A.mini.schedule(); A.autoDirty = true; ed.dirty = true; A.refresh(); const mb = modalBody(); mb.innerHTML = ''; mb.append(build()); } }, c.fix.label) : null) : null)));
     }
     body.append(h('div', { class: 'row', style: 'margin-top:8px' }, h('button', { onclick: () => { closeModal(); import('./extras.js').then((m) => m.checklistDialog()); }, html: icon('batch') + ' 试玩检查清单' }), h('button', { onclick: () => { closeModal(); import('./extras.js').then((m) => m.scoreDialog()); }, html: icon('report') + ' 地图体检评分' })));
+    const fixes = list.filter((c) => c.fix);
+    if (fixes.length > 1) body.append(h('div', { class: 'row', style: 'margin-top:8px' },
+      h('button', { class: 'primary', onclick: async () => {
+        const names = fixes.map((f) => f.title).slice(0, 6).join('、') + (fixes.length > 6 ? '…' : '');
+        if (!(await confirmBox('一键修复全部？', `会依次修 ${fixes.length} 项：${names}。\n每个修复单独记一步撤销，可以逐步撤回。`, '全部修复', '取消'))) return;
+        let n = 0, failed = 0;
+        for (const c of fixes) { try { c.fix.run(); n++; } catch (e) { failed++; console.warn('修复失败', c.title, e); } }
+        rend.invalidateAll(); A.mini.schedule(); A.autoDirty = true; ed.dirty = true; A.refresh();
+        const mb = modalBody(); if (mb) { mb.innerHTML = ''; mb.append(build()); }
+        toast(`已执行 ${n} 个修复${failed ? `，${failed} 个失败（见控制台）` : ''}`, 3200);
+      }, html: icon('inspect') + ` 一键修复全部（${fixes.length} 项）` })));
     body.append(h('p', { style: 'color:var(--muted);font-size:12px' }, '检查项来自社区整理的游戏规则，最终以游戏里实际打开为准。'));
     return body;
   };

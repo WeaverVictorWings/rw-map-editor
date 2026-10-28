@@ -40,6 +40,23 @@ const LESSONS = [
     { spot: '#dockBody .cards', text: '<b>图片转地图</b>：选一张图，自动找出主要颜色，你决定每种颜色变成什么地形、各占多少比例；预览满意了再生成，之后还能逐块改。', wait: null },
     { spot: '#dockBody .cards', text: '<b>等比缩放</b>：整张图放大 2 倍时，地形自动重铺，出生点和资源池跟着搬，资源池还可以按面积加多。', wait: null },
   ] },
+  { id: 'detail', title: '第五课：让地图变好看（自动细节）', desc: '草地、树林、河岸、沙滩一次刷好，还能调强弱', needMap: true, steps: [
+    { spot: '[data-mode=terrain]', text: '切到<b>地形</b>模式，点面板右上角的<b>自动丰富细节</b>（菜单「生成 → 自动丰富细节」也能进）。', wait: 'mode:terrain' },
+    { spot: '.modal', text: '先挑一个<b>风格预设</b>，比如「湖畔草原」。预设就是一组修改器的组合，选完右边会列出它做了哪些事。', wait: () => !!document.querySelector('.modal') },
+    { spot: '.modal', text: '每个修改器都能单独调：树多不多、沙滩宽不宽、河流怎么弯。点<b>预览</b>只看不落盘，满意了点<b>应用</b>。', wait: null },
+    { spot: '#stage', text: '应用后看效果——注意出生点和资源池周围<b>不会被树木挡住</b>，这是自动保护。不满意就 Ctrl+Z 撤销，整次应用是一步。', wait: null },
+  ] },
+  { id: 'balance', title: '第六课：检查这局公不公平', desc: '平衡报告、一键平衡、通行瓶颈', needMap: true, steps: [
+    { spot: '[data-mode=generate]', text: '打开菜单「地图 → 平衡报告」，看每个队伍最近的资源池几个格、30 格内有几个、地盘多大。', wait: null },
+    { spot: '.modal', text: '差额大的行会标黄。<b>一键平衡</b>会把吃亏那队的资源池往出生点方向挪，或者补一个新的，整次改动一步撤销。', wait: () => !!document.querySelector('.modal') },
+    { spot: '[data-mode=generate]', text: '再试试「地图 → 通行瓶颈」：它算各队互相要走多少格，把窄道标出来。抢点图全靠这个调。', wait: null },
+  ] },
+  { id: 'ship', title: '第七课：检查、打包和发布', desc: '能玩吗、截图导出、发帖文案、工坊发布包', needMap: true, steps: [
+    { spot: '#btnCheck', text: '发布前必点<b>能玩吗？</b>。它会把能一键修的都列出来——资源池在水里、出生点太挤、触发器引用了不存在的名字……', wait: 'checked' },
+    { spot: '[data-mode=trigger]', text: '逻辑问题先别进游戏：菜单「触发器 → 触发器模拟器」，拖时间轴就能看到每条在第几秒触发、一共触发几次。', wait: null },
+    { spot: '[data-mode=items]', text: '做封面图用「文件 → 截图导出」，能按真实图块渲染高清 PNG，还能画网格、标资源池。', wait: null },
+    { spot: '#btnSave', text: '最后保存 .tmx，放进游戏的 maps 文件夹。想发工坊就用「文件 → 工坊发布包」，封面、简介、更新说明一次打包。', wait: 'saved', skipLabel: '先不保存' },
+  ] },
 ];
 
 let cur = null; // {lesson, i, phase}

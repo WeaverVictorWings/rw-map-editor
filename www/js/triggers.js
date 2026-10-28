@@ -62,7 +62,7 @@ const TIMING = [['delay', '延迟', 'time', '开局后多久才可以触发（�
 const MSG = [['globalMessage', '作战日志消息', 'text'], ['globalMessage_textColor', '消息颜色', 'color'], ['globalMessage_delayPerChar', '打字速度（如 0.05s）', 'text'], ['showOnMap', '在小地图上标出', 'bool'], ['comment', '备注（游戏不读）', 'text']];
 const BOOL_PROPS = new Set(['allToActivate', 'showOnMap', 'onlyBuildings', 'onlyMainBuildings', 'onlyBuilders', 'onlyOnResourcePool', 'onlyIdle', 'onlyEmptyQueue', 'onlyAttack', 'onlyAttackAir', 'includeIncomplete', 'onlyIfEmpty', 'unload', 'disabledAI', 'basicAI', 'shareFogWithAllies', 'survivalWavesClassic', 'startWithMusic']);
 const TIME_PROPS = ['delay', 'warmup', 'resetActivationAfter', 'repeatDelay'];
-const LINKS = [['activatedBy', '被谁激活', '这些触发器成立时，这个才会触发'], ['alsoActivate', '同时激活', '这个成立时，也算作激活下面这些'], ['deactivatedBy', '被谁关闭', '这些触发器成立时，这个被关闭、不能触发']];
+export const LINKS = [['activatedBy', '被谁激活', '这些触发器成立时，这个才会触发'], ['alsoActivate', '同时激活', '这个成立时，也算作激活下面这些'], ['deactivatedBy', '被谁关闭', '这些触发器成立时，这个被关闭、不能触发']];
 export const WIN_CONDITIONS = [['', '默认'], ['commandCenter', '摧毁指挥中心'], ['mainBuildings', '摧毁主要建筑'], ['allBuildings', '摧毁所有建筑'], ['allUnitsAndBuildings', '消灭所有单位和建筑'], ['requiredObjectives', '完成所有任务目标'], ['none', '没有（不会自动结束）']];
 const MAP_TYPE_CN = [['skirmish', '遭遇战（普通对战）'], ['survival', '生存（打波次）'], ['mission', '任务（剧情关卡）'], ['challenge', '挑战']];
 const KNOWN_UNITS = ['tank', 'heavyTank', 'builder', 'turret', 'supplyDepot', 'commandCenter', 'mechGun', 'c_tank', 'turret_flamethrower', 'bugTurret', 'antiAirTurretFlak', 'ladybug', 'fireBee'];
@@ -98,7 +98,10 @@ export function parseTime(v) {
   if (v === undefined || v === null || String(v).trim() === '') return null;
   const m = String(v).trim().match(/^(\d+(?:\.\d+)?)\s*(ms|s)?$/i);
   if (!m) return NaN;
-  return m[2] && m[2].toLowerCase() === 's' ? +m[1] * 1000 : +m[1];
+  const ms = m[2] && m[2].toLowerCase() === 's' ? +m[1] * 1000 : +m[1];
+  // 超过 10 分钟的时间基本是打错了（比如多敲了几个 0），当成读不懂，而不是“等很久”
+  if (!Number.isFinite(ms) || ms > 600000) return NaN;
+  return ms;
 }
 export function fmtTime(ms) {
   if (ms === null || Number.isNaN(ms)) return '?';
@@ -392,6 +395,7 @@ export function triggerPanel(body, T) {
     h('button', { class: 'primary', onclick: async () => { const t = await chooseType(); if (t) { const c = viewCenterRect(); createAt(t, c); } }, html: icon('plus') + ' 新建' }),
     h('button', { onclick: () => graphView(), html: icon('rules') + ' 逻辑图' }), helpBtn('trig.graph'),
     h('button', { onclick: () => logDialog(), html: icon('log') + ' 作战日志' }),
+    h('button', { onclick: () => import('./sim.js').then((m) => m.simDialog()), html: icon('clock') + ' 模拟' }),
     h('button', { class: 'ib', title: '在地图上画区域来新建', style: T === 'region' ? 'color:var(--accent2)' : '', onclick: () => { ed.tool.triggers = 'region'; A.refresh('toolbar', 'dock'); toast('在地图上拖出一个区域，然后选择触发器类型'); }, html: icon('region') })));
   const TG = trigGroup();
   const objs = TG ? TG.objects.filter((o) => kindOf(o) !== 'map_info') : [];
@@ -633,9 +637,10 @@ function pickTrigger(title, self) {
   return modal(title, h('div', {}, inp, list), [{ label: '取消', value: null }]);
 }
 
-function rename(o, nv) {
-  if (!nv || nv === label(o)) return;
-  if (/,/.test(nv)) { toast('名字里不能有逗号'); A.refresh('dock'); return; }
+// 导出给区域管理器复用：改名时把 LINKS 里的引用、以及 point 的 target 一起改掉
+export function rename(o, nv) {
+  if (!nv || nv === label(o)) return false;
+  if (/,/.test(nv)) { toast('名字里不能有逗号'); A.refresh('dock'); return false; }
   const old = lc(label(o));
   const T = trigGroup();
   const refs = T.objects.filter((x) => x !== o && LINKS.some(([p]) => listOf(objProp(x, p)).some((r) => lc(r) === old)));
@@ -647,6 +652,7 @@ function rename(o, nv) {
     for (const x of moves) setP(x, 'target', nv);
   });
   if (refs.length + moves.length) toast(`已同时更新 ${refs.length + moves.length} 处引用`);
+  return { refs: refs.length, moves: moves.length };
 }
 function duplicate(o) {
   edit('复制触发器', (T) => {

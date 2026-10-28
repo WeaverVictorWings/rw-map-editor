@@ -411,3 +411,48 @@ canvas.pick { max-width: 100%; image-rendering: pixelated; cursor: crosshair; to
   #btnCheck, #btnSave { max-width: 104px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 }
 @media (max-width: 430px) { #mapSize { display: none; } #btnUndo, #btnRedo { width: 34px; } }
+
+/* 历史面板：每行 = 操作 + 单独撤销按钮 */
+.hrow { display: flex; align-items: stretch; gap: 4px; }
+.hrow .hitem { flex: 1; }
+.hstat { display: block; opacity: .62; font-size: 11px; margin-top: 2px; }
+.hdrop { opacity: .55; align-self: center; }
+.hdrop:hover:not(:disabled) { opacity: 1; color: #e5534b; }
+.hdrop:disabled { opacity: .18; }
+
+/* ---- 手机体验偏好（mobile.js 设 body 上的 class 开关） ---- */
+/* 大按钮：工具栏和面板里的按钮整体放大，适合手机上点 */
+body.rw-bigbtn .tool { width: 48px; height: 48px; }
+body.rw-bigbtn #toolbar button { width: 52px; height: 52px; }
+body.rw-bigbtn #dock .card, body.rw-bigbtn #dockBody button { min-height: 42px; font-size: 14px; }
+body.rw-bigbtn .seg button { padding: 8px 12px; font-size: 14px; }
+body.rw-bigbtn .swatches .swatch { width: 46px; height: 46px; }
+
+/* 左手/单手模式
+   桌面是「工具栏 | 画布 | 面板」三栏，把工具栏和面板换个边；
+   手机是上下布局（底部工具栏 + 下方面板），改成上下对调，工具条挪到拇指更顺手的一侧 */
+@media (min-width: 861px) {
+  body.rw-lefthand #main { direction: rtl; }
+  body.rw-lefthand #main > * { direction: ltr; }
+  body.rw-lefthand #toolbar { order: 3; border-right: 0; border-left: 1px solid var(--line); }
+  body.rw-lefthand #stage { order: 2; }
+  body.rw-lefthand #dock { order: 1; border-left: 0; border-right: 1px solid var(--line); }
+}
+@media (max-width: 860px) {
+  body.rw-lefthand #toolbar { grid-row: 3; border-top: 0; border-bottom: 1px solid var(--line); }
+  body.rw-lefthand #stage { grid-row: 2; }
+  body.rw-lefthand #dock { grid-row: 1; border-top: 0; border-bottom: 1px solid var(--line); max-height: 34vh; }
+  body.rw-lefthand #dockHandle { display: none; }
+}
+
+/* 长按弹出的快捷菜单 */
+#rwLongMenu { position: fixed; z-index: 400; min-width: 150px; padding: 4px; border-radius: 8px;
+  background: var(--panel, #1b1e24); border: 1px solid var(--line); box-shadow: 0 8px 24px rgba(0,0,0,.45); }
+#rwLongMenu button { display: block; width: 100%; text-align: left; padding: 9px 12px; border-radius: 6px; font-size: 13px; }
+#rwLongMenu button:hover { background: rgba(255,255,255,.08); }
+
+/* 快捷工具栏 */
+#rwQuickbar { display: flex; gap: 4px; align-items: center; overflow-x: auto; padding: 3px 6px;
+  background: rgba(20,22,27,.92); border-bottom: 1px solid var(--line); }
+#rwQuickbar button { flex: none; min-width: 34px; height: 28px; padding: 0 8px; font-size: 12px; border-radius: 6px; }
+#rwQuickbar button.wide { padding: 0 10px; }

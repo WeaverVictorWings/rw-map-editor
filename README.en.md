@@ -46,7 +46,13 @@ The built-in 4-lesson tutorial and the **?** next to every tool explain everythi
 - Playtest checklist with a test log, map health score, version diff against snapshots.
 - Save straight into the game folder with a same-name cover image; map library; batch processing; pack a collection as `.rwmod`; import Mods' units and tilesets.
 
-**UI languages**: 简体中文, English, Русский, Português (BR), Español, Bahasa Indonesia, Türkçe, 繁體中文, Українська, Français, 日本語. English and Traditional Chinese are complete; the others cover menus, buttons and short texts, with a few long help paragraphs in English. Fixes are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
+**New in 2.4**
+- Resource pools are truly 1×1 (they can sit side by side), **one-tap balance**, design wizard, curve tool for rivers and roads, smooth / erode / noise brushes, feathered paste, snapping and precision drawing.
+- **Trigger simulator** (see when each trigger fires without launching the game), trigger template library, firepower coverage analysis, passage bottleneck map, naval check, distance and range circles.
+- Bulk unit editing, bulk replace, find and jump, layer panel, zone manager, history panel (undo just one middle step), multiple reference images, team colors and alliances.
+- Workshop package, one-tap map description, screenshot export, project files (.rwproj), auto backup, offline web version (PWA), phone experience mode.
+
+**UI languages**: 简体中文, English, Русский, Português (BR), Español, Bahasa Indonesia, Türkçe, 繁體中文, Українська, Français, 日本語. English and Traditional Chinese are complete; the others cover menus, buttons and short texts from before 2.4 (new 2.4 features show English for now), with a few long help paragraphs in English. Fixes are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Player count
 

@@ -1,0 +1,23 @@
+import { createRequire } from 'module'; import fs from 'fs';
+const require = createRequire(import.meta.url);
+const { chromium } = require(process.env.PW || 'playwright');
+const browser = await chromium.launch();
+const page = await (await browser.newContext({ locale: 'zh-CN' })).newPage();
+const errs = []; page.on('pageerror', (e) => errs.push(e.message));
+await page.goto((process.env.URL || 'http://localhost:8765/index.html')); await page.waitForFunction(() => window.__rwReady);
+await page.evaluate(async (t) => { await window.__rw.loadMapFromText(t, 's.tmx'); }, fs.readFileSync(process.argv[2], 'utf8'));
+const r = await page.evaluate(async () => {
+  await window.__rw.createNewMap({ name: 't', w: 90, h: 70, players: 2, start: 'blank', layout: '1v1', base: -1, pools: 2, center: 0 });
+  const H = await import('./js/historyx.js'); const D = await import('./js/detail.js'); const { ed } = window.__rw;
+  const hash = () => { let h = 0; const eng = ed.engine; for (const l of ed.map.layers) if (l.data) for (let i = 0; i < l.data.length; i++) h = (h * 31 + l.data[i]) | 0; for (let i = 0; i < eng.V.length; i++) h = (h * 31 + eng.V[i]) | 0; return h; };
+  const base = hash(); const n0 = ed.undoStack.length;
+  const run = async (id, seed) => { const p = D.STYLE_PRESETS.find((q) => q.id === id); const w = D.makeWork({}); await D.runStack(w, p.stack, { seed, sym: 'none' }); D.applyWork(w, id, { connect: false }); };
+  await run('forest', 2); const hA = hash(); await run('swamp', 5); await run('grassland', 7); const hAll = hash();
+  const ok = H.dropOp(n0); const hDrop = hash();
+  ed.undo(); ed.undo(); const hBack = hash();
+  ed.redo(); ed.redo(); const hRedo = hash();
+  ed.undo(); ed.undo();
+  return { n: ed.undoStack.length - n0, ok, changedByDrop: hDrop !== hAll, backToBase: hBack === base, redoStable: hRedo === hDrop, finalBase: hash() === base };
+});
+console.log(JSON.stringify(r)); console.log('errs', errs);
+await browser.close();

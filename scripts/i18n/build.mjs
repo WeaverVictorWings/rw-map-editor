@@ -1,7 +1,7 @@
 import fs from 'fs';
 // 用法：node scripts/i18n/build.mjs en；其他语言 node scripts/i18n/build.mjs ja 20（20 = 只要求 20 字以内的句子都有译文，长句回落英文）。繁体中文由 OpenCC 词典从简体自动转换。
 const D = new URL('.', import.meta.url).pathname;
-const lines = fs.readFileSync(D + 'strings.txt','utf8').split('\n');
+const lines = fs.readFileSync(D + 'strings.txt','utf8').split('\n').filter(l => l.trim());
 const byId = new Map(lines.map(l => { const [id,, js] = l.split('\t'); return [id, JSON.parse(js)]; }));
 const lang = process.argv[2], maxLen = +process.argv[3] || 1e9;
 const out = {}; const seen = new Set();

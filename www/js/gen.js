@@ -163,8 +163,29 @@ export function generateMap(ed, p) {
   spawns.forEach(([x, y], k) => ed.spawnAtCenter(G, x * 20 + 10, y * 20 + 10, k));
   let carved = 0;
   if (p.preset !== 'islands') carved = connectSpawns(ed, op);
+  // 生成前先把旧资源池清掉：它们在新地形上可能已经在悬崖/水里，留着会让“能不能玩吗”立刻报红
+  clearOldPools(ed, op);
   const pools = placePoolsAround(ed, op, spawns, p.pools ?? 2, p.center ?? 2, p.sym);
   op.markAll();
   ed.commit();
   return { spawns: spawns.length, pools, carved, T };
+}
+
+// 清掉地图上所有已有资源池（随机生成是“整张图重来”，旧池不该留）
+function clearOldPools(ed, op) {
+  const m = ed.map, L = m.layer('Items');
+  if (!L) return 0;
+  const gids = ed.poolGids instanceof Set ? ed.poolGids : new Set(Array.isArray(ed.poolGids) ? ed.poolGids : []);
+  const W = m.width, H = m.height;
+  let n = 0;
+  for (let i = 0; i < W * H; i++) {
+    const g = L.data[i];
+    if (!g) continue;
+    const info = m.tileInfo(g);
+    if ((info && info.props && 'res_pool' in info.props) || gids.has(g)) {
+      ed.setTile(L, i % W, (i / W) | 0, 0);
+      n++;
+    }
+  }
+  return n;
 }

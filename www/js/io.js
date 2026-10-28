@@ -178,7 +178,8 @@ async function coverBytes() {
 }
 export async function exportCover(quiet = false) {
   if (!ed.map) return;
-  const r = await saveFile(A.mapName + '.png', await coverBytes(), 'image/png');
+  // quiet：保存地图后顺手存封面时，不再弹第二次“另存为”，直接下载到默认文件夹
+  const r = await saveFile(A.mapName + '.png', await coverBytes(), 'image/png', null, { quiet });
   if (r.ok) toast(`${quiet ? '地图和' : ''}封面${r.where}：${A.mapName}.png`);
 }
 
