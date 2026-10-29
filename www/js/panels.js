@@ -20,6 +20,7 @@ import * as D from './dialogs.js';
 import * as DU from './detailui.js';
 
 const ed = A.ed, rend = A.rend;
+const tr = (x) => (window.__rwT ? window.__rwT(x) : x);
 const $ = (id) => document.getElementById(id);
 
 export const MODES = [
@@ -650,12 +651,18 @@ export async function showWelcome(force = false) {
   const modAuto = await kvGet('modAuto'), modRec = (await kvGet('modRecents')) || [];
   const openMod = (o) => import('./modedit.js').then((m) => m.modEditorDialog(o));
   const pick = (id, ic, title, sub, tag) => h('button', { class: 'pick' + (tool === id ? ' on' : ''), 'aria-pressed': String(tool === id), onclick: () => { try { localStorage.setItem('rwTool', id); } catch { /* 忽略 */ } showWelcome(force); }, html: icon(ic) + `<b>${title}</b><small>${sub}</small>` + (tag ? `<span class="tag">${tag}</span>` : '') });
-  const intro = tpl ? '打开一张地图继续编辑，或者新建一张。不知道从哪开始？试试新手教程。' : '第一次使用：先打开一张你已有的铁锈战争地图（.tmx）。编辑器会从里面取出图块素材，之后新建地图就用这套素材。';
+  const intro = tpl ? h('p', {}, '打开一张地图继续编辑，或者新建一张。不知道从哪开始？试试新手教程。') : h('div', { class: 'guide' },
+    h('b', {}, '第一次使用，三步开始'),
+    h('ol', {}, h('li', { html: tr('<b>找一张铁锈战争的地图文件（.tmx）</b>。手机一般在 内部存储 / rustedWarfare / maps；电脑在游戏目录的 mods/maps（Steam：库里右键游戏 → 管理 → 浏览本地文件）。没有的话，可以在游戏里存一张，或向朋友要一张。') }),
+      h('li', { html: tr('点下面的<b>打开地图</b>选中它。编辑器只会取出里面的图块图片当素材，不会改动或上传你的文件。') }),
+      h('li', { html: tr('素材会记在这台设备上，以后随时可以<b>新建地图</b>。') })),
+    h('small', {}, '为什么要这样？游戏的图块图片有版权，编辑器本身不附带，所以需要你自己的一张地图来提供。'));
   const box = h('div', { class: 'w' },
     h('h1', {}, h('img', { class: 'logo', src: 'icon.svg', alt: '' }), '铁锈战争工具箱'),
     h('div', { class: 'picks' },
       pick('map', 'mountain', '地图编辑器', '画地形、放资源池和出生点、检查、保存 .tmx', '推荐新手'),
       pick('mod', 'unit', 'Mod 编辑器', '改单位数值、检查问题、打包 .rwmod')));
+  const cont = recent.length && !force ? h('button', { class: 'resume', onclick: () => IO.openRecent(recent[0]) }, h('img', { src: recent[0].thumb, alt: '' }), h('div', {}, h('b', {}, '继续编辑'), h('small', { translate: 'no' }, recent[0].name + ' · ' + recent[0].w + '×' + recent[0].h))) : null;
   const mapActs = h('div', { class: 'acts' },
       big('open', '打开地图', '选择一个 .tmx 文件', () => IO.openMap()),
       big('newfile', '新建地图', tpl ? '选尺寸和人数，自动布点' : '需要先打开一张地图', () => D.newMapDialog(), !tpl),
@@ -684,7 +691,10 @@ export async function showWelcome(force = false) {
   if (modAuto) modExtra.push(h('div', { class: 'mrec' }, h('b', {}, '发现未保存的 Mod：' + modAuto.name), h('button', { class: 'primary', onclick: () => openMod({ action: 'recover' }) }, '恢复')));
   if (modRec.length) modExtra.push(h('div', { class: 'recent' }, h('h3', {}, '最近打开'), ...modRec.map((x) => h('div', { class: 'mrec' }, h('span', { translate: 'no' }, x.name), h('small', {}, new Date(x.time).toLocaleDateString()), h('button', { onclick: () => openMod({ load: x }) }, '打开')))));
   box.append(tool === 'mod' ? h('div', { class: 'sec' }, h('p', {}, '打开一个 Mod，就能浏览里面的单位、改数值、检查问题并重新打包。操作和地图编辑器差不多：Ctrl+S 保存（打包）、Ctrl+Z 撤销。'), modActs, ...modExtra)
-    : h('div', { class: 'sec' }, h('p', {}, intro), mapActs, ...mapRecent));
+    : h('div', { class: 'sec' }, cont, intro, mapActs, ...mapRecent));
+  const TIPS = ['按 Ctrl+K（手机：左上角菜单 → 搜索功能）可以按名字找到任何功能，也可以只输入拼音首字母。', '画对战图时先在“对称”里选好，再画，另一半会同时画好。', '做完先点“能玩吗？”，很多问题能一键修好。', '手机上两指轻点屏幕就是撤销。', '自动备份会在你改动后悄悄存档，“文件 → 存一份带备注的版本”可以给重要的一版留个记号。', '“地图 → 重新排布出生点”能换一种基地排法，各队一起搬。', '“地图 → 资源池周围加一圈”一步给每个资源池围上一圈。', '菜单太多？“视图 → 界面：精简 / 完整”可以收起高级功能。'];
+  const tip = h('div', { class: 'tip' }, '小提示：' + TIPS[Math.floor(Math.random() * TIPS.length)]);
+  box.append(tip);
   box.append(h('div', { class: 'note' }, '非官方工具。图块素材来自你自己的地图文件，编辑器本身不附带游戏素材。'));
   if (force && ed.map) box.append(h('div', { style: 'text-align:center;margin-top:10px' }, h('button', { onclick: () => w.classList.add('hidden') }, '返回当前地图')));
   w.append(box);

@@ -47,12 +47,12 @@ const LESSONS = [
     { spot: '.modal', text: '每个修改器都能单独调：树多不多、沙滩宽不宽、河流怎么弯。点<b>预览</b>只看不落盘，满意了点<b>应用</b>。', wait: null },
     { spot: '#stage', text: '应用后看效果——注意出生点和资源池周围<b>不会被树木挡住</b>，这是自动保护。不满意就 Ctrl+Z 撤销，整次应用是一步。', wait: null },
   ] },
-  { id: 'balance', title: '第六课：检查这局公不公平', desc: '平衡报告、一键平衡、通行瓶颈', needMap: true, steps: [
+  { id: 'balance', needFull: true, title: '第六课：检查这局公不公平', desc: '平衡报告、一键平衡、通行瓶颈', needMap: true, steps: [
     { spot: '[data-mode=generate]', text: '打开菜单「地图 → 平衡报告」，看每个队伍最近的资源池几个格、30 格内有几个、地盘多大。', wait: null },
     { spot: '.modal', text: '差额大的行会标黄。<b>一键平衡</b>会把吃亏那队的资源池往出生点方向挪，或者补一个新的，整次改动一步撤销。', wait: () => !!document.querySelector('.modal') },
     { spot: '[data-mode=generate]', text: '再试试「地图 → 通行瓶颈」：它算各队互相要走多少格，把窄道标出来。抢点图全靠这个调。', wait: null },
   ] },
-  { id: 'ship', title: '第七课：检查、打包和发布', desc: '能玩吗、截图导出、发帖文案、工坊发布包', needMap: true, steps: [
+  { id: 'ship', needFull: true, title: '第七课：检查、打包和发布', desc: '能玩吗、截图导出、发帖文案、工坊发布包', needMap: true, steps: [
     { spot: '#btnCheck', text: '发布前必点<b>能玩吗？</b>。它会把能一键修的都列出来——资源池在水里、出生点太挤、触发器引用了不存在的名字……', wait: 'checked' },
     { spot: '[data-mode=trigger]', text: '逻辑问题先别进游戏：菜单「触发器 → 触发器模拟器」，拖时间轴就能看到每条在第几秒触发、一共触发几次。', wait: null },
     { spot: '[data-mode=items]', text: '做封面图用「文件 → 截图导出」，能按真实图块渲染高清 PNG，还能画网格、标资源池。', wait: null },
@@ -150,6 +150,7 @@ export async function startLesson(id) {
     }
     await D.createNewMap({ name: '教程练习', w: 80, h: 60, players: 2, start: 'blank', layout: 'lr', base: -1, pools: 1, center: 0 });
   }
+  if (lesson.needFull && A.settings.simple) { A.settings.simple = false; kvSet('settings', A.settings); toast('已切换到完整界面：这一课要用到高级功能', 3500); }
   if (!lesson.mod || ed.map) document.getElementById('welcome').classList.add('hidden');
   cur = { lesson, i: 0, phase: null };
   try { lesson.steps[0].before && lesson.steps[0].before(); } catch (e) { console.warn(e); }

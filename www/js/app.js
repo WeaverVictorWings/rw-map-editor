@@ -133,7 +133,9 @@ async function init() {
     return out;
   });
   await I18N.initI18n();
+  const firstRun = !(await kvGet('settings'));
   await D.loadSettings();
+  if (A.settings.simple === undefined) A.settings.simple = firstRun;
   import('./feel.js').then((m) => m.applyLook());
   import('./safety.js').then((m) => m.installErrorCapture());
   import('./backup.js').then((m) => m.startAutoBackup(A.settings.backupMin ?? 5));

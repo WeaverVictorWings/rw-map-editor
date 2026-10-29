@@ -26,6 +26,8 @@ export const ACTIONS = [
   { id: 'library', group: '文件', label: '地图库…', icon: 'library', desc: '所有做过、打开过的地图，带缩略图和标签', help: 'tool.library', run: () => import('./tools2.js').then((m) => m.libraryDialog()) },
   { id: 'batch', group: '文件', label: '批量处理…', icon: 'batch', desc: '一次检查、修复一堆地图，生成封面', help: 'tool.batch', run: () => import('./tools2.js').then((m) => m.batchDialog()) },
   { id: 'pack', group: '文件', label: '打包地图合集（Mod）…', icon: 'package', desc: '把几张地图打包成 .rwmod', help: 'tool.pack', run: () => import('./tools2.js').then((m) => m.packDialog()) },
+  { id: 'ringpools', group: '地图', label: '资源池周围加一圈…', icon: 'stamp', desc: '给每个资源池周围再围一圈，自动躲开水面和重叠', enabled: () => !!A.ed.map, kw: '资源池 一圈 周围 加 批量', run: () => import('./batchops.js').then((m) => m.ringPoolsDialog()) },
+  { id: 'relayout', group: '地图', label: '重新排布出生点…', icon: 'spawn', desc: '换一种排法（一圈、左右、上下、网格），各队一起搬，躲开水面', enabled: () => !!A.ed.map, kw: '出生点 基地 排布 重排 指挥中心 搬', run: () => import('./batchops.js').then((m) => m.relayoutDialog()) },
   { id: 'maplink', group: '地图', label: '地图用到的单位…', icon: 'unit', desc: '列出触发器和图块集用到的单位，对照已打开的 Mod', enabled: () => !!A.ed.map, run: () => import('./maplink.js').then((m) => m.mapModDialog()) },
   { id: 'modedit', group: '文件', label: 'Mod 编辑器…', icon: 'import', desc: '浏览、编辑、检查并打包 .rwmod：单位表单、炮塔和弹道', kw: 'mod 单位 武器 弹道 打包 rwmod 编辑器', run: () => import('./modedit.js').then((m) => m.modEditorDialog()) },
   { id: 'mods', group: '文件', label: 'Mod 支持…', icon: 'import', desc: '导入 Mod 的单位和图块集', help: 'tool.mod', run: () => import('./tools2.js').then((m) => m.modDialog()) },
@@ -67,6 +69,7 @@ export const ACTIONS = [
   { id: 'teamhelp', group: '地图', label: '队伍与阵营助手…', icon: 'team', desc: '队伍颜色、队伍号检查、一键整理', enabled: has, help: 'teamhelp', kw: '队伍 阵营 颜色 队伍号', run: () => import('./teamhelp.js').then((m) => m.teamDialog()) },
   { id: 'assetcheck', group: '地图', label: '地图依赖检查…', icon: 'inspect', desc: '用了哪些图块和单位，换电脑会不会缺', enabled: has, help: 'assetcheck', kw: '依赖 图块 缺素材', run: () => import('./assetcheck.js').then((m) => m.assetCheckDialog()) },
   { id: 'notebak', group: '文件', label: '存一份带备注的版本…', icon: 'history', desc: '给当前这一版写个备注并备份，之后能找回', enabled: has, kw: '版本 备注 备份', run: () => import('./backup.js').then((m) => m.noteBackup()) },
+  { id: 'mydata', group: '帮助', label: '我的数据在哪…', icon: 'help', desc: '地图和备份存在哪里、什么时候会丢', kw: '数据 隐私 存储 备份 上传', run: () => import('./safety.js').then((m) => m.dataDialog()) },
   { id: 'diag', group: '帮助', label: '自检面板（复制诊断信息）…', icon: 'inspect', desc: '版本、存储、备份、最近的错误，出问题时发给作者', kw: '诊断 自检 错误 存储', run: () => import('./safety.js').then((m) => m.diagDialog()) },
   { id: 'backup', group: '地图', label: '自动备份…', icon: 'history', desc: '定时存一份，崩了能捞回来', kw: '备份 恢复 自动保存', run: () => import('./backup.js').then((m) => m.backupDialog()) },
   { id: 'commands', group: '地图', label: '指令一览…', icon: 'clock', desc: '把这张图所有触发器的指令按类型分组列出来', enabled: has, help: 'tool.commands', kw: '指令 触发器 清单 汇总 分组', run: () => import('./commands.js').then((m) => m.commandsDialog()) },
@@ -127,6 +130,7 @@ export const ACTIONS = [
   { id: 'fixtiles', group: '地图', label: '补上缺少的地块图…', icon: 'tiles', enabled: has, run: () => import('./assets.js').then((m) => m.missingDialog()) },
   { id: 'teams', group: '地图', label: '队伍号重新编号', icon: 'flag', desc: '把队伍号整理成 1、2、3…', enabled: has, run: () => ed.renumberTeams() },
   // 视图
+  { id: 'simple', group: '视图', label: '界面：精简 / 完整', icon: 'settings', desc: '精简模式下菜单只留常用功能，其余用 Ctrl+K 搜索也能找到', kw: '精简 完整 简单 专家 菜单', check: () => !!A.settings.simple, run: async () => { A.settings.simple = !A.settings.simple; (await import('./util.js')).kvSet('settings', A.settings); (await import('./ui.js')).toast(A.settings.simple ? '已切换到精简界面：菜单里只留常用功能，其余用 Ctrl+K 搜索' : '已切换到完整界面'); } },
   { id: 'feel', group: '视图', label: '外观与手感…', icon: 'settings', desc: '主题、文字大小、专注模式、标尺、粗网格线、防误触、震动', kw: '主题 深色 浅色 字体 全屏 专注 标尺 网格 震动 手写笔', run: () => import('./feel.js').then((m) => m.feelDialog()) },
   { id: 'focus', group: '视图', label: '专注模式（隐藏所有面板）', icon: 'fit', desc: '只留画布，右上角有退出按钮', kw: '全屏 专注 沉浸', run: () => import('./feel.js').then((m) => m.setFocus(true)) },
   { id: 'fullscreen', group: '视图', label: '全屏 / 退出全屏', icon: 'fit', kw: '全屏', run: () => import('./feel.js').then((m) => m.toggleFullscreen()) },
@@ -148,7 +152,7 @@ export const ACTIONS = [
   // 帮助
   { id: 'tutorial', group: '帮助', label: '新手教程', icon: 'tutorial', desc: '跟着做，几分钟学会基本操作', run: () => A.hooks.tutorial() },
   { id: 'helpCenter', group: '帮助', label: '帮助中心', icon: 'help', keys: 'F1', run: () => helpCenter() },
-  { id: 'feedback', group: '帮助', label: '反馈问题…', icon: 'globe', desc: '在 GitHub 上报告 bug、翻译问题或提建议', kw: 'bug 建议 翻译', run: () => import('./version.js').then((m) => m.feedback()) },
+  { id: 'feedback', group: '帮助', label: '反馈问题…', icon: 'globe', desc: '复制诊断信息，并打开反馈页面报告 bug、翻译问题或提建议', kw: 'bug 建议 翻译', run: () => import('./safety.js').then((m) => m.reportProblem()) },
   { id: 'update', group: '帮助', label: '检查更新', icon: 'import', kw: '新版本 升级', run: () => import('./version.js').then((m) => m.checkUpdate(true)) },
   { id: 'gestures', group: '帮助', label: '手势与快捷键', icon: 'book', run: () => showHelp('gestures') },
   { id: 'search', group: '帮助', label: '搜索功能', icon: 'search', keys: 'Ctrl+K', hidden: true, run: () => A.hooks.palette() },
@@ -161,8 +165,11 @@ export function runAction(a) {
   if (!a || (a.enabled && !a.enabled())) return;
   try { const r = a.run(); if (r && r.catch) r.catch((e) => console.error(e)); } catch (e) { console.error(e); }
 }
+
+// 精简模式下菜单里先收起的高级功能（Ctrl+K 搜索仍然能找到；在“视图 → 界面：精简 / 完整”里切换）
+const ADV = new Set('batch pack mods sharecode publish library unitprops poolgen measure checklist score balance symdiff charts naval bottleneck teamhelp assetcheck commands unitsbrowse regions shot sharelayer editorial collision curves brushtools pasteblend gamelook quickbar traces2 assetfix unitstats erasebrush teamchart stampstyle replaceall hint debugtrig project workshop modunits examples importexport massedit markers layercmp parity templates pathannot layers tiling sim picture trace timing crosscopy stitch diff log killzones maplink autofixmap'.split(' '));
 export function menuItems(group) {
-  return ACTIONS.filter((a) => a.group === group).map((a) => a.sep ? { sep: true } : a.title ? { title: a.title } : {
+  return ACTIONS.filter((a) => a.group === group && !(A.settings.simple && ADV.has(a.id))).map((a) => a.sep ? { sep: true } : a.title ? { title: a.title } : {
     label: a.label, iconHtml: a.check ? '' : a.iconHtml, keys: a.keys, disabled: a.enabled && !a.enabled(), check: a.check && a.check(), run: () => runAction(a),
   });
 }

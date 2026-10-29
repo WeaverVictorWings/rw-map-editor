@@ -35,6 +35,7 @@ export async function loadMapFromText(text, name, handle = null, opts = {}) {
   else if (!ed.engine) toast('这张地图的地面图块没有地形标注，自动过渡不可用，可以用“图块”模式直接画', 4200);
   A.refresh();
   captureSaved();
+  setTimeout(() => import('./safety.js').then((m) => m.roundtripCheck(text)), 1200);
   if (!opts.noRecent) rememberRecent(text).catch(() => {});
   return map;
 }

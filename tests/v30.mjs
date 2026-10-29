@@ -1,0 +1,34 @@
+// 3.0：批量操作、精简界面、首页与 Mod 教程：node tests/v30.mjs <样例地图.tmx>
+// 需要本地服务：python3 -m http.server 8765 --directory www
+import { createRequire } from 'module';
+import fs from 'fs';
+const require = createRequire(import.meta.url);
+const { chromium } = require(process.env.PW || 'playwright');
+const fail = []; const expect = (c, m) => { console.log(c ? '  ✓' : '  ✗', m); if (!c) fail.push(m); };
+const sample = fs.readFileSync(process.argv[2], 'utf8');
+const b = await chromium.launch(); const ctx = await b.newContext({ locale: 'zh-CN', viewport: { width: 1200, height: 800 } });
+await ctx.addInitScript(() => { try { localStorage.setItem('rwNoUpdate', '1'); localStorage.setItem('rwSeen', '3.0.0'); } catch { /* 忽略 */ } });
+const p = await ctx.newPage(); const errs = []; p.on('pageerror', (e) => errs.push(e.message));
+await p.goto('http://localhost:8765/index.html'); await p.waitForFunction(() => window.__rwReady);
+expect(await p.locator('.pick').count() === 2, '首页有两个并列的工具卡片');
+expect(await p.evaluate(() => window.__rw.A.settings.simple === true), '新用户默认精简界面');
+await p.evaluate(async (t) => { await window.__rw.loadMapFromText(t, 's.tmx'); window.__m = await import('./js/batchops.js'); }, sample);
+const click = (l) => p.evaluate((x) => { const b = [...document.querySelectorAll('.modal .mfoot button')].find((e) => e.textContent === x); if (b) b.click(); return !!b; }, l);
+const pools = () => p.evaluate(() => window.__rw.A.ed.poolTiles().length);
+const n0 = await pools();
+await p.evaluate(() => { window.__m.ringPoolsDialog(); }); await p.waitForTimeout(300); await click('放进去'); await p.waitForTimeout(400);
+expect(await pools() > n0, '资源池周围加一圈：数量变多');
+await p.evaluate(() => window.__rw.A.ed.undo());
+expect(await pools() === n0, '一步撤销回到原样');
+const before = await p.evaluate(() => window.__rw.A.ed.spawns().map((s) => s.cx + ',' + s.cy).join('|'));
+await p.evaluate(() => { window.__m.relayoutDialog(); }); await p.waitForTimeout(400); await click('搬过去'); await p.waitForTimeout(400);
+const after = await p.evaluate(() => window.__rw.A.ed.spawns().map((s) => s.cx + ',' + s.cy).join('|'));
+expect(before !== after, '重新排布出生点：位置变了');
+await p.evaluate(() => window.__rw.A.ed.undo());
+expect(await p.evaluate(() => window.__rw.A.ed.spawns().map((s) => s.cx + ',' + s.cy).join('|')) === before, '一步撤销回到原位');
+const cnt = (simple) => p.evaluate(async (s) => { window.__rw.A.settings.simple = s; const m = await import('./js/actions.js'); return m.MENU_GROUPS.reduce((n, g) => n + m.menuItems(g).filter((x) => !x.sep && !x.title).length, 0); }, simple);
+expect(await cnt(true) < await cnt(false), '精简界面的菜单项比完整界面少');
+expect(/通过/.test(await p.evaluate(async () => { const s = await import('./js/safety.js'); await s.roundtripCheck(document.title && window.__rw.A.ed.map ? await (async () => (await window.__rw.A.ed.map.serialize()))() : ''); return (await s.diagText()).split('\n').find((l) => l.startsWith('往返检查')); })), '往返检查通过');
+expect(errs.length === 0, '没有页面错误 ' + errs.join(';'));
+await b.close();
+console.log(fail.length ? '\n失败 ' + fail.length : '\n全部通过'); process.exit(fail.length ? 1 : 0);

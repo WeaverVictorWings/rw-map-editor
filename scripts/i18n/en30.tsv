@@ -1,0 +1,60 @@
+n30_0	Add a ring around resource pools…
+n30_1	Put a ring of pools around every resource pool, avoiding water and overlaps
+n30_2	Re-lay out spawns…
+n30_3	Switch to another layout (ring, left-right, top-bottom, grid); every team moves together, avoiding water
+n30_4	Where is my data…
+n30_5	Where maps and backups are stored and when they can be lost
+n30_6	Interface: simple / full
+n30_7	In simple mode menus keep only common features; the rest can still be found with Ctrl+K
+n30_8	Switched to the simple interface: menus keep only common features; use Ctrl+K for the rest
+n30_9	Switched to the full interface
+n30_10	Copy diagnostics and open the feedback page to report a bug, a translation problem or an idea
+n30_12	New: “Add a ring around resource pools” and “Re-lay out spawns” — preview first, apply in one step, undo in one step.
+n30_13	New players get a simple interface (menus keep only common features; switch under “View → Interface: simple / full”) and a three-step guide to finding a map file on first use.
+n30_14	New: “Where is my data” and one-tap “Report a problem” (copies diagnostics); after loading a map the editor checks whether anything cannot be kept as it was; the start screen can resume your last map.
+n30_15	Look and feel: metal edges, rivets, worn texture, tips on the start screen.
+n30_16	First time here? Three steps to start
+n30_17	<b>Find a Rusted Warfare map file (.tmx)</b>. On phones it is usually in Internal storage / rustedWarfare / maps; on PC in the game's mods/maps folder (Steam: right-click the game in the library → Manage → Browse local files). If you have none, save one in the game or ask a friend.
+n30_18	Tap <b>Open map</b> below and pick it. The editor only takes the tile images from it as assets; your file is not changed or uploaded.
+n30_19	The assets are remembered on this device, so you can <b>create new maps</b> any time afterwards.
+n30_20	Why? The game's tile images are copyrighted and the editor does not ship them, so it needs one of your own maps to take them from.
+n30_21	Continue editing
+n30_22	Press Ctrl+K (phone: top-left menu → Search) to find any feature by name, or just type its pinyin initials.
+n30_23	For versus maps pick the symmetry first, then paint — the other half is painted at the same time.
+n30_24	When you finish, press “Playable?” — many problems can be fixed in one tap.
+n30_25	On a phone a two-finger tap is undo.
+n30_26	Auto backup quietly keeps copies after you edit; “File → Save a version with a note” marks an important one.
+n30_27	“Map → Re-lay out spawns” changes the base layout; every team moves together.
+n30_28	“Map → Add a ring around resource pools” surrounds every pool in one step.
+n30_29	Too many menu items? “View → Interface: simple / full” hides the advanced ones.
+n30_36	This tool has no server: your maps and Mods are never uploaded anywhere. The following only live in this device's browser (or app):
+n30_37	Recently opened maps (thumbnails and content, so you can continue next time)
+n30_38	The Mod editor's autosave and recently opened Mods
+n30_39	Your settings, bookmarks and tutorial progress
+n30_40	Tile assets taken from your maps
+n30_41	Clearing browser data, uninstalling the app or switching devices removes all of this. Save important maps as files, and back up your settings now and then with “Settings → Export personal data”.
+n30_42	Where is my data
+n30_43	Open auto backups
+n30_44	Diagnostics copied. Paste them into the page that opens and add a sentence about what happened
+n30_45	After the page opens, copy the diagnostics from “Help → Self-check panel” and paste them there
+n30_46	Switched to the full interface: this lesson uses advanced features
+n30_47	There are no resource pools on this map yet
+n30_48	No resource pools in the selection. Select an area first or choose “All resource pools”.
+n30_49	All resource pools
+n30_50	Pools inside the selection
+n30_51	Pools inside the selection (select first)
+n30_52	How many to add around each pool
+n30_53	Distance from the centre (cells)
+n30_54	Add a ring around resource pools
+n30_55	No valid positions
+n30_56	No resource pool item found
+n30_57	Pool ring
+n30_58	Note: the gap is large; after applying you can use “Resource pool layout generator” or “Auto balance” to even it out.
+n30_59	Every team is about the same distance from resources.
+n30_60	There are no resource pools on this map; add some afterwards.
+n30_61	Even grid
+n30_62	Distance from the edge
+n30_63	Each team's command center and the builders beside it move together and avoid water. Resource pools, triggers and regions stay where they are, so please check afterwards.
+n30_64	Re-lay out spawns
+n30_65	Move them
+n30_66	Re-laid out; one undo step. Remember to press “Playable?” again.
