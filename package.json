@@ -1,6 +1,6 @@
 {
   "name": "rw-map-editor",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "private": true,
   "description": "非官方的铁锈战争（Rusted Warfare）地图编辑器",
   "scripts": {

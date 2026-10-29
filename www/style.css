@@ -456,3 +456,27 @@ body.rw-bigbtn .swatches .swatch { width: 46px; height: 46px; }
   background: rgba(20,22,27,.92); border-bottom: 1px solid var(--line); }
 #rwQuickbar button { flex: none; min-width: 34px; height: 28px; padding: 0 8px; font-size: 12px; border-radius: 6px; }
 #rwQuickbar button.wide { padding: 0 10px; }
+
+/* 2.9：首页两个工具并列、教程覆盖在 Mod 编辑器上、手机端打磨 */
+#coach.over { position: fixed; z-index: 40; top: 10px; }
+#welcome .picks { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 6px 0 14px; }
+#welcome .pick { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 14px; text-align: left; position: relative; border: 2px solid var(--line, #2c313b); }
+#welcome .pick .ic { width: 26px; height: 26px; color: var(--accent2); }
+#welcome .pick b { font-size: 16px; }
+#welcome .pick small { color: var(--muted); font-size: 12px; line-height: 1.4; }
+#welcome .pick.on { border-color: var(--accent); background: rgba(232, 163, 61, .08); }
+#welcome .pick .tag { position: absolute; top: 8px; right: 8px; font-size: 11px; padding: 1px 7px; border-radius: 9px; background: var(--accent); color: #1a1208; }
+#welcome .sec h3 { margin: 4px 0 8px; font-size: 14px; color: var(--muted); font-weight: 600; }
+#welcome .mrec { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+#welcome .mrec small { color: var(--muted); }
+#btnMod { white-space: nowrap; }
+@media (max-width: 860px) {
+  #welcome { position: fixed; z-index: 12; padding: 14px; place-items: start center; }
+  #welcome .acts { grid-template-columns: 1fr 1fr; }
+  #welcome .big { min-height: 84px; }
+  .modal { grid-template-columns: minmax(0, 1fr); }
+  .modal .box, .modal .mbody, .modedit { min-width: 0; max-width: 100%; }
+  .modedit > div.me-bar:first-of-type { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
+  .modedit > div.me-bar:first-of-type button { flex: none; white-space: nowrap; min-height: 40px; }
+}
+#btnMod { display: flex; align-items: center; gap: 6px; } #btnMod .ic { width: 16px; height: 16px; }

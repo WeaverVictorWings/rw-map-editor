@@ -162,6 +162,7 @@ export function checkMod(mod) {
 let mod = null, cur = null, ui = {};
 // 撤销：每个单位存最近 60 份文本快照
 export function currentMod() { return mod; }
+const coach = (e) => { try { window.__rwCoach && window.__rwCoach(e); } catch { /* 教程出错不影响编辑 */ } };
 export function markDirty(v = true) { if (mod) mod.dirty = v; window.__modDirty = !!(mod && mod.dirty); }
 // 自动保存：每 20 秒把当前 Mod（含笔记、快照）存进本机，刷新后可恢复
 let autoT = 0, autoSig = '';
@@ -180,7 +181,7 @@ async function loadFromBytes(name, bytes) {
   mod.dirty = false; window.__modDirty = false;
   cur = mod.realUnits()[0] || null; render();
 }
-export function snap(u) { markDirty(); (u.undo = u.undo || []).push(serializeIni(u.ini)); if (u.undo.length > 60) u.undo.shift(); u.redo = []; }
+export function snap(u) { markDirty(); coach('mod:edit'); (u.undo = u.undo || []).push(serializeIni(u.ini)); if (u.undo.length > 60) u.undo.shift(); u.redo = []; }
 function undo(u, back) {
   const from = back ? u.undo : u.redo, to = back ? (u.redo = u.redo || []) : (u.undo = u.undo || []);
   if (!from || !from.length) { toast(back ? '没有可撤销的' : '没有可重做的'); return; }
@@ -193,27 +194,45 @@ async function delUnit() {
   cur = mod.realUnits()[0] || null; render();
 }
 const ctx = { get mod() { return mod; }, get cur() { return cur; }, set cur(u) { cur = u; }, refresh: () => { markDirty(); render(); }, snap, visible: () => { const q = (ui.q || '').toLowerCase(); return mod.realUnits().filter((u) => !q || (mod.unitName(u) + ' ' + (getVal(u.ini, 'core', 'displayText') || '') + ' ' + u.file).toLowerCase().includes(q)); } };
-export async function modEditorDialog() {
+export async function modEditorDialog(opts = {}) {
   const body = h('div', { class: 'modedit' });
   ui = { body };
   const style = h('style', {}, `.modedit{display:flex;flex-direction:column;gap:8px;min-height:60vh}.me-bar{display:flex;flex-wrap:wrap;gap:6px}.me-main{display:flex;gap:10px;min-height:50vh}.me-list{flex:0 0 38%;max-height:62vh;overflow:auto;border:1px solid var(--line,#8884);border-radius:8px}.me-row{display:flex;gap:8px;align-items:center;padding:6px;cursor:pointer;border-bottom:1px solid #8882}.me-row.on{background:#4a8cff33}.me-row canvas{width:36px;height:36px;image-rendering:pixelated;flex:none}.me-row small{opacity:.7;display:block}.me-form{flex:1;max-height:62vh;overflow:auto}.me-sec{border:1px solid #8884;border-radius:8px;margin:0 0 8px;padding:6px 8px}.me-sec h4{margin:0 0 6px;display:flex;justify-content:space-between;align-items:center}.me-f{display:grid;grid-template-columns:9em 1fr;gap:4px 8px;align-items:center;margin:3px 0}.me-f label{font-size:12px;opacity:.85}.me-f input,.me-f select{width:100%;box-sizing:border-box}.me-src{width:100%;min-height:50vh;font-family:monospace;font-size:12px;box-sizing:border-box}.me-chk div{padding:4px 0;border-bottom:1px solid #8882;font-size:13px}.me-chk .error{color:#e55}.me-chk .warn{color:#d90}.me-chk .info{opacity:.75}@media(max-width:700px){.me-main{flex-direction:column}.me-list{flex:none;max-height:26vh}.me-f{grid-template-columns:7em 1fr}}`);
   body.append(style);
   render();
   if (!autoT) autoT = setInterval(autoSaveMod, 20000);
-  await modal('Mod 编辑器', body, [{ label: '关闭', value: true }], { wide: true, full: true });
+  const keys = (e) => {
+    if (!(e.ctrlKey || e.metaKey) || !ui.body || ui.body !== body) return;
+    const k = e.key.toLowerCase(), inField = /^(INPUT|TEXTAREA|SELECT)$/.test((e.target || {}).tagName || '');
+    if (k === 's' && mod) { e.preventDefault(); e.stopPropagation(); pack(); }
+    else if (k === 'z' && mod && cur && !inField && !document.querySelector('.modal ~ .modal')) { e.preventDefault(); e.stopPropagation(); undo(cur, !e.shiftKey); }
+  };
+  window.addEventListener('keydown', keys, true);
+  const done = modal('Mod 编辑器', body, [{ label: '回到地图编辑器', value: true }], { wide: true, full: true });
+  coach('mod:open');
+  try {
+    if (opts.load) await loadFromBytes(opts.load.name, opts.load.bytes);
+    else if (opts.action === 'open') await openMod();
+    else if (opts.action === 'folder') await openFolder();
+    else if (opts.action === 'new') await newMod();
+    else if (opts.action === 'recover') { const a = await kvGet('modAuto'); if (a) { await loadFromBytes(a.name, a.bytes); mod.dirty = true; window.__modDirty = true; } }
+  } catch (e) { console.warn(e); }
+  await done;
+  window.removeEventListener('keydown', keys, true);
   autoSaveMod();
 }
 
 function render() {
   const body = ui.body; [...body.children].forEach((c) => { if (c.tagName !== 'STYLE') c.remove(); });
   const bar = h('div', { class: 'me-bar' },
-    h('button', { onclick: openMod }, '打开 .rwmod / zip / 项目'),
-    h('button', { onclick: openFolder }, '打开文件夹'),
-    h('button', { onclick: newMod }, '新建 Mod'),
-    mod ? h('button', { onclick: () => import('./modtools.js').then((m) => m.toolsDialog(ctx)) }, '工具') : null,
+    h('button', { id: 'me-open', onclick: openMod }, '打开 .rwmod / zip / 项目'),
+    h('button', { id: 'me-folder', onclick: openFolder }, '打开文件夹'),
+    h('button', { id: 'me-new', onclick: newMod }, '新建 Mod'),
+    mod ? h('button', { id: 'me-tools', onclick: () => import('./modtools.js').then((m) => m.toolsDialog(ctx)) }, '工具') : null,
     mod ? h('button', { onclick: infoDialog }, 'Mod 信息') : null,
-    mod ? h('button', { onclick: showCheck }, '检查') : null,
-    mod ? h('button', { class: 'primary', onclick: pack }, '打包 .rwmod') : null);
+    mod ? h('button', { id: 'me-check', onclick: showCheck }, '检查') : null,
+    mod ? h('button', { id: 'me-pack', class: 'primary', onclick: pack }, '打包 .rwmod') : null,
+    h('button', { id: 'me-help', title: '新手教程', onclick: () => { window.__rwTutorial && window.__rwTutorial('mod'); } }, '教程'));
   body.append(bar);
   if (!mod) {
     body.append(h('p', { class: 'hint' }, '打开一个 Mod（.rwmod 或 zip，或解压后的文件夹），就能浏览里面的单位、改数值、检查问题并重新打包。'));
@@ -231,6 +250,7 @@ function render() {
   ui.list = list; ui.form = form;
   body.append(h('div', { class: 'hint' }, mod.name + ' · ' + mod.realUnits().length + ' 个单位 · ' + mod.files.size + ' 个文件'), q, h('div', { class: 'me-main' }, list, form));
   fillList(); fillForm();
+  coach('mod:loaded');
 }
 
 async function drawIcon(cv, u) {
@@ -253,7 +273,7 @@ function fillList() {
     if (q && !(nm + ' ' + disp + ' ' + u.file + ' ' + (getVal(u.ini, 'core', 'tags') || '')).toLowerCase().includes(q)) continue;
     const cv = h('canvas', { width: 36, height: 36 });
     const stat = ['price', 'maxHp'].map((k) => { const v = getVal(u.ini, 'core', k); return v ? ({ price: '$', maxHp: '♥' })[k] + v : ''; }).concat(getVal(u.ini, 'movement', 'moveSpeed') ? '»' + getVal(u.ini, 'movement', 'moveSpeed') : '').filter(Boolean).join('  ');
-    l.append(h('div', { class: 'me-row' + (cur === u ? ' on' : ''), onclick: () => { cur = u; ui.sec = null; fillList(); fillForm(); } }, cv, h('div', {}, h('b', { translate: 'no' }, nm), h('small', { translate: 'no' }, disp ? disp + ' · ' + stat : stat))));
+    l.append(h('div', { class: 'me-row' + (cur === u ? ' on' : ''), onclick: () => { cur = u; ui.sec = null; fillList(); fillForm(); coach('mod:select'); } }, cv, h('div', {}, h('b', { translate: 'no' }, nm), h('small', { translate: 'no' }, disp ? disp + ' · ' + stat : stat))));
     drawIcon(cv, u);
   }
   if (!l.children.length) l.append(h('p', { class: 'hint', style: 'padding:8px' }, '没有单位'));
@@ -376,6 +396,7 @@ function showCheck() {
   const order = { error: 0, warn: 1, info: 2 };
   for (const r of R.sort((a, b) => order[a.lv] - order[b.lv])) body.append(h('div', { class: r.lv }, (r.lv === 'error' ? '✗ ' : r.lv === 'warn' ? '! ' : 'i ') + r.msg + (r.file ? '  — ' + r.file : '')));
   modal('检查结果', body, [{ label: '关闭', value: true }]);
+  coach('mod:check');
   return R;
 }
 async function pack() {
@@ -387,5 +408,5 @@ async function pack() {
   const bytes = writeZip(files);
   const title = (getVal(mod.info, 'mod', 'title') || mod.name).replace(/[\\/:*?"<>|]/g, '_');
   const res = await saveFile(title + '.rwmod', bytes, 'application/octet-stream');
-  if (res && res.ok !== false) { toast('已打包 ' + files.length + ' 个文件'); markDirty(false); kvDel('modAuto'); }
+  if (res && res.ok !== false) { toast('已打包 ' + files.length + ' 个文件'); markDirty(false); kvDel('modAuto'); coach('mod:pack'); }
 }

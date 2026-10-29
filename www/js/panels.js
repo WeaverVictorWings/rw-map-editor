@@ -90,6 +90,8 @@ export function initChrome() {
   $('btnRedo').innerHTML = icon('redo');
   $('btnSearch').innerHTML = icon('search') + '<span>搜索功能…</span><kbd>Ctrl K</kbd>';
   $('btnSearch').onclick = () => A.hooks.palette();
+  $('btnMod').innerHTML = icon('unit') + '<span>Mod 编辑器</span>';
+  $('btnMod').onclick = () => import('./modedit.js').then((m) => m.modEditorDialog());
   $('btnUndo').onclick = () => ed.undo();
   $('btnRedo').onclick = () => ed.redo();
   $('btnSave').onclick = () => IO.saveMap();
@@ -120,7 +122,7 @@ export function initChrome() {
 function mobileMenu(anchor) {
   const items = [];
   for (const g of MENU_GROUPS) { items.push({ title: g }); for (const it of menuItems(g)) if (!it.sep && !it.title) items.push(it); }
-  items.splice(0, 0, { label: '搜索功能…', iconHtml: icon('search'), run: () => A.hooks.palette() });
+  items.splice(0, 0, { label: '搜索功能…', iconHtml: icon('search'), run: () => A.hooks.palette() }, { label: 'Mod 编辑器', iconHtml: icon('unit'), run: () => import('./modedit.js').then((m) => m.modEditorDialog()) }, { label: '首页（选择工具）', iconHtml: icon('folder'), run: () => showWelcome(true) });
   menu(anchor, items);
 }
 
@@ -644,18 +646,25 @@ export async function showWelcome(force = false) {
   const gf = canGame ? await gameFolder() : null;
   w.innerHTML = '';
   const big = (ic, label, sub, fn, dis) => h('button', { class: 'big', disabled: dis, onclick: fn, html: icon(ic) + `<div><b>${label}</b><br><small>${sub}</small></div>` });
+  let tool = 'map'; try { tool = localStorage.getItem('rwTool') || 'map'; } catch { /* 记不住就用默认 */ }
+  const modAuto = await kvGet('modAuto'), modRec = (await kvGet('modRecents')) || [];
+  const openMod = (o) => import('./modedit.js').then((m) => m.modEditorDialog(o));
+  const pick = (id, ic, title, sub, tag) => h('button', { class: 'pick' + (tool === id ? ' on' : ''), 'aria-pressed': String(tool === id), onclick: () => { try { localStorage.setItem('rwTool', id); } catch { /* 忽略 */ } showWelcome(force); }, html: icon(ic) + `<b>${title}</b><small>${sub}</small>` + (tag ? `<span class="tag">${tag}</span>` : '') });
+  const intro = tpl ? '打开一张地图继续编辑，或者新建一张。不知道从哪开始？试试新手教程。' : '第一次使用：先打开一张你已有的铁锈战争地图（.tmx）。编辑器会从里面取出图块素材，之后新建地图就用这套素材。';
   const box = h('div', { class: 'w' },
-    h('h1', {}, h('img', { class: 'logo', src: 'icon.svg', alt: '' }), '铁锈地图编辑器'),
-    h('p', {}, tpl ? '打开一张地图继续编辑，或者新建一张。不知道从哪开始？试试新手教程。' : '第一次使用：先打开一张你已有的铁锈战争地图（.tmx）。编辑器会从里面取出图块素材，之后新建地图就用这套素材。'),
-    h('div', { class: 'acts' },
+    h('h1', {}, h('img', { class: 'logo', src: 'icon.svg', alt: '' }), '铁锈战争工具箱'),
+    h('div', { class: 'picks' },
+      pick('map', 'mountain', '地图编辑器', '画地形、放资源池和出生点、检查、保存 .tmx', '推荐新手'),
+      pick('mod', 'unit', 'Mod 编辑器', '改单位数值、检查问题、打包 .rwmod')));
+  const mapActs = h('div', { class: 'acts' },
       big('open', '打开地图', '选择一个 .tmx 文件', () => IO.openMap()),
       big('newfile', '新建地图', tpl ? '选尺寸和人数，自动布点' : '需要先打开一张地图', () => D.newMapDialog(), !tpl),
       big('wand2', '设计向导', tpl ? '回答几个问题，自动做一张能玩的图' : '需要先打开一张地图', () => import('./wizard.js').then((m) => m.wizardDialog()), !tpl),
       canGame ? big('folder', '从游戏文件夹打开', gf ? gf.name : '授权一次游戏地图文件夹', () => IO.openFromGame()) : big('image', '图片转地图', '把一张图变成地图', () => D.imageToMapDialog(), !tpl),
       canGame ? big('image', '图片转地图', '把一张图变成地图', () => D.imageToMapDialog(), !tpl) : null,
       big('tutorial', '新手教程', '跟着做，几分钟学会', () => A.hooks.tutorial()),
-      big('import', 'Mod 编辑器', '改单位和数值、打包 Mod', () => { w.classList.add('hidden'); runAction(action('modedit')); }),
-      big('help', '帮助中心', '每个功能怎么用', () => import('./help.js').then((m) => m.helpCenter()))));
+      big('help', '帮助中心', '每个功能怎么用', () => import('./help.js').then((m) => m.helpCenter())));
+  const mapRecent = [];
   if (recent.length) {
     const grid = h('div', { class: 'recents' });
     for (const r of recent) {
@@ -663,8 +672,19 @@ export async function showWelcome(force = false) {
       card.addEventListener('contextmenu', (e) => { e.preventDefault(); menu(card, [{ label: pins.includes(r.id) ? '取消固定' : '固定在最前', run: async () => { await kvSet('pins', pins.includes(r.id) ? pins.filter((x) => x !== r.id) : [...pins, r.id]); showWelcome(force); } }, { label: '从列表移除', run: async () => { await removeRecent(r.id); showWelcome(force); } }]); });
       grid.append(card);
     }
-    box.append(h('div', { class: 'recent' }, h('h3', {}, '最近打开'), grid));
+    mapRecent.push(h('div', { class: 'recent' }, h('h3', {}, '最近打开'), grid));
   }
+  const modActs = h('div', { class: 'acts' },
+    big('open', '打开 Mod', '.rwmod / zip / 项目文件', () => openMod({ action: 'open' })),
+    big('folder', '打开文件夹', '解压后的 Mod 文件夹', () => openMod({ action: 'folder' })),
+    big('newfile', '新建 Mod', '从一个示例单位开始', () => openMod({ action: 'new' })),
+    big('tutorial', 'Mod 新手教程', '改一个单位并打包', () => A.hooks.tutorial('mod')),
+    big('help', '帮助中心', '每个功能怎么用', () => import('./help.js').then((m) => m.helpCenter())));
+  const modExtra = [];
+  if (modAuto) modExtra.push(h('div', { class: 'mrec' }, h('b', {}, '发现未保存的 Mod：' + modAuto.name), h('button', { class: 'primary', onclick: () => openMod({ action: 'recover' }) }, '恢复')));
+  if (modRec.length) modExtra.push(h('div', { class: 'recent' }, h('h3', {}, '最近打开'), ...modRec.map((x) => h('div', { class: 'mrec' }, h('span', { translate: 'no' }, x.name), h('small', {}, new Date(x.time).toLocaleDateString()), h('button', { onclick: () => openMod({ load: x }) }, '打开')))));
+  box.append(tool === 'mod' ? h('div', { class: 'sec' }, h('p', {}, '打开一个 Mod，就能浏览里面的单位、改数值、检查问题并重新打包。操作和地图编辑器差不多：Ctrl+S 保存（打包）、Ctrl+Z 撤销。'), modActs, ...modExtra)
+    : h('div', { class: 'sec' }, h('p', {}, intro), mapActs, ...mapRecent));
   box.append(h('div', { class: 'note' }, '非官方工具。图块素材来自你自己的地图文件，编辑器本身不附带游戏素材。'));
   if (force && ed.map) box.append(h('div', { style: 'text-align:center;margin-top:10px' }, h('button', { onclick: () => w.classList.add('hidden') }, '返回当前地图')));
   w.append(box);

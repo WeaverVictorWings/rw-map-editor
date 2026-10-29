@@ -10,6 +10,7 @@ import { autoSnapshot } from './io.js';
 const ed = A.ed;
 const el = () => document.getElementById('coach');
 const mob = () => A.isMobile();
+const tr = (x) => (window.__rwT ? window.__rwT(x) : x);
 
 // wait：事件名（以冒号结尾表示前缀），数组，或判断函数
 const LESSONS = [
@@ -57,6 +58,20 @@ const LESSONS = [
     { spot: '[data-mode=items]', text: '做封面图用「文件 → 截图导出」，能按真实图块渲染高清 PNG，还能画网格、标资源池。', wait: null },
     { spot: '#btnSave', text: '最后保存 .tmx，放进游戏的 maps 文件夹。想发工坊就用「文件 → 工坊发布包」，封面、简介、更新说明一次打包。', wait: 'saved', skipLabel: '先不保存' },
   ] },
+  { id: 'mod1', mod: true, title: '第八课：改一个 Mod 单位并打包', desc: 'Mod 编辑器：新建、改数值、检查、打包成 .rwmod', needMap: false, steps: [
+    { before: () => { if (!document.getElementById('me-new')) import('./modedit.js').then((m) => m.modEditorDialog()); }, spot: '#me-new', text: '这里是 <b>Mod 编辑器</b>。点<b>新建 Mod</b>，会得到一个现成的示例单位。想改自己的 Mod，就点“打开”载入 .rwmod 或 zip。', wait: () => !!document.querySelector('.me-row'), skipLabel: '我已经打开了' },
+    { spot: '.me-list', text: '左边是<b>单位列表</b>，每行显示造价、生命、速度。点一个单位。', wait: 'mod:select' },
+    { spot: '.me-form', text: '右边是<b>表单</b>：每一项旁边的 <b>ⓘ</b> 会解释这个数值的作用。试着改一下<b>造价</b>或<b>生命</b>。', wait: 'mod:edit' },
+    { spot: '.me-form .me-bar', text: '改错了没关系：点 <b>↶</b> 撤销（电脑按 Ctrl+Z）。想看原始文件就点“源码”。', wait: null },
+    { spot: '#me-check', text: '打包前先点<b>检查</b>：缺图片、弹道不存在、数值异常……都会列出来。', wait: 'mod:check' },
+    { spot: '#me-pack', text: '最后点<b>打包 .rwmod</b>（电脑按 Ctrl+S），放进游戏的 mods 文件夹就能用。', wait: 'mod:pack', skipLabel: '先不打包' },
+  ] },
+  { id: 'mod2', mod: true, title: '第九课：Mod 工具箱', desc: '缩放、变体、对比、分享码、发布包，还有自动保存和回收站', needMap: false, steps: [
+    { before: () => { if (!document.getElementById('me-new')) import('./modedit.js').then((m) => m.modEditorDialog()); }, spot: '#me-tools', text: '先打开或新建一个 Mod，然后点<b>工具</b>。里面按用途分组：做单位、批量改、对比平衡、分享发布。', wait: () => !!document.querySelector('.me-tools'), skipLabel: '我看到了' },
+    { spot: '.me-tools', text: '<b>数值缩放 / 生成变体</b>：一键做出强化或弱化版本。<b>对比表 / 战斗模拟</b>：看几个单位谁强谁弱（是估算，仅供参考）。', wait: null },
+    { spot: '.me-tools', text: '<b>单位分享码</b>：把一个单位压成一串文字，发给朋友粘贴就能导入。<b>发布包</b>：预检、版本号、更新日志，一次打成 zip。', wait: null },
+    { spot: '.me-tools', text: '所有改动都会<b>自动保存</b>，刷新页面后能恢复；删错的单位在<b>回收站</b>里找回。', wait: null },
+  ] },
 ];
 
 let cur = null; // {lesson, i, phase}
@@ -78,10 +93,13 @@ function render() {
   const n = cur.lesson.steps.length;
   box.innerHTML = '';
   box.append(h('div', { class: 'step' }, `${cur.i + 1}/${n}`),
-    h('div', { class: 'txt', html: st.text + (st.hint ? `<div style="color:var(--muted);font-size:12px;margin-top:4px">${st.hint}</div>` : '') }),
+    h('div', { class: 'txt', html: tr(st.text) + (st.hint ? `<div style="color:var(--muted);font-size:12px;margin-top:4px">${st.hint}</div>` : '') }),
     h('div', { class: 'cbtns' },
       h('button', { onclick: () => next() }, st.wait ? (st.skipLabel || '跳过') : (cur.i === n - 1 ? '完成' : '下一步')),
       h('button', { class: 'ib', title: '退出教程', onclick: () => stop(), html: icon('close') })));
+  box.classList.toggle('over', !!cur.lesson.mod);
+  if (!box._home) box._home = box.parentElement;
+  (cur.lesson.mod ? document.body : box._home).appendChild(box);
   box.classList.remove('hidden');
   // 高亮（目标还没出现时稍后再试）
   let tries = 0;
@@ -132,16 +150,20 @@ export async function startLesson(id) {
     }
     await D.createNewMap({ name: '教程练习', w: 80, h: 60, players: 2, start: 'blank', layout: 'lr', base: -1, pools: 1, center: 0 });
   }
-  document.getElementById('welcome').classList.add('hidden');
+  if (!lesson.mod || ed.map) document.getElementById('welcome').classList.add('hidden');
   cur = { lesson, i: 0, phase: null };
   try { lesson.steps[0].before && lesson.steps[0].before(); } catch (e) { console.warn(e); }
   render();
 }
 
-export async function tutorialMenu() {
+export async function tutorialMenu(which) {
   const done = new Set((await kvGet('lessonsDone')) || []);
   const list = h('div', { class: 'cards' });
-  for (const l of LESSONS) list.append(h('button', { class: 'acard', onclick: () => closeModal(l.id), html: icon(done.has(l.id) ? 'check' : 'tutorial') + `<div><b>${l.title}</b><small>${l.desc}${done.has(l.id) ? ' · 已完成' : ''}</small></div>` }));
+  const secs = which === 'mod' ? [true, false] : [false, true];
+  for (const isMod of secs) {
+    list.append(h('h4', { style: 'margin:10px 0 4px' }, isMod ? 'Mod 编辑器' : '地图编辑器'));
+    for (const l of LESSONS.filter((x) => !!x.mod === isMod)) list.append(h('button', { class: 'acard', onclick: () => closeModal(l.id), html: icon(done.has(l.id) ? 'check' : 'tutorial') + `<div><b>${l.title}</b><small>${l.desc}${done.has(l.id) ? ' · 已完成' : ''}</small></div>` }));
+  }
   list.append(h('div', { class: 'hint', html: '任何时候都可以点工具旁边的 <b>?</b> 看说明，或者按 <b>Ctrl+K</b>（手机点左上角菜单 → 搜索功能）按名字找功能。' }));
   const id = await modal('新手教程', list, [{ label: '关闭', value: null }]);
   if (id) startLesson(id);
@@ -150,4 +172,5 @@ export async function tutorialMenu() {
 export function initTutorial() {
   A.hooks.coach = coach;
   A.hooks.tutorial = tutorialMenu;
+  window.__rwCoach = coach; window.__rwTutorial = tutorialMenu;
 }

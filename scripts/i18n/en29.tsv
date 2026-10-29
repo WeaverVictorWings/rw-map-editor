@@ -1,0 +1,63 @@
+n29_0	The start screen now lets you choose between the Map editor and the Mod editor; the top bar has a Mod editor button too.
+n29_1	The Mod editor has its own tutorial, Ctrl+S to pack and Ctrl+Z to undo; on phones its top bar scrolls sideways.
+n29_2	READMEs in Traditional Chinese, Japanese, Russian and Spanish.
+n29_3	Back to the map editor
+n29_4	Tutorial
+n29_7	<span>Mod editor</span>
+n29_8	Start screen (choose a tool)
+n29_21	Rusted Warfare toolbox
+n29_22	Map editor
+n29_23	Paint terrain, place resource pools and spawns, check, save .tmx
+n29_24	Best for beginners
+n29_25	Edit unit values, check problems, pack .rwmod
+n29_26	.rwmod / zip / project file
+n29_27	Start from a sample unit
+n29_28	Edit a unit and pack it
+n29_29	Open a Mod to browse its units, edit values, check problems and pack it again. It works much like the map editor: Ctrl+S saves (packs), Ctrl+Z undoes.
+n29_30	This is <b>Terrain</b> mode. Pick a terrain on the right (at the bottom on phones), for example <b>Shallow water</b>.
+n29_31	<b>Press and drag</b> on the map to paint. Notice that edges get <b>transitions automatically</b> (beach, shallows) — no hand-placing tiles.
+n29_32	Made a mistake? Tap <b>Undo</b>. On a computer press Ctrl+Z; on a phone a <b>two-finger tap</b> also works.
+n29_33	Versus maps are usually symmetric. Under “Symmetry” pick <b>Left-right</b>, then paint again — the other half is painted at the same time.
+n29_34	Switch to <b>Items</b> mode, then tap the map once to place a <b>resource pool</b>.
+n29_35	Switch to <b>Units</b> mode and tap the map once to place a <b>spawn</b> (command center + 2 builders). Team numbers are assigned in order.
+n29_36	Press <b>Playable?</b> to check: missing map_info, spawns on water, crowded resource pools… it tells you, and many problems can be fixed in one tap.
+n29_37	Finally <b>Save</b>. The small arrow next to it also offers “Save to game folder”, so you can go straight into the game.
+n29_38	Pick the <b>Marquee</b> tool (shortcut M).
+n29_39	<b>Drag a box</b> on the map to select an area.
+n29_40	A bar appears below: <b>copy, cut, flip, rotate</b>. Tap <b>Copy</b>, then <b>Paste</b>.
+n29_41	After selecting, tap “<b>Save stamp</b>”: it appears in the <b>Stamps</b> panel on the right and can be placed with one tap later. The panel also has built-in bases, lakes, shallows and more.
+n29_42	Switch to <b>Triggers</b> mode. Triggers are the map's rules: <b>when</b> something happens, <b>then</b> do something.
+n29_43	The quickest way is a template. Tap <b>City capture</b>, give it a name, then tap the city's position on the map.
+n29_44	Tap “<b>Logic graph</b>” to see how all triggers connect: green lines are “activate”, red dashed lines are “deactivate”. Afterwards press “Playable?” to check.
+n29_45	<b>Generate</b> mode works on the whole map: random generation, image to map, proportional scaling, whole-map mirroring and canvas resize.
+n29_46	<b>Image to map</b>: pick an image, the main colours are found automatically, you decide which terrain each becomes and in what proportion; generate when the preview looks right, then fine-tune piece by piece.
+n29_47	<b>Proportional scaling</b>: when the map is doubled, terrain is re-laid automatically, spawns and resource pools move with it, and more pools can be added by area.
+n29_48	Switch to <b>Terrain</b> mode and tap <b>Auto detail</b> at the top right of the panel (also in the menu “Generate → Auto detail”).
+n29_49	First pick a <b>style preset</b>, such as “Lakeside meadow”. A preset is a combination of modifiers; the right side lists what it does.
+n29_50	Each modifier can be tuned: how many trees, how wide the beach, how the river bends. <b>Preview</b> only looks; press <b>Apply</b> when happy.
+n29_51	Look at the result — spawns and resource pools are <b>kept clear of trees</b> automatically. If you don't like it, Ctrl+Z; the whole application is one step.
+n29_52	Open the menu “Map → Balance report” to see each team's nearest resource pool, how many are within 30 cells, and territory size.
+n29_53	Rows with a big gap turn yellow. <b>Auto balance</b> moves the disadvantaged team's pools toward their spawn or adds a new one, and the whole change is one undo step.
+n29_54	Now try “Map → Chokepoints”: it computes how far each team has to walk to the other and marks narrow passes. Capture-point maps depend on this.
+n29_55	Always press <b>Playable?</b> before publishing. It lists everything that can be fixed in one tap — pools in water, spawns too close, triggers referring to names that don't exist…
+n29_56	Check logic before going into the game: menu “Triggers → Trigger simulator”; drag the timeline to see when each one fires and how many times.
+n29_57	For a cover image use “File → Export screenshot”: it renders a high-resolution PNG from the real tiles, with optional grid and resource pool markers.
+n29_58	Finally save the .tmx and put it in the game's maps folder. To post it on the workshop use “File → Workshop package”: cover, description and changelog in one package.
+n29_59	Lesson 8: Edit a Mod unit and pack it
+n29_60	Mod editor: create, edit values, check, pack into .rwmod
+n29_61	This is the <b>Mod editor</b>. Tap <b>New Mod</b> to get a ready-made sample unit. To edit your own Mod, tap “Open” and load a .rwmod or zip.
+n29_62	I already have it open
+n29_63	On the left is the <b>unit list</b>; each row shows price, health and speed. Tap a unit.
+n29_64	On the right is the <b>form</b>: the <b>ⓘ</b> next to each field explains what the value does. Try changing the <b>price</b> or <b>health</b>.
+n29_65	A mistake is fine: tap <b>↶</b> to undo (Ctrl+Z on a computer). Tap “Source” to see the raw file.
+n29_66	Before packing, tap <b>Check</b>: missing images, projectiles that don't exist, odd values… all listed.
+n29_67	Finally tap <b>Pack .rwmod</b> (Ctrl+S on a computer) and put it in the game's mods folder.
+n29_68	Not now
+n29_69	Lesson 9: The Mod toolbox
+n29_70	Scale, variants, comparison, share codes, publish package, plus autosave and trash
+n29_71	Open or create a Mod first, then tap <b>Tools</b>. They are grouped by purpose: make units, bulk edit, compare and balance, share and publish.
+n29_72	I see it
+n29_73	<b>Scale values / Generate variants</b>: make a stronger or weaker version in one go. <b>Comparison table / Battle simulation</b>: see which unit wins (an estimate, for reference only).
+n29_74	<b>Unit share code</b>: pack a unit into a line of text; a friend pastes it to import. <b>Publish package</b>: pre-check, version number and changelog packed into one zip.
+n29_75	Every change is <b>autosaved</b> and can be recovered after a refresh; deleted units can be found again in the <b>Trash</b>.
+n29_76	At any time tap the <b>?</b> next to a tool for help, or press <b>Ctrl+K</b> (on a phone: top-left menu → Search) to find a feature by name.

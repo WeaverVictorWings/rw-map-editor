@@ -6,7 +6,7 @@
 ![平台](https://img.shields.io/badge/%E5%B9%B3%E5%8F%B0-Android%20%7C%20Windows%20%7C%20%E6%B5%8F%E8%A7%88%E5%99%A8-orange)
 ![语言](https://img.shields.io/badge/%E7%95%8C%E9%9D%A2%E8%AF%AD%E8%A8%80-11-blue)
 
-**中文** · [English](README.en.md) · [功能总览](docs/FEATURES.md) · [更新日志](CHANGELOG.md) · [反馈问题](https://github.com/WeaverVictorWings/rw-map-editor/issues/new/choose)
+**中文** · [繁體中文](README.zh-TW.md) · [English](README.en.md) · [日本語](README.ja.md) · [Русский](README.ru.md) · [Español](README.es.md) · [功能总览](docs/FEATURES.md) · [更新日志](CHANGELOG.md) · [反馈问题](https://github.com/WeaverVictorWings/rw-map-editor/issues/new/choose)
 
 给 **铁锈战争（Rusted Warfare）** 用的免费编辑器，非官方：**地图编辑器** 加 **Mod 编辑器**。安卓为主，电脑浏览器也能用。
 
@@ -35,7 +35,7 @@
 2. 第一次先打开一张你已有的铁锈战争地图（.tmx），编辑器会从里面取出图块素材。
 3. 新建或继续编辑，点“能玩吗？”检查，再“保存到游戏文件夹”，进游戏就能玩。
 
-不会用？打开后点“新手教程”，4 课跟着做。每个工具旁边的 **?** 都有说明。
+不会用？打开后点“新手教程”，共 9 课（地图 7 课、Mod 2 课）跟着做。每个工具旁边的 **?** 都有说明。
 
 <img src="docs/screenshot-phone.png" width="260" alt="手机界面">
 
@@ -51,7 +51,7 @@
 
 **怎么换语言？** “设置 → 界面语言 · Language”。
 
-**Mod 编辑器在哪？** 菜单“文件 → Mod 编辑器…”。它的预估数值（DPS、战力、战斗模拟）只是粗略参考，以游戏里为准。
+**Mod 编辑器在哪？** 首页选“Mod 编辑器”，或点顶栏的“Mod 编辑器”按钮。它的预估数值（DPS、战力、战斗模拟）只是粗略参考，以游戏里为准。
 
 ## 反馈与参与
 

@@ -6,7 +6,7 @@
 ![Platforms](https://img.shields.io/badge/platform-Android%20%7C%20Windows%20%7C%20Browser-orange)
 ![UI languages](https://img.shields.io/badge/UI%20languages-11-blue)
 
-[中文](README.md) · **English** · [Features](docs/FEATURES.en.md) · [Changelog](CHANGELOG.md) · [Report an issue](https://github.com/WeaverVictorWings/rw-map-editor/issues/new/choose)
+[中文](README.md) · [繁體中文](README.zh-TW.md) · **English** · [日本語](README.ja.md) · [Русский](README.ru.md) · [Español](README.es.md) · [Features](docs/FEATURES.en.md) · [Changelog](CHANGELOG.md) · [Report an issue](https://github.com/WeaverVictorWings/rw-map-editor/issues/new/choose)
 
 A free, unofficial editor for **Rusted Warfare**: a **map editor** and a **mod editor**. Android first; it also runs in any desktop browser.
 
@@ -35,7 +35,7 @@ The interface comes in 11 languages.
 2. Open any Rusted Warfare map you already have (.tmx) once; the editor takes the tile assets from it (no game assets are bundled).
 3. Create or edit a map, press **Playable?**, then **Save to game folder** and play.
 
-The built-in 4-lesson tutorial and the **?** next to every tool explain the rest.
+The built-in tutorial (9 lessons: 7 for maps, 2 for mods) and the **?** next to every tool explain the rest.
 
 ## FAQ
 
@@ -43,7 +43,7 @@ The built-in 4-lesson tutorial and the **?** next to every tool explain the rest
 
 **"Tile assets needed" when creating a map?** The editor ships no game assets. Open any map exported from the game once and it will pick them up.
 
-**Where is the mod editor?** Menu "File → Mod editor...". Its estimates (DPS, power, battle simulation) are rough; trust the game.
+**Where is the mod editor?** Pick "Mod editor" on the start screen or use the button in the top bar. Its estimates (DPS, power, battle simulation) are rough; trust the game.
 
 ## Feedback and contributing
 
