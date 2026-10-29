@@ -9,3 +9,17 @@
 - 教程跟随界面语言；新增繁体、日语、俄语、西班牙语的 README。
 
 完整说明见 CHANGELOG.md。
+
+---
+
+## Rusted Warfare Map Editor 2.9.0 (English)
+
+**Download**
+- Android: `rw-map-editor.apk` (installs over the old version). PC: `rw-map-editor-web.zip`, unzip and double-click `Start-Editor.bat`.
+
+**What's new**
+- Start screen: choose between the Map editor (recommended for beginners) and the Mod editor; the top bar has a Mod editor button too.
+- Mod editor: two tutorial lessons, Ctrl+S to pack, Ctrl+Z to undo, a scrollable top bar on phones.
+- The tutorial now follows the interface language. READMEs added for Traditional Chinese, Japanese, Russian and Spanish.
+
+Full details in CHANGELOG.md.
