@@ -34,6 +34,7 @@ export class Mod {
     return m;
   }
   index() {
+    this._tc = null;
     this.lower = new Map([...this.files.keys()].map((k) => [k.toLowerCase(), k]));
     const mi = this.files.get(this.lower.get('mod-info.txt') || '');
     this.infoText = mi ? dec.decode(mi.bytes) : '';
@@ -88,6 +89,8 @@ export class Mod {
 }
 
 // ---- 检查 ----
+function lev(a, b) { const d = Array.from({ length: a.length + 1 }, (_, i) => [i]); for (let j = 1; j <= b.length; j++) d[0][j] = j; for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); return d[a.length][b.length]; }
+function typoOf(pre) { if (pre.length < 4) return ''; let best = '', bd = 3; for (const k of KNOWN_SECTIONS) { const dd = lev(pre.toLowerCase(), k.toLowerCase()); if (dd < bd && dd > 0 && Math.abs(pre.length - k.length) <= 2) { bd = dd; best = k; } } return best && bd <= 2 ? '[' + best + '_…]' : ''; }
 export function checkMod(mod) {
   const R = []; const add = (lv, msg, file) => R.push({ lv, msg, file });
   if (!mod.lower.has('mod-info.txt')) add('error', '缺少 mod-info.txt，游戏不会把它当作 Mod');
@@ -96,30 +99,29 @@ export function checkMod(mod) {
   const th = getVal(mod.info, 'mod', 'thumbnail');
   if (th && !mod.has(th)) add('warn', '缩略图文件不存在：' + th);
   if (!th) add('info', '没有设置缩略图（thumbnail）');
-  const names = new Map();
+  const names = new Map(), dupNames = [], dupSecs = [], unkSecs = new Map();
   const unitNames = new Set(mod.realUnits().map((u) => mod.unitName(u).toLowerCase()));
   for (const u of mod.realUnits()) {
     const nm = getVal(u.ini, 'core', 'name');
-    if (!nm) add('error', '缺少 [core] 的 name', u.file);
-    else {
-      if (names.has(nm.toLowerCase())) add('error', '单位代号重复：' + nm + '（与 ' + names.get(nm.toLowerCase()) + '）', u.file);
+    if (!nm) add('info', '没写 [core] 的 name，游戏会用文件名当代号', u.file);
+    else if (nm.toLowerCase() !== 'null') {
+      if (names.has(nm.toLowerCase())) dupNames.push(nm);
       names.set(nm.toLowerCase(), u.file);
-      if (/\s/.test(nm)) add('warn', '单位代号里有空格：' + nm, u.file);
     }
     const secs = u.ini.sections.filter((s) => s.name);
     const seen = new Set();
     for (const s of secs) {
-      if (seen.has(s.name)) add('warn', '重复的段：[' + s.name + ']', u.file);
+      if (seen.has(s.name)) dupSecs.push(s.name + '（' + u.file.replace(/^.*\//, '') + '）');
       seen.add(s.name);
       const k = schemaKey(s.name);
-      if (!k) add('warn', '不认识的段：[' + s.name + ']（拼写错了吗？）', u.file);
+      if (!k) { const pre = s.name.replace(/_.*$/, ''), typo = typoOf(pre); if (typo) add('warn', '不认识的段：[' + s.name + ']，是不是想写 ' + typo + '？', u.file); else { unkSecs.set(pre, (unkSecs.get(pre) || 0) + 1); } }
       else if (['core', 'graphics', 'movement', 'attack', 'ai'].includes(s.name) === false && !/_/.test(s.name) && ['turret', 'projectile', 'canBuild', 'action'].includes(k)) add('warn', '[' + s.name + '] 缺少 _名字 后缀', u.file);
     }
     if (!getSec(u.ini, 'core')) add('warn', '没有 [core] 段', u.file);
     // 图片、声音
     const chk = (sec, key, val, kind) => {
       for (const v of String(val || '').split(',')) {
-        const t = v.trim(); if (!t || /^(none|null)$/i.test(t)) continue;
+        const t = v.trim(); if (!t || /\$\{/.test(t) || /^(none|null)$/i.test(t) || /^(?!ROOT:)[A-Za-z_]{3,}:/.test(t) || /^[A-Z][A-Z_]+$/.test(t)) continue; // SHARED: 是游戏自带素材；全大写的是特殊值（如 AUTO_ANIMATED）
         if (kind === 'sound' && !/\.(ogg|wav|mp3)$/i.test(t)) continue; // 无扩展名的是原版音效
         if (kind === 'img' && /^(none|null|auto)$/i.test(t)) continue;
         if (!mod.has(t, u.file)) add('error', '[' + sec + '] ' + key + ' 指向不存在的文件：' + t, u.file);
@@ -132,7 +134,7 @@ export function checkMod(mod) {
         else if (/sound$/i.test(l.key) || /^(shoot_sound|shoot_sound_vol)$/i.test(l.key)) { if (!/vol$/i.test(l.key)) chk(s.name, l.key, l.val, 'sound'); }
         const sk = schemaKey(s.name);
         if (sk && SCHEMA[sk].length && !SCHEMA[sk].some((f) => f.key === l.key) && !/_/.test(l.key) && !/^(image|sound)/i.test(l.key) && false) add('info', '[' + s.name + '] 里有未收录的键：' + l.key, u.file);
-        if (/^(price|maxHp|moveSpeed|directDamage|areaDamage)$/.test(l.key) && l.val !== '' && isNaN(+l.val)) add('error', '[' + s.name + '] ' + l.key + ' 应为数字：' + l.val, u.file);
+        if (/^(price|maxHp|moveSpeed|directDamage|areaDamage)$/.test(l.key) && l.val !== '' && isNaN(+l.val) && !/[${}@]|\bif\b/.test(l.val) && !(l.key === 'price' && /^\s*(-?\d+(\.\d+)?\s*,\s*)?([^=,]+=\s*-?\d+(\.\d+)?\s*,?\s*)+$/.test(l.val))) add('error', '[' + s.name + '] ' + l.key + ' 应为数字：' + l.val, u.file);
       }
     }
     // 炮塔引用的弹道
@@ -140,8 +142,8 @@ export function checkMod(mod) {
     const projs = new Set(esecs.filter((s) => s.name.startsWith('projectile_')).map((s) => s.name.slice(11)));
     for (const s of esecs.filter((x) => x.name.startsWith('turret_'))) {
       const p = (s.lines.find((l) => l.key === 'projectile') || {}).val;
-      if (!p) add('warn', '[' + s.name + '] 没有设置 projectile', u.file);
-      else if (!projs.has(p.trim()) && !/^[0-9]+$/.test(p.trim())) add('error', '[' + s.name + '] 引用了不存在的弹道 projectile_' + p, u.file);
+      if (!p) continue; // 没有弹道的炮塔是合法的（只转动、不开火）
+      if (!projs.has(p.trim()) && !/^[0-9]+$/.test(p.trim())) add('error', '[' + s.name + '] 引用了不存在的弹道 projectile_' + p, u.file);
     }
     // 引用别的单位
     const cf = getVal(u.ini, 'core', 'copyFrom');
@@ -151,6 +153,9 @@ export function checkMod(mod) {
       if (bn && !unitNames.has(bn.toLowerCase()) && !/^(c_|)/.test('')) add('info', '[' + s.name + '] 建造 ' + bn + ' 不在本 Mod 内（原版单位可忽略）', u.file);
     }
   }
+  if (dupNames.length) add('warn', `有 ${dupNames.length} 个单位代号和别的文件重复（后加载的会盖掉前面的，确认是有意为之），例如：${[...new Set(dupNames)].slice(0, 4).join('、')}`);
+  if (dupSecs.length) add('info', `有 ${dupSecs.length} 处段名重复（同一个文件里写了两次同名的段），例如：${dupSecs.slice(0, 3).join('、')}`);
+  if (unkSecs.size) add('info', `有一些段名不在常见列表里：${[...unkSecs].sort((a, b) => b[1] - a[1]).slice(0, 8).map(([k, n]) => k + '_… ×' + n).join('、')}。多半是游戏支持的写法，已原样保留`);
   const A = assetIssues(mod);
   for (const x of A.issues) R.push(x);
   for (const x of extraChecks(mod)) R.push(x);
@@ -197,7 +202,7 @@ const ctx = { get mod() { return mod; }, get cur() { return cur; }, set cur(u) {
 export async function modEditorDialog(opts = {}) {
   const body = h('div', { class: 'modedit' });
   ui = { body };
-  const style = h('style', {}, `.modedit{display:flex;flex-direction:column;gap:8px;min-height:60vh}.me-bar{display:flex;flex-wrap:wrap;gap:6px}.me-main{display:flex;gap:10px;min-height:50vh}.me-list{flex:0 0 38%;max-height:62vh;overflow:auto;border:1px solid var(--line,#8884);border-radius:8px}.me-row{display:flex;gap:8px;align-items:center;padding:6px;cursor:pointer;border-bottom:1px solid #8882}.me-row.on{background:#4a8cff33}.me-row canvas{width:36px;height:36px;image-rendering:pixelated;flex:none}.me-row small{opacity:.7;display:block}.me-form{flex:1;max-height:62vh;overflow:auto}.me-sec{border:1px solid #8884;border-radius:8px;margin:0 0 8px;padding:6px 8px}.me-sec h4{margin:0 0 6px;display:flex;justify-content:space-between;align-items:center}.me-f{display:grid;grid-template-columns:9em 1fr;gap:4px 8px;align-items:center;margin:3px 0}.me-f label{font-size:12px;opacity:.85}.me-f input,.me-f select{width:100%;box-sizing:border-box}.me-src{width:100%;min-height:50vh;font-family:monospace;font-size:12px;box-sizing:border-box}.me-chk div{padding:4px 0;border-bottom:1px solid #8882;font-size:13px}.me-chk .error{color:#e55}.me-chk .warn{color:#d90}.me-chk .info{opacity:.75}@media(max-width:700px){.me-main{flex-direction:column}.me-list{flex:none;max-height:26vh}.me-f{grid-template-columns:7em 1fr}}`);
+  const style = h('style', {}, `.modedit{display:flex;flex-direction:column;gap:8px;min-height:60vh}.me-bar{display:flex;flex-wrap:wrap;gap:6px}.me-main{display:flex;gap:10px;min-height:50vh}.me-list{flex:0 0 38%;max-height:62vh;overflow:auto;border:1px solid var(--line,#8884);border-radius:8px}.me-row{display:flex;gap:8px;align-items:center;padding:6px;cursor:pointer;border-bottom:1px solid #8882}.me-row.on{background:#4a8cff33}.me-row canvas{width:36px;height:36px;image-rendering:pixelated;flex:none}.me-row small{opacity:.7;display:block}.me-form{flex:1;max-height:62vh;overflow:auto}.me-sec{border:1px solid #8884;border-radius:8px;margin:0 0 8px;padding:6px 8px}.me-sec h4{margin:0 0 6px;display:flex;justify-content:space-between;align-items:center}.me-f{display:grid;grid-template-columns:9em 1fr;gap:4px 8px;align-items:center;margin:3px 0}.me-f label{font-size:12px;opacity:.85}.me-f input,.me-f select{width:100%;box-sizing:border-box}.me-src{width:100%;min-height:50vh;font-family:monospace;font-size:12px;box-sizing:border-box}.me-bar2{margin:0 0 4px}.me-sug{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0;min-height:4px}.me-s{padding:2px 8px}.me-s small{opacity:.6}.me-diag{max-height:18vh;overflow:auto;font-size:12px}.me-d{padding:3px 0;border-bottom:1px solid #8882;cursor:pointer}.me-d.error{color:#e55}.me-d.warn{color:#d90}.me-chk div{padding:4px 0;border-bottom:1px solid #8882;font-size:13px}.me-chk .error{color:#e55}.me-chk .warn{color:#d90}.me-chk .info{opacity:.75}@media(max-width:700px){.me-main{flex-direction:column}.me-list{flex:none;max-height:26vh}.me-f{grid-template-columns:7em 1fr}}`);
   body.append(style);
   render();
   if (!autoT) autoT = setInterval(autoSaveMod, 20000);
@@ -290,8 +295,9 @@ function fillForm() {
     h('button', { onclick: () => { if (mode === 'form') { u.text = serializeIni(u.ini); } else { applySource(u); } ui.mode = mode === 'form' ? 'src' : 'form'; fillForm(); } }, mode === 'form' ? '源码' : '回到表单'),
     mode === 'form' ? h('button', { onclick: addSecDialog }, '+ 添加段') : null));
   if (mode === 'src') {
-    const ta = h('textarea', { class: 'me-src', spellcheck: 'false', translate: 'no', value: u.text, oninput: (e) => { u.text = e.target.value; u.srcDirty = true; } });
-    f.append(ta); return;
+    const holder = h('div', {}); f.append(holder);
+    import('./modsrc.js').then((m) => holder.append(m.srcEditor(u, mod, () => markDirty())));
+    return;
   }
   for (const s of u.ini.sections.filter((x) => x.name)) f.append(secBox(u, s));
 }
@@ -349,6 +355,7 @@ async function addSecDialog() {
 // ---- 打开 ----
 async function openMod() {
   const r = await pickFile('.rwmod,.zip,.rwproj'); if (!r) return;
+  if (r.file.size > 100e6) toast('这个 Mod 有 ' + Math.round(r.file.size / 1e6) + ' MB，编辑器会把全部文件读进内存，手机上可能很慢甚至闪退，建议在电脑上编辑。', 6000);
   try {
     await busy('读取 Mod…', async () => { const buf = new Uint8Array(await r.file.arrayBuffer()); const ent = readZip(buf), pr = splitProject(ent); mod = await Mod.fromEntries(pr.rest, r.file.name); if (pr.meta) { try { const o = JSON.parse(await pr.meta.text()); mod.notes = o.notes; mod.todos = o.todos; mod.snaps = o.snaps; mod.unitNotes = o.unitNotes; toast('已载入项目（笔记、待办、快照）'); } catch {} } });
     mod.dirty = false; window.__modDirty = false;

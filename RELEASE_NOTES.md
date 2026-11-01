@@ -1,3 +1,35 @@
+## 铁锈地图编辑器 3.1.0
+
+**下载**
+**下载**
+
+**这一版：Mod 编辑器更能读、更准、更好写**
+- 用 5 个真实大 Mod（最大 184 MB、777 个单位）测过兼容性，检查不再乱报错；支持文件名末尾带 “/” 的 rwmod、copyFrom 指向模板文件。
+- 源码模式：边写边检查（点一条跳到那一行）、键名/选项/弹道名补全、整理格式。
+- 新工具：翻译表（CSV 导出/导回）、单位图鉴、体检报告、整理全部格式。
+- 新增命令行和 GitHub Action（lint / 图鉴 / 对比 / 打包）。
+- 没做：一键部署到游戏、地图里放 Mod 单位（需要真机和游戏里实验）。
+
+完整说明见 CHANGELOG.md。
+
+---
+
+## Rusted Warfare Map Editor 3.1.0 (English)
+
+**Download**
+- Android: `rw-map-editor.apk` (installs over the old version). PC: `rw-map-editor-web.zip`, unzip and double-click `Start-Editor.bat`.
+
+**Mod editor: reads more mods, checks more accurately, easier to write**
+- Tested against 5 real large mods (up to 184 MB / 777 units): far fewer false alarms; supports rwmods whose entry names end with “/” and copyFrom pointing at template files.
+- Source mode: live diagnostics (tap one to jump to the line), completion for keys / enum values / projectile names, and Format.
+- New tools: translation CSV export/import, unit gallery, health report, format all files.
+- New command line and GitHub Action (lint / gallery / diff / pack), same checks as the web editor.
+- Not done: one-tap deploy to the game and placing Mod units on maps (need real-device and in-game experiments).
+
+Full details in CHANGELOG.md.
+
+---
+
 ## 铁锈地图编辑器 3.0.0
 
 **下载**

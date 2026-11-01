@@ -102,18 +102,18 @@ export function extraChecks(mod) {
   const R = [], add = (lv, msg, file) => R.push({ lv, msg, file });
   const units = mod.realUnits();
   if (units.length > 300) add('info', `单位多达 ${units.length} 个，低配手机加载会慢`);
-  const byName = new Map(units.map((u) => [mod.unitName(u).toLowerCase(), u]));
+  const byName = new Map(units.map((u) => [mod.unitName(u).toLowerCase(), u])), oddNames = [];
   for (const u of units) {
     const nm = mod.unitName(u);
-    if (nm && !/^[A-Za-z0-9_\-]+$/.test(nm)) add('warn', `单位代号“${nm}”含有字母数字以外的字符，建议只用英文、数字、下划线`, u.file);
+    if (nm && !/^[A-Za-z0-9_\-]+$/.test(nm)) oddNames.push(nm);
     const E = L.eff(mod, u), hp = num(getVal(E, 'core', 'maxHp')), pr = num(getVal(E, 'core', 'price')), sp = num(getVal(E, 'movement', 'moveSpeed'));
     if (pr < 0) add('error', '造价是负数', u.file);
     if (hp <= 0 && !/true/i.test(getVal(E, 'core', 'isBuilding') || '')) add('warn', '生命为 0 或负数', u.file);
     if (hp > 100000) add('info', `生命 ${hp} 非常大，确认没多写个零`, u.file);
-    if (sp > 20) add('warn', `移动速度 ${sp} 很大，常见单位在 0.3~4 左右`, u.file);
+    if (sp > 20) add('info', `移动速度 ${sp} 很大，常见单位在 0.3~4 左右`, u.file);
     const projUsed = new Set();
     for (const s of E.sections) {
-      if (s.name.startsWith('turret_')) { const p = (s.lines.find((l) => l.key === 'projectile') || {}).val; if (p) projUsed.add(p.trim()); const d = num((s.lines.find((l) => l.key === 'delay') || {}).val); if (d < 1) add('warn', `[${s.name}] 的 delay 小于 1，会每帧开火`, u.file); }
+      if (s.name.startsWith('turret_')) { const p = (s.lines.find((l) => l.key === 'projectile') || {}).val; if (p) projUsed.add(p.trim()); const d = num((s.lines.find((l) => l.key === 'delay') || {}).val); if (d < 1) add('info', `[${s.name}] 的 delay 小于 1，会每帧开火`, u.file); }
     }
     for (const s of E.sections) if (s.name.startsWith('projectile_') && !projUsed.has(s.name.slice(11))) add('info', `[${s.name}] 没有炮塔使用（可能被别的单位或 mutator 引用）`, u.file);
     // copyFrom 循环
@@ -126,6 +126,7 @@ export function extraChecks(mod) {
     const img = getVal(u.ini, 'graphics', 'image'), k = img && resolveFile(mod, img, u.file);
     if (k && /\.png$/i.test(k)) { const sz = L.pngSize(mod.files.get(k).bytes); if (sz && (sz.w > 2048 || sz.h > 2048)) add('warn', `图片 ${sz.w}×${sz.h} 过大，手机上可能加载不了`, u.file); if (mod.files.get(k).bytes.length > 2e6) add('info', `图片 ${k} 超过 2MB`, u.file); }
   }
+  if (oddNames.length) add('info', `有 ${oddNames.length} 个单位代号含空格或非英文字母数字（游戏能用，但在 copyFrom、建造列表里引用时要一模一样，安卓上建议少用），例如：${oddNames.slice(0, 4).join('、')}`);
   return R;
 }
 

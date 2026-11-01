@@ -8,12 +8,31 @@ const lineVal = (s, k) => { for (let i = s.lines.length - 1; i >= 0; i--) if (s.
 const isFalse = (v) => String(v).trim().toLowerCase() === 'false';
 
 // ---------- copyFrom 继承：把父单位的段和键合并进来（只读副本，不改原文件） ----------
+// copyFrom 可以写单位代号，也可以写文件路径（ROOT:templates/xx.template、相对本文件的路径，扩展名随意）
+function parentIni(mod, tok, u) {
+  const t = tok.trim();
+  const byName = mod.realUnits().find((x) => x !== u && mod.unitName(x).toLowerCase() === t.toLowerCase());
+  if (byName) return byName;
+  const cands = [norm(t), norm(t) + '.ini'];
+  if (u && u.file) { const dir = u.file.replace(/[^/]*$/, '').toLowerCase(); cands.push(dir + norm(t), dir + norm(t) + '.ini'); }
+  for (const c of cands) {
+    const key = mod.lower && mod.lower.get(c); if (!key) continue;
+    const un = mod.units.find((x) => x.file === key); if (un && un !== u) return un;
+    const f = mod.files.get(key);
+    if (f && f.bytes && !/\.(png|jpe?g|gif|bmp|ogg|wav|mp3|zip|ttf|otf|rwmod)$/i.test(key)) {
+      mod._tc = mod._tc || new Map();
+      if (!mod._tc.has(key)) mod._tc.set(key, { file: key, ini: parseIni(new TextDecoder().decode(f.bytes)) });
+      return mod._tc.get(key);
+    }
+  }
+  return null;
+}
 export function eff(mod, u, depth = 0) {
   const cf = String(getVal(u.ini, 'core', 'copyFrom') || '').split(',').map((x) => x.trim()).filter(Boolean);
   if (!cf.length || depth > 8) return u.ini;
   const out = cloneIni(u.ini); out.sections = [];
   const put = (src) => { for (const s of src.sections) { if (!s.name) continue; let t = out.sections.find((x) => x.name === s.name); if (!t) { t = { name: s.name, lines: [] }; out.sections.push(t); } for (const l of s.lines) if (l.key) { const ex = t.lines.find((x) => x.key === l.key); if (ex) ex.val = l.val; else t.lines.push({ raw: '', key: l.key, val: l.val }); } } };
-  for (const n of cf) { const par = mod.realUnits().find((x) => x !== u && mod.unitName(x).toLowerCase() === n.toLowerCase()); if (par) put(eff(mod, par, depth + 1)); }
+  for (const n of cf) { const par = parentIni(mod, n, u); if (par) put(eff(mod, par, depth + 1)); }
   put(u.ini);
   return out;
 }

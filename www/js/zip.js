@@ -23,9 +23,10 @@ export function readZip(buf) {
     if (dv.getUint32(p, true) !== 0x02014b50) break;
     const method = dv.getUint16(p + 10, true), csize = dv.getUint32(p + 20, true), size = dv.getUint32(p + 24, true);
     const nl = dv.getUint16(p + 28, true), el = dv.getUint16(p + 30, true), cl = dv.getUint16(p + 32, true), lho = dv.getUint32(p + 42, true);
-    const name = dec.decode(b.subarray(p + 46, p + 46 + nl));
+    let name = dec.decode(b.subarray(p + 46, p + 46 + nl));
     p += 46 + nl + el + cl;
-    if (name.endsWith('/')) continue;
+    // 有些 mod 为了防解压，把真文件的名字末尾加了“/”；有内容的就当文件，去掉斜杠
+    if (name.endsWith('/')) { if (size > 0 || csize > 2) name = name.replace(/\/+$/, ''); if (!name || name.endsWith('/')) continue; }
     const bytes = async () => {
       const ln = dv.getUint16(lho + 26, true), le = dv.getUint16(lho + 28, true);
       const data = b.subarray(lho + 30 + ln + le, lho + 30 + ln + le + csize);

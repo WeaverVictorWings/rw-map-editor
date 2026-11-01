@@ -34,7 +34,7 @@ const pf = readZip(pub.bytes);
 ok(pf.some((f) => /\.rwmod$/.test(f.name)) && pf.some((f) => f.name === 'CHANGELOG.md'), '发布包内容');
 const C = await mk([{ name: 'mod-info.txt', data: '[mod]\n' }, { name: 'bad.ini', data: unit('bad name', 1, 0, 1, 'x.png', '') .replace('moveSpeed: 1', 'moveSpeed: 50') + '\n[core]\ncopyFrom: loopB\n' }, { name: 'a.ini', data: '[core]\nname: loopA\ncopyFrom: loopB\n' }, { name: 'b.ini', data: '[core]\nname: loopB\ncopyFrom: loopA\n' }]);
 const X = M.extraChecks(C).map((x) => x.msg).join('|');
-ok(/字母数字以外/.test(X) && /移动速度 50/.test(X) && /绕成了圈/.test(X) && /生命为 0/.test(X), '额外检查');
+ok(/非英文字母数字/.test(X) && /移动速度 50/.test(X) && /绕成了圈/.test(X) && /生命为 0/.test(X), '额外检查');
 ok(checkMod(C).length > 3, 'checkMod 已接入额外检查');
 const bs = M.balanceSuggest(A);
 ok(Array.isArray(bs), '平衡建议 ' + bs.map((b) => b.name + b.tag + '×' + b.mult.toFixed(2)).join(','));

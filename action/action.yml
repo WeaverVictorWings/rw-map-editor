@@ -1,0 +1,25 @@
+name: 'RW Mod check'
+description: 'Check a Rusted Warfare mod (.rwmod or an unpacked folder), annotate problems in the PR, optionally write a unit gallery'
+inputs:
+  path:
+    description: 'Mod folder or .rwmod file, relative to the repo root'
+    default: '.'
+  fail-on:
+    description: 'error (default), warn or none'
+    default: 'error'
+  docs:
+    description: 'A file name such as UNITS.md: writes the unit gallery there'
+    default: ''
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    - name: Lint
+      shell: bash
+      run: node "${{ github.action_path }}/../scripts/rwmod.mjs" lint "${{ inputs.path }}" --github --fail-on=${{ inputs.fail-on }}
+    - name: Docs
+      if: inputs.docs != ''
+      shell: bash
+      run: node "${{ github.action_path }}/../scripts/rwmod.mjs" docs "${{ inputs.path }}" -o "${{ inputs.docs }}"
