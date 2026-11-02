@@ -7,7 +7,7 @@ const fail = []; const expect = (c, m) => { console.log(c ? '  ✓' : '  ✗', m
 const U = '[core]\nname: tank\nprice: 200\nmaxHp: 300\ndisplayText: 坦克\n\n[movement]\nmovementType: LAND\nmoveSpeed: 1\n';
 const zip = Array.from(writeZip([{ name: 'mod-info.txt', data: '[mod]\ntitle: T\n' }, { name: 'tank.ini', data: U }]));
 const b = await chromium.launch(); const ctx = await b.newContext({ locale: 'zh-CN', viewport: { width: 1000, height: 800 } });
-await ctx.addInitScript(() => { try { localStorage.setItem('rwNoUpdate', '1'); localStorage.setItem('rwSeen', '3.1.0'); } catch { /* 忽略 */ } });
+await ctx.addInitScript(() => { try { localStorage.setItem('rwNoUpdate', '1'); localStorage.setItem('rwSeen', '3.1.1'); } catch { /* 忽略 */ } });
 const p = await ctx.newPage(); const errs = []; p.on('pageerror', (e) => errs.push(e.message));
 await p.goto('http://localhost:8765/index.html'); await p.waitForFunction(() => window.__rwReady);
 p.evaluate(async (z) => { const m = await import('./js/modedit.js'); m.modEditorDialog({ load: { name: 't.rwmod', bytes: new Uint8Array(z) } }); }, zip);

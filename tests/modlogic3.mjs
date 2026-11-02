@@ -41,4 +41,17 @@ const h = T.healthMd(M, checkMod(M)); ok(/综合分/.test(h) && /体积/.test(h)
 const O = await mk([{ name: 'mod-info.txt', data: '[mod]\ntitle: T\n' }, { name: 'tank.ini', data: U.replace('maxHp: 300', 'maxHp: 250') }]);
 const dm = T.diffMods(O, await mk([{ name: 'mod-info.txt', data: '[mod]\ntitle: T\n' }, { name: 'tank.ini', data: U }]));
 ok(dm.length === 1 && dm[0].changes.some((x) => x.from === '250' && x.to === '300'), '对比两个版本');
+ok(T.formatIni('[core] # hi\nname:a') === '[core] # hi\nname: a\n', '整理：段名后的注释不重复');
+{ const X = await mk([{ name: 'mod-info.txt', data: '[mod]\n' }, { name: 'a.ini', data: '[core]\nname:a\ndisplayText:甲\n' }, { name: 'b.ini', data: '[core]\nname: b\ndisplayText: 乙\n' }]);
+  const ua = X.units.find((u) => u.file === 'a.ini'), ub = X.units.find((u) => u.file === 'b.ini');
+  const { setVal } = await import('../www/js/ini.js'); setVal(ua.ini, 'core', 'price', '77'); ub.text = '[core]\nname: b\ndisplayText: 乙\nmaxHp:5'; ub.srcDirty = true;
+  const n = T.formatAllUnits(X); const out = Object.fromEntries(X.collect().map((f) => [f.name, new TextDecoder().decode(f.data)]));
+  ok(n === 2 && /price: 77/.test(out['a.ini']) && /name: a/.test(out['a.ini']), '整理全部：保留表单里的改动');
+  ok(/maxHp: 5/.test(out['b.ini']), '整理全部：保留源码里的改动');
+  const Y = await mk([{ name: 'mod-info.txt', data: '[mod]\n' }, { name: 'a.ini', data: '[core]\nname: a\ndisplayText: 甲\n' }]);
+  const yu = Y.units[0]; yu.text = '[core]\nname: a\ndisplayText: 甲\nmaxHp: 9\n'; yu.srcDirty = true;
+  T.applyTranslationCsv(Y, 'file,section,key,text\r\na.ini,core,displayText,A\r\n');
+  const o2 = new TextDecoder().decode(Y.collect().find((f) => f.name === 'a.ini').data);
+  ok(/displayText: A/.test(o2) && /maxHp: 9/.test(o2), '翻译导回：不丢源码模式里的改动'); }
+{ const s = '[core]\nmaxH: 3'; const c = T.completions(s, 8); ok(c.items.some((i) => i.insert === 'maxHp'), '补全：行里已有冒号时不再多加冒号'); }
 process.exit(fail ? 1 : 0);

@@ -34,7 +34,7 @@ export function srcEditor(u, mod, onChange) {
   ta.addEventListener('input', () => changed());
   ta.addEventListener('click', drawSug); ta.addEventListener('keyup', (e) => { if (/Arrow|Home|End/.test(e.key)) drawSug(); });
   ta.addEventListener('keydown', (e) => {
-    if ((e.key === 'Tab' || e.key === 'Enter') && items && items.list.length && !e.shiftKey && e.key === 'Tab') { e.preventDefault(); accept(items.list[0]); }
+    if (e.key === 'Tab' && items && items.list.length && !e.shiftKey) { e.preventDefault(); accept(items.list[0]); }
     else if (e.key === 'Escape') { sug.replaceChildren(); items = null; }
   });
   const bar = h('div', { class: 'me-bar2' },

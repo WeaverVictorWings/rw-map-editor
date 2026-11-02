@@ -1,3 +1,15 @@
+## 铁锈地图编辑器 3.1.1
+
+复查修复：“整理全部格式”和翻译表导回可能盖掉刚改的内容；整理格式重复写注释；补全多加冒号。其余同 3.1.0（见下）。
+
+---
+
+## Rusted Warfare Map Editor 3.1.1 (English)
+
+Bug fixes from a review of 3.1: “Format all files” and translation import could overwrite edits you had just made; Format duplicated a comment after a section header; completion added a second colon. Everything else is as in 3.1.0 (below).
+
+---
+
 ## 铁锈地图编辑器 3.1.0
 
 **下载**

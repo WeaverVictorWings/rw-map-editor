@@ -65,7 +65,7 @@ export function completions(text, caret) {
   if (c < 0) {
     const p = linePre.trim(), start = caret - linePre.trimStart().length;
     const k = schemaKey(sec); if (!k) return { from: caret, to: caret, items: [] };
-    return { from: start, to: caret, items: SCHEMA[k].filter((f) => f.key.toLowerCase().startsWith(p.toLowerCase()) && f.key !== p).map((f) => ({ label: f.key, insert: f.key + ': ', hint: f.label })) };
+    return { from: start, to: caret, items: SCHEMA[k].filter((f) => f.key.toLowerCase().startsWith(p.toLowerCase()) && f.key !== p).map((f) => ({ label: f.key, insert: lineRest.includes(':') ? f.key : f.key + ': ', hint: f.label })) };
   }
   const key = linePre.slice(0, c).trim(), f = fieldOf(sec, key), p = linePre.slice(c + 1).trimStart();
   const from = caret - p.length;
@@ -88,7 +88,7 @@ export function formatIni(text) {
   for (const raw of String(text).split(/\r?\n/)) {
     let l = raw.replace(/\s+$/, '');
     const t = l.trim();
-    if (t.startsWith('[')) { if (out.length && !prevBlank) out.push(''); out.push(t.replace(/^\[\s*([^\]]*?)\s*\]/, '[$1]') + t.replace(/^\[[^\]]*\]/, '')); prevBlank = false; continue; }
+    if (t.startsWith('[')) { if (out.length && !prevBlank) out.push(''); out.push(t.replace(/^\[\s*([^\]]*?)\s*\]/, '[$1]')); prevBlank = false; continue; }
     if (!t) { if (!prevBlank) out.push(''); prevBlank = true; continue; }
     if (!t.startsWith('#') && !t.startsWith('@')) { const c = l.indexOf(':'); if (c > 0) { const k = l.slice(0, c).trim(), v = l.slice(c + 1).trim(); l = v ? k + ': ' + v : k + ':'; } }
     out.push(l); prevBlank = false;
@@ -126,6 +126,7 @@ export function parseCsv(text) {
 }
 // 导回：已有的键改值；新键（比如加了 displayText_ja 一行）加到该段末尾。返回 {changed, added, skipped}
 export function applyTranslationCsv(mod, csv) {
+  syncSources(mod);
   const rows = parseCsv(csv); const res = { changed: 0, added: 0, skipped: 0 };
   for (const r of rows.slice(rows[0] && rows[0][0] === 'file' ? 1 : 0)) {
     const [file, sec, key, val] = r; if (!file || !sec || !key) { res.skipped++; continue; }
@@ -136,6 +137,15 @@ export function applyTranslationCsv(mod, csv) {
     else if (val) { let at = s.lines.length; while (at > 0 && !s.lines[at - 1].raw.trim()) at--; s.lines.splice(at, 0, { raw: key + ': ' + val, key, val }); res.added++; }
   }
   return res;
+}
+
+// 源码模式里改过但还没解析回表单的单位，先解析（不然后面的改动会被源码文本盖掉）
+export function syncSources(mod) { for (const u of mod.units) if (u.srcDirty && u.text !== undefined) { u.ini = parseIni(u.text); u.srcDirty = false; } }
+// 整理所有单位文件的格式，返回改了几个
+export function formatAllUnits(mod) {
+  syncSources(mod); let n = 0;
+  for (const u of mod.units) { const base = serializeIni(u.ini), f = formatIni(base); if (f !== base) { u.text = f; u.ini = parseIni(f); u.edited = true; n++; } }
+  return n;
 }
 
 // ---- 单位图鉴（Markdown）----

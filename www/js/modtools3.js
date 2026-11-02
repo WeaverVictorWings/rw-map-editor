@@ -2,8 +2,8 @@
 import { h, toast, modal } from './ui.js';
 import { pickFile, saveFile } from './files.js';
 import { checkMod, markDirty } from './modedit.js';
-import { translationCsv, applyTranslationCsv, translationRows, docsMd, healthMd, formatIni } from './modlogic3.js';
-import { getVal, parseIni } from './ini.js';
+import { translationCsv, applyTranslationCsv, translationRows, docsMd, healthMd, formatAllUnits } from './modlogic3.js';
+import { getVal } from './ini.js';
 
 const CLOSE = [{ label: '关闭', value: true }];
 const title = (m) => (getVal(m.info, 'mod', 'title') || m.name).replace(/[\\/:*?"<>|]/g, '_');
@@ -22,7 +22,7 @@ async function translate(ctx) {
       h('button', { onclick: async () => {
         const r = await pickFile('.csv,.txt'); if (!r) return;
         const res = applyTranslationCsv(ctx.mod, await r.file.text());
-        if (res.changed + res.added) { for (const u of ctx.mod.units) u.text = undefined; markDirty(); ctx.refresh && ctx.refresh(); }
+        if (res.changed + res.added) { markDirty(); ctx.refresh && ctx.refresh(); }
         toast(`改了 ${res.changed} 条，新增 ${res.added} 条，跳过 ${res.skipped} 条`, 4000);
       } }, '导入 CSV')));
   modal('翻译表', box, CLOSE);
@@ -40,13 +40,7 @@ async function health(ctx) {
   if (r) await saveFile(title(ctx.mod) + '-体检.md', new TextEncoder().encode(md), 'text/markdown');
 }
 async function formatAll(ctx) {
-  let n = 0;
-  for (const u of ctx.mod.units) {
-    const cur = u.srcDirty && u.text !== undefined ? u.text : null;
-    const base = cur ?? new TextDecoder().decode(ctx.mod.files.get(u.file).bytes);
-    const f = formatIni(base);
-    if (f !== base) { u.text = f; u.ini = parseIni(f); u.srcDirty = true; u.edited = true; n++; }
-  }
+  const n = formatAllUnits(ctx.mod);
   if (n) { markDirty(); ctx.refresh && ctx.refresh(); }
   toast(n ? `整理了 ${n} 个文件（改的只有空格和空行，可用“对比”确认）` : '已经很整齐了', 4000);
 }
