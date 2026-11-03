@@ -1,0 +1,27 @@
+n32_0	Derive wizard
+n32_1	Pick a unit, say faster / tougher / stronger, and get a new unit with a preview of the change
+n32_2	Import sprite and slice frames
+n32_3	Pick an image; frame size is guessed, animation previewed, frame settings written
+n32_4	Batch edit units
+n32_5	Tick units, multiply / add / set one value, preview first
+n32_6	Relation graph
+n32_7	Inheritance, build and spawn links drawn as a graph; tap to jump
+n32_8	Search everywhere
+n32_9	Find text in every file (regex allowed); tap a result to jump
+n32_10	Field help search
+n32_11	Type “range” or “speed” to find the key and its note
+n32_12	Export gallery page
+n32_13	One .html file with images inside; friends just open it
+n32_14	Compare with another version
+n32_15	Pick an old .rwmod to get a change list, an announcement and a page
+n32_16	Derive new unit…
+n32_18	Paste section
+n32_19	Copy announcement
+n32_20	Save page
+n32_22	Faster
+n32_23	Tougher
+n32_24	Stronger
+n32_25	Cheaper
+n32_26	Longer range
+n32_27	Import sprite
+n32_28	Batch edit

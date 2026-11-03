@@ -7,6 +7,7 @@ import * as L from './modlogic.js';
 import * as M from './modlogic2.js';
 import { Mod, checkMod, markDirty } from './modedit.js';
 import { TOOLS3 } from './modtools3.js';
+import { TOOLS4 } from './modtools4.js';
 
 const fld = (label, el) => h('div', { style: 'margin:6px 0' }, h('label', {}, label), el);
 const OK = [{ label: '取消', value: false }, { label: '确定', value: true, primary: true }];
@@ -27,6 +28,7 @@ export const TOOLS2 = [
   ['弹道预览', '弹道飞行距离、射程、爆炸范围', proj],
   ['回收站', '找回被删除的单位', trash],
   ...TOOLS3,
+  ...TOOLS4,
 ];
 
 async function shareCode(ctx) {

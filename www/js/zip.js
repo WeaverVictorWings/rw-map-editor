@@ -30,7 +30,7 @@ export function readZip(buf) {
     const bytes = async () => {
       const ln = dv.getUint16(lho + 26, true), le = dv.getUint16(lho + 28, true);
       const data = b.subarray(lho + 30 + ln + le, lho + 30 + ln + le + csize);
-      if (method === 0) return data.slice();
+      if (method === 0) return data; // 存储方式的直接引用原数据，不再多复制一份（省内存）
       if (method === 8) return inflateRaw(data);
       throw new Error('不支持的压缩方式：' + name);
     };

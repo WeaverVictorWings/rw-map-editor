@@ -7,6 +7,7 @@ import { parseIni, serializeIni, getVal, setVal, getSec, sectionNames, addSectio
 import { SCHEMA, SECTION_LABEL, schemaKey, KNOWN_SECTIONS } from './modschema.js';
 import { assetIssues, eff } from './modlogic.js';
 import { extraChecks, splitProject } from './modlogic2.js';
+import { fixOf, applyFix, standing, copySection, pasteSection } from './modlogic4.js';
 
 const dec = new TextDecoder();
 const norm = (p) => String(p || '').trim().replace(/^ROOT:[\\/]*/i, '').replace(/\\/g, '/').replace(/^\/+/, '').toLowerCase();
@@ -202,7 +203,7 @@ const ctx = { get mod() { return mod; }, get cur() { return cur; }, set cur(u) {
 export async function modEditorDialog(opts = {}) {
   const body = h('div', { class: 'modedit' });
   ui = { body };
-  const style = h('style', {}, `.modedit{display:flex;flex-direction:column;gap:8px;min-height:60vh}.me-bar{display:flex;flex-wrap:wrap;gap:6px}.me-main{display:flex;gap:10px;min-height:50vh}.me-list{flex:0 0 38%;max-height:62vh;overflow:auto;border:1px solid var(--line,#8884);border-radius:8px}.me-row{display:flex;gap:8px;align-items:center;padding:6px;cursor:pointer;border-bottom:1px solid #8882}.me-row.on{background:#4a8cff33}.me-row canvas{width:36px;height:36px;image-rendering:pixelated;flex:none}.me-row small{opacity:.7;display:block}.me-form{flex:1;max-height:62vh;overflow:auto}.me-sec{border:1px solid #8884;border-radius:8px;margin:0 0 8px;padding:6px 8px}.me-sec h4{margin:0 0 6px;display:flex;justify-content:space-between;align-items:center}.me-f{display:grid;grid-template-columns:9em 1fr;gap:4px 8px;align-items:center;margin:3px 0}.me-f label{font-size:12px;opacity:.85}.me-f input,.me-f select{width:100%;box-sizing:border-box}.me-src{width:100%;min-height:50vh;font-family:monospace;font-size:12px;box-sizing:border-box}.me-bar2{margin:0 0 4px}.me-sug{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0;min-height:4px}.me-s{padding:2px 8px}.me-s small{opacity:.6}.me-diag{max-height:18vh;overflow:auto;font-size:12px}.me-d{padding:3px 0;border-bottom:1px solid #8882;cursor:pointer}.me-d.error{color:#e55}.me-d.warn{color:#d90}.me-chk div{padding:4px 0;border-bottom:1px solid #8882;font-size:13px}.me-chk .error{color:#e55}.me-chk .warn{color:#d90}.me-chk .info{opacity:.75}@media(max-width:700px){.me-main{flex-direction:column}.me-list{flex:none;max-height:26vh}.me-f{grid-template-columns:7em 1fr}}`);
+  const style = h('style', {}, `.modedit{display:flex;flex-direction:column;gap:8px;min-height:60vh}.me-bar{display:flex;flex-wrap:wrap;gap:6px}.me-main{display:flex;gap:10px;min-height:50vh}.me-list{flex:0 0 38%;max-height:62vh;overflow:auto;border:1px solid var(--line,#8884);border-radius:8px}.me-row{display:flex;gap:8px;align-items:center;padding:6px;cursor:pointer;border-bottom:1px solid #8882}.me-row.on{background:#4a8cff33}.me-row canvas{width:36px;height:36px;image-rendering:pixelated;flex:none}.me-row small{opacity:.7;display:block}.me-form{flex:1;max-height:62vh;overflow:auto}.me-sec{border:1px solid #8884;border-radius:8px;margin:0 0 8px;padding:6px 8px}.me-sec h4{margin:0 0 6px;display:flex;justify-content:space-between;align-items:center}.me-f{display:grid;grid-template-columns:9em 1fr;gap:4px 8px;align-items:center;margin:3px 0}.me-f label{font-size:12px;opacity:.85}.me-f input,.me-f select{width:100%;box-sizing:border-box}.me-src{width:100%;min-height:50vh;font-family:monospace;font-size:12px;box-sizing:border-box}.me-stand{margin:2px 0 6px}.me-bar2{margin:0 0 4px}.me-sug{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0;min-height:4px}.me-s{padding:2px 8px}.me-s small{opacity:.6}.me-diag{max-height:18vh;overflow:auto;font-size:12px}.me-d{padding:3px 0;border-bottom:1px solid #8882;cursor:pointer}.me-d.error{color:#e55}.me-d.warn{color:#d90}.me-chk div{padding:4px 0;border-bottom:1px solid #8882;font-size:13px}.me-chk .error{color:#e55}.me-chk .warn{color:#d90}.me-chk .info{opacity:.75}@media(pointer:coarse){.me-row{padding:10px 6px}.ib{min-width:36px;min-height:36px}.me-s{padding:8px 12px}}@media(max-width:700px){.me-main{flex-direction:column}.me-list{flex:none;max-height:26vh}.me-f{grid-template-columns:7em 1fr}}`);
   body.append(style);
   render();
   if (!autoT) autoT = setInterval(autoSaveMod, 20000);
@@ -269,6 +270,8 @@ async function drawIcon(cv, u) {
   c.imageSmoothingEnabled = false;
   c.drawImage(im, 0, 0, s, sh, (36 - s * k) / 2, (36 - sh * k) / 2, s * k, sh * k);
 }
+let lpT = 0;
+function rowMenu(u) { cur = u; fillList(); fillForm(); import('./modtools4.js').then((m) => m.rowMenu(ctx, u)); }
 function fillList() {
   const l = ui.list; l.replaceChildren();
   const q = (ui.q || '').toLowerCase();
@@ -278,7 +281,7 @@ function fillList() {
     if (q && !(nm + ' ' + disp + ' ' + u.file + ' ' + (getVal(u.ini, 'core', 'tags') || '')).toLowerCase().includes(q)) continue;
     const cv = h('canvas', { width: 36, height: 36 });
     const stat = ['price', 'maxHp'].map((k) => { const v = getVal(u.ini, 'core', k); return v ? ({ price: '$', maxHp: '♥' })[k] + v : ''; }).concat(getVal(u.ini, 'movement', 'moveSpeed') ? '»' + getVal(u.ini, 'movement', 'moveSpeed') : '').filter(Boolean).join('  ');
-    l.append(h('div', { class: 'me-row' + (cur === u ? ' on' : ''), onclick: () => { cur = u; ui.sec = null; fillList(); fillForm(); coach('mod:select'); } }, cv, h('div', {}, h('b', { translate: 'no' }, nm), h('small', { translate: 'no' }, disp ? disp + ' · ' + stat : stat))));
+    l.append(h('div', { class: 'me-row' + (cur === u ? ' on' : ''), oncontextmenu: (e) => { e.preventDefault(); rowMenu(u); }, ontouchstart: () => { clearTimeout(lpT); lpT = setTimeout(() => { lpT = -1; rowMenu(u); }, 550); }, ontouchend: (e) => { if (lpT === -1) e.preventDefault(); clearTimeout(lpT); }, ontouchmove: () => clearTimeout(lpT), onclick: () => { cur = u; ui.sec = null; fillList(); fillForm(); coach('mod:select'); } }, cv, h('div', {}, h('b', { translate: 'no' }, nm), h('small', { translate: 'no' }, disp ? disp + ' · ' + stat : stat))));
     drawIcon(cv, u);
   }
   if (!l.children.length) l.append(h('p', { class: 'hint', style: 'padding:8px' }, '没有单位'));
@@ -293,7 +296,9 @@ function fillForm() {
     h('button', { onclick: () => undo(u, true), title: '撤销' }, '↶'), h('button', { onclick: () => undo(u, false), title: '重做' }, '↷'),
     h('button', { onclick: delUnit }, '删除单位'),
     h('button', { onclick: () => { if (mode === 'form') { u.text = serializeIni(u.ini); } else { applySource(u); } ui.mode = mode === 'form' ? 'src' : 'form'; fillForm(); } }, mode === 'form' ? '源码' : '回到表单'),
-    mode === 'form' ? h('button', { onclick: addSecDialog }, '+ 添加段') : null));
+    mode === 'form' ? h('button', { onclick: addSecDialog }, '+ 添加段') : null,
+    mode === 'form' && secClip ? h('button', { onclick: () => { snap(u); const a = pasteSection(u, secClip); toast('已粘贴：' + a.join('、')); fillForm(); }, title: '把复制的段（炮塔会带上它的弹道）粘贴到这个单位' }, '粘贴段') : null));
+  if (mode === 'form' && mod.realUnits().length <= 300) { standEl = h('div', { class: 'hint me-stand' }); f.append(standEl); standU = u; updStand(); } else standEl = null;
   if (mode === 'src') {
     const holder = h('div', {}); f.append(holder);
     import('./modsrc.js').then((m) => holder.append(m.srcEditor(u, mod, () => markDirty())));
@@ -308,14 +313,15 @@ function secBox(u, s) {
   const k = schemaKey(s.name);
   const defs = k ? SCHEMA[k] : [];
   const box = h('div', { class: 'me-sec' });
-  box.append(h('h4', {}, h('span', {}, (SECTION_LABEL[k] || '未知') + ' [' + s.name + ']'), h('button', { class: 'ib', title: '删除这一段', onclick: async () => { if (await confirmBox('删除段', '删除 [' + s.name + '] ？', '删除', '取消', true)) { snap(u); removeSection(u.ini, s.name); fillForm(); fillList(); } } }, '×')));
+  box.append(h('h4', {}, h('span', {}, (SECTION_LABEL[k] || '未知') + ' [' + s.name + ']'), h('button', { class: 'ib', title: '复制这一段（炮塔会带上弹道）', onclick: () => { secClip = copySection(u, s.name); toast('已复制 [' + s.name + ']，到别的单位点“粘贴段”'); fillForm(); } }, '⧉'), h('button', { class: 'ib', title: '删除这一段', onclick: async () => { if (await confirmBox('删除段', '删除 [' + s.name + '] ？', '删除', '取消', true)) { snap(u); removeSection(u.ini, s.name); fillForm(); fillList(); } } }, '×')));
   const known = new Set(defs.map((d) => d.key));
   const row = (key, label, type, help, val) => {
     let inp;
-    const set = (v) => { snap(u); setVal(u.ini, s.name, key, v); if (key === 'name' || key === 'displayText' || key === 'price' || key === 'maxHp' || key === 'moveSpeed') fillListSoft(); };
+    const set = (v) => { snap(u); setVal(u.ini, s.name, key, v); if (key === 'name' || key === 'displayText' || key === 'price' || key === 'maxHp' || key === 'moveSpeed') fillListSoft(); updStand(); };
     if (type === 'b') inp = select([['', '—'], ['true', '是'], ['false', '否']], val || '', set);
     else if (type.startsWith('e:')) inp = select([['', '—']].concat(type.slice(2).split('|')), val || '', set);
     else inp = h('input', { type: 'text', inputmode: type === 'n' ? 'decimal' : 'text', value: val || '', translate: 'no', title: help, onchange: (e) => set(e.target.value.trim()) });
+    if (/\.(ogg|wav|mp3)\s*$/i.test(val || '') && mod.has(val, u.file)) inp = h('div', { style: 'display:flex;gap:4px' }, inp, h('button', { class: 'ib', title: '试听', onclick: () => import('./modtools4.js').then((m) => m.playAudio(mod, val, u.file)) }, '▶'));
     return [h('label', { title: help }, label + (help ? ' ⓘ' : '')), inp];
   };
   const grid = h('div', {});
@@ -338,6 +344,15 @@ function secBox(u, s) {
   return box;
 }
 let softT = 0;
+let secClip = null, standEl = null, standU = null, standT = 0;
+function updStand() {
+  clearTimeout(standT);
+  standT = setTimeout(() => {
+    if (!standEl || !standEl.isConnected || !standU) return;
+    let s = null; try { s = standing(mod, standU); } catch { /* 数据不完整时不显示 */ }
+    standEl.textContent = s ? `战力 ${Math.round(s.power)} · DPS ${Math.round(s.dps)} · ` + (s.rank ? `性价比第 ${s.rank}/${s.total}（${s.verdict}）` : s.verdict) + '（估算）' : '';
+  }, 200);
+}
 function fillListSoft() { clearTimeout(softT); softT = setTimeout(fillList, 400); }
 
 async function addSecDialog() {
@@ -401,7 +416,11 @@ function showCheck() {
   const cnt = { error: 0, warn: 0, info: 0 }; R.forEach((r) => cnt[r.lv]++);
   body.append(h('p', {}, R.length ? `错误 ${cnt.error} · 警告 ${cnt.warn} · 提示 ${cnt.info}` : '没有发现问题 ✓'));
   const order = { error: 0, warn: 1, info: 2 };
-  for (const r of R.sort((a, b) => order[a.lv] - order[b.lv])) body.append(h('div', { class: r.lv }, (r.lv === 'error' ? '✗ ' : r.lv === 'warn' ? '! ' : 'i ') + r.msg + (r.file ? '  — ' + r.file : '')));
+  for (const r of R.sort((a, b) => order[a.lv] - order[b.lv])) {
+    const fx = fixOf(mod, r);
+    body.append(h('div', { class: r.lv }, (r.lv === 'error' ? '✗ ' : r.lv === 'warn' ? '! ' : 'i ') + r.msg + (r.file ? '  — ' + r.file : ''),
+      fx ? h('button', { style: 'margin-left:8px', onclick: () => { const u = mod.units.find((x) => x.file === r.file); if (u) snap(u); const m = applyFix(mod, r); if (m) { toast(m, 3500); closeModal(); fillList(); fillForm(); showCheck(); } } }, '修复：' + fx.label) : null));
+  }
   modal('检查结果', body, [{ label: '关闭', value: true }]);
   coach('mod:check');
   return R;

@@ -1,3 +1,33 @@
+## 铁锈地图编辑器 3.2.0
+
+**下载**
+- 安卓：`rw-map-editor.apk`（可直接覆盖安装）。电脑：`rw-map-editor-web.zip`，解压后双击 `Start-Editor.bat`。
+
+**这一版：少做重复劳动，更好看，更好分享**
+- 派生向导（更快/更肉/更能打）、检查结果逐条“修复”、导入精灵图自动切帧、批量改多个单位、复制粘贴一段。
+- 单位战力和性价比排名、关系图、全局搜索、字段帮助搜索、音效试听。
+- 导出图鉴网页（图片内嵌）、和旧版对比生成公告稿；手机上长按单位有菜单。
+- 没做：Mod 与地图联动、一键部署、触发器流程图编辑（需要真机和游戏里验证）。
+
+完整说明见 CHANGELOG.md。
+
+---
+
+## Rusted Warfare Map Editor 3.2.0 (English)
+
+**Download**
+- Android: `rw-map-editor.apk` (installs over the old version). PC: `rw-map-editor-web.zip`, unzip and double-click `Start-Editor.bat`.
+
+**Less repetitive work, clearer, easier to share**
+- Derive wizard (faster / tougher / stronger), per-issue “Fix” buttons in the check list, sprite import with automatic frame slicing, batch edit across units, copy / paste a section.
+- Per-unit power and value rank, relation graph, search everywhere, field help search, audio preview.
+- Export a gallery web page (images embedded), compare with an older version to get an announcement; long-press a unit on a phone for a menu.
+- Not done: Mod-to-map linking, one-tap deploy, a trigger flow editor (need real-device and in-game verification).
+
+Full details in CHANGELOG.md.
+
+---
+
 ## 铁锈地图编辑器 3.1.1
 
 复查修复：“整理全部格式”和翻译表导回可能盖掉刚改的内容；整理格式重复写注释；补全多加冒号。其余同 3.1.0（见下）。

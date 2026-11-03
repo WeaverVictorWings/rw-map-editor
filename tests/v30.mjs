@@ -7,7 +7,7 @@ const { chromium } = require(process.env.PW || 'playwright');
 const fail = []; const expect = (c, m) => { console.log(c ? '  ✓' : '  ✗', m); if (!c) fail.push(m); };
 const sample = fs.readFileSync(process.argv[2], 'utf8');
 const b = await chromium.launch(); const ctx = await b.newContext({ locale: 'zh-CN', viewport: { width: 1200, height: 800 } });
-await ctx.addInitScript(() => { try { localStorage.setItem('rwNoUpdate', '1'); localStorage.setItem('rwSeen', '3.1.1'); } catch { /* 忽略 */ } });
+await ctx.addInitScript(() => { try { localStorage.setItem('rwNoUpdate', '1'); localStorage.setItem('rwSeen', '3.2.0'); } catch { /* 忽略 */ } });
 const p = await ctx.newPage(); const errs = []; p.on('pageerror', (e) => errs.push(e.message));
 await p.goto('http://localhost:8765/index.html'); await p.waitForFunction(() => window.__rwReady);
 expect(await p.locator('.pick').count() === 2, '首页有两个并列的工具卡片');

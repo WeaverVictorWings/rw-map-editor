@@ -1,6 +1,6 @@
 // 自动生成：scripts/build-sw.mjs —— 不要手改这个文件（改完网页资源后重新生成）
 // 离线优先：所有资源走缓存，网络只用来补新东西；换版本时旧缓存自动清掉。
-const CACHE = 'rw-map-editor-3.1.1-572576a9';
+const CACHE = 'rw-map-editor-3.2.0-7c9581d9';
 const ASSETS = [
   './icon-192.png',
   './icon-512.png',
@@ -71,11 +71,13 @@ const ASSETS = [
   './js/modlogic.js',
   './js/modlogic2.js',
   './js/modlogic3.js',
+  './js/modlogic4.js',
   './js/modschema.js',
   './js/modsrc.js',
   './js/modtools.js',
   './js/modtools2.js',
   './js/modtools3.js',
+  './js/modtools4.js',
   './js/modunits.js',
   './js/movebrush.js',
   './js/naval.js',

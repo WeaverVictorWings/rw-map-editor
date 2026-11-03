@@ -4,6 +4,8 @@
 //   node scripts/rwmod.mjs health <mod> [-o 体检.md]
 //   node scripts/rwmod.mjs docs   <mod> [-o 图鉴.md]
 //   node scripts/rwmod.mjs diff   <旧mod> <新mod> [-o 更新日志.md]
+//   node scripts/rwmod.mjs gallery <mod> [-o 图鉴.html]     单文件图鉴网页，图片内嵌
+//   (diff 的 -o 以 .html 结尾会生成网页)
 //   node scripts/rwmod.mjs pack   <文件夹> [-o out.rwmod]
 //   node scripts/rwmod.mjs translate-export <mod> [-o 翻译.csv]
 //   node scripts/rwmod.mjs translate-import <mod> <csv> [-o out.rwmod]
@@ -12,6 +14,7 @@ import path from 'path';
 import { Mod, checkMod } from '../www/js/modedit.js';
 import { readZip, writeZip } from '../www/js/zip.js';
 import { changelogMd } from '../www/js/modlogic.js';
+import { galleryHtml, diffHtml, announcement } from '../www/js/modlogic4.js';
 import { docsMd, healthMd, diffMods, translationCsv, applyTranslationCsv, lintText } from '../www/js/modlogic3.js';
 
 const args = process.argv.slice(2);
@@ -59,7 +62,9 @@ try {
   } else if (cmd === 'docs') {
     const m = await load(rest[0]); const md = docsMd(m); out ? write(out, md) : console.log(md);
   } else if (cmd === 'diff') {
-    const a = await load(rest[0]), b = await load(rest[1]); const md = changelogMd(diffMods(a, b), b.name); out ? write(out, md) : console.log(md);
+    const a = await load(rest[0]), b = await load(rest[1]); const d = diffMods(a, b); const md = /\.html?$/i.test(out || '') ? diffHtml(d, b.name) : /announce/.test(String(out)) ? announcement(d, b.name) : changelogMd(d, b.name); out ? write(out, md) : console.log(md);
+  } else if (cmd === 'gallery') {
+    const m = await load(rest[0]); write(out || (m.name + '-图鉴.html'), galleryHtml(m, m.name));
   } else if (cmd === 'pack') {
     const m = await load(rest[0]); write(out || (m.name + '.rwmod'), pack(m));
   } else if (cmd === 'translate-export') {

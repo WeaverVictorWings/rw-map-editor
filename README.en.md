@@ -27,6 +27,7 @@ A free, unofficial editor for **Rusted Warfare**: a **map editor** and a **mod e
 - Comparison table and battle simulation to see whether a new unit is too strong.
 - Check for missing sprites and sounds and broken references, then pack a `.rwmod`.
 - Source mode with live diagnostics and completion; translation CSV, unit gallery, health report.
+- Derive wizard, batch edit, per-issue fixes, relation graph, search everywhere, export a gallery web page.
 - Command line / GitHub Action: `node scripts/rwmod.mjs lint your-mod` (usage at the top of `scripts/rwmod.mjs`).
 
 The interface comes in 11 languages.
