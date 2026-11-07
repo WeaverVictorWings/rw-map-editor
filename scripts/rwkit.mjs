@@ -3,7 +3,8 @@
 import fs from 'node:fs'; import path from 'node:path'; import { fileURLToPath } from 'node:url';
 const K = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'kit');
 const L = (f) => import(path.join(K, f));
-const [cmd, ...rest] = process.argv.slice(2); const flags = {}, pos = [];
+const [cmd, ...rest] = process.argv.slice(2);
+try { fs.mkdirSync('.rwkit', { recursive: true }); fs.appendFileSync('.rwkit/log.txt', `${new Date().toISOString()} ${process.argv.slice(2).join(' ')}\n`); } catch {} const flags = {}, pos = [];
 for (let i = 0; i < rest.length; i++) { const a = rest[i]; if (a.startsWith('--') || a === '-o') { const k = a.replace(/^-+/, ''); flags[k] = rest[i + 1] && !rest[i + 1].startsWith('--') ? rest[++i] : true; } else pos.push(a); }
 const usage = `RWKit 用法:
   lint <map.tmx> [--rules rules.json] [--json]   全套质检(触发器/文本/站位/连通/队伍/规则/陈旧输出)
@@ -32,6 +33,16 @@ const usage = `RWKit 用法:
   water <map.tmx>                                水域连通域(面积/外接框)
   perf <map.tmx>                                 触发器负担估算(相对指标)
   dump <map.tmx>                                 稳定排序的触发器文本(适合 git diff)
+  groups <map.tmx>                               触发器按名字家族分组(数字当通配)    patterns <map.tmx>   各家族共同属性/变化属性
+  gates <map.tmx>                                逻辑门(basic)清单:来源、且/或、谁引用    heat <map.tmx> [--team N] [--step 8]  单位热力图(文字)
+  strength <map.tmx>                             各队强弱粗估(权重是经验值)    rewards <map.tmx>   各队奖励总额与触发条件
+  colors <map.tmx>                               按相邻关系给各队推荐颜色    tcolors <map.tmx>   消息文字色与队伍色是否一致
+  geo <map.tmx> --geojson 地区.json -o out [--proj mercator] [--bbox lon0,lat0,lon1,lat1]   GeoJSON 多边形 → 陆/水(覆盖整个 ground 层)
+  coast <map.tmx> [--rounds 1] -o out            海岸线平滑(只动水↔普通陆地,不动悬崖/岩浆)
+  box <map.tmx> --box x0,y0,x1,y1 --gid N [--only lava|cliff|all] -o out   区域地形覆盖(例:某区域不要悬崖)
+  road <map.tmx> --from x,y --to x,y --gid N -o out   A* 在陆地上铺道路(gid 由你指定)
+  scale <map.tmx> --km 5                         比例尺换算
+  build <项目.rwproj.json> [--run]               按输入/输出新旧决定要重跑哪些步骤(默认只打印计划)
   route <map.tmx> --from x,y --to x,y [--naval|--land] [--clear 1]   通道是否连通 / 最大可过船宽
 `;
 const load = async (f) => { const { parseTmx } = await L('tmx.js'); return parseTmx(fs.readFileSync(f, 'utf8')); };
@@ -91,4 +102,21 @@ if (cmd === 'lint') {
 } else if (cmd === 'water') { const w = (await L('terrain.js')).waterComponents(await load(pos[0])); w.comps.slice(0, 15).forEach((c) => console.log(`#${c.id} 面积 ${c.area} 框 ${c.bbox}`)); console.log(`共 ${w.comps.length} 块水域(>=10 格)`);
 } else if (cmd === 'perf') { console.log((await L('terrain.js')).perfEstimate(await load(pos[0])));
 } else if (cmd === 'dump') { const m = await load(pos[0]); const { TRIGGER_TYPES, trigKey } = await L('tmx.js'); m.objects.filter((o) => TRIGGER_TYPES.has(o.type.toLowerCase())).sort((a, b) => trigKey(a).localeCompare(trigKey(b))).forEach((o) => console.log(`[${trigKey(o)}] ${o.type} @${o.x},${o.y} ${o.w}x${o.h}\n` + Object.keys(o.props).sort().map((k) => `  ${k} = ${JSON.stringify(o.props[k])}`).join('\n')));
+} else if (cmd === 'groups') { (await L('insight.js')).groups(await load(pos[0])).slice(0, +(flags.n ?? 40)).forEach((g) => console.log(String(g.count).padStart(5), g.family, `[${g.types}]`));
+} else if (cmd === 'patterns') { (await L('insight.js')).patterns(await load(pos[0])).slice(0, 30).forEach((p) => { console.log(`${p.family} ×${p.count} (${p.type})`); console.log('   共同:', JSON.stringify(p.common)); console.log('   变化:', p.vary.join(',') || '无'); });
+} else if (cmd === 'gates') { (await L('insight.js')).gates(await load(pos[0])).slice(0, +(flags.n ?? 30)).forEach((g) => console.log(`${g.key} [${g.mode}] 来源${g.sources} 关闭${g.closedBy.length}个 reset=${g.reset} ← ${g.usedBy.join(' ')}`));
+} else if (cmd === 'heat') { const I = await L('insight.js'); const hm = I.unitHeat(await load(pos[0]), { step: +(flags.step ?? 8), filter: (u) => flags.team === undefined || +u.props.team === +flags.team }); console.log(I.heatText(hm));
+} else if (cmd === 'strength') { const r = (await L('insight.js')).strength(await load(pos[0])); r.rows.forEach((x) => console.log(`${String(x.team).padStart(3)} 号  ${String(x.power).padStart(6)}  ×${x.ratio}`)); if (r.unknownUnits.length) console.log('未配权重的单位(按 1 计):', r.unknownUnits.join(',')); console.log(r.note);
+} else if (cmd === 'rewards') { (await L('mapops.js')).rewardCurve(await load(pos[0])).forEach((r) => console.log(`${r.team} 号 总额 ${r.total}  ` + r.rows.map((x) => `${x.needCities ?? '-'}城:${x.add}`).join(' ')));
+} else if (cmd === 'colors') { const M = await L('mapops.js'); const r = M.colorAssign(await load(pos[0])); Object.entries(r).sort((a, b) => a[0] - b[0]).forEach(([t, c]) => console.log(`${t} 号 → ${c}`)); console.log('注意:颜色是游戏按队伍编号决定的,这里给的是"哪个编号配哪个颜色最合适",要用 remap --perm 把队伍号换过去');
+} else if (cmd === 'tcolors') { const r = (await L('mapops.js')).lintTeamColors(await load(pos[0])); r.slice(0, 20).forEach((i) => console.log(i.key, i.msg)); console.log(`共 ${r.length} 处`);
+} else if (cmd === 'geo' || cmd === 'coast' || cmd === 'box' || cmd === 'road') {
+  const M = await L('mapops.js'), G = await L('guard.js'); const t = fs.readFileSync(pos[0], 'utf8'); const m = await load(pos[0]); let out, msg = '';
+  if (cmd === 'geo') { const { mask, bbox } = M.rasterizePolygons(JSON.parse(fs.readFileSync(flags.geojson, 'utf8')), m.width, m.height, { bbox: flags.bbox && flags.bbox.split(',').map(Number), proj: flags.proj }); out = M.paintMask(t, mask, { land: flags.land && +flags.land, water: flags.water && +flags.water }); msg = `陆地 ${mask.reduce((a, b) => a + b, 0)} 格,范围 ${bbox.map((v) => v.toFixed(2))}`; }
+  else if (cmd === 'coast') { const r = M.smoothCoast(t, { rounds: +(flags.rounds ?? 1) }); out = r.text; msg = `改了 ${r.changed} 格`; }
+  else if (cmd === 'box') { const r = M.overrideBox(t, flags.box.split(',').map(Number), +flags.gid, { onlyIf: flags.only || 'all' }); out = r.text; msg = `改了 ${r.changed} 格`; }
+  else { const p = M.findPath(m, flags.from.split(',').map(Number), flags.to.split(',').map(Number)); if (!p) { console.error('两点之间陆路不通'); process.exit(2); } out = M.paintRoad(t, p, +flags.gid); msg = `路径 ${p.length} 格`; }
+  G.safeWrite(flags.o || pos[0].replace(/\.tmx$/, `.${cmd}.tmx`), out, { overwrite: !!flags.force }); console.log(msg, '→', flags.o || '(默认文件名)');
+} else if (cmd === 'scale') { console.log((await L('mapops.js')).scale(await load(pos[0]), +flags.km));
+} else if (cmd === 'build') { const proj = JSON.parse(fs.readFileSync(pos[0], 'utf8')); const root = path.dirname(path.resolve(pos[0])); const plan = (await L('insight.js')).planBuild(proj, root, { fs, path }); const { execSync } = await import('node:child_process'); for (const s of plan) { console.log(`${s.run ? '▶' : '·'} ${s.name}  (${s.why})`); if (s.run && flags.run) { try { execSync(s.cmd, { cwd: root, stdio: 'inherit' }); } catch (e) { console.error(`步骤「${s.name}」失败:${s.cmd}`); process.exit(1); } } }
 } else console.log(usage);

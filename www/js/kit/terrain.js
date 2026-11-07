@@ -1,5 +1,5 @@
 // RWKit · 地形分析与导出:山口扫描、水域连通域、通行性/地形图 PNG、截取测试图、性能估算
-import zlib from 'node:zlib';
+const zlib = (typeof process !== 'undefined' && process.versions && process.versions.node) ? (await import('node:zlib')).default : null;   // 浏览器里 PNG 导出不可用
 import { passability, terrainClasses, LAND, NAVAL, HOVER, BUILD, triggersOf, parseTmx, trigKey, TRIGGER_TYPES } from './tmx.js';
 import { mapTriggers } from './refactor.js';
 // 沿线段扫描:列出连续的"可通行"区段(山口宽度)与"阻断"区段。验证山脉岩墙的山口是否够宽、是否漏洞

@@ -4,12 +4,15 @@ export async function kitDialog() {
   const { rwApi } = await import('./api.js');
   const text = await rwApi.exportText('full'); const K = (f) => import('./kit/' + f);
   const { parseTmx, normalizeTmx } = await K('tmx.js'); const model = parseTmx(await normalizeTmx(text));
-  const [AN, { openingCheck }] = await Promise.all([K('analysis.js'), K('tsim.js')]);
+  const [AN, { openingCheck }, IN, MO] = await Promise.all([K('analysis.js'), K('tsim.js'), K('insight.js'), K('mapops.js')]);
   const items = AN.allChecks(model); const rep = AN.report(model, {});
   const o = openingCheck(model, 30); if (o.messages > 6) items.push({ sev: 'warn', code: 'O01', msg: `开局 30 秒内有 ${o.messages} 条消息(可能刷屏)` });
   const by = new Map(); for (const i of items) { const k = i.sev + '|' + i.code; if (!by.has(k)) by.set(k, []); by.get(k).push(i); }
   const col = { error: '#e5484d', warn: '#d9a400', info: '#888' };
   const rows = [...by].sort((a, b) => ['error', 'warn', 'info'].indexOf(a[0].split('|')[0]) - ['error', 'warn', 'info'].indexOf(b[0].split('|')[0])).map(([k, v]) => h('div', { style: 'margin:6px 0' }, h('b', { style: 'color:' + col[v[0].sev] }, `${v[0].sev === 'error' ? '错误' : v[0].sev === 'warn' ? '警告' : '提示'} ${v[0].code} ×${v.length}`), ...v.slice(0, 5).map((i) => h('div', { style: 'font-size:12px;margin-left:10px' }, (i.key ? `「${i.key}」` : '') + i.msg))));
   const c = { error: 0, warn: 0 }; items.forEach((i) => c[i.sev] !== undefined && c[i.sev]++);
-  return modal('质检套件', h('div', {}, h('div', {}, `触发器 ${rep.md.match(/触发器 (\d+)/)[1]} 个 · ${c.error} 个错误 · ${c.warn} 个警告 · 开局 30 秒消息 ${o.messages} 条`), ...(rows.length ? rows : [h('div', {}, '没有发现问题。')])), [{ label: '下载报告(.md)', value: 1, onClick: () => { const a = h('a', { href: URL.createObjectURL(new Blob([rep.md], { type: 'text/markdown' })), download: 'rwkit-report.md' }); document.body.append(a); a.click(); a.remove(); } }, { label: '关闭', value: 0, primary: true }], { wide: true });
+  const tbl = (head, rows) => h('table', { style: 'font-size:12px;border-collapse:collapse;margin:4px 0' }, h('tr', {}, ...head.map((x) => h('th', { style: 'text-align:left;padding:2px 8px' }, x))), ...rows.map((r) => h('tr', {}, ...r.map((c) => h('td', { style: 'padding:2px 8px' }, String(c))))));
+  const st = IN.strength(model); const fr = Object.fromEntries(AN.fairness(model).map((r) => [r.team, r])); const rw = Object.fromEntries(MO.rewardCurve(model).map((r) => [r.team, r.total]));
+  const extra = h('details', {}, h('summary', {}, '各队强弱 / 奖励 / 触发器家族'), tbl(['队', '强弱(估)', '倍数', '最近敌方指挥中心', '奖励总额'], st.rows.map((r) => [r.team, r.power, '×' + r.ratio, fr[r.team]?.nearestEnemyCC ?? '-', rw[r.team] ?? '-'])), h('div', { style: 'font-size:12px;color:#888' }, st.note), tbl(['数量', '触发器家族'], IN.groups(model).slice(0, 12).map((g) => [g.count, g.family])));
+  return modal('质检套件', h('div', {}, h('div', {}, `触发器 ${rep.md.match(/触发器 (\d+)/)[1]} 个 · ${c.error} 个错误 · ${c.warn} 个警告 · 开局 30 秒消息 ${o.messages} 条`), ...(rows.length ? rows : [h('div', {}, '没有发现问题。')]), extra), [{ label: '下载报告(.md)', value: 1, onClick: () => { const a = h('a', { href: URL.createObjectURL(new Blob([rep.md], { type: 'text/markdown' })), download: 'rwkit-report.md' }); document.body.append(a); a.click(); a.remove(); } }, { label: '关闭', value: 0, primary: true }], { wide: true });
 }

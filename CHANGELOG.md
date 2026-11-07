@@ -1,6 +1,10 @@
 ## 3.3.4
 夺城（在场式）减负：去掉“指挥中心在场”检测和按队伍变色的城名（改成每城一个静态城名）；战报改成“夺城成功且指挥中心撑过 hold 秒”才播，可用 rwNews=0 让某座城不播战报；重要城市候选 candidates 个队伍，其余 candidatesMinor 个；无主检测开局 startGrace 秒后才启动；占领条件加 2 秒确认。常开检测约减少 40%。
 
+## 3.4.3
+- RWKit:新增 groups/patterns/gates/heat/strength/rewards/colors/tcolors/geo/coast/box/road/scale/build 命令与 mapops.js、insight.js;面板加概览表;命令日志。
+- 文档对 154 条清单逐条分类(已做/部分/编辑器原有/需游戏验证/没做)。
+
 ## 3.4.2
 - RWKit:新增 png/crop/pools/fill/rmunits/passes/water/perf/dump 命令与 units.js、terrain.js;ignore 支持原因字段;截取测试图自动清理悬空引用。
 
