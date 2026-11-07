@@ -1,0 +1,5 @@
+2026-11-07T16:46:03.907Z terrain-report /tmp/w/us/out/美国内战.tmx
+2026-11-07T16:46:04.106Z lint /tmp/w/us/out/美国内战.tmx --rules /tmp/w/us/rules_us.json
+2026-11-07T16:46:16.368Z report /tmp/w/us/out/美国内战.tmx
+2026-11-07T16:47:45.763Z report /tmp/w/us/out/美国内战.tmx --rules /tmp/w/us/rules_us.json
+2026-11-07T16:48:06.105Z report /tmp/w/us/out/美国内战.tmx --rules /tmp/w/us/rules_us.json

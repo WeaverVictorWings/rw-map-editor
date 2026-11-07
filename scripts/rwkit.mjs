@@ -43,6 +43,9 @@ const usage = `RWKit 用法:
   road <map.tmx> --from x,y --to x,y --gid N -o out   A* 在陆地上铺道路(gid 由你指定)
   scale <map.tmx> --km 5                         比例尺换算
   build <项目.rwproj.json> [--run]               按输入/输出新旧决定要重跑哪些步骤(默认只打印计划)
+  diag <map.tmx> "过滤条件" -o out               诊断版:去掉某一类触发器(如 "name~^势名"),二分排错用
+  init-rules [-o rules.json]                     生成带历史错误检查的规则模板
+  terrain-report <map.tmx>                       各类地形占比(岩浆/悬崖/水...)
   route <map.tmx> --from x,y --to x,y [--naval|--land] [--clear 1]   通道是否连通 / 最大可过船宽
 `;
 const load = async (f) => { const { parseTmx } = await L('tmx.js'); return parseTmx(fs.readFileSync(f, 'utf8')); };
@@ -119,4 +122,7 @@ if (cmd === 'lint') {
   G.safeWrite(flags.o || pos[0].replace(/\.tmx$/, `.${cmd}.tmx`), out, { overwrite: !!flags.force }); console.log(msg, '→', flags.o || '(默认文件名)');
 } else if (cmd === 'scale') { console.log((await L('mapops.js')).scale(await load(pos[0]), +flags.km));
 } else if (cmd === 'build') { const proj = JSON.parse(fs.readFileSync(pos[0], 'utf8')); const root = path.dirname(path.resolve(pos[0])); const plan = (await L('insight.js')).planBuild(proj, root, { fs, path }); const { execSync } = await import('node:child_process'); for (const s of plan) { console.log(`${s.run ? '▶' : '·'} ${s.name}  (${s.why})`); if (s.run && flags.run) { try { execSync(s.cmd, { cwd: root, stdio: 'inherit' }); } catch (e) { console.error(`步骤「${s.name}」失败:${s.cmd}`); process.exit(1); } } }
+} else if (cmd === 'diag') { const X = await L('extras.js'); const r = X.diagVariant(fs.readFileSync(pos[0], 'utf8'), pos[1]); (await L('guard.js')).safeWrite(flags.o || pos[0].replace(/\.tmx$/, '.diag.tmx'), r.text, { overwrite: !!flags.force }); console.log(`去掉了 ${r.dropped} 个触发器 →`, flags.o || '(默认文件名)');
+} else if (cmd === 'init-rules') { const X = await L('extras.js'); const o = flags.o || 'rules.json'; (await L('guard.js')).safeWrite(o, JSON.stringify(X.MISTAKE_TEMPLATE, null, 2), { overwrite: !!flags.force }); console.log('已写入', o);
+} else if (cmd === 'terrain-report') { (await L('extras.js')).terrainReport(await load(pos[0])).forEach((r) => console.log(r.name.padEnd(6), String(r.cells).padStart(8), r.pct + '%'));
 } else console.log(usage);

@@ -5,6 +5,7 @@ import { lintTriggers } from './tlint.js';
 import { checkPlacement, landConnectivity } from './grid.js';
 import { checkRules } from './rules.js';
 import { checkTeams } from './teams.js';
+import { lintFacilities, lintStartInDetect, levelOf } from './extras.js';
 export function lintLogic(model, { coverSecs = 300, openSecs = 5 } = {}) {
   const out = []; const add = (sev, code, msg, key) => out.push({ sev, code, msg, key });
   const trs = triggersOf(model);
@@ -47,14 +48,15 @@ export function fairness(model) {
 }
 export function timeline(model, secs = 120, { quiet = true } = {}) { const s = new Sim(model).run(secs); return s.log.filter((l) => !quiet || !l.msg.startsWith('<<')).map((l) => `${l.t.toFixed(1).padStart(6)}s  ${l.name}  ${l.msg.replace(/\n/g, ' / ').slice(0, 60)}`); }
 export function applyIgnore(items, ignore = []) { const ig = ignore.map((s) => { if (typeof s === 'object') return { c: s.code, k: s.key && new RegExp(s.key), why: s.why }; const [c, k] = s.split(':'); return { c, k: k && new RegExp(k) }; }); const kept = items.filter((i) => !ig.some((g) => g.c === i.code && (!g.k || g.k.test(i.key || '')))); return { kept, suppressed: items.length - kept.length }; }
-export function allChecks(model, R = {}) { return [...lintTriggers(model, { teamCount: R.teams, text: R.text }), ...lintLogic(model), ...lintSpawnCells(model), ...lintContrast(model), ...lintLayout(model, R), ...checkPlacement(model), ...landConnectivity(model), ...checkRules(model, R), ...checkTeams(model, { expect: R.teams })]; }
+export function allChecks(model, R = {}) { return [...lintTriggers(model, { teamCount: R.teams, text: R.text }), ...lintLogic(model), ...lintSpawnCells(model), ...lintContrast(model), ...lintLayout(model, R), ...checkPlacement(model), ...landConnectivity(model), ...checkRules(model, R), ...checkTeams(model, { expect: R.teams }), ...lintFacilities(model), ...lintStartInDetect(model)]; }
 export function report(model, R = {}, title = '地图质检报告') {
   const { kept, suppressed } = applyIgnore(allChecks(model, R), R.ignore);
   const by = new Map(); for (const i of kept) { const k = `${i.sev}|${i.code}`; if (!by.has(k)) by.set(k, []); by.get(k).push(i); }
   const c = { error: 0, warn: 0, info: 0 }; kept.forEach((i) => c[i.sev]++);
   const o = openingCheck(model, 30); const st = lintLogic(model).stats;
   let md = `# ${title}\n\n- 地图 ${model.width}×${model.height}  ·  触发器 ${triggersOf(model).length}  ·  单位 ${unitsOf(model).length}\n- **${c.error} 错误 / ${c.warn} 警告 / ${c.info} 提示**${suppressed ? `(另有 ${suppressed} 条被规则文件的 ignore 屏蔽)` : ''}\n- 开局 30 秒消息 ${o.messages} 条;空闲模拟 ${st.coverSecs}s 内触发过 ${st.firedInIdle}/${st.simulated} 条\n\n`;
-  for (const sev of ['error', 'warn', 'info']) for (const [k, v] of by) if (k.startsWith(sev)) md += `## ${sev === 'error' ? '错误' : sev === 'warn' ? '警告' : '提示'} ${k.split('|')[1]} ×${v.length}\n${v.slice(0, 5).map((i) => `- ${i.key ? `「${i.key}」` : ''}${i.msg}`).join('\n')}\n\n`;
+  for (const sev of ['error', 'warn', 'info']) for (const [k, v] of by) if (k.startsWith(sev)) md += `## ${sev === 'error' ? '错误' : sev === 'warn' ? '警告' : '提示'} ${k.split('|')[1]} ×${v.length}(验证等级:${levelOf(k.split('|')[1])})\n${v.slice(0, 5).map((i) => `- ${i.key ? `「${i.key}」` : ''}${i.msg}`).join('\n')}\n\n`;
+  if ((R.requirements || []).length) md += `## 项目要求与对应检查\n${R.requirements.map((q) => `- ${q.text}(来源:${q.source || '未注明'};检查:${(q.codes || []).join('/')};当前${(q.codes || []).some((c) => kept.some((i) => i.code === c && i.sev !== 'info')) ? '**未满足**' : '满足'})`).join('\n')}\n\n`;
   md += `## 各队概况\n| 队 | 指挥中心 | 抽取仪 | 工厂 | 单位 | 最近敌方指挥中心(格) |\n|---|---|---|---|---|---|\n${fairness(model).map((r) => `| ${r.team} | ${r.cc} | ${r.extractors} | ${r.factories} | ${r.units} | ${r.nearestEnemyCC ?? '-'} |`).join('\n')}\n`;
   return { md, counts: c, items: kept };
 }
