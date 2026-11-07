@@ -64,6 +64,10 @@ export const ACTIONS = [
   { id: 'balance', group: '地图', label: '一键平衡…', icon: 'report', desc: '自动调整资源池的位置和数量，让各队拿到的资源接近', enabled: has, kw: '公平 资源池 平衡 自动', help: 'balance', run: () => import('./balance.js').then((m) => m.balanceDialog()).catch((e) => console.warn('一键平衡不可用', e)) },
   { id: 'symdiff', group: '地图', label: '对称差异检查 / 一键修复…', icon: 'sym', enabled: has, help: 'symdiff', kw: '对称 修复', run: () => D.symDiffDialog() },
   { id: 'charts', group: '地图', label: '地图统计图表…', icon: 'report', desc: '地形占比、各队资源分布、单位构成', enabled: has, help: 'tool.charts', kw: '图表 统计 占比 分布 构成', run: () => import('./charts.js').then((m) => m.chartsDialog()) },
+  { id: 'geo', group: '地图', label: '地理工具（经纬度/画岛/放城市/量测/整形）…', icon: 'water', desc: '校准经纬度、经纬网、按海岸线画岛、按表格放城市、量面积和海峡、清碎片、边缘墙', enabled: has, help: 'tool.geo', kw: '经纬度 经纬网 海岸线 岛 城市 校准 量测 面积 海峡 整形 碎片 边缘', run: () => import('./geo.js').then((m) => m.geoDialog()) },
+  { id: 'capture', group: '触发器', label: '夺城模板（换主/重生/战报/奖励）…', icon: 'trigger', desc: '把标成城市的指挥中心做成可夺取的城，并导出完整/轻量/无触发器版', enabled: has, help: 'tool.capture', kw: '夺城 城市 占领 换主 重生 战报 奖励 轻量 导出', run: () => import('./capture.js').then((m) => m.captureDialog()) },
+  { id: 'passtable', group: '地图', label: '地形通行表…', icon: 'tiles', desc: '每种地形能不能走、建、走船，并注明依据', enabled: has, help: 'tool.passtable', kw: '通行 地形 水 浅滩 悬崖 依据', run: () => import('./checks2.js').then((m) => m.passTable()) },
+  { id: 'ov-connect', group: '视图', label: '连通图（孤岛/断开的水域）', icon: 'wave', check: () => A.overlayKind === 'connect', run: () => A.hooks.setOverlay('connect') },
   { id: 'naval', group: '地图', label: '海战专项检查…', icon: 'water', desc: '港口能不能出海、出海口多宽、海面通不通', enabled: has, help: 'naval', kw: '海战 海军 水面 港口 出海口', run: () => import('./naval.js').then((m) => m.navalDialog()) },
   { id: 'bottleneck', group: '地图', label: '通行瓶颈地图…', icon: 'route', desc: '看哪些位置是卡点、哪个队伍被绕远', enabled: has, help: 'bottleneck', kw: '瓶颈 卡点 绕路 通路 行军', run: () => import('./bottleneck.js').then((m) => m.bottleneckDialog()) },
   { id: 'teamhelp', group: '地图', label: '队伍与阵营助手…', icon: 'team', desc: '队伍颜色、队伍号检查、一键整理', enabled: has, help: 'teamhelp', kw: '队伍 阵营 颜色 队伍号', run: () => import('./teamhelp.js').then((m) => m.teamDialog()) },
@@ -72,6 +76,7 @@ export const ACTIONS = [
   { id: 'mydata', group: '帮助', label: '我的数据在哪…', icon: 'help', desc: '地图和备份存在哪里、什么时候会丢', kw: '数据 隐私 存储 备份 上传', run: () => import('./safety.js').then((m) => m.dataDialog()) },
   { id: 'diag', group: '帮助', label: '自检面板（复制诊断信息）…', icon: 'inspect', desc: '版本、存储、备份、最近的错误，出问题时发给作者', kw: '诊断 自检 错误 存储', run: () => import('./safety.js').then((m) => m.diagDialog()) },
   { id: 'backup', group: '地图', label: '自动备份…', icon: 'history', desc: '定时存一份，崩了能捞回来', kw: '备份 恢复 自动保存', run: () => import('./backup.js').then((m) => m.backupDialog()) },
+  { id: 'kitcheck', group: '地图', label: '质检套件…', icon: 'check', desc: '触发器格式/引用/文本/站位/连通/开局刷屏,与命令行 rwkit 同一套代码', enabled: has, kw: '质检 检查 触发器 lint 刷屏 连通 站位 海军工厂', run: () => import('./kitpanel.js').then((m) => m.kitDialog()) },
   { id: 'commands', group: '地图', label: '指令一览…', icon: 'clock', desc: '把这张图所有触发器的指令按类型分组列出来', enabled: has, help: 'tool.commands', kw: '指令 触发器 清单 汇总 分组', run: () => import('./commands.js').then((m) => m.commandsDialog()) },
   { id: 'unitsbrowse', group: '单位', label: '单位图鉴（用了哪些、谁强谁弱）…', desc: '列出这张图用到的单位和游戏自带的单位，点一行就换成画笔', enabled: () => !!ed.map, help: 'tool.unitsbrowse', kw: '单位 图鉴 列表 血量 价格 浏览', run: () => import('./unitsbrowse.js').then((m) => m.unitBrowserDialog()) },
   { id: 'regions', group: '触发器', label: '区域管理器（改名/批移/查引用）…', desc: '一张表管所有区域：改名时引用自动同步、可整体平移', enabled: () => !!ed.map, help: 'tool.regions', kw: '区域 region 改名 移动 引用 触发器', run: () => import('./regions.js').then((m) => m.regionsDialog()) },
@@ -167,7 +172,7 @@ export function runAction(a) {
 }
 
 // 精简模式下菜单里先收起的高级功能（Ctrl+K 搜索仍然能找到；在“视图 → 界面：精简 / 完整”里切换）
-const ADV = new Set('batch pack mods sharecode publish library unitprops poolgen measure checklist score balance symdiff charts naval bottleneck teamhelp assetcheck commands unitsbrowse regions shot sharelayer editorial collision curves brushtools pasteblend gamelook quickbar traces2 assetfix unitstats erasebrush teamchart stampstyle replaceall hint debugtrig project workshop modunits examples importexport massedit markers layercmp parity templates pathannot layers tiling sim picture trace timing crosscopy stitch diff log killzones maplink autofixmap'.split(' '));
+const ADV = new Set('geo capture passtable batch pack mods sharecode publish library unitprops poolgen measure checklist score balance symdiff charts naval bottleneck teamhelp assetcheck commands unitsbrowse regions shot sharelayer editorial collision curves brushtools pasteblend gamelook quickbar traces2 assetfix unitstats erasebrush teamchart stampstyle replaceall hint debugtrig project workshop modunits examples importexport massedit markers layercmp parity templates pathannot layers tiling sim picture trace timing crosscopy stitch diff log killzones maplink autofixmap'.split(' '));
 export function menuItems(group) {
   return ACTIONS.filter((a) => a.group === group && !(A.settings.simple && ADV.has(a.id))).map((a) => a.sep ? { sep: true } : a.title ? { title: a.title } : {
     label: a.label, iconHtml: a.check ? '' : a.iconHtml, keys: a.keys, disabled: a.enabled && !a.enabled(), check: a.check && a.check(), run: () => runAction(a),

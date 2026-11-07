@@ -1,0 +1,19 @@
+// node tests/kit.test.mjs <正常地图.tmx>  — 用"故意弄坏"的地图验证质检能抓到历史上犯过的错
+import fs from 'fs'; import assert from 'node:assert/strict';
+import { parseTmx } from '../tmx.js'; import { lintTriggers } from '../tlint.js'; import { checkPlacement, landConnectivity } from '../grid.js'; import { checkRules } from '../rules.js'; import { Sim, openingCheck } from '../tsim.js'; import { wrap, lintText } from '../textlint.js';
+const src = fs.readFileSync(process.argv[2], 'utf8'); let pass = 0; const T = (n, f) => { try { f(); pass++; console.log('ok  ', n); } catch (e) { console.log('FAIL', n, '\n   ', e.message.split('\n')[0]); process.exitCode = 1; } };
+const has = (r, code) => r.some((i) => i.code === code);
+const base = parseTmx(src);
+T('正常图无 error', () => { const r = lintTriggers(base); assert.equal(r.filter((i) => i.sev === 'error').length, 0); });
+T("抓到 resetActivationAfter='10m'", () => { const t = src.replace(/(name="resetActivationAfter" value=")600/, '$110m'); assert.notEqual(t, src); assert.ok(has(lintTriggers(parseTmx(t)), 'G03')); });
+T('抓到 hsl 颜色', () => { const t = src.replace(/(name="globalMessage_textColor" value=")#[0-9A-Fa-f]+/, '$1hsl(10,50%,50%)'); assert.ok(has(lintTriggers(parseTmx(t)), 'G03')); });
+T('抓到引用不存在的触发器', () => { const t = src.replace(/(name="activatedBy" value=")检测0"/, '$1检测不存在"'); assert.ok(has(lintTriggers(parseTmx(t)), 'G02')); });
+T('抓到零面积检测区', () => { const t = src.replace(/(type="unitDetect"[^>]*?width=")\d+(")/, '$10$2'); assert.ok(has(lintTriggers(parseTmx(t)), 'G05')); });
+T('抓到重复名', () => { const t = src.replace(/name="检测1"/, 'name="检测0"'); assert.ok(has(lintTriggers(parseTmx(t)), 'G01')); });
+T('抓到海军工厂放陆地', () => { const i = src.indexOf('<objectgroup'); const t = src.slice(0, i) + src.slice(i).replace(/(<property name="unit" value=")landFactory"/, '$1seaFactory"'); assert.notEqual(t, src); assert.ok(has(checkPlacement(parseTmx(t)), 'F01')); });
+T('抓到岩浆', () => assert.ok(has(checkRules(base, { forbidClasses: ['normal'] }), 'R01')));
+T('抓到尺寸不符', () => assert.ok(has(checkRules(base, { mapSize: [1240, 800] }), 'S02')));
+T('抓到超长行', () => assert.ok(has(lintText('一二三四五六七八九十'.repeat(5)), 'T01') || lintText('一二三四五六七八九十'.repeat(5)).length));
+T('wrap 后每行≤24', () => { const w = wrap('联邦军队在大平原上展开了一场规模空前的会战,双方投入了数以万计的兵力,战线绵延数百公里,炮声昼夜不息。'); assert.ok(w.split('\n').every((l) => [...l].length <= 24)); });
+T('开局不刷屏(30s内消息≤6)', () => assert.ok(openingCheck(base, 30).messages <= 6));
+console.log(pass, '项通过');

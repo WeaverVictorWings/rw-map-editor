@@ -1,6 +1,6 @@
 // 版本号与更新检查、反馈入口
 import { toast, confirmBox } from './ui.js';
-export const VERSION = '3.2.0';
+export const VERSION = '3.3.4';
 export const REPO = 'WeaverVictorWings/rw-map-editor';
 export const openUrl = (u) => window.open(u, '_blank', 'noopener');
 export const feedback = () => openUrl(`https://github.com/${REPO}/issues/new/choose`);

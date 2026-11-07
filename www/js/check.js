@@ -4,6 +4,8 @@ import { teamColor } from './render.js';
 import { passability, BUILD, LAND, NAVAL, HOVER } from './pathing.js';
 import { NONE } from './terrain.js';
 import { bfsFrom } from './bottleneck.js';
+import { markAsCities } from './capture.js';
+import { startSpawns, allyMap, extraChecks } from './checks2.js';
 
 const lc = (s) => String(s || '').trim().toLowerCase();
 
@@ -115,7 +117,9 @@ export function runChecks(ed, opts = {}) {
   }
 
   // ---- 队伍与出生点 ----
-  const sp = ed.spawns();
+  const spAll = ed.spawns();
+  const sp = startSpawns(spAll);   // 3.3：城市指挥中心（rwRole=city）不算开局点
+  const ally = allyMap(ed);
   const teams = [...new Set(sp.map((s) => s.team).filter((t) => t >= 0))].sort((a, b) => a - b);
   if (!sp.length) {
     // 有些地图（战略图、剧情图）不摆指挥中心，开局靠“刷兵”触发器把单位发给各队：只提醒，不报错
@@ -130,7 +134,7 @@ export function runChecks(ed, opts = {}) {
     if (teams.length > 10) add('info', '出生点', `${teams.length} 支队伍`, opts.teamNote || '游戏默认房间只有 10 队（第 1~10 队），第 11 队以后的单位和触发器会被跳过。要玩满需要支持更多玩家的服务器房间（引擎上限 100 队）。');
     if (teams.some((t) => t >= 100)) add('error', '出生点', '有队伍号超过 100', '游戏引擎最多支持 100 支队伍（第 1~100 队），超出的队伍无法使用。', { fix: { label: '重新编号', run: () => ed.renumberTeams() } });
     const dup = sp.length - new Set(sp.map((s) => s.team)).size;
-    if (dup > 0) add('warn', '出生点', `${dup} 个指挥中心与别的指挥中心同队`, '同一队有多个指挥中心是允许的，但如果是误放，会让这队开局更强。');
+    if (dup > 0) add('warn', '出生点', `${dup} 个指挥中心与别的指挥中心同队`, '同一队有多个指挥中心是允许的，但如果是误放，会让这队开局更强。如果多出来的其实是“城市”（夺城用的指挥中心），把它们标成城市就不再被当作出生点。', { fix: { label: '身边没有建造者的标为城市', run: () => markAsCities(6) } });
   }
   const pass = opts.pass || passability(ed);
   const ptile = (x, y) => (x >= 0 && y >= 0 && x < W && y < H) ? pass[y * W + x] : 0;
@@ -152,7 +156,7 @@ export function runChecks(ed, opts = {}) {
     };
     return (x, y) => (x >= 0 && y >= 0 && x < W && y < H) ? cls(G2 ? G2.data[y * W + x] : 0) : 0;
   })();
-  for (const s of sp) {
+  for (const s of spAll) {
     const tx = Math.floor(s.cx / 20), ty = Math.floor(s.cy / 20);
     if (!(ptile(tx, ty) & BUILD)) add('warn', '出生点', `第 ${s.team + 1} 队的指挥中心压在水面、悬崖或障碍上`, '可能无法正常开局。', { goto: { x: tx, y: ty } });
     if (tx < 2 || ty < 2 || tx > W - 3 || ty > H - 5) add('warn', '出生点', `第 ${s.team + 1} 队的出生点太靠近地图边缘`, '建造者可能被卡住。', { goto: { x: tx, y: ty } });
@@ -160,10 +164,11 @@ export function runChecks(ed, opts = {}) {
   const close = [];
   for (let a = 0; a < sp.length; a++) for (let b = a + 1; b < sp.length; b++) {
     if (sp[a].team === sp[b].team) continue;
+    if (ally.has(sp[a].team) && ally.get(sp[a].team) === ally.get(sp[b].team)) continue;   // 盟友靠近不算问题
     const d = Math.hypot(sp[a].cx - sp[b].cx, sp[a].cy - sp[b].cy) / 20;
     if (d < 15) close.push([sp[a], sp[b], d]);
   }
-  if (close.length) add('warn', '出生点', `${close.length} 对出生点相距不到 15 格`, close.slice(0, 4).map(([a, b, d]) => `第 ${a.team + 1} 队和第 ${b.team + 1} 队：${d.toFixed(0)} 格`).join('；'), { goto: { x: Math.floor(close[0][0].cx / 20), y: Math.floor(close[0][0].cy / 20) } });
+  if (close.length) add('warn', '出生点', `${close.length} 对出生点相距不到 15 格`, close.sort((p, q) => p[2] - q[2]).slice(0, 6).map(([a, b, d]) => `第 ${a.team + 1} 队(${Math.floor(a.cx / 20)},${Math.floor(a.cy / 20)})和第 ${b.team + 1} 队(${Math.floor(b.cx / 20)},${Math.floor(b.cy / 20)})：${d.toFixed(0)} 格`).join('；'), { goto: { x: Math.floor(close[0][0].cx / 20), y: Math.floor(close[0][0].cy / 20) } });
   let outside = 0;
   for (const g of m.groups) for (const o of g.objects) {
     const x = +(o.attrs.x || 0), y = +(o.attrs.y || 0);
@@ -210,13 +215,14 @@ export function runChecks(ed, opts = {}) {
 
   // ---- 道路连通（按地面判据，不看资源池遮罩） ----
   {
-    const totalLand = (() => { let n = 0; for (let i = 0; i < W * H; i++) if (gpassFor(i % W, (i / W) | 0) & LAND) n++; return n; })();
+    const edge = (i) => { const x = i % W, y = (i / W) | 0; return x < 3 || y < 3 || x >= W - 3 || y >= H - 3; };   // 地图最外 3 圈是边界环，不算“走不到”
+    const totalLand = (() => { let n = 0; for (let i = 0; i < W * H; i++) if (!edge(i) && gpassFor(i % W, (i / W) | 0) & LAND) n++; return n; })();
     if (totalLand && sp.length) {
       // bfsFrom 的 sources 是格子索引（不是 [x,y] 坐标），传坐标对会让它一格都找不到
       const dm = bfsFrom(pass, W, H, sp.map((s) => Math.floor(s.cy / 20) * W + Math.floor(s.cx / 20)), LAND | BUILD);
       let unreach = 0, firstUn = null;
       for (let i = 0; i < W * H; i++) {
-        if (!(gpassFor(i % W, (i / W) | 0) & LAND)) continue;
+        if (edge(i) || !(gpassFor(i % W, (i / W) | 0) & LAND)) continue;
         if (dm[i] < 0) { unreach++; if (!firstUn) firstUn = [i % W, (i / W) | 0]; }
       }
       if (unreach) {
@@ -282,6 +288,7 @@ export function runChecks(ed, opts = {}) {
     if (soft.length) add('info', '地形', `${soft.length} 种图块可以被工兵打掉（cliff-soft）`, '这些格子是“可破坏地形”，画地图时留意别把必经之路做成这里。');
   }
 
+  try { extraChecks(ed, add, { pass, sp }); } catch (e) { add('info', '检查', '附加检查出错：' + (e && e.message)); }
   return out;
 }
 

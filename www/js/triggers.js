@@ -131,7 +131,7 @@ function teamCn(t) {
   if (n === -2) return '敌对中立';
   return Number.isNaN(n) ? `队伍“${t}”` : `第 ${n + 1} 队`;
 }
-function hslToHex(s) {
+export function hslToHex(s) {
   const m = s.match(/hsl\((\d+)\s+(\d+)%\s+(\d+)%\)/); if (!m) return s;
   const H = +m[1] / 360, S = +m[2] / 100, L = +m[3] / 100;
   const f = (n) => { const k = (n + H * 12) % 12, a = S * Math.min(L, 1 - L); const c = L - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)); return Math.round(c * 255).toString(16).padStart(2, '0'); };

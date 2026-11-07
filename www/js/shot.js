@@ -96,6 +96,7 @@ export function shotDialog() {
 
   return modal('截图导出（按真实图块渲染的大图）', body, [
     { label: '取消', value: 0 },
+    { label: '按区域批量截图 (zip)', value: 2, check: async () => { try { const m = await import('./tools331.js'); const n = await m.shotRegions({ scale: Math.max(0.5, Math.min(8, +zInp.value || 2)), grid: useGrid, marks: useMarks }); toast(`已按区域截了 ${n} 张`); } catch (e) { toast('失败：' + e.message, 3500); return false; } } },
     { label: '保存 PNG', value: 1, primary: true, check: save },
   ], { wide: true });
 }

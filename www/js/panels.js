@@ -144,7 +144,7 @@ export function renderModes() {
     nav.append(h('div', { class: 'mbspacer' }));
     const quick = h('div', { class: 'quick' },
       h('span', { class: 'qlabel' }, '对称'), segmented([['none', '无'], ['lr', '左右'], ['tb', '上下'], ['rot', '中心'], ['quad', '四向']], ed.sym, (v) => { ed.sym = v; rend.request(); A.refresh('dock'); A.hooks.coach && A.hooks.coach('sym'); }), helpBtn('sym'),
-      h('span', { class: 'qlabel', style: 'margin-left:8px' }, '叠加'), select([['none', '无'], ['land', '陆军通行'], ['naval', '海军通行'], ['hover', '悬浮通行'], ['build', '可建造'], ['territory', '各队地盘'], ['symdiff', '对称差异']], A.overlayKind, (v) => A.hooks.setOverlay(v)), helpBtn('overlay'),
+      h('span', { class: 'qlabel', style: 'margin-left:8px' }, '叠加'), select([['none', '无'], ['land', '陆军通行'], ['naval', '海军通行'], ['hover', '悬浮通行'], ['build', '可建造'], ['territory', '各队地盘'], ['symdiff', '对称差异'], ['connect', '连通图']], A.overlayKind, (v) => A.hooks.setOverlay(v)), helpBtn('overlay'),
       h('button', { class: 'ib', title: '其他层变暗', style: A.settings.dim ? 'color:var(--accent2)' : '', onclick: () => A.hooks.toggleDim(), html: icon('dim') }),
       h('button', { class: 'ib', title: '网格', style: A.settings.grid ? 'color:var(--accent2)' : '', onclick: () => A.hooks.toggleGrid(), html: icon('grid') }));
     nav.append(quick);
@@ -170,6 +170,7 @@ export function renderToolbar() {
 }
 
 // ---------------- 状态栏 ----------------
+let widthHintFn = null; import('./tools331.js').then((m) => { widthHintFn = m.widthHint; }).catch(() => {});
 export function renderStatus(mp) {
   const m = ed.map;
   const sb = $('statusbar');
@@ -179,6 +180,7 @@ export function renderStatus(mp) {
     if (tx >= 0 && ty >= 0 && tx < m.width && ty < m.height) {
       pos = `格 ${tx}, ${ty}`;
       if (ed.engine) { const t = ed.engine.terrainAtVertex(Math.round(mp.x / m.tw), Math.round(mp.y / m.th)); if (t !== 255) pos += ' · ' + ed.engine.cn(t); }
+      if (A.settings.widthHint !== false && ed.engine && rend.view.z >= 0.5) { try { const w = widthHintFn && widthHintFn(tx, ty); if (w) pos += ' · ' + w; } catch { /* */ } }
     }
   }
   const sel = ed.selection ? `选区 ${ed.selection.x1 - ed.selection.x0 + 1}×${ed.selection.y1 - ed.selection.y0 + 1}` : '';
@@ -499,7 +501,7 @@ function dockLayers(body) {
   body.append(sec('图层', null, rows,
     toggle('其他层变暗（突出当前模式在改的东西）', A.settings.dim, () => A.hooks.toggleDim()),
     toggle('显示网格', A.settings.grid, () => A.hooks.toggleGrid())));
-  body.append(sec('叠加图', 'overlay', select([['none', '不叠加'], ['land', '陆军通行'], ['naval', '海军通行'], ['hover', '悬浮通行'], ['build', '可建造区域'], ['territory', '各队地盘'], ['symdiff', '对称差异']], A.overlayKind, (v) => A.hooks.setOverlay(v))));
+  body.append(sec('叠加图', 'overlay', select([['none', '不叠加'], ['land', '陆军通行'], ['naval', '海军通行'], ['hover', '悬浮通行'], ['build', '可建造区域'], ['territory', '各队地盘'], ['symdiff', '对称差异'], ['connect', '连通图']], A.overlayKind, (v) => A.hooks.setOverlay(v))));
   body.append(sec('描图参考图', 'trace', rend.reference
     ? h('div', { class: 'row' }, toggle('显示', rend.reference.visible !== false, (v) => { rend.reference.visible = v; rend.request(); }), h('button', { onclick: () => D.traceDialog() }, '调整…'))
     : h('button', { onclick: () => D.traceDialog(), html: icon('trace') + ' 选一张参考图…' })));

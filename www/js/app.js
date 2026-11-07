@@ -39,6 +39,9 @@ async function setOverlay(kind) {
     if (!A.report) A.report = await busy('正在计算各队地盘…', async () => balanceReport(ed, 30));
     const own = A.report.owner, cols = A.report.teams.map((t) => rgbaOf(teamColor(t), 105));
     rend.setTint({ kind, fn: (i) => (own[i] >= 0 ? cols[own[i]] : 0), opacity: 1 });
+  } else if (kind === 'connect') {
+    const m = await import('./geo.js'); const fn = await busy('正在分析连通块…', async () => m.connectTint());
+    rend.setTint({ kind, fn, opacity: 1 });
   } else {
     const pass = passability(ed);
     const cb = !!A.settings.colorblind;
@@ -208,6 +211,7 @@ async function init() {
     triggerIssues, setMode: P.setMode, setTool: P.setTool, scaleMap, mirrorMap, symmetryDiff, copySelection, pasteClip, rectSelection, generateMap, balanceReport, createNewMap: D.createNewMap, setOverlay,
   };
   window.__rwReady = true;
+  import('./api.js').catch((e) => console.error('rwApi 加载失败', e));
   setTimeout(() => import('./version.js').then((m) => m.checkUpdate(false)), 4000);
 }
 

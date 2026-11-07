@@ -609,22 +609,40 @@ export async function templateDialog() {
 // ---------------- 检查 ----------------
 export async function openChecks() {
   if (!ed.map) return;
+  const C3 = await import('./checks3.js');
+  const prev = await C3.lastRun(A.mapName);
+  let showIgnored = false, last = [];
   const build = () => {
-    const list = runChecks(ed, { triggerIssues: A.hooks.triggerIssues ? A.hooks.triggerIssues() : [] });
+    const all = runChecks(ed, { triggerIssues: A.hooks.triggerIssues ? A.hooks.triggerIssues() : [] });
+    last = all;
     const order = { error: 0, warn: 1, info: 2, ok: 3 };
-    list.sort((a, b) => order[a.level] - order[b.level]);
+    all.sort((a, b) => order[a.level] - order[b.level]);
+    const ign = all.filter((c) => C3.isIgnored(ed, c));
+    const list = showIgnored ? all : all.filter((c) => !ign.includes(c));
     const errs = list.filter((c) => c.level === 'error').length, warns = list.filter((c) => c.level === 'warn').length;
+    const d = C3.diffRun(prev, list.filter((c) => !ign.includes(c)));
     const body = h('div', {},
       h('div', { class: 'row' }, h('p', { style: 'margin:0;flex:1;font-weight:600' }, errs ? `有 ${errs} 个问题会影响游戏，${warns} 个提醒。` : warns ? `没有严重问题，有 ${warns} 个提醒。` : '没发现问题，可以保存后去游戏里试玩了。'), helpBtn('check')));
+    if (d && (d.fixed.length || d.added.length)) body.append(h('p', { style: 'color:var(--muted);font-size:12.5px;margin:2px 0 6px' }, `和上次检查相比：解决了 ${d.fixed.length} 项，新出现 ${d.added.length} 项。`));
     for (const c of list) {
-      body.append(h('div', { class: 'chk ' + c.level },
+      const t = C3.toolFor(c), isIg = ign.includes(c);
+      body.append(h('div', { class: 'chk ' + c.level, style: isIg ? 'opacity:.55' : '' },
         h('div', { class: 'icn' }, { error: '!', warn: '!', ok: '✓', info: 'i' }[c.level]),
-        h('div', { style: 'flex:1' }, h('div', { class: 't' }, h('span', { class: 'badge', style: 'margin-right:6px' }, c.cat), c.title), c.detail ? h('div', { class: 'd' }, c.detail) : null,
-          (c.goto || c.fix) ? h('div', { class: 'acts' },
+        h('div', { style: 'flex:1' }, h('div', { class: 't' }, h('span', { class: 'badge', style: 'margin-right:6px' }, c.cat), c.title, isIg ? h('span', { class: 'badge', style: 'margin-left:6px' }, '已标记为有意') : null), c.detail ? h('div', { class: 'd' }, c.detail) : null,
+          (c.goto || c.fix || t || (c.level !== 'ok')) ? h('div', { class: 'acts' },
             c.goto ? h('button', { onclick: () => { closeModal(); rend.centerOn(c.goto.x, c.goto.y, Math.max(rend.view.z, 1)); } }, '去看看') : null,
+            t ? h('button', { onclick: () => { closeModal(); import('./actions.js').then((m) => m.runAction(t[0])); } }, t[1]) : null,
+            c.level !== 'ok' ? h('button', { title: '这是故意的：之后不再提醒，信息存进地图文件的 EditorRules 里', onclick: async () => {
+              if (c.level === 'error' && !isIg && !(await confirmBox('把严重问题标记为有意？', '这个问题会影响游戏。确定它是故意的才标记；以后检查会把它收起来（可以在底部“显示已忽略”里找回）。', '标记为有意', '取消'))) return;
+              const on = C3.toggleIgnore(ed, c); A.autoDirty = true; ed.dirty = true; toast(on ? '已标记为有意' : '已取消标记');
+              const mb = modalBody(); mb.innerHTML = ''; mb.append(build()); } }, isIg ? '取消有意' : '这是有意的') : null,
             c.fix ? h('button', { class: 'primary', onclick: () => { c.fix.run(); rend.invalidateAll(); A.mini.schedule(); A.autoDirty = true; ed.dirty = true; A.refresh(); const mb = modalBody(); mb.innerHTML = ''; mb.append(build()); } }, c.fix.label) : null) : null)));
     }
-    body.append(h('div', { class: 'row', style: 'margin-top:8px' }, h('button', { onclick: () => { closeModal(); import('./extras.js').then((m) => m.checklistDialog()); }, html: icon('batch') + ' 试玩检查清单' }), h('button', { onclick: () => { closeModal(); import('./extras.js').then((m) => m.scoreDialog()); }, html: icon('report') + ' 地图体检评分' })));
+    body.append(h('div', { class: 'row', style: 'margin-top:8px;flex-wrap:wrap' },
+      h('button', { onclick: () => { closeModal(); import('./extras.js').then((m) => m.checklistDialog()); }, html: icon('batch') + ' 试玩检查清单' }),
+      h('button', { onclick: () => { closeModal(); import('./extras.js').then((m) => m.scoreDialog()); }, html: icon('report') + ' 地图体检评分' }),
+      h('button', { onclick: async () => { await C3.exportReport(list, A.mapName, d); await C3.rememberRun(A.mapName, list.filter((c) => !ign.includes(c))); toast('已导出检查报告'); }, html: icon('export') + ' 导出检查报告' }),
+      ign.length ? h('button', { onclick: () => { showIgnored = !showIgnored; const mb = modalBody(); mb.innerHTML = ''; mb.append(build()); } }, showIgnored ? '隐藏已忽略' : `显示已忽略（${ign.length}）`) : null));
     const fixes = list.filter((c) => c.fix);
     if (fixes.length > 1) body.append(h('div', { class: 'row', style: 'margin-top:8px' },
       h('button', { class: 'primary', onclick: async () => {
@@ -640,6 +658,7 @@ export async function openChecks() {
     return body;
   };
   await modal('能玩吗？', build(), [{ label: '关闭', value: 1, primary: true }]);
+  C3.rememberRun(A.mapName, last.filter((c) => !C3.isIgnored(ed, c)));
   A.hooks.coach && A.hooks.coach('checked');
 }
 
