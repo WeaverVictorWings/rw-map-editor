@@ -1,6 +1,6 @@
 // 自动生成：scripts/build-sw.mjs —— 不要手改这个文件（改完网页资源后重新生成）
 // 离线优先：所有资源走缓存，网络只用来补新东西；换版本时旧缓存自动清掉。
-const CACHE = 'rw-map-editor-3.4.1-37f8c81c';
+const CACHE = 'rw-map-editor-3.4.2-f14a353a';
 const ASSETS = [
   './icon-192.png',
   './icon-512.png',
@@ -74,10 +74,12 @@ const ASSETS = [
   './js/kit/sizeguard.js',
   './js/kit/teams.js',
   './js/kit/templates.js',
+  './js/kit/terrain.js',
   './js/kit/textlint.js',
   './js/kit/tlint.js',
   './js/kit/tmx.js',
   './js/kit/tsim.js',
+  './js/kit/units.js',
   './js/kitpanel.js',
   './js/layercmp.js',
   './js/layers.js',

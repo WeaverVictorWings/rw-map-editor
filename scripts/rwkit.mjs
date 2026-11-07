@@ -23,6 +23,15 @@ const usage = `RWKit 用法:
   texts <map.tmx> [-o texts.csv] | texts-in <map.tmx> <texts.csv> [-o out]   导出/导入全部新闻文本
   graph <map.tmx> [--root 名字] [--dot]          触发器依赖图(mermaid/dot)
   tpl capture <map.tmx> --k 99 --cx 40 --cy 40 --teams 0,1 [-o out]      插入一条夺城链模板
+  png <map.tmx> -o 图.png [--mode pass|terrain] [--step 2]   通行性/地形图(蓝=水 青=浅滩/桥 绿=可建造 黄=仅可走 黑=不可通行)
+  crop <map.tmx> --box x0,y0,x1,y1 -o 测试图.tmx   截取窗口做小测试图(图层改成 csv)
+  pools <map.tmx>                                资源池总数/缺抽取仪的池格(按池格算,本图一格一个抽取仪)
+  fill <map.tmx> [--unit extractorT1] [--radius 10] [--teams 0,1] -o out   给缺口补抽取仪(归属=半径内最近的指挥中心;半径内没有的跳过)
+  rmunits <map.tmx> --re "^seaFactory$" [--teams 3] -o out   按单位名删除
+  passes <map.tmx> --from x,y --to x,y [--naval]  沿线段列出可通行区段(查山口宽度/岩墙漏洞)
+  water <map.tmx>                                水域连通域(面积/外接框)
+  perf <map.tmx>                                 触发器负担估算(相对指标)
+  dump <map.tmx>                                 稳定排序的触发器文本(适合 git diff)
   route <map.tmx> --from x,y --to x,y [--naval|--land] [--clear 1]   通道是否连通 / 最大可过船宽
 `;
 const load = async (f) => { const { parseTmx } = await L('tmx.js'); return parseTmx(fs.readFileSync(f, 'utf8')); };
@@ -72,4 +81,14 @@ if (cmd === 'lint') {
 } else if (cmd === 'diff') { const R = await L('refactor.js'); const d = R.diffTriggers(fs.readFileSync(pos[0], 'utf8'), fs.readFileSync(pos[1], 'utf8')); console.log(`新增 ${d.added.length}  删除 ${d.removed.length}  修改 ${d.changed.length}`); d.added.slice(0, 10).forEach((k) => console.log(' +', k)); d.removed.slice(0, 10).forEach((k) => console.log(' -', k)); d.changed.slice(0, 10).forEach((c) => console.log(' ~', c.key, c.diff.join('; ')));
 } else if (cmd === 'texts') { const csv = (await L('refactor.js')).exportTexts(fs.readFileSync(pos[0], 'utf8')); if (flags.o) { fs.writeFileSync(flags.o, csv); console.log('已写入', flags.o); } else process.stdout.write(csv);
 } else if (cmd === 'graph') { process.stdout.write((await L('refactor.js')).depGraph(await load(pos[0]), { root: flags.root, fmt: flags.dot ? 'dot' : 'mermaid' }));
+} else if (cmd === 'png') { const m = await load(pos[0]); fs.writeFileSync(flags.o, (await L('terrain.js')).renderPng(m, { mode: flags.mode || 'pass', step: +(flags.step ?? 2) })); console.log('已写入', flags.o);
+} else if (cmd === 'crop') { const t = fs.readFileSync(pos[0], 'utf8'); const out = (await L('terrain.js')).cropTmx(t, await load(pos[0]), flags.box.split(',').map(Number)); (await L('guard.js')).safeWrite(flags.o, out, { overwrite: !!flags.force }); console.log('已写入', flags.o);
+} else if (cmd === 'pools') { const U = await L('units.js'); const m = await load(pos[0]); const g = U.poolGaps(m); console.log(`资源池格 ${U.pools(m).length},缺抽取仪 ${g.length}(其中在势力指挥中心半径 10 格内 ${g.filter((c) => U.ownerOf(m, c) !== null).length})`); g.slice(0, 10).forEach((c) => console.log(' ', c.join(',')));
+} else if (cmd === 'fill' || cmd === 'rmunits') { const U = await L('units.js'), G = await L('guard.js'); const t = fs.readFileSync(pos[0], 'utf8'); const o = flags.o || pos[0].replace(/\.tmx$/, `.${cmd}.tmx`); let r;
+  if (cmd === 'fill') { r = U.fillPools(t, { unit: flags.unit || 'extractorT1', radius: +(flags.radius ?? 10), onlyTeams: flags.teams ? flags.teams.split(',').map(Number) : null }); console.log(`补了 ${r.added} 个,跳过 ${r.skipped} 个(半径内无指挥中心)`); } else { r = U.removeUnits(t, { unitRe: new RegExp(flags.re), teams: flags.teams ? flags.teams.split(',').map(Number) : null }); console.log(`删了 ${r.removed} 个`); }
+  G.safeWrite(o, r.text, { overwrite: !!flags.force }); console.log('→', o);
+} else if (cmd === 'passes') { const T = await L('terrain.js'); const m = await load(pos[0]); const [a, b] = [flags.from.split(',').map(Number), flags.to.split(',').map(Number)]; T.scanLine(m, a, b, flags.naval ? 2 : 1).forEach((r) => console.log(r.ok ? '可通行' : '阻断  ', `${r.len} 格`, `(${r.from})→(${r.to})`));
+} else if (cmd === 'water') { const w = (await L('terrain.js')).waterComponents(await load(pos[0])); w.comps.slice(0, 15).forEach((c) => console.log(`#${c.id} 面积 ${c.area} 框 ${c.bbox}`)); console.log(`共 ${w.comps.length} 块水域(>=10 格)`);
+} else if (cmd === 'perf') { console.log((await L('terrain.js')).perfEstimate(await load(pos[0])));
+} else if (cmd === 'dump') { const m = await load(pos[0]); const { TRIGGER_TYPES, trigKey } = await L('tmx.js'); m.objects.filter((o) => TRIGGER_TYPES.has(o.type.toLowerCase())).sort((a, b) => trigKey(a).localeCompare(trigKey(b))).forEach((o) => console.log(`[${trigKey(o)}] ${o.type} @${o.x},${o.y} ${o.w}x${o.h}\n` + Object.keys(o.props).sort().map((k) => `  ${k} = ${JSON.stringify(o.props[k])}`).join('\n')));
 } else console.log(usage);
