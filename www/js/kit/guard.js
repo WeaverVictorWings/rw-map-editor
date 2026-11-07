@@ -10,5 +10,4 @@ export function safeWrite(file, data, { overwrite = false, expectSize } = {}) {
 }
 // 输出是否比输入旧(检查前提醒重新导出)
 export function staleCheck(outFile, ...srcs) { const o = fs.statSync(outFile).mtimeMs; const newer = srcs.filter((s) => fs.existsSync(s) && fs.statSync(s).mtimeMs > o); return newer.length ? [{ sev: 'warn', code: 'S01', msg: `输出 ${path.basename(outFile)} 比 ${newer.map((s) => path.basename(s)).join('、')} 旧,检查的可能是过期版本,请先重新导出` }] : []; }
-// 危险尺寸:脚本默认尺寸与既有 tmx 不一致时报错(曾因默认 1240×800 覆盖 1090×670 的底图)
-export function sizeGuard(model, want) { if (!want) return []; return (model.width !== want.w || model.height !== want.h) ? [{ sev: 'error', code: 'S02', msg: `地图尺寸 ${model.width}×${model.height} 与期望 ${want.w}×${want.h} 不一致(可能用了脚本默认尺寸)` }] : []; }
+export { sizeGuard } from './sizeguard.js';

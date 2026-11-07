@@ -1,6 +1,6 @@
 // node tests/kit.test.mjs <正常地图.tmx>  — 用"故意弄坏"的地图验证质检能抓到历史上犯过的错
 import fs from 'fs'; import assert from 'node:assert/strict';
-import { parseTmx } from '../tmx.js'; import { lintTriggers } from '../tlint.js'; import { checkPlacement, landConnectivity } from '../grid.js'; import { checkRules } from '../rules.js'; import { Sim, openingCheck } from '../tsim.js'; import { wrap, lintText } from '../textlint.js';
+import { parseTmx } from '../tmx.js'; import { lintTriggers } from '../tlint.js'; import { checkPlacement, landConnectivity } from '../grid.js'; import { checkRules } from '../rules.js'; import { Sim, openingCheck } from '../tsim.js'; import { wrap, lintText } from '../textlint.js'; import * as A from '../analysis.js';
 const src = fs.readFileSync(process.argv[2], 'utf8'); let pass = 0; const T = (n, f) => { try { f(); pass++; console.log('ok  ', n); } catch (e) { console.log('FAIL', n, '\n   ', e.message.split('\n')[0]); process.exitCode = 1; } };
 const has = (r, code) => r.some((i) => i.code === code);
 const base = parseTmx(src);
@@ -16,4 +16,10 @@ T('抓到尺寸不符', () => assert.ok(has(checkRules(base, { mapSize: [1240, 8
 T('抓到超长行', () => assert.ok(has(lintText('一二三四五六七八九十'.repeat(5)), 'T01') || lintText('一二三四五六七八九十'.repeat(5)).length));
 T('wrap 后每行≤24', () => { const w = wrap('联邦军队在大平原上展开了一场规模空前的会战,双方投入了数以万计的兵力,战线绵延数百公里,炮声昼夜不息。'); assert.ok(w.split('\n').every((l) => [...l].length <= 24)); });
 T('开局不刷屏(30s内消息≤6)', () => assert.ok(openingCheck(base, 30).messages <= 6));
+T('逻辑矛盾 minUnits>maxUnits', () => { const m = parseTmx(src.replace(/(type="unitDetect"[^>]*><properties>)/, '$1<property name="minUnits" value="5"/><property name="maxUnits" value="2"/>')); assert.ok(has(A.lintLogic(m, { coverSecs: 10 }), 'L01')); });
+T('颜色对比抓黑色', () => { const m = parseTmx(src.replace(/(name="globalMessage_textColor" value=")#[0-9A-Fa-f]+/, '$1#222222')); assert.ok(has(A.lintContrast(m), 'T07')); });
+T('建筑叠格', () => { const m = parseTmx(src); const f = m.objects.find((o) => o.props.unit === 'landFactory'); m.objects.push({ ...f, props: { ...f.props, unit: 'airFactory' } }); assert.ok(has(A.lintLayout(m), 'F05')); });
+T('公平性表', () => assert.ok(A.fairness(base).length >= 20));
+T('一页报告', () => { const r = A.report(base, { teams: 22 }); assert.ok(r.md.includes('各队概况') && r.counts.error === 0); });
+T('ignore 屏蔽', () => { const r = A.applyIgnore([{ code: 'T04', key: 'a' }, { code: 'T04', key: 'b' }], ['T04:^a$']); assert.equal(r.kept.length, 1); });
 console.log(pass, '项通过');

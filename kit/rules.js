@@ -2,7 +2,7 @@
 // 例:{ "teams":21, "forbidClasses":["lava"], "forbidGids":[], "regions":[{"name":"墨西哥","box":[x0,y0,x1,y1],"forbidClasses":["cliff","lava"]}], "factions":[{"team":3,"box":[...]}] , "mapSize":[1090,670], "noUnits":["seaFactory"] }
 import { terrainClasses } from './tmx.js';
 import { checkTeams } from './teams.js';
-import { sizeGuard } from './guard.js';
+import { sizeGuard } from './sizeguard.js';
 const CLS = { 普通: 0, normal: 0, water: 1, 水: 1, shallow: 2, 浅滩: 2, lava: 3, 岩浆: 3, cliff: 4, 悬崖: 4, bigcliff: 5, 大悬崖: 5 };
 export function checkRules(model, R) {
   const out = []; const { width: W, height: H } = model; const tc = terrainClasses(model).data; const G = model.layers.ground;
