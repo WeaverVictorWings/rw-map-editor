@@ -46,6 +46,18 @@ const usage = `RWKit 用法:
   diag <map.tmx> "过滤条件" -o out               诊断版:去掉某一类触发器(如 "name~^势名"),二分排错用
   init-rules [-o rules.json]                     生成带历史错误检查的规则模板
   terrain-report <map.tmx>                       各类地形占比(岩浆/悬崖/水...)
+  carve <map.tmx> --from x,y --to x,y [--width 5] [--shallow] -o out      开凿水道(海峡/运河),同时清掉水道上的物品
+  islands <map.tmx>                              岛屿清单(陆地连通块)    island-diff <旧.tmx> <新.tmx>   改图前后岛屿消失/缩小/断裂
+  connect <map.tmx> [--width 3] [--gap 25] -o out  群岛连接器:相邻岛屿之间铺浅滩带(最小生成树,不会把所有岛都连上)
+  passes-suggest <map.tmx> --from x,y --to x,y [--n 3]   沿山脊给出建议山口位置    pass-carve <map.tmx> --at x,y [--width 5] -o out   开凿山口
+  bands <map.tmx> --bbox lon0,lat0,lon1,lat1 --bands "40:90:GID,20:40:GID" -o out   纬度带地形(只改普通陆地格)
+  decor <map.tmx> --gid N [--density 0.01] [--seed 5] -o out   撒装饰物(不压单位、资源池和已有物品)
+  ally <map.tmx> --groups "1:0,1;2:2" -o out     设置同盟组(已有 team_info 原地修改)
+  expect <map.tmx> --city N --team T [-o 预期.csv]  生成"预期事件时间表",游戏里实测后填 actual 列    compare-log <预期.csv>   汇总偏差
+  explain <代码>                                  这条检查是真问题还是有意写法    preview-text "文本"   文字框预览(估算)
+  perf-log add <map.tmx> --level 1..5 / perf-log fit   记录你实测的流畅度(1 流畅~5 卡),≥3 条后拟合预测
+  publish <map.tmx> --to 正式.tmx [--rules r.json]   lint 通过(0 错误)才复制,覆盖前自动备份
+  quota <map.tmx> --csv 配额.csv --mind 3 --maxd 10 -o out   按配额表在指挥中心周围成簇放建筑(只放可建造格)
   route <map.tmx> --from x,y --to x,y [--naval|--land] [--clear 1]   通道是否连通 / 最大可过船宽
 `;
 const load = async (f) => { const { parseTmx } = await L('tmx.js'); return parseTmx(fs.readFileSync(f, 'utf8')); };
@@ -53,12 +65,12 @@ const say = (items) => { const c = { error: 0, warn: 0, info: 0 }; for (const i 
 if (cmd === 'lint') {
   const f = pos[0]; const m = await load(f); const R = flags.rules ? JSON.parse(fs.readFileSync(flags.rules, 'utf8')) : {};
   const [{ lintTriggers }, g, { checkRules }, { checkTeams }, { staleCheck }, { openingCheck }] = await Promise.all([L('tlint.js'), L('grid.js'), L('rules.js'), L('teams.js'), L('guard.js'), L('tsim.js')]);
-  const AN = await L('analysis.js'); let items = AN.applyIgnore(AN.allChecks(m, R), R.ignore).kept;
+  const AN = await L('analysis.js'); let items = (await L('more.js')).locate(m, AN.applyIgnore(AN.allChecks(m, R), R.ignore).kept);
   items.push(...staleCheck(f, ...(R.sources || [])));
   const o = openingCheck(m, 30); if (o.messages > (R.openMsgMax ?? 6)) items.push({ sev: 'warn', code: 'O01', msg: `开局 30 秒内有 ${o.messages} 条消息(可能刷屏)` });
   if (flags.json) { console.log(JSON.stringify(items, null, 1)); process.exit(items.some((i) => i.sev === 'error') ? 1 : 0); }
   const by = new Map(); for (const i of items) { const k = `${i.sev}|${i.code}`; if (!by.has(k)) by.set(k, []); by.get(k).push(i); }
-  for (const sev of ['error', 'warn', 'info']) for (const [k, v] of by) if (k.startsWith(sev)) { console.log(`[${sev}] ${k.split('|')[1]} ×${v.length}`); v.slice(0, flags.all ? 1e9 : 3).forEach((i) => console.log('   ', i.key ? `「${i.key}」` : '', i.msg)); }
+  for (const sev of ['error', 'warn', 'info']) for (const [k, v] of by) if (k.startsWith(sev)) { console.log(`[${sev}] ${k.split('|')[1]} ×${v.length}`); v.slice(0, flags.all ? 1e9 : 3).forEach((i) => console.log('   ', i.key ? `「${i.key}」` : '', i.x !== undefined ? `@(${i.x},${i.y})` : '', i.msg)); }
   const c = say(items); console.log(`\n结果: ${c.error} 错误, ${c.warn} 警告, ${c.info} 提示`); process.exit(c.error ? 1 : 0);
 } else if (cmd === 'scen') {
   const m = await load(pos[0]); const { captureScenario } = await L('tsim.js'); const k = String(flags.city);
@@ -125,4 +137,23 @@ if (cmd === 'lint') {
 } else if (cmd === 'diag') { const X = await L('extras.js'); const r = X.diagVariant(fs.readFileSync(pos[0], 'utf8'), pos[1]); (await L('guard.js')).safeWrite(flags.o || pos[0].replace(/\.tmx$/, '.diag.tmx'), r.text, { overwrite: !!flags.force }); console.log(`去掉了 ${r.dropped} 个触发器 →`, flags.o || '(默认文件名)');
 } else if (cmd === 'init-rules') { const X = await L('extras.js'); const o = flags.o || 'rules.json'; (await L('guard.js')).safeWrite(o, JSON.stringify(X.MISTAKE_TEMPLATE, null, 2), { overwrite: !!flags.force }); console.log('已写入', o);
 } else if (cmd === 'terrain-report') { (await L('extras.js')).terrainReport(await load(pos[0])).forEach((r) => console.log(r.name.padEnd(6), String(r.cells).padStart(8), r.pct + '%'));
+} else if (['carve', 'connect', 'pass-carve', 'bands', 'decor', 'ally', 'quota'].includes(cmd)) {
+  const X = await L('more.js'), G = await L('guard.js'), M = await L('mapops.js'); const t = fs.readFileSync(pos[0], 'utf8'); const P2 = (v) => v.split(',').map(Number); let out, msg = '';
+  if (cmd === 'carve') { out = X.carveChannel(t, P2(flags.from), P2(flags.to), { width: +(flags.width ?? 5), shallow: !!flags.shallow }); const m2 = (await L('tmx.js')).parseTmx(out); msg = `最窄处 ${(await L('grid.js')).minChannelWidth(m2, P2(flags.from).map((v, i) => v + Math.sign(P2(flags.to)[i] - v) * 3), P2(flags.to).map((v, i) => v - Math.sign(v - P2(flags.from)[i]) * 3), 2)} 格`; }
+  else if (cmd === 'connect') { const r = X.connectIslands(t, { width: +(flags.width ?? 3), maxGap: +(flags.gap ?? 25) }); out = r.text; msg = `连了 ${r.connected} 处,剩 ${r.groups} 个岛群`; }
+  else if (cmd === 'pass-carve') { out = X.carvePass(t, P2(flags.at), { width: +(flags.width ?? 5) }); msg = '山口已开凿'; }
+  else if (cmd === 'bands') { const bands = flags.bands.split(',').map((q) => { const [a, b, g] = q.split(':'); return { lat0: +a, lat1: +b, gid: +g }; }); const r = X.applyBands(t, bands, P2(flags.bbox)); out = r.text; msg = `改了 ${r.changed} 格`; }
+  else if (cmd === 'decor') { const r = X.scatterDecor(t, +flags.gid, { density: +(flags.density ?? 0.01), seed: +(flags.seed ?? 5) }); out = r.text; msg = `撒了 ${r.placed} 个`; }
+  else if (cmd === 'ally') { const groups = {}; for (const part of String(flags.groups).split(';')) { const [g, ts] = part.split(':'); groups[g] = ts.split(',').map(Number); } out = X.setAlly(t, groups); msg = '同盟组已设置'; }
+  else { const U = await L('units.js'); const m = await load(pos[0]); const P = (await L('tmx.js')).passability(m); const B = (await L('tmx.js')).BUILD; const r = await U.placeQuota(t, X.parseQuotaCsv(fs.readFileSync(flags.csv, 'utf8')), { minD: +(flags.mind ?? 3), maxD: +(flags.maxd ?? 10), accept: (x, y) => { for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) { const X2 = x + dx, Y2 = y + dy; if (X2 < 0 || Y2 < 0 || X2 >= m.width || Y2 >= m.height || !(P[Y2 * m.width + X2] & B)) return false; } return true; } }); out = r.text; msg = `放了 ${r.added} 个${r.missing.length ? ';放不下:' + r.missing.join('、') : ''}`; }
+  G.safeWrite(flags.o || pos[0].replace(/\.tmx$/, `.${cmd}.tmx`), out, { overwrite: !!flags.force }); console.log(msg, '→', flags.o || '(默认文件名)');
+} else if (cmd === 'islands') { const X = await L('more.js'); const r = X.islands(await load(pos[0])); r.slice(0, 20).forEach((i) => console.log(`#${i.id} 面积 ${i.area} 中心 (${i.cx},${i.cy})`)); console.log(`共 ${r.length} 个(>=30 格)`);
+} else if (cmd === 'island-diff') { const X = await L('more.js'); const r = X.compareIslands(await load(pos[0]), await load(pos[1])); r.forEach((i) => console.log(`[${i.sev}] ${i.code} ${i.msg}`)); console.log(r.length ? '' : '没有岛屿消失或明显缩小'); process.exit(r.some((i) => i.sev === 'error') ? 1 : 0);
+} else if (cmd === 'passes-suggest') { const X = await L('more.js'); X.suggestPasses(await load(pos[0]), flags.from.split(',').map(Number), flags.to.split(',').map(Number), { n: +(flags.n ?? 3) }).forEach((p) => console.log(`建议山口 (${p.x},${p.y}) 两侧空间 ${p.s} 格`));
+} else if (cmd === 'expect') { const X = await L('more.js'); const m = await load(pos[0]); const c = m.objects.find((q) => q.name === '检测' + flags.city); const csv = X.expectCsv(m, { x: c.x + c.w / 2, y: c.y + c.h / 2, team: +flags.team }); if (flags.o) { fs.writeFileSync(flags.o, csv); console.log('已写入', flags.o); } else process.stdout.write(csv);
+} else if (cmd === 'compare-log') { const r = (await L('more.js')).compareCsv(fs.readFileSync(pos[0], 'utf8')); r.rows.forEach((x) => console.log(x.status.padEnd(3), x.name, x.expected ?? '', x.actual ?? '', x.diff ?? '')); console.log(`已填 ${r.filled} 条,偏差 ${r.mismatches} 条`);
+} else if (cmd === 'explain') { console.log((await L('more.js')).explain(pos[0]));
+} else if (cmd === 'preview-text') { console.log((await L('more.js')).previewText(pos.join(' ').replace(/\\n/g, '\n')));
+} else if (cmd === 'perf-log') { const X = await L('more.js'); const f = '.rwkit/perf.json'; const rec = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : []; if (pos[0] === 'add') { const pe = (await L('terrain.js')).perfEstimate(await load(pos[1])); rec.push({ map: path.basename(pos[1]), scanned: pe.scannedCellsPerTick, level: +flags.level }); fs.mkdirSync('.rwkit', { recursive: true }); fs.writeFileSync(f, JSON.stringify(rec, null, 1)); console.log('已记录', rec.length, '条'); } else { const fit = X.perfFit(rec); console.log(fit ? `拟合:level ≈ ${fit.intercept.toFixed(2)} + ${fit.slope.toExponential(2)}×扫描格数` : `记录不足(${rec.length}/3)`); } 
+} else if (cmd === 'publish') { const G = await L('guard.js'), AN = await L('analysis.js'), X = await L('more.js'); const m = await load(pos[0]); const R = flags.rules ? JSON.parse(fs.readFileSync(flags.rules, 'utf8')) : {}; const g = X.gateCheck(AN.applyIgnore(AN.allChecks(m, R), R.ignore).kept); if (!g.ok) { console.error(`未发布:有 ${g.errors} 个错误,先运行 lint 查看`); process.exit(1); } G.safeWrite(flags.to, fs.readFileSync(pos[0]), { overwrite: true }); console.log('已发布到', flags.to, '(旧文件已备份到 .rwbak/)');
 } else console.log(usage);
