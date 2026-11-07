@@ -9,12 +9,11 @@ Object.assign(HELP, {
 
 const ed = A.ed;
 
-// 铁锈战争里队伍号的常见配色（跟游戏内接近，仅供参考）
-export const TEAM_COLORS = [
-  ['#4a90e2', '蓝'], ['#e5484d', '红'], ['#36c25b', '绿'], ['#f5c518', '黄'],
-  ['#a855f7', '紫'], ['#22d3ee', '青'], ['#fb923c', '橙'], ['#f472b6', '粉'],
-  ['#94a3b8', '灰'], ['#a3e635', '青柠'],
-];
+// 队伍号配色:与画布(render.js 的 BASE_COLORS)同一张表,只在这里加上中文名。
+// 前两个(0 号绿、1 号红)已由用户在游戏里确认;其余按同一张表,10 号以后画布用哈希色,游戏里真实颜色未核对。
+import { BASE_COLORS } from './render.js';
+const COLOR_NAMES = ['绿', '红', '蓝', '黄', '青', '紫', '黑', '白', '橙', '青柠'];
+export const TEAM_COLORS = BASE_COLORS.map((c, i) => [c, COLOR_NAMES[i]]);
 
 export function teamInfo() {
   const spawns = ed.spawns();

@@ -7,6 +7,8 @@
 //   node scripts/rwmod.mjs gallery <mod> [-o 图鉴.html]     单文件图鉴网页，图片内嵌
 //   (diff 的 -o 以 .html 结尾会生成网页)
 //   node scripts/rwmod.mjs pack   <文件夹> [-o out.rwmod]
+//   node scripts/rwmod.mjs clone-unit <mod> <源单位名> <新单位名> [-o out.rwmod]   克隆单位(复制 ini,改 [core] name 和文件名;弹药/引用的其它单位不会自动改)
+//   node scripts/rwmod.mjs map-units <mod> <地图.tmx>   地图用到了本 mod 的哪些单位、本 mod 的哪些单位地图没用到、地图里有哪些不在 mod 里的单位名
 //   node scripts/rwmod.mjs translate-export <mod> [-o 翻译.csv]
 //   node scripts/rwmod.mjs translate-import <mod> <csv> [-o out.rwmod]
 import fs from 'fs';
@@ -67,6 +69,16 @@ try {
     const m = await load(rest[0]); write(out || (m.name + '-图鉴.html'), galleryHtml(m, m.name));
   } else if (cmd === 'pack') {
     const m = await load(rest[0]); write(out || (m.name + '.rwmod'), pack(m));
+  } else if (cmd === 'clone-unit') {
+    const m = await load(rest[0]); const src = m.realUnits().find((u) => m.unitName(u) === rest[1]); if (!src) throw new Error('找不到单位 ' + rest[1]); if (m.realUnits().some((u) => m.unitName(u) === rest[2])) throw new Error('新名字已被占用: ' + rest[2]);
+    const text = src.text.replace(/(\[core\][\s\S]*?^\s*name\s*:\s*)[^\r\n]*/m, `$1${rest[2]}`); if (text === src.text) throw new Error('源单位的 [core] 里没有 name 字段,无法改名');
+    const dir = src.file.replace(/[^/]*$/, ''); const nf = dir + rest[2] + '.ini'; if (m.files.has(nf)) throw new Error('文件已存在: ' + nf); m.files.set(nf, { bytes: new TextEncoder().encode(text) }); m.index();
+    console.log(`已克隆 ${rest[1]} → ${rest[2]}(${nf})`); write(out || (m.name + '.cloned.rwmod'), pack(m));
+  } else if (cmd === 'map-units') {
+    const m = await load(rest[0]); const { parseTmx, unitsOf } = await import('../kit/tmx.js'); const model = parseTmx(fs.readFileSync(rest[1], 'utf8')); const used = new Map(); for (const u of unitsOf(model)) used.set(u.props.unit, (used.get(u.props.unit) || 0) + 1);
+    const mine = new Set(m.realUnits().map((u) => m.unitName(u))); const inMod = [...used].filter(([k]) => mine.has(k)); const notInMod = [...used].filter(([k]) => !mine.has(k)); const unused = [...mine].filter((k) => !used.has(k));
+    console.log(`地图用到本 mod 的单位 ${inMod.length} 种:` + inMod.map(([k, n]) => `${k}×${n}`).join('、')); console.log(`本 mod 里地图没用到的单位 ${unused.length} 种:` + unused.slice(0, 40).join('、'));
+    console.log(`地图里不在本 mod 中的单位名 ${notInMod.length} 种(可能是原版单位,也可能是缺失的 mod 单位,脚本分不出来):` + notInMod.map(([k, n]) => `${k}×${n}`).join('、'));
   } else if (cmd === 'translate-export') {
     const m = await load(rest[0]); const csv = translationCsv(m); out ? write(out, csv) : console.log(csv);
   } else if (cmd === 'translate-import') {

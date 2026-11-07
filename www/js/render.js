@@ -2,7 +2,7 @@
 import { objProp, placeholderRGB } from './tmx.js';
 
 const C = 64;
-const BASE_COLORS = ['#36c25b', '#e5484d', '#3e8ef7', '#f5c518', '#00bcd4', '#b36cf0', '#2b2b2b', '#ffffff', '#ff8c1a', '#8bc34a'];
+export const BASE_COLORS = ['#36c25b', '#e5484d', '#3e8ef7', '#f5c518', '#00bcd4', '#b36cf0', '#2b2b2b', '#ffffff', '#ff8c1a', '#8bc34a'];
 export function teamColor(t) {
   const n = +t;
   if (n < 0 || Number.isNaN(n)) return '#9aa0a6';

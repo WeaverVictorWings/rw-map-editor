@@ -24,7 +24,7 @@ const usage = `RWKit 用法:
   texts <map.tmx> [-o texts.csv] | texts-in <map.tmx> <texts.csv> [-o out]   导出/导入全部新闻文本
   graph <map.tmx> [--root 名字] [--dot]          触发器依赖图(mermaid/dot)
   tpl capture <map.tmx> --k 99 --cx 40 --cy 40 --teams 0,1 [-o out]      插入一条夺城链模板
-  png <map.tmx> -o 图.png [--mode pass|terrain] [--step 2]   通行性/地形图(蓝=水 青=浅滩/桥 绿=可建造 黄=仅可走 黑=不可通行)
+  png <map.tmx> -o 图.png [--mode pass|terrain] [--step 2] [--rules r.json]   (带 rules 时叠加:势力位置框、区域框、各队指挥中心着队伍色)   通行性/地形图(蓝=水 青=浅滩/桥 绿=可建造 黄=仅可走 黑=不可通行)
   crop <map.tmx> --box x0,y0,x1,y1 -o 测试图.tmx   截取窗口做小测试图(图层改成 csv)
   pools <map.tmx>                                资源池总数/缺抽取仪的池格(按池格算,本图一格一个抽取仪)
   fill <map.tmx> [--unit extractorT1] [--radius 10] [--teams 0,1] -o out   给缺口补抽取仪(归属=半径内最近的指挥中心;半径内没有的跳过)
@@ -58,6 +58,8 @@ const usage = `RWKit 用法:
   perf-log add <map.tmx> --level 1..5 / perf-log fit   记录你实测的流畅度(1 流畅~5 卡),≥3 条后拟合预测
   publish <map.tmx> --to 正式.tmx [--rules r.json]   lint 通过(0 错误)才复制,覆盖前自动备份
   quota <map.tmx> --csv 配额.csv --mind 3 --maxd 10 -o out   按配额表在指挥中心周围成簇放建筑(只放可建造格)
+  strait <map.tmx> --name 苏伊士运河 --bbox lon0,lat0,lon1,lat1 -o out   按预设开凿海峡/运河(经纬度为近似值,开凿后请用 route 验证)    straits   列出预设
+  perf-family <map.tmx>                          触发器负担按家族拆分
   route <map.tmx> --from x,y --to x,y [--naval|--land] [--clear 1]   通道是否连通 / 最大可过船宽
 `;
 const load = async (f) => { const { parseTmx } = await L('tmx.js'); return parseTmx(fs.readFileSync(f, 'utf8')); };
@@ -107,7 +109,7 @@ if (cmd === 'lint') {
 } else if (cmd === 'diff') { const R = await L('refactor.js'); const d = R.diffTriggers(fs.readFileSync(pos[0], 'utf8'), fs.readFileSync(pos[1], 'utf8')); console.log(`新增 ${d.added.length}  删除 ${d.removed.length}  修改 ${d.changed.length}`); d.added.slice(0, 10).forEach((k) => console.log(' +', k)); d.removed.slice(0, 10).forEach((k) => console.log(' -', k)); d.changed.slice(0, 10).forEach((c) => console.log(' ~', c.key, c.diff.join('; ')));
 } else if (cmd === 'texts') { const csv = (await L('refactor.js')).exportTexts(fs.readFileSync(pos[0], 'utf8')); if (flags.o) { fs.writeFileSync(flags.o, csv); console.log('已写入', flags.o); } else process.stdout.write(csv);
 } else if (cmd === 'graph') { process.stdout.write((await L('refactor.js')).depGraph(await load(pos[0]), { root: flags.root, fmt: flags.dot ? 'dot' : 'mermaid' }));
-} else if (cmd === 'png') { const m = await load(pos[0]); fs.writeFileSync(flags.o, (await L('terrain.js')).renderPng(m, { mode: flags.mode || 'pass', step: +(flags.step ?? 2) })); console.log('已写入', flags.o);
+} else if (cmd === 'png') { const m = await load(pos[0]); const R = flags.rules ? JSON.parse(fs.readFileSync(flags.rules, 'utf8')) : {}; const { slotColor } = await L('teams.js'); const rgb = (h) => /^#/.test(h) ? [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)) : [255, 255, 255]; const { unitsOf } = await L('tmx.js'); const marks = flags.rules ? unitsOf(m).filter((u) => u.props.unit === 'commandCenter' && +u.props.team >= 0).map((u) => [u.x / m.tw, u.y / m.tw, rgb(slotColor(+u.props.team))]) : []; const boxes = (R.factions || []).map((f) => [...f.box, rgb(slotColor(f.team))]).concat((R.regions || []).map((r) => [...r.box, [255, 255, 255]])); fs.writeFileSync(flags.o, (await L('terrain.js')).renderPng(m, { mode: flags.mode || 'pass', step: +(flags.step ?? 2), marks, boxes })); console.log('已写入', flags.o);
 } else if (cmd === 'crop') { const t = fs.readFileSync(pos[0], 'utf8'); const out = (await L('terrain.js')).cropTmx(t, await load(pos[0]), flags.box.split(',').map(Number)); (await L('guard.js')).safeWrite(flags.o, out, { overwrite: !!flags.force }); console.log('已写入', flags.o);
 } else if (cmd === 'pools') { const U = await L('units.js'); const m = await load(pos[0]); const g = U.poolGaps(m); console.log(`资源池格 ${U.pools(m).length},缺抽取仪 ${g.length}(其中在势力指挥中心半径 10 格内 ${g.filter((c) => U.ownerOf(m, c) !== null).length})`); g.slice(0, 10).forEach((c) => console.log(' ', c.join(',')));
 } else if (cmd === 'fill' || cmd === 'rmunits') { const U = await L('units.js'), G = await L('guard.js'); const t = fs.readFileSync(pos[0], 'utf8'); const o = flags.o || pos[0].replace(/\.tmx$/, `.${cmd}.tmx`); let r;
@@ -156,4 +158,7 @@ if (cmd === 'lint') {
 } else if (cmd === 'preview-text') { console.log((await L('more.js')).previewText(pos.join(' ').replace(/\\n/g, '\n')));
 } else if (cmd === 'perf-log') { const X = await L('more.js'); const f = '.rwkit/perf.json'; const rec = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : []; if (pos[0] === 'add') { const pe = (await L('terrain.js')).perfEstimate(await load(pos[1])); rec.push({ map: path.basename(pos[1]), scanned: pe.scannedCellsPerTick, level: +flags.level }); fs.mkdirSync('.rwkit', { recursive: true }); fs.writeFileSync(f, JSON.stringify(rec, null, 1)); console.log('已记录', rec.length, '条'); } else { const fit = X.perfFit(rec); console.log(fit ? `拟合:level ≈ ${fit.intercept.toFixed(2)} + ${fit.slope.toExponential(2)}×扫描格数` : `记录不足(${rec.length}/3)`); } 
 } else if (cmd === 'publish') { const G = await L('guard.js'), AN = await L('analysis.js'), X = await L('more.js'); const m = await load(pos[0]); const R = flags.rules ? JSON.parse(fs.readFileSync(flags.rules, 'utf8')) : {}; const g = X.gateCheck(AN.applyIgnore(AN.allChecks(m, R), R.ignore).kept); if (!g.ok) { console.error(`未发布:有 ${g.errors} 个错误,先运行 lint 查看`); process.exit(1); } G.safeWrite(flags.to, fs.readFileSync(pos[0]), { overwrite: true }); console.log('已发布到', flags.to, '(旧文件已备份到 .rwbak/)');
+} else if (cmd === 'strait') { const X = await L('more.js'), G = await L('guard.js'); const r = X.carveStrait(fs.readFileSync(pos[0], 'utf8'), flags.name, flags.bbox.split(',').map(Number)); G.safeWrite(flags.o || pos[0].replace(/\.tmx$/, '.strait.tmx'), r.text, { overwrite: !!flags.force }); console.log(`已开凿 ${flags.name}:(${r.a}) → (${r.b})`);
+} else if (cmd === 'straits') { const X = await L('more.js'); Object.entries(X.STRAITS).forEach(([k, v]) => console.log(k, JSON.stringify(v)));
+} else if (cmd === 'perf-family') { (await L('more.js')).perfByFamily(await load(pos[0])).slice(0, 15).forEach((e) => console.log(String(e.pct).padStart(5) + '%', String(e.count).padStart(5), e.family));
 } else console.log(usage);

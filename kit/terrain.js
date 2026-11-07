@@ -12,11 +12,12 @@ const crcT = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n
 const crc = (b) => { let c = 0xffffffff; for (const v of b) c = crcT[(c ^ v) & 255] ^ (c >>> 8); return (c ^ 0xffffffff) >>> 0; };
 function png(w, h, rgb) { const raw = Buffer.alloc((w * 3 + 1) * h); for (let y = 0; y < h; y++) { raw[y * (w * 3 + 1)] = 0; rgb.copy(raw, y * (w * 3 + 1) + 1, y * w * 3, (y + 1) * w * 3); } const chunk = (t, d) => { const b = Buffer.alloc(12 + d.length); b.writeUInt32BE(d.length, 0); b.write(t, 4); d.copy(b, 8); b.writeUInt32BE(crc(b.subarray(4, 8 + d.length)), 8 + d.length); return b; }; const ih = Buffer.alloc(13); ih.writeUInt32BE(w, 0); ih.writeUInt32BE(h, 4); ih[8] = 8; ih[9] = 2; return Buffer.concat([Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), chunk('IHDR', ih), chunk('IDAT', zlib.deflateSync(raw)), chunk('IEND', Buffer.alloc(0))]); }
 // mode: 'pass' 通行性(陆海气垫建造着色) | 'terrain' 语义地形(水/浅滩/岩浆/悬崖);scale 每格像素(大图自动缩小为 1 像素/格 再按 step 抽样)
-export function renderPng(model, { mode = 'pass', step = 1, marks = [] } = {}) {
+export function renderPng(model, { mode = 'pass', step = 1, marks = [], boxes = [] } = {}) {
   const { width: W, height: H } = model; const P = passability(model); const T = terrainClasses(model).data; const w = Math.ceil(W / step), h = Math.ceil(H / step); const rgb = Buffer.alloc(w * h * 3);
   const col = (i) => { if (mode === 'terrain') return [[110, 150, 90], [40, 90, 170], [110, 170, 210], [220, 60, 40], [120, 100, 80], [60, 50, 45]][T[i]]; const p = P[i]; if (p === 0) return [30, 30, 30]; if (p & NAVAL && !(p & LAND)) return [50, 100, 190]; if ((p & LAND) && (p & NAVAL)) return [120, 190, 210]; if (p & BUILD) return [120, 160, 100]; return [190, 180, 120]; };
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const c = col(Math.min(H - 1, y * step) * W + Math.min(W - 1, x * step)); rgb.set(c, (y * w + x) * 3); }
   for (const [mx, my, c = [255, 255, 0]] of marks) for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const x = Math.floor(mx / step) + dx, y = Math.floor(my / step) + dy; if (x >= 0 && y >= 0 && x < w && y < h) rgb.set(c, (y * w + x) * 3); }
+  for (const [bx0, by0, bx1, by1, c = [255, 255, 255]] of boxes) { const X0 = Math.floor(bx0 / step), X1 = Math.floor(bx1 / step), Y0 = Math.floor(by0 / step), Y1 = Math.floor(by1 / step); for (let x = X0; x <= X1; x++) for (const y of [Y0, Y1]) if (x >= 0 && y >= 0 && x < w && y < h) rgb.set(c, (y * w + x) * 3); for (let y = Y0; y <= Y1; y++) for (const x of [X0, X1]) if (x >= 0 && y >= 0 && x < w && y < h) rgb.set(c, (y * w + x) * 3); }
   return png(w, h, rgb);
 }
 // 截取测试图:把大图切出 [x0,y0,x1,y1] 窗口(格),对象坐标平移,窗口外的对象丢弃;图层改写成 csv(Tiled 都能读)

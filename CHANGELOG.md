@@ -1,6 +1,11 @@
 ## 3.3.4
 夺城（在场式）减负：去掉“指挥中心在场”检测和按队伍变色的城名（改成每城一个静态城名）；战报改成“夺城成功且指挥中心撑过 hold 秒”才播，可用 rwNews=0 让某座城不播战报；重要城市候选 candidates 个队伍，其余 candidatesMinor 个；无主检测开局 startGrace 秒后才启动；占领条件加 2 秒确认。常开检测约减少 40%。
 
+## 3.4.4
+- RWKit:水道/群岛/山口/纬度带/装饰/同盟/对拍/发布闸/配额/海峡预设/叠加图/凑不够检查等;lint 结果带坐标。
+- 编辑器:触发器面板「质检」按钮、结果点击定位、状态栏通行标志、队伍颜色表统一。
+- Mod 命令行:clone-unit、map-units。
+
 ## 3.4.3
 - RWKit:新增 groups/patterns/gates/heat/strength/rewards/colors/tcolors/geo/coast/box/road/scale/build 命令与 mapops.js、insight.js;面板加概览表;命令日志。
 - 文档对 154 条清单逐条分类(已做/部分/编辑器原有/需游戏验证/没做)。

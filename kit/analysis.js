@@ -6,7 +6,7 @@ import { checkPlacement, landConnectivity } from './grid.js';
 import { checkRules } from './rules.js';
 import { checkTeams } from './teams.js';
 import { lintFacilities, lintStartInDetect, levelOf } from './extras.js';
-import { lintLocale, lintShipWater, checkAllies, locate } from './more.js';
+import { lintLocale, lintShipWater, checkAllies, locate, lintDetectCapacity, labelOverlaps } from './more.js';
 export function lintLogic(model, { coverSecs = 300, openSecs = 5 } = {}) {
   const out = []; const add = (sev, code, msg, key) => out.push({ sev, code, msg, key });
   const trs = triggersOf(model);
@@ -49,7 +49,7 @@ export function fairness(model) {
 }
 export function timeline(model, secs = 120, { quiet = true } = {}) { const s = new Sim(model).run(secs); return s.log.filter((l) => !quiet || !l.msg.startsWith('<<')).map((l) => `${l.t.toFixed(1).padStart(6)}s  ${l.name}  ${l.msg.replace(/\n/g, ' / ').slice(0, 60)}`); }
 export function applyIgnore(items, ignore = []) { const ig = ignore.map((s) => { if (typeof s === 'object') return { c: s.code, k: s.key && new RegExp(s.key), why: s.why }; const [c, k] = s.split(':'); return { c, k: k && new RegExp(k) }; }); const kept = items.filter((i) => !ig.some((g) => g.c === i.code && (!g.k || g.k.test(i.key || '')))); return { kept, suppressed: items.length - kept.length }; }
-export function allChecks(model, R = {}) { return [...lintTriggers(model, { teamCount: R.teams, text: R.text }), ...lintLogic(model), ...lintSpawnCells(model), ...lintContrast(model), ...lintLayout(model, R), ...checkPlacement(model), ...landConnectivity(model), ...checkRules(model, R), ...checkTeams(model, { expect: R.teams }), ...lintFacilities(model), ...lintStartInDetect(model), ...lintLocale(model), ...lintShipWater(model), ...checkAllies(model)]; }
+export function allChecks(model, R = {}) { return [...lintTriggers(model, { teamCount: R.teams, text: R.text }), ...lintLogic(model), ...lintSpawnCells(model), ...lintContrast(model), ...lintLayout(model, R), ...checkPlacement(model), ...landConnectivity(model), ...checkRules(model, R), ...checkTeams(model, { expect: R.teams }), ...lintFacilities(model), ...lintStartInDetect(model), ...lintLocale(model), ...lintShipWater(model), ...checkAllies(model), ...lintDetectCapacity(model)]; }
 export function report(model, R = {}, title = '地图质检报告') {
   const { kept, suppressed } = applyIgnore(allChecks(model, R), R.ignore);
   const by = new Map(); for (const i of kept) { const k = `${i.sev}|${i.code}`; if (!by.has(k)) by.set(k, []); by.get(k).push(i); }

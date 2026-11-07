@@ -8,3 +8,6 @@
 2026-11-07T16:55:19.524Z lint /tmp/w/us/out/美国内战.tmx --rules /tmp/w/us/rules_us.json
 2026-11-07T16:55:37.069Z lint /tmp/w/us/out/美国内战.tmx --rules /tmp/w/us/rules_us.json --all
 2026-11-07T16:56:06.512Z lint /tmp/w/us/out/美国内战.tmx --rules /tmp/w/us/rules_us.json
+2026-11-07T17:02:19.554Z perf-family /tmp/w/us/out/美国内战.tmx
+2026-11-07T17:02:19.726Z lint /tmp/w/us/out/美国内战.tmx --rules /tmp/w/us/rules_us.json
+2026-11-07T17:03:20.412Z png /tmp/w/us/out/美国内战.tmx -o /tmp/claude-0/-home-claude/00984055-ee17-547c-b5d8-843bad60d93b/scratchpad/ov.png --rules /tmp/claude-0/-home-claude/00984055-ee17-547c-b5d8-843bad60d93b/scratchpad/r.json --step 2

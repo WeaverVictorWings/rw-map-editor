@@ -12,7 +12,7 @@ import { hslToHex } from './triggers.js';
 
 const need = () => { if (!A.ed.map) throw new Error('rwApi：还没有载入地图，请先 loadText(tmxText)'); return A.ed; };
 export const rwApi = {
-  version: '3.4.3',
+  version: '3.4.4',
   loadText: async (text, name = 'map.tmx') => { await IO.loadMapFromText(text, name); need(); return { width: A.ed.map.width, height: A.ed.map.height }; },
   exportText: async (kind = 'full', opts = {}) => { need(); const t = await C.exportVariant(kind, opts); return typeof t === 'string' ? t.replace(/value="(hsl\([^"]*\))"/g, (m, c) => `value="${hslToHex(c)}"`) : t; },
   check: () => runChecks(need(), { triggerIssues: triggerIssues() }),
