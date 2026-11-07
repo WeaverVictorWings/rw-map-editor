@@ -170,6 +170,12 @@ export function renderToolbar() {
 }
 
 // ---------------- 状态栏 ----------------
+// 通行标志(陆/海/气垫/可建造):整图计算较重,缓存 3 秒,只在放大到一定程度时显示
+let _pass = null, _passT = 0, _passMod = null;
+function passHint(tx, ty) {
+  const m = ed.map; if (!m || rend.view.z < 0.5 || A.settings.passHint === false) return '';
+  try { const now = Date.now(); if (!_passMod) { import('./pathing.js').then((x) => { _passMod = x; }); return ''; } if (!_pass || now - _passT > 3000 || _pass.n !== m.width * m.height) { _pass = { d: _passMod.passability(ed), n: m.width * m.height }; _passT = now; } const f = _pass.d[ty * m.width + tx]; const P = _passMod; return ['陆' + (f & P.LAND ? '✓' : '✗'), '海' + (f & P.NAVAL ? '✓' : '✗'), '气' + (f & P.HOVER ? '✓' : '✗'), '建' + (f & P.BUILD ? '✓' : '✗')].join(' '); } catch { return ''; }
+}
 let widthHintFn = null; import('./tools331.js').then((m) => { widthHintFn = m.widthHint; }).catch(() => {});
 export function renderStatus(mp) {
   const m = ed.map;
@@ -180,6 +186,7 @@ export function renderStatus(mp) {
     if (tx >= 0 && ty >= 0 && tx < m.width && ty < m.height) {
       pos = `格 ${tx}, ${ty}`;
       if (ed.engine) { const t = ed.engine.terrainAtVertex(Math.round(mp.x / m.tw), Math.round(mp.y / m.th)); if (t !== 255) pos += ' · ' + ed.engine.cn(t); }
+      { const ph = passHint(tx, ty); if (ph) pos += ' · ' + ph; }
       if (A.settings.widthHint !== false && ed.engine && rend.view.z >= 0.5) { try { const w = widthHintFn && widthHintFn(tx, ty); if (w) pos += ' · ' + w; } catch { /* */ } }
     }
   }

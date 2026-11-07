@@ -47,7 +47,8 @@ export function lintShipWater(model) { const P = passability(model); const { wid
 // 81:发布闸:lint 通过(0 错误)才把文件复制到正式输出,覆盖前备份
 export function gateCheck(items) { const e = items.filter((i) => i.sev === 'error'); return { ok: e.length === 0, errors: e.length }; }
 // 91:给检查结果补上地图坐标(格),便于定位
-export function locate(model, items) { const by = new Map(); for (const o of triggersOf(model)) by.set(trigKey(o), o); return items.map((i) => { if (i.x !== undefined) return i; const o = i.key && by.get(i.key); return o && o.x >= 0 ? { ...i, x: Math.floor(o.x / model.tw), y: Math.floor(o.y / model.tw) } : i; }); }
+export function locate(model, items) { const by = new Map(); for (const o of triggersOf(model)) by.set(trigKey(o), o); const pos = (o, d = 0) => { if (!o) return null; if (o.x >= 0 && o.y >= 0) return o; if (d > 6) return null; for (const k of (o.props.activatedBy || '').split(',').map((q) => q.trim()).filter(Boolean)) { const r = pos(by.get(k), d + 1); if (r) return r; } return null; };   // 地图外的辅助触发器(消息/奖励)沿 activatedBy 找到图内的来源
+  return items.map((i) => { if (i.x !== undefined) return i; const o = i.key && pos(by.get(i.key)); return o ? { ...i, x: Math.floor(o.x / model.tw), y: Math.floor(o.y / model.tw) } : i; }); }
 // 66/69:布局预设
 export const LAYOUT_PRESETS = { 紧凑: { minD: 3, maxD: 7 }, 松散: { minD: 4, maxD: 12 }, 环带: { minD: 6, maxD: 9 }, 前线: { minD: 3, maxD: 10 } };
 // 71:配额表 CSV:team,unit,count

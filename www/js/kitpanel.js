@@ -4,12 +4,13 @@ export async function kitDialog() {
   const { rwApi } = await import('./api.js');
   const text = await rwApi.exportText('full'); const K = (f) => import('./kit/' + f);
   const { parseTmx, normalizeTmx } = await K('tmx.js'); const model = parseTmx(await normalizeTmx(text));
-  const [AN, { openingCheck }, IN, MO] = await Promise.all([K('analysis.js'), K('tsim.js'), K('insight.js'), K('mapops.js')]);
-  const items = AN.allChecks(model); const rep = AN.report(model, {});
+  const [AN, { openingCheck }, IN, MO, MO2] = await Promise.all([K('analysis.js'), K('tsim.js'), K('insight.js'), K('mapops.js'), K('more.js')]);
+  const { A } = await import('./state.js'); const { closeModal } = await import('./ui.js');
+  const items = MO2.locate(model, AN.allChecks(model)); const rep = AN.report(model, {});
   const o = openingCheck(model, 30); if (o.messages > 6) items.push({ sev: 'warn', code: 'O01', msg: `开局 30 秒内有 ${o.messages} 条消息(可能刷屏)` });
   const by = new Map(); for (const i of items) { const k = i.sev + '|' + i.code; if (!by.has(k)) by.set(k, []); by.get(k).push(i); }
   const col = { error: '#e5484d', warn: '#d9a400', info: '#888' };
-  const rows = [...by].sort((a, b) => ['error', 'warn', 'info'].indexOf(a[0].split('|')[0]) - ['error', 'warn', 'info'].indexOf(b[0].split('|')[0])).map(([k, v]) => h('div', { style: 'margin:6px 0' }, h('b', { style: 'color:' + col[v[0].sev] }, `${v[0].sev === 'error' ? '错误' : v[0].sev === 'warn' ? '警告' : '提示'} ${v[0].code} ×${v.length}`), ...v.slice(0, 5).map((i) => h('div', { style: 'font-size:12px;margin-left:10px' }, (i.key ? `「${i.key}」` : '') + i.msg))));
+  const rows = [...by].sort((a, b) => ['error', 'warn', 'info'].indexOf(a[0].split('|')[0]) - ['error', 'warn', 'info'].indexOf(b[0].split('|')[0])).map(([k, v]) => h('div', { style: 'margin:6px 0' }, h('b', { style: 'color:' + col[v[0].sev] }, `${v[0].sev === 'error' ? '错误' : v[0].sev === 'warn' ? '警告' : '提示'} ${v[0].code} ×${v.length}`), ...v.slice(0, 5).map((i) => h('div', { style: 'font-size:12px;margin-left:10px' }, (i.key ? `「${i.key}」` : '') + i.msg, i.x !== undefined ? h('button', { style: 'margin-left:6px;font-size:11px', onclick: () => { try { closeModal(); } catch { /* */ } A.rend.centerOn(i.x + 0.5, i.y + 0.5, Math.max(A.rend.view.z, 1)); } }, `定位 (${i.x},${i.y})`) : null))));
   const c = { error: 0, warn: 0 }; items.forEach((i) => c[i.sev] !== undefined && c[i.sev]++);
   const tbl = (head, rows) => h('table', { style: 'font-size:12px;border-collapse:collapse;margin:4px 0' }, h('tr', {}, ...head.map((x) => h('th', { style: 'text-align:left;padding:2px 8px' }, x))), ...rows.map((r) => h('tr', {}, ...r.map((c) => h('td', { style: 'padding:2px 8px' }, String(c))))));
   const st = IN.strength(model); const fr = Object.fromEntries(AN.fairness(model).map((r) => [r.team, r])); const rw = Object.fromEntries(MO.rewardCurve(model).map((r) => [r.team, r.total]));

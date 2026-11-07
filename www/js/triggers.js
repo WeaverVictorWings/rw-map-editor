@@ -403,6 +403,7 @@ export function triggerPanel(body, T) {
     h('button', { onclick: () => graphView(), html: icon('rules') + ' 逻辑图' }), helpBtn('trig.graph'),
     h('button', { onclick: () => logDialog(), html: icon('log') + ' 作战日志' }),
     h('button', { onclick: () => import('./sim.js').then((m) => m.simDialog()), html: icon('clock') + ' 模拟' }),
+    h('button', { title: '质检套件:格式/引用/文本/站位/连通/开局刷屏(同命令行 rwkit)', onclick: () => import('./kitpanel.js').then((m) => m.kitDialog()), html: icon('check') + ' 质检' }),
     h('button', { class: 'ib', title: '在地图上画区域来新建', style: T === 'region' ? 'color:var(--accent2)' : '', onclick: () => { ed.tool.triggers = 'region'; A.refresh('toolbar', 'dock'); toast('在地图上拖出一个区域，然后选择触发器类型'); }, html: icon('region') })));
   const TG = trigGroup();
   const objs = TG ? TG.objects.filter((o) => kindOf(o) !== 'map_info') : [];
