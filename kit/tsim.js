@@ -7,7 +7,7 @@ const L = (v) => String(v || '').split(',').map((s) => s.trim()).filter(Boolean)
 const has = (v) => v !== undefined && v !== '';
 export class Sim {
   constructor(model) {
-    this.ts = triggersOf(model).filter((o) => ['unitdetect', 'unitadd', 'basic', 'maptext', 'changecredits'].includes(o.type.toLowerCase())).map((o) => {
+    this.ts = triggersOf(model).filter((o) => ['unitdetect', 'unitadd', 'unitremove', 'basic', 'maptext', 'changecredits'].includes(o.type.toLowerCase())).map((o) => {
       const p = o.props; const t = { o, name: trigKey(o), type: o.type.toLowerCase(), x: o.x, y: o.y, w: o.w, h: o.h, p, ab: L(p.activatedBy).concat(L(p.whenActivatedIds)), db: L(p.deactivatedBy), all: /^true$/i.test(p.allToActivate || ''), delay: tms(p.delay), warm: tms(p.warmup) || 0, reset: tms(p.resetActivationAfter), rep: tms(p.repeatDelay), team: has(p.team) ? +p.team : null, msg: p.globalMessage, active: false, last: -1e12, since: null, fires: 0 };
       t.gate = t.delay === null; return t;
     });
@@ -35,6 +35,11 @@ export class Sim {
       if (this.spawnFail > 0) { this.spawnFail--; this.log.push({ t: this.now / 1000, name: t.name, msg: '<<刷出失败(被挡住)>>' }); return; }
       const tm = has(t.p.team) ? +t.p.team : 0;
       for (const part of t.p.spawnUnits.split(',')) { const q = part.trim(); const nm = q.split('*')[0].split('(')[0].trim(); const n = q.includes('*') ? +q.split('*')[1].split('(')[0] : 1; const k = t.name + '|' + nm; this.spawned.set(k, (this.spawned.get(k) || 0) + n); if (nm === 'commandCenter') { this.units.push({ type: nm, team: tm, x: t.x + t.w / 2, y: t.y + t.h / 2 }); this.log.push({ t: this.now / 1000, name: t.name, msg: `<<刷出指挥中心 team${tm}>>` }); } }
+    }
+    if (t.type === 'unitremove') {   // 区域内(team 匹配,不填=所有队伍)的单位全部删除;终局判胜靠它
+      const tm = has(t.p.team) ? +t.p.team : null; const before = this.units.length;
+      this.units = this.units.filter((u) => !((tm === null || u.team === tm) && t.x <= u.x && u.x < t.x + t.w && t.y <= u.y && u.y < t.y + t.h));
+      this.log.push({ t: this.now / 1000, name: t.name, msg: `<<删除 ${before - this.units.length} 个单位(team ${tm === null ? '全部' : tm})>>` });
     }
     if (t.type === 'changecredits') this.credits.set(t.team, (this.credits.get(t.team) || 0) + +(t.p.add || 0));
   }
