@@ -12,3 +12,41 @@
 2026-11-07T17:02:19.726Z lint /tmp/w/us/out/美国内战.tmx --rules /tmp/w/us/rules_us.json
 2026-11-07T17:03:20.412Z png /tmp/w/us/out/美国内战.tmx -o /tmp/claude-0/-home-claude/00984055-ee17-547c-b5d8-843bad60d93b/scratchpad/ov.png --rules /tmp/claude-0/-home-claude/00984055-ee17-547c-b5d8-843bad60d93b/scratchpad/r.json --step 2
 2026-11-08T12:10:42.855Z 
+2026-11-11T04:00:57.378Z lint /home/claude/eu/欧陆战争_v0.1.tmx
+2026-11-11T04:01:09.906Z lint /home/claude/eu/欧陆战争_v0.1.tmx --rules /home/claude/eu/rules_eu.json
+2026-11-11T04:01:16.009Z lint /home/claude/eu/欧陆战争_v0.1.tmx --rules /home/claude/eu/rules_eu.json
+2026-11-11T04:01:38.903Z lint /home/claude/eu/欧陆战争_v0.1.tmx --rules /home/claude/eu/rules_eu.json
+2026-11-11T04:01:42.813Z lint /home/claude/eu/欧陆战争_v0.1.tmx --rules /home/claude/eu/rules_eu.json
+2026-11-11T04:01:49.378Z open /home/claude/eu/欧陆战争_v0.1.tmx --secs 120 --rules /home/claude/eu/rules_eu.json
+2026-11-11T04:02:38.418Z lint /home/claude/eu/欧陆战争_v0.1.tmx --rules /home/claude/eu/rules_eu.json
+2026-11-11T04:02:42.461Z 
+2026-11-11T04:02:46.687Z route /home/claude/eu/欧陆战争_v0.1.tmx --from 868,279 --to 251,467 --land --clear 1
+2026-11-11T04:02:48.339Z route /home/claude/eu/欧陆战争_v0.1.tmx --from 744,424 --to 444,367 --land --clear 1
+2026-11-11T04:02:50.012Z route /home/claude/eu/欧陆战争_v0.1.tmx --from 568,577 --to 692,329 --land --clear 1
+2026-11-11T04:02:51.686Z route /home/claude/eu/欧陆战争_v0.1.tmx --from 785,710 --to 618,635 --land --clear 1
+2026-11-11T04:02:53.358Z route /home/claude/eu/欧陆战争_v0.1.tmx --from 146,697 --to 251,467 --land --clear 1
+2026-11-11T04:02:55.007Z route /home/claude/eu/欧陆战争_v0.1.tmx --from 429,655 --to 251,467 --land --clear 1
+2026-11-11T04:02:56.700Z route /home/claude/eu/欧陆战争_v0.1.tmx --from 785,710 --to 994,661 --land --clear 1
+2026-11-11T04:02:57.689Z route /home/claude/eu/欧陆战争_v0.1.tmx --from 868,279 --to 994,661 --land --clear 1
+2026-11-11T04:02:58.598Z route /home/claude/eu/欧陆战争_v0.1.tmx --from 868,279 --to 640,153 --land --clear 1
+2026-11-11T04:03:00.252Z route /home/claude/eu/欧陆战争_v0.1.tmx --from 578,375 --to 868,279 --land --clear 1
+2026-11-11T04:03:01.877Z route /home/claude/eu/欧陆战争_v0.1.tmx --from 667,587 --to 744,424 --land --clear 1
+2026-11-11T04:03:03.502Z route /home/claude/eu/欧陆战争_v0.1.tmx --from 429,655 --to 568,577 --land --clear 1
+2026-11-11T04:03:09.302Z png /home/claude/eu/欧陆战争_v0.1.tmx -o /home/claude/eu/pass_full.png --mode terrain --step 1 --rules /home/claude/eu/rules_eu.json
+2026-11-11T04:21:02.363Z lint /home/claude/eu/欧陆战争_v0.2.tmx --rules /home/claude/eu/rules_eu.json
+2026-11-11T04:21:16.298Z lint /home/claude/eu/欧陆战争_v0.2.tmx --rules /home/claude/eu/rules_eu.json
+2026-11-11T04:21:38.038Z lint /home/claude/eu/欧陆战争_v0.2.tmx --rules /home/claude/eu/rules_eu.json
+2026-11-11T04:21:49.171Z lint /home/claude/eu/欧陆战争_v0.2.tmx --rules /home/claude/eu/rules_eu.json
+2026-11-11T04:22:08.083Z lint /home/claude/eu/欧陆战争_v0.2.tmx --rules /home/claude/eu/rules_eu.json
+2026-11-11T04:22:19.111Z lint /home/claude/eu/欧陆战争_v0.2.tmx --rules /home/claude/eu/rules_eu.json
+2026-11-11T04:22:34.976Z lint /home/claude/eu/欧陆战争_v0.2.tmx --rules /home/claude/eu/rules_eu.json
+2026-11-11T04:22:46.116Z lint /home/claude/eu/欧陆战争_v0.2.tmx --rules /home/claude/eu/rules_eu.json
+2026-11-11T04:23:01.978Z lint /home/claude/eu/欧陆战争_v0.2.tmx --rules /home/claude/eu/rules_eu.json
+2026-11-11T04:23:17.484Z lint /home/claude/eu/欧陆战争_v0.2.tmx --rules /home/claude/eu/rules_eu.json
+2026-11-11T04:23:28.296Z open /home/claude/eu/欧陆战争_v0.2.tmx --secs 60 --rules /home/claude/eu/rules_eu.json
+2026-11-11T04:23:34.758Z lint /home/claude/eu/欧陆战争_v0.2.tmx --rules /home/claude/eu/rules_eu.json
+2026-11-11T04:54:16.615Z route /home/claude/eu/欧陆战争_v0.2.tmx --from 180,377 --to 221,445 --land --clear 1
+2026-11-11T04:54:17.024Z route /home/claude/eu/欧陆战争_v0.2.tmx --from 74,333 --to 180,377 --land --clear 1
+2026-11-11T04:54:17.314Z route /home/claude/eu/欧陆战争_v0.2.tmx --from 586,237 --to 810,266 --land --clear 1
+2026-11-11T04:54:19.111Z route /home/claude/eu/欧陆战争_v0.2.tmx --from 731,677 --to 571,605 --land --clear 1
+2026-11-11T04:54:20.899Z route /home/claude/eu/欧陆战争_v0.2.tmx --from 925,670 --to 810,266 --land --clear 1
