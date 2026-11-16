@@ -77,3 +77,19 @@
 2026-11-11T14:33:59.519Z report /home/claude/eu/v4/欧陆战争_v0.4.tmx --rules /home/claude/eu/rules_eu.json -o /home/claude/eu/v4/质检报告_v0.4.md
 2026-11-11T14:34:58.321Z lint /home/claude/eu/v4/欧陆战争_v0.4.tmx --rules /home/claude/eu/rules_eu.json
 2026-11-11T14:35:26.670Z texts /home/claude/eu/v4/欧陆战争_v0.4.tmx -o /home/claude/eu/v4/texts.csv
+2026-11-12T06:51:38.678Z lint /home/claude/eu/v5/欧陆战争_v0.5.tmx --rules /home/claude/eu/rules_eu5.json
+2026-11-12T06:52:44.071Z perf /home/claude/eu/v5/欧陆战争_v0.5.tmx
+2026-11-12T06:54:04.435Z lint /home/claude/eu/v5/欧陆战争_v0.5.tmx --rules /home/claude/eu/rules_eu5.json
+2026-11-12T06:58:12.661Z lint /home/claude/eu/v5/欧陆战争_v0.5.tmx --rules /home/claude/eu/rules_eu5.json
+2026-11-12T06:59:18.113Z open /home/claude/eu/v5/欧陆战争_v0.5.tmx --secs 30
+2026-11-12T07:00:16.866Z png /home/claude/eu/v5/欧陆战争_v0.5.tmx -o /home/claude/eu/v5/preview_v05.png --mode terrain --step 1 --rules /home/claude/eu/rules_eu5.json
+2026-11-12T07:01:20.791Z lint /home/claude/eu/v5/欧陆战争_v0.5.tmx --rules /home/claude/eu/rules_eu5.json
+2026-11-12T07:02:34.906Z perf /home/claude/eu/v5/欧陆战争_v0.5.tmx
+2026-11-12T07:02:35.184Z png /home/claude/eu/v5/欧陆战争_v0.5.tmx -o /home/claude/eu/v5/preview_v05.png --mode terrain --step 1 --rules /home/claude/eu/rules_eu5.json
+2026-11-12T08:17:10.268Z lint /home/claude/eu/v6/欧陆战争_v0.6.tmx --rules /home/claude/eu/rules_eu5.json
+2026-11-12T08:17:45.983Z perf /home/claude/eu/v6/欧陆战争_v0.6.tmx
+2026-11-12T08:17:48.466Z lint /home/claude/eu/v6/欧陆战争_v0.6.tmx --rules /home/claude/eu/rules_eu5.json
+2026-11-12T08:18:49.279Z lint /home/claude/eu/v6/欧陆战争_v0.6.tmx --rules /home/claude/eu/rules_eu6.json
+2026-11-12T08:19:23.745Z open /home/claude/eu/v6/欧陆战争_v0.6.tmx --secs 30
+2026-11-12T08:20:00.024Z png /home/claude/eu/v6/欧陆战争_v0.6.tmx -o /home/claude/eu/v6/preview_v06.png --mode terrain --step 1 --rules /home/claude/eu/rules_eu6.json
+2026-11-12T09:08:14.777Z lint /home/claude/eu/v7/欧陆战争_v0.7.tmx --rules /home/claude/eu/rules_eu6.json
