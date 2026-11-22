@@ -100,3 +100,22 @@
 2026-11-17T04:47:06.980Z lint /home/claude/wg/out/美国内战_v0.1.tmx --rules /home/claude/wg/rules_us.json
 2026-11-17T04:50:29.500Z lint /home/claude/wg/out/大亚洲战争_v0.1.tmx --rules /home/claude/wg/rules_asia.json
 2026-11-17T04:50:57.368Z lint /home/claude/wg/out/大亚洲战争_v0.1.tmx --rules /home/claude/wg/rules_asia.json
+2026-11-22T10:32:38.385Z lint /mnt/user-data/attachments/00984055-ee17-547c-b5d8-843bad60d93b/4e74ab06-_____v0.7.tmx
+2026-11-22T10:36:41.744Z lint /mnt/user-data/attachments/00984055-ee17-547c-b5d8-843bad60d93b/c2dab422-_____v71.tmx
+2026-11-22T10:39:55.732Z lint /home/claude/wg/out2/美国内战_v72_全知者.tmx --rules /home/claude/wg/rules_us72.json
+2026-11-22T10:40:20.163Z lint /home/claude/wg/out2/美国内战_v72_全知者.tmx --rules /home/claude/wg/rules_us72.json
+2026-11-22T10:40:46.775Z timeline /home/claude/wg/out2/美国内战_v72_全知者.tmx
+2026-11-22T10:42:54.790Z open /home/claude/wg/out2/美国内战_v72_全知者.tmx
+2026-11-22T10:44:12.911Z png /home/claude/wg/out/大亚洲战争_v0.1.tmx -o /tmp/claude-0/-home-claude/00984055-ee17-547c-b5d8-843bad60d93b/scratchpad/us/asia_pass.png --mode pass --step 1
+2026-11-22T10:44:13.187Z png /home/claude/wg/out/大亚洲战争_v0.1.tmx -o /tmp/claude-0/-home-claude/00984055-ee17-547c-b5d8-843bad60d93b/scratchpad/us/asia_terr.png --mode terrain --step 1
+2026-11-22T10:44:21.313Z png /mnt/user-data/attachments/00984055-ee17-547c-b5d8-843bad60d93b/c2dab422-_____v71.tmx -o /tmp/claude-0/-home-claude/00984055-ee17-547c-b5d8-843bad60d93b/scratchpad/us/us_pass.png --mode pass --step 1
+2026-11-22T10:44:21.613Z png /mnt/user-data/attachments/00984055-ee17-547c-b5d8-843bad60d93b/4e74ab06-_____v0.7.tmx -o /tmp/claude-0/-home-claude/00984055-ee17-547c-b5d8-843bad60d93b/scratchpad/us/eu_pass.png --mode pass --step 1
+2026-11-22T10:46:03.769Z png /home/claude/wg/out/大亚洲战争_v0.1.tmx -o /tmp/claude-0/-home-claude/00984055-ee17-547c-b5d8-843bad60d93b/scratchpad/us/asia2_pass.png --mode pass --step 1
+2026-11-22T10:46:52.628Z png /home/claude/wg/out/大亚洲战争_v0.1.tmx -o /tmp/claude-0/-home-claude/00984055-ee17-547c-b5d8-843bad60d93b/scratchpad/us/asia3_pass.png --mode pass --step 1
+2026-11-22T10:46:59.052Z lint /home/claude/wg/out/大亚洲战争_v0.1.tmx --rules /home/claude/wg/rules_asia.json
+2026-11-22T10:47:58.136Z lint /home/claude/wg/out/大亚洲战争_v0.1.tmx --rules /home/claude/wg/rules_asia.json
+2026-11-22T10:53:21.934Z lint /home/claude/wg/out/大亚洲战争_v0.2.tmx
+2026-11-22T10:53:59.694Z open /home/claude/wg/out/大亚洲战争_v0.2.tmx
+2026-11-22T10:54:03.189Z lint /home/claude/wg/out2/美国内战_v72_全知者.tmx --rules /home/claude/wg/rules_us72.json
+2026-11-22T10:54:17.766Z lint /home/claude/wg/out/大亚洲战争_v0.2.tmx
+2026-11-22T10:55:19.863Z lint /home/claude/wg/out/大亚洲战争_v0.2.tmx --rules /home/claude/wg/rules_asia.json
