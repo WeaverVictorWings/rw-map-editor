@@ -93,3 +93,10 @@
 2026-11-12T08:19:23.745Z open /home/claude/eu/v6/欧陆战争_v0.6.tmx --secs 30
 2026-11-12T08:20:00.024Z png /home/claude/eu/v6/欧陆战争_v0.6.tmx -o /home/claude/eu/v6/preview_v06.png --mode terrain --step 1 --rules /home/claude/eu/rules_eu6.json
 2026-11-12T09:08:14.777Z lint /home/claude/eu/v7/欧陆战争_v0.7.tmx --rules /home/claude/eu/rules_eu6.json
+2026-11-17T04:45:29.114Z lint /home/claude/wg/out/美国内战_v0.1.tmx
+2026-11-17T04:45:50.485Z lint /home/claude/wg/out/美国内战_v0.1.tmx --rules /home/claude/wg/rules_us.json
+2026-11-17T04:46:10.253Z lint /home/claude/wg/out/美国内战_v0.1.tmx --rules /home/claude/wg/rules_us.json
+2026-11-17T04:46:40.555Z lint /home/claude/wg/out/美国内战_v0.1.tmx --rules /home/claude/wg/rules_us.json
+2026-11-17T04:47:06.980Z lint /home/claude/wg/out/美国内战_v0.1.tmx --rules /home/claude/wg/rules_us.json
+2026-11-17T04:50:29.500Z lint /home/claude/wg/out/大亚洲战争_v0.1.tmx --rules /home/claude/wg/rules_asia.json
+2026-11-17T04:50:57.368Z lint /home/claude/wg/out/大亚洲战争_v0.1.tmx --rules /home/claude/wg/rules_asia.json
