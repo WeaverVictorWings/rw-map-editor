@@ -50,7 +50,7 @@ export function tileProps(model, gid) {
   if (!ts) return null; return ts.tiles.get(gid - ts.firstgid) || {};
 }
 export const isUnit = (o) => o.props.unit !== undefined;
-export const TRIGGER_TYPES = new Set(['unitadd', 'unitdetect', 'unitremove', 'maptext', 'changecredits', 'teamtags', 'teamtagdetect', 'basic', 'objective', 'movecamera', 'move']);
+export const TRIGGER_TYPES = new Set(['unitadd', 'unitdetect', 'unitremove', 'maptext', 'changecredits', 'teamtags', 'teamtagdetect', 'basic', 'objective', 'movecamera', 'move', 'set_team', 'ai_allow_full_use', 'disable_unit_ai', 'rotate', 'point']);
 export const triggersOf = (model) => model.objects.filter((o) => TRIGGER_TYPES.has((o.type || '').toLowerCase()));
 export const unitsOf = (model) => model.objects.filter(isUnit);
 export const trigKey = (o) => ((o.props.id || '').trim() || (o.name || '').trim() || 'NULL');

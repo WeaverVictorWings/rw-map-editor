@@ -7,7 +7,7 @@ const L = (v) => String(v || '').split(',').map((s) => s.trim()).filter(Boolean)
 const has = (v) => v !== undefined && v !== '';
 export class Sim {
   constructor(model) {
-    this.ts = triggersOf(model).filter((o) => ['unitdetect', 'unitadd', 'unitremove', 'basic', 'maptext', 'changecredits'].includes(o.type.toLowerCase())).map((o) => {
+    this.ts = triggersOf(model).filter((o) => ['unitdetect', 'unitadd', 'unitremove', 'basic', 'maptext', 'changecredits', 'set_team'].includes(o.type.toLowerCase())).map((o) => {
       const p = o.props; const t = { o, name: trigKey(o), type: o.type.toLowerCase(), x: o.x, y: o.y, w: o.w, h: o.h, p, ab: L(p.activatedBy).concat(L(p.whenActivatedIds)), db: L(p.deactivatedBy), all: /^true$/i.test(p.allToActivate || ''), delay: tms(p.delay), warm: tms(p.warmup) || 0, reset: tms(p.resetActivationAfter), rep: tms(p.repeatDelay), team: has(p.team) ? +p.team : null, msg: p.globalMessage, active: false, last: -1e12, since: null, fires: 0 };
       t.gate = t.delay === null; return t;
     });
@@ -41,7 +41,13 @@ export class Sim {
       this.units = this.units.filter((u) => !((tm === null || u.team === tm) && t.x <= u.x && u.x < t.x + t.w && t.y <= u.y && u.y < t.y + t.h));
       this.log.push({ t: this.now / 1000, name: t.name, msg: `<<删除 ${before - this.units.length} 个单位(team ${tm === null ? '全部' : tm})>>` });
     }
-    if (t.type === 'changecredits') this.credits.set(t.team, (this.credits.get(t.team) || 0) + +(t.p.add || 0));
+    if (t.type === 'set_team') {   // 区域内「所有」单位(不分原属队伍)改成 team;没写 team 游戏里会出错
+      if (!has(t.p.team)) { this.log.push({ t: this.now / 1000, name: t.name, msg: '<<set_team 没写 team>>' }); return; }
+      const tm = +t.p.team; let n = 0;
+      for (const u of this.units) if (t.x <= u.x && u.x < t.x + t.w && t.y <= u.y && u.y < t.y + t.h && u.team !== tm) { u.team = tm; n++; }
+      this.log.push({ t: this.now / 1000, name: t.name, msg: `<<区域内 ${n} 个单位改成 team ${tm}>>` });
+    }
+    if (t.type === 'changecredits') { if (has(t.p.set)) this.credits.set(t.team, +t.p.set); this.credits.set(t.team, (this.credits.get(t.team) || 0) + +(t.p.add || 0)); }
   }
   step() {
     for (const t of this.ts) {

@@ -38,6 +38,10 @@ export const TYPES = {
     fields: [['spawnUnits', '生成哪些单位', 'units', true], ['team', '属于哪个队', 'team', true]] },
   unitRemove: { cn: '删除单位', cat: 'act', icon: 'del', area: 'rect', desc: '删除区域里的单位。',
     fields: [COMMON_TEAM, ['onlyIfEmpty', '只删空的运输单位', 'bool']] },
+  set_team: { cn: '改单位队伍', cat: 'act', icon: 'units', area: 'rect', desc: '把区域里「所有」单位（不分原来属于谁）改成指定队伍，血量等状态是否保留请在游戏里确认。框要画紧，别把别队的兵一起圈进去。',
+    fields: [['team', '改成哪个队', 'team', true]] },
+  disable_unit_ai: { cn: '禁止 AI 调动', cat: 'act', icon: 'del', area: 'rect', desc: '禁止 AI 驱动区域里的单位移动（工厂照常生产）。', fields: [] },
+  ai_allow_full_use: { cn: '允许 AI 充分使用', cat: 'act', icon: 'units', area: 'rect', desc: '允许 AI 充分使用区域里的单位。', fields: [] },
   changeCredits: { cn: '改资金', cat: 'act', icon: 'coin', desc: '给某队加钱、扣钱或直接设成某个数。',
     fields: [['team', '队伍', 'team', true], ['add', '增加（负数为扣）', 'int'], ['set', '直接设为', 'int', false, '同时填时先“设为”再“增加”']] },
   teamTags: { cn: '队伍标签', cat: 'act', icon: 'flag', desc: '给某队加上或去掉标签，配合“标签检测”做开关。',
@@ -197,6 +201,9 @@ function actText(o) {
   switch (k) {
     case 'unitAdd': { const u = parseUnits(objProp(o, 'spawnUnits')); return `给${teamCn(t)}刷出 ${u.length ? u.map((x) => unitCn(x.name) + (x.n > 1 ? '×' + x.n : '')).join('、') : '<i>（还没选单位）</i>'}`; }
     case 'unitRemove': return `删除区域里${t === undefined ? '所有' : teamCn(t) + '的'}单位`;
+    case 'set_team': return `区域里的所有单位改成${teamCn(t)}`;
+    case 'disable_unit_ai': return '区域里的单位 AI 不再调动';
+    case 'ai_allow_full_use': return '允许 AI 充分使用区域里的单位';
     case 'changeCredits': { const s = objProp(o, 'set'), a = objProp(o, 'add'); return `${teamCn(t)}资金` + (s !== undefined ? `设为 ${s}` : '') + (a !== undefined ? (+a >= 0 ? ` +${a}` : ` ${a}`) : '') + (s === undefined && a === undefined ? '<i>（还没填数）</i>' : ''); }
     case 'teamTags': return `${teamCn(t)}` + (objProp(o, 'addTeamTags') ? `加标签「${esc(objProp(o, 'addTeamTags'))}」` : '') + (objProp(o, 'removeTeamTags') ? `去标签「${esc(objProp(o, 'removeTeamTags'))}」` : '');
     case 'mapText': return `显示文字「${esc(objProp(o, 'text') || '')}」`;

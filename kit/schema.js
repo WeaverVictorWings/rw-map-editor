@@ -30,8 +30,14 @@ export const TYPES = {
   objective: { keys: { text: 'any' }, loose: true },
   movecamera: { keys: {}, loose: true },
   move: { keys: { target: 'any', unload: 'any', onlyIfEmpty: 'bool' }, team: true, loose: true },
+  // 以下来自游戏反编译(gameFramework/n/f.class)与社区教程:改区域内单位的队伍 / AI 相关 / 旋转 / 目标点
+  set_team: { keys: { team: 'teamTrig' }, team: true },   // 区域内「所有」单位(不分原属队伍)改成 team
+  ai_allow_full_use: { keys: {}, loose: true },            // 引擎里的写法是 ai_allow_full_use(教程写成 fullUse 是错的)
+  disable_unit_ai: { keys: {}, loose: true },              // 禁止 AI 驱动区域内单位移动(工厂不受影响)
+  rotate: { keys: { dir: 'float' }, loose: true },
+  point: { keys: {}, loose: true },
 };
-export const AREA_TYPES = new Set(['unitdetect', 'unitremove', 'move']);
+export const AREA_TYPES = new Set(['unitdetect', 'unitremove', 'move', 'set_team', 'ai_allow_full_use', 'disable_unit_ai', 'rotate']);
 export const SPAWN_OPTS = new Set('neutralteam aggressiveteam settoteamoflastattacker spawnchance maxspawnlimit techlevel gridalign skipifoverlapping falling transportedunitstotransfer alwaysstartdiratzero alwaystartdiratzero offsetx offsety offsetheight offsetdir offsetrandomxy offsetrandomx offsetrandomy offsetrandomdir addresources spawnsource copywaypointsfrom'.split(' '));
 // 属性是否属于"多语言后缀"(text_zh 等)
 export const localeBase = (k) => { const m = k.match(/^(.+)_([a-zA-Z-]{1,4})$/); return m && ['text', 'globalMessage', 'introText'].includes(m[1]) ? m[1] : null; };

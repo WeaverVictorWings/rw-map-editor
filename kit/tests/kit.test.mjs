@@ -22,4 +22,11 @@ T('建筑叠格', () => { const m = parseTmx(src); const f = m.objects.find((o) 
 T('公平性表', () => assert.ok(A.fairness(base).length >= 20));
 T('一页报告', () => { const r = A.report(base, { teams: 22 }); assert.ok(r.md.includes('各队概况') && r.counts.error === 0); });
 T('ignore 屏蔽', () => { const r = A.applyIgnore([{ code: 'T04', key: 'a' }, { code: 'T04', key: 'b' }], ['T04:^a$']); assert.equal(r.kept.length, 1); });
+T('set_team:认识类型、缺 team 报错、不当未知属性', () => {
+  const mk = (props) => parseTmx(src.replace('</objectgroup>', `<object id="99001" name="换队测试" type="set_team" x="100" y="100" width="60" height="60"><properties>${props}</properties></object></objectgroup>`));
+  const ok1 = lintTriggers(mk('<property name="team" value="3"/><property name="delay" value="1200s"/>'));
+  assert.ok(!ok1.some((i) => i.key === '换队测试' && (i.sev === 'error' || i.code === 'G04')), JSON.stringify(ok1.filter((i) => i.key === '换队测试')));
+  assert.ok(has(lintTriggers(mk('<property name="delay" value="1200s"/>')), 'G11'));
+  assert.ok(has(lintTriggers(mk('<property name="team" value="x"/>')), 'G03') || has(lintTriggers(mk('<property name="team" value="x"/>')), 'G06'));
+});
 console.log(pass, '项通过');
