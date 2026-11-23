@@ -153,3 +153,4 @@
 2026-11-22T15:15:24.377Z scen /home/claude/wg/out/大亚洲战争_v0.4.tmx --city 5 --fail 1
 2026-11-22T15:15:50.354Z scen /home/claude/wg/out/大亚洲战争_v0.4.tmx --city 30 --fail 1
 2026-11-22T15:16:18.760Z scen /home/claude/wg/out2/美国内战_v75.tmx --city 20 --fail 1
+2026-11-23T05:18:10.094Z 
