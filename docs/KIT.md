@@ -4,46 +4,54 @@
 
 ## 命令
 ```
-node scripts/rwkit.mjs lint 地图.tmx --rules 规则.json   # 全套质检,有 error 时退出码为 1
-node scripts/rwkit.mjs open 地图.tmx                       # 开局 30 秒模拟:有无刷屏
+node scripts/rwkit.mjs lint 地图.tmx --rules 规则.json   # 全套质检，有 error 时退出码为 1
+node scripts/rwkit.mjs open 地图.tmx                       # 开局 30 秒模拟：有无刷屏
 node scripts/rwkit.mjs scen 地图.tmx --city 12 --team 3 --fail 1   # 打掉第 12 座城的指挥中心 → 某队占领 → 看战报
-node scripts/rwkit.mjs remap 地图.tmx --swap 0,1 -o 新.tmx # 互换队伍号(单位+触发器),默认不覆盖
+node scripts/rwkit.mjs remap 地图.tmx --swap 0,1 -o 新.tmx # 互换队伍号（单位+触发器）,默认不覆盖
 node scripts/rwkit.mjs teams 地图.tmx | route … | wrap "文本"
-node kit/tests/kit.test.mjs 正常地图.tmx                   # 回归:故意弄坏地图,验证质检抓得到
+node kit/tests/kit.test.mjs 正常地图.tmx                   # 回归：故意弄坏地图，验证质检抓得到
 ```
-## 规则文件(rules.json)
+## 规则文件（rules.json）
 `teams` 队伍数上限 · `mapSize:[w,h]` · `forbidClasses`(lava/cliff/bigcliff/water/shallow)· `forbidGids` · `regions:[{name,box:[x0,y0,x1,y1],forbidClasses}]` · `factions:[{team,box,mustAllInside}]` · `noUnits:["seaFactory"]` · `text:{lineMax,linesMax,banned:["新势力"]}` · `openMsgMax` · `sources:[依赖文件]`(输出比它们旧会提示重新导出)。
 
 ## 检查代码
-G01 名字重复 · G02 引用不存在 · G03 属性格式(时间 `10m`、hsl 颜色、整数/布尔)· G04 未知属性 · G05 零面积检测区 · G06 team 非法 · G07 刷兵语法/未知选项 · G08 多来源默认「或」提示 · G09 activatedBy 成环 · G10 区域在图外 · G12 allToActivate 无意义 · T01–T06 文本(超长行/行数/禁用词/重复句/完全相同)· F01 海军工厂不在水边 · F02 舰船不在水上 · F03/F04 站位不可通行 · N01 孤岛(陆路不通)· N02 孤立小水域/陆块 · D01–D03 队伍 · R01–R04 项目规则 · S01 输出过期 · S02 尺寸不符 · O01 开局刷屏 · P01/P02 性能。
+G01 名字重复 · G02 引用不存在 · G03 属性格式（时间 `10m`、hsl 颜色、整数/布尔）· G04 未知属性 · G05 零面积检测区 · G06 team 非法 · G07 刷兵语法/未知选项 · G08 多来源默认「或」提示 · G09 activatedBy 成环 · G10 区域在图外 · G12 allToActivate 无意义 · T01–T06 文本（超长行/行数/禁用词/重复句/完全相同）· F01 海军工厂不在水边 · F02 舰船不在水上 · F03/F04 站位不可通行 · N01 孤岛（陆路不通）· N02 孤立小水域/陆块 · D01–D03 队伍 · R01–R04 项目规则 · S01 输出过期 · S02 尺寸不符 · O01 开局刷屏 · P01/P02 性能。
 
 ## 3.4.1 新增命令
-`report`(一页报告,rules.ignore 屏蔽已确认警告)· `timeline` · `find`/`refs` · `rename`(同步引用)· `set`(批量改属性)· `clone [--tree]` · `diff` · `texts`/`texts-in`(新闻文本 CSV 往返)· `graph`(mermaid/dot)· `tpl capture`(夺城链模板;`templates.js` 另有新闻/奖励/覆灭模板)。过滤语法:`type=unitDetect reset=200 name~^占 team!=-1 has:activatedBy`。
-新检查:L01 minUnits>maxUnits · L02 开局即触发动作 · L03 一次性触发器 · L04 刷兵点不可通行/在图外 · T07 文字颜色对比 · F05 建筑叠格 · F06 占地重叠(需 rules.footprints,如 {"landFactory":7},**边长是你自己填的,我没有核实游戏里的真实占地**)· F07 不同队建筑过近(rules.minDist)。
+`report`(一页报告，rules.ignore 屏蔽已确认警告)· `timeline` · `find`/`refs` · `rename`(同步引用)· `set`(批量改属性)· `clone [--tree]` · `diff` · `texts`/`texts-in`(新闻文本 CSV 往返)· `graph`(mermaid/dot)· `tpl capture`(夺城链模板；`templates.js` 另有新闻/奖励/覆灭模板)。过滤语法:`type=unitDetect reset=200 name~^占 team!=-1 has:activatedBy`。
+新检查:L01 minUnits>maxUnits · L02 开局即触发动作 · L03 一次性触发器 · L04 刷兵点不可通行/在图外 · T07 文字颜色对比 · F05 建筑叠格 · F06 占地重叠（需 rules.footprints,如 {"landFactory":7},**边长是你自己填的，我没有核实游戏里的真实占地**）· F07 不同队建筑过近（rules.minDist）。
 
 ## 3.4.2 新增命令
-`png`(通行性/地形图,无依赖 PNG)· `crop`(截取窗口做小测试图,自动清理悬空引用,美国图截取后 0 错误、夺城场景可跑)· `pools`/`fill`(资源池缺口检查与补抽取仪)· `rmunits`(按单位名/队伍删除)· `passes`(沿线段列出可通行区段,查山口宽度和岩墙漏洞)· `water`(水域连通域)· `perf`(触发器负担,相对指标)· `dump`(稳定排序文本,适合 git diff)。`units.js` 另有 `placeQuota`(按队伍配额在指挥中心周围成簇放建筑,带 accept 回调)。规则文件的 `ignore` 现在也可以写 `{"code":"T04","key":"^占52","why":"已确认"}`。
-**资源池**:本图实测是"一个池格一个抽取仪"(866 个池格,786 个抽取仪都落在池格上,其中 611 个有相邻抽取仪)。缺口 80 格都是不属于任何城市的自由池,与最初"只填城市池"的设计一致;`fill` 默认只填半径 10 格内有指挥中心的池,半径可调。
+`png`(通行性/地形图，无依赖 PNG)· `crop`(截取窗口做小测试图，自动清理悬空引用，美国图截取后 0 错误、夺城场景可跑)· `pools`/`fill`(资源池缺口检查与补抽取仪)· `rmunits`(按单位名/队伍删除)· `passes`(沿线段列出可通行区段，查山口宽度和岩墙漏洞)· `water`(水域连通域)· `perf`(触发器负担，相对指标)· `dump`(稳定排序文本，适合 git diff)。`units.js` 另有 `placeQuota`(按队伍配额在指挥中心周围成簇放建筑，带 accept 回调)。规则文件的 `ignore` 现在也可以写 `{"code":"T04","key":"^占52","why":"已确认"}`。
+**资源池**：本图实测是"一个池格一个抽取仪"(866 个池格，786 个抽取仪都落在池格上，其中 611 个有相邻抽取仪)。缺口 80 格都是不属于任何城市的自由池，与最初"只填城市池"的设计一致；`fill` 默认只填半径 10 格内有指挥中心的池，半径可调。
 
 ## 3.4.3 新增命令
-`groups`/`patterns`(触发器家族与共同属性)· `gates`(逻辑门清单)· `heat`(单位热力图)· `strength`(各队强弱粗估)· `rewards`(奖励总额与触发条件)· `colors`(按相邻关系推荐队伍颜色)· `tcolors`(消息文字色与队伍色一致性,T08)· `geo`(GeoJSON 多边形→陆/水,等距圆柱或墨卡托,可指定范围)· `coast`(海岸线平滑)· `box`(区域地形覆盖)· `road`(A* 铺路)· `scale` · `build`(项目清单 `*.rwproj.json`:按输入输出新旧只重跑需要的步骤)。所有命令记入 `.rwkit/log.txt`。另有 `diag`(诊断版:去掉一类触发器)、`init-rules`(带历史错误检查的规则模板)、`terrain-report`;检查结果标注验证等级(模型验证/规格推断/推断/已验证),报告里列出项目要求与对应检查是否满足;新增 F08(舰船无海军工厂)、L05(开局单位落在检测区内)。面板新增"各队强弱/奖励/触发器家族"折叠表。
-**写地图的命令**(geo/coast/box/road)沿用原文件的图层编码,默认不覆盖原文件;测试里验证了往返不变、圆形岛面积误差 <3%、海岸平滑能抹掉单格水点且不动悬崖。
-**限制**:`geo` 没有 Albers 等投影,也不处理高程;`road` 的图块 gid 需要你指定;强弱权重是经验值;`crop` 生成的测试图用 csv 编码,游戏是否接受 csv 我没验证。
+`groups`/`patterns`(触发器家族与共同属性)· `gates`(逻辑门清单)· `heat`(单位热力图)· `strength`(各队强弱粗估)· `rewards`(奖励总额与触发条件)· `colors`(按相邻关系推荐队伍颜色)· `tcolors`(消息文字色与队伍色一致性，T08)· `geo`(GeoJSON 多边形→陆/水，等距圆柱或墨卡托，可指定范围)· `coast`(海岸线平滑)· `box`(区域地形覆盖)· `road`(A* 铺路)· `scale` · `build`(项目清单 `*.rwproj.json`：按输入输出新旧只重跑需要的步骤)。所有命令记入 `.rwkit/log.txt`。另有 `diag`(诊断版：去掉一类触发器)、`init-rules`(带历史错误检查的规则模板)、`terrain-report`;检查结果标注验证等级（模型验证/规格推断/推断/已验证）,报告里列出项目要求与对应检查是否满足；新增 F08(舰船无海军工厂)、L05(开局单位落在检测区内)。面板新增"各队强弱/奖励/触发器家族"折叠表。
+**写地图的命令**(geo/coast/box/road)沿用原文件的图层编码，默认不覆盖原文件；测试里验证了往返不变、圆形岛面积误差 <3%、海岸平滑能抹掉单格水点且不动悬崖。
+**限制**:`geo` 没有 Albers 等投影，也不处理高程；`road` 的图块 gid 需要你指定；强弱权重是经验值；`crop` 生成的测试图用 csv 编码，游戏是否接受 csv 我没验证。
 
 ## 3.4.4 新增
-**命令**:`carve`(开凿水道)· `islands`/`island-diff`(岛屿清单与改图前后对比)· `connect`(群岛连接器)· `passes-suggest`/`pass-carve`(山口建议与开凿)· `bands`(纬度带地形)· `decor`(装饰撒布)· `ally`(同盟组,已有 team_info 原地修改)· `expect`/`compare-log`(与真实游戏对拍:生成预期时间表→游戏里实测填 actual→汇总偏差)· `explain`(检查代码是真问题还是有意写法)· `preview-text` · `perf-log`/`perf-family` · `publish`(0 错误才发布并备份)· `quota`(配额 CSV 成簇放建筑)· `strait`/`straits`(海峡运河预设,经纬度是近似值)· `png --rules`(叠加势力位置框、区域框、各队指挥中心)。
-**新检查**:L06 检测要求的指挥中心数超过检测框内总数(永远成立不了/差一)· L07 恰好卡边 · F09 舰船所在水域与最大水域不通(≥5000 格的大湖降为提示)· A01–A03 team_info · T09 多语言缺默认文本 · T10 地图文字重叠(估算)。lint 结果现在带地图坐标。
-**编辑器**:触发器面板新增「质检」按钮;质检结果可点击定位到地图;状态栏显示悬停格的通行标志(陆/海/气/建);队伍颜色表统一(画布 `BASE_COLORS` 与 `teamhelp.TEAM_COLORS` 原来互相矛盾,现在同一张表,0 号绿、1 号红已经你在游戏里确认)。
-**Mod 命令行**:`node scripts/rwmod.mjs clone-unit <mod> <源> <新>`(克隆单位,在真实 mod 上验证过:单位数 697→698,错误数不变)· `map-units <mod> <地图.tmx>`(地图用到了 mod 的哪些单位)。
+**命令**:`carve`(开凿水道)· `islands`/`island-diff`(岛屿清单与改图前后对比)· `connect`(群岛连接器)· `passes-suggest`/`pass-carve`(山口建议与开凿)· `bands`(纬度带地形)· `decor`(装饰撒布)· `ally`(同盟组，已有 team_info 原地修改)· `expect`/`compare-log`(与真实游戏对拍：生成预期时间表→游戏里实测填 actual→汇总偏差)· `explain`(检查代码是真问题还是有意写法)· `preview-text` · `perf-log`/`perf-family` · `publish`(0 错误才发布并备份)· `quota`(配额 CSV 成簇放建筑)· `strait`/`straits`(海峡运河预设，经纬度是近似值)· `png --rules`(叠加势力位置框、区域框、各队指挥中心)。
+**新检查**:L06 检测要求的指挥中心数超过检测框内总数（永远成立不了/差一）· L07 恰好卡边 · F09 舰船所在水域与最大水域不通（≥5000 格的大湖降为提示）· A01–A03 team_info · T09 多语言缺默认文本 · T10 地图文字重叠（估算）。lint 结果现在带地图坐标。
+**编辑器**：触发器面板新增「质检」按钮；质检结果可点击定位到地图；状态栏显示悬停格的通行标志（陆/海/气/建）;队伍颜色表统一（画布 `BASE_COLORS` 与 `teamhelp.TEAM_COLORS` 原来互相矛盾，现在同一张表，0 号绿、1 号红已经你在游戏里确认）。
+**Mod 命令行**:`node scripts/rwmod.mjs clone-unit <mod> <源> <新>`(克隆单位，在真实 mod 上验证过：单位数 697→698,错误数不变)· `map-units <mod> <地图.tmx>`(地图用到了 mod 的哪些单位)。
 
-## 对照 154 条清单的完成情况(3.4.4,逐条分类,数字由 scripts/_classify.py 统计;125–154 来自第二份清单)
-- **已做(101)**:1 2 3 4 5 6 7 8 9 10 11 12 14 16 17 18 20 21 22 23 24 25 28 29 30 31 33 34 35 36 37 38 41 42 44 46 47 48 50 52 53 54 55 57 58 59 60 62 64 65 67 68 70 71 72 73 74 76 77 78 79 80 81 82 86 87 88 89 90 91 92 95 96 101 113 114 116 117 118 120 121 124 125 126 127 131 132 133 135 137 138 141 142 143 145 146 147 150 151 153 154
-- **部分做了(29)**:13 15 19 26 27 32 39 43 45 49 56 61 63 66 69 83 85 93 94 128 129 130 134 136 139 140 144 148 149(19/26/27 只有命令行文字版或函数;49 权重是经验估计;56 能连通/开凿水道但不会自动造河;63 有装饰撒布和海岸平滑,没有噪声侵蚀;128 预设坐标是近似值;129/130/134 只覆盖到部分场景;148 没有"一处改全图同步"的映射表;其余同前)
-- **编辑器原本就有(11)**:97 98 99 102 103 104 105 107 108 111 112——命令面板 Ctrl+K、触发器面板(上千条仍秒开,实测 1786 条 141ms)、图层/历史面板、设计向导、小地图、批量编辑、触发器属性内置说明、快捷栏、Mod 校验与新旧对比。我确认了功能存在并实测了触发器面板性能,没有逐项核对是否满足清单上的全部描述。
-- **原有功能但没核对是否满足(4)**:100 106 109 110
-- **需要真实游戏数据/实测才能做或确认(8)**:40 51 75 115 119 122 123 152(字体支持清单、21 队以上行为、Mod 依赖/加载顺序、性能评分标定、多行消息序列化、中文触发器名)
-- **没做(1)**:84
+## 3.5.0 新增
+**模块**:`schema35.js`(属性说明/单位库/时间换算)· `lint35.js`(新检查)· `geo35.js`(地形)· `text35.js`(文本)· `units35.js`(兵力)· `author.js`(速记语法/模板/城市势力表/规则表单)· `deliver.js`(交付检查/说明/打包/变更摘要/项目文件)。命令行入口 `scripts/cli35.mjs`(由 `rwkit.mjs` 转发)。
+**命令**:`check`(交付检查)· `health` · `package` · `changes` · `proj-new`/`proj-check` · `geo-check` · `gaps` · `shallow-links` · `widen-gaps` · `small-islands` · `circum` · `ports` · `rivers` · `dead-seas` · `river-draw` · `ridge` · `pass-widths` · `zoom` · `island-chain` · `geo-import` · `sites` · `uniform` · `shares` · `latlon` · `decal` · `gids` · `elim` · `intro` · `camp-colors` · `reports` · `rename-text` · `text-panel` · `screen` · `fix-punct` · `punct` · `phases` · `locale-out`/`locale-in` · `placeholders` · `forces` · `city-forces` · `plan-forces` · `factory-row` · `fleets` · `fleet` · `place-region` · `replace-units` · `travel` · `unit-names` · `dsl-in`/`dsl-out` · `tjson-in`/`tjson-out` · `sort-props` · `tpl35-list`/`tpl35` · `cities`/`cities-in` · `factions` · `merge-hints` · `team-colors`。`node scripts/rwkit.mjs` 不带参数会列出用法。
+**规则文件**:`rules.json` 的 `check` 项可配置口径:`lineMax linesMax minGap minDeep shallowWalkable smallIsland riverMax openingSecs clearance mapBudget`;界面在工具箱「视图与规则」。
+**口径**：陆军能走「陆地 + 浅水」，所以只靠浅水相连的陆块算连着；海峡宽度 = 两块可走陆地之间最近的深水带（8 邻域）;环绕 = 不贴地图边缘的 8 连通非海军可走块。
+**测试**:`node kit/tests/v35.test.mjs <样例.tmx>`(50 条，合成地图 + 真实地图);浏览器:`node tests/v35.mjs <样例.tmx>`、`tests/v35b.mjs`、`tests/v35i18n.mjs`(需先 `python3 -m http.server 8765 --directory www`)。
+**逐条完成情况**：见 `docs/ROADMAP-3.5.md` 末尾的表。**没有在真实游戏里验证。**
+
+## 对照 154 条清单的完成情况（3.4.4,逐条分类，数字由 scripts/_classify.py 统计；125–154 来自第二份清单）
+- **已做（101）**:1 2 3 4 5 6 7 8 9 10 11 12 14 16 17 18 20 21 22 23 24 25 28 29 30 31 33 34 35 36 37 38 41 42 44 46 47 48 50 52 53 54 55 57 58 59 60 62 64 65 67 68 70 71 72 73 74 76 77 78 79 80 81 82 86 87 88 89 90 91 92 95 96 101 113 114 116 117 118 120 121 124 125 126 127 131 132 133 135 137 138 141 142 143 145 146 147 150 151 153 154
+- **部分做了（29）**:13 15 19 26 27 32 39 43 45 49 56 61 63 66 69 83 85 93 94 128 129 130 134 136 139 140 144 148 149(19/26/27 只有命令行文字版或函数；49 权重是经验估计；56 能连通/开凿水道但不会自动造河；63 有装饰撒布和海岸平滑，没有噪声侵蚀；128 预设坐标是近似值；129/130/134 只覆盖到部分场景；148 没有"一处改全图同步"的映射表；其余同前)
+- **编辑器原本就有（11）**:97 98 99 102 103 104 105 107 108 111 112——命令面板 Ctrl+K、触发器面板（上千条仍秒开，实测 1786 条 141ms）、图层/历史面板、设计向导、小地图、批量编辑、触发器属性内置说明、快捷栏、Mod 校验与新旧对比。我确认了功能存在并实测了触发器面板性能，没有逐项核对是否满足清单上的全部描述。
+- **原有功能但没核对是否满足（4）**:100 106 109 110
+- **需要真实游戏数据/实测才能做或确认（8）**:40 51 75 115 119 122 123 152(字体支持清单、21 队以上行为、Mod 依赖/加载顺序、性能评分标定、多行消息序列化、中文触发器名)
+- **没做（1）**:84
 
 ## 没有在真实游戏里验证的
-122(多行消息的序列化)和 123(中文/下划线触发器名的引用兼容)这版仍未在游戏内确认,但美国图已经用到了两者,请以你试玩结果为准。
+122(多行消息的序列化)和 123(中文/下划线触发器名的引用兼容)这版仍未在游戏内确认，但美国图已经用到了两者，请以你试玩结果为准。
 触发器模型来自反编译规格 `triggers_spec.md`,**没有和游戏逐帧对拍**;多行消息、屏幕截断字数、队伍号 10 以后的颜色、性能评级口径都未在游戏内实测。

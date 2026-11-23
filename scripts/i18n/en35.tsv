@@ -1,0 +1,421 @@
+n35_0	Errors
+n35_1	Warnings
+n35_2	Notes
+n35_3	Applied. Use “Undo last” at the bottom of the toolbox to restore.
+n35_4	Error: 
+n35_5	…and
+n35_7	No problems found.
+n35_8	Delivery check
+n35_9	Checking (large maps take a few seconds)…
+n35_13	One page, red/yellow/green: trigger rules, 3.5 checks, terrain connectivity, text, opening and city-capture simulation, forces, area and load pressure. Each result is labelled with how strong the evidence is (model-verified / inferred from spec / experience). Not tested in the real game.
+n35_14	Run pre-delivery check
+n35_15	Pick reference map (optional, e.g. Europe)
+n35_16	Reference map: 
+n35_17	Pick mod unit list (optional)
+n35_18	Unit list: 
+n35_19	Download notes (.md)
+n35_21	Download delivery package (.zip)
+n35_22	Whether a victory announcement fires within N seconds of capturing everything
+n35_24	Not set
+n35_25	Capture
+n35_27	Victory simulation (optional)
+n35_28	Click the cities to capture. The delivery check simulates “this team has captured them all — does a announcer trigger whose name matches the keyword below fire within N seconds?”, then repeats with one city missing.
+n35_29	Capturing team
+n35_30	Announcer trigger name matches
+n35_31	Seconds to watch
+n35_32	Add a city
+n35_33	Click a city to capture
+n35_34	Calculating…
+n35_35	After you confirm, the map is reloaded with the new result.
+n35_36	Writing…
+n35_37	Land armies can walk on land + shallow water, so two landmasses joined only by shallows count as connected (the root cause of Japan and Korea being linked). Everything here uses that rule.
+n35_38	Strait at least (cells)
+n35_39	Small island ≤ (cells)
+n35_40	Check terrain connectivity
+n35_41	Distance between neighbouring landmasses
+n35_42	Landmass A
+n35_43	Landmass B
+n35_44	Narrowest
+n35_45	Deep run
+n35_46	✗ Locate
+n35_47	City evenness
+n35_53	Empty area
+n35_54	Distance to nearest city
+n35_55	No large empty areas.
+n35_56	Naval circumnavigation (click land)
+n35_57	Click the land to check “can ships sail all the way round?”
+n35_58	Yes, ships can sail all the way round.
+n35_61	Remove tiny islands
+n35_66	No small islands to remove
+n35_67	Widen narrow straits
+n35_71	No straits are too narrow
+n35_72	Fill enclosed dead seas
+n35_76	No dead seas
+n35_77	Draw terrain / import
+n35_78	Click “Add a point” a few times, or type: x,y x,y x,y (cells)
+n35_79	Add a point
+n35_80	Click a point on the line (you can add several in a row)
+n35_82	 points
+n35_83	Both ends not set yet
+n35_84	Centre not set yet
+n35_85	Country:team, e.g. China:0,India:1
+n35_86	optional: lon0,lat0,lon1,lat1
+n35_87	Drawing tools: click a polyline first (cell coordinates). The map only changes after you confirm the preview, and you can “Undo last”. Rivers and island chains are only drawn where it makes sense; ridges leave passes at the spacing you set.
+n35_88	Draw a river (polyline → continuous shallow river)
+n35_89	There is no land on this line to draw a river on
+n35_93	Draw a mountain ridge (polyline → cliff wall + passes)
+n35_94	Wall width
+n35_95	Pass spacing
+n35_96	Pass width
+n35_97	Draw ridge
+n35_98	There is no land on this line to draw mountains on
+n35_101	Pass width statistics
+n35_102	Walk along a line (the ridge direction) and check, point by point, whether land units can cross sideways. Consecutive passable positions are merged into passes and measured; narrow ones are flagged.
+n35_103	Click ridge start
+n35_104	Click one end of the ridge
+n35_105	Start
+n35_107	Click ridge end
+n35_108	Click the other end of the ridge
+n35_109	Narrow <
+n35_110	Measure
+n35_111	Click both ends of the ridge first
+n35_112	Nothing on this line lets land units through.
+n35_113	Total
+n35_117	← narrow
+n35_118	Island chain (generate unconnected islands along a polyline)
+n35_119	Count
+n35_120	Deep water between ≥
+n35_121	Generate island chain
+n35_122	Cannot place: too crowded near the line, or not on water
+n35_127	Regional zoom (radial warp, smooth blend at the edge)
+n35_128	Click centre
+n35_129	Click the centre to magnify
+n35_130	Factor
+n35_131	Click the centre first
+n35_136	Terrain decals (irregular patches: desert / salt lake / wasteland)
+n35_137	Only changes ordinary land cells; never touches water, cliffs or shallows. Pick a tile number (gid) from the list below.
+n35_138	Click the decal centre
+n35_139	Tile gid
+n35_140	List tiles
+n35_141	Apply decal
+n35_142	Enter a tile gid first
+n35_143	There is no ordinary land here to change
+n35_145	Import elevation raster (ESRI ASCII .asc → deep / shallow / land / mountain)
+n35_146	Pick .asc file
+n35_147	Loaded 
+n35_148	Sea level (below = deep water)
+n35_149	Shallow band
+n35_150	Mountain height ≥ (optional)
+n35_151	Import elevation
+n35_152	Pick a file first
+n35_154	 elevation raster will redraw the whole terrain (existing terrain is overwritten; units and triggers are untouched).
+n35_155	Country borders GeoJSON → city ownership check
+n35_156	Load a GeoJSON (one Feature per country), draw it onto the map by lat/lon range, and list which country each command centre sits in and whether that matches its team.
+n35_157	Pick GeoJSON
+n35_158	Not valid JSON: 
+n35_159	Country-name field
+n35_160	Country → team
+n35_161	Compare
+n35_162	Pick a GeoJSON first
+n35_171	Automatic city placement
+n35_172	Greedy pick from cells that are buildable and have margin from water and mountains, honouring the minimum spacing. Only suggests positions; the map is not changed.
+n35_173	Margin from water/mountain
+n35_174	Suggest sites
+n35_178	Country
+n35_179	Text
+n35_185	Paste a message here to see whether it would run off the screen
+n35_186	Text: statistics, punctuation, opening compression, faction colours, bulk rename, elimination text draft, screen preview. Generated text is only a draft — polish it.
+n35_187	Text stats + punctuation check
+n35_198	Phase announcement schedule
+n35_199	Time (s)
+n35_200	Content
+n35_203	Compress opening
+n35_204	Finish within (s)
+n35_205	Opening intro
+n35_207	Some message lines exceed 30 characters. Fix them with “Fullwidth punctuation” and line wrapping first.
+n35_208	No message triggers whose name starts with 开场 or intro.
+n35_209	No opening messages
+n35_213	Faction colours / bulk rename
+n35_214	Other text colour
+n35_215	Apply colours
+n35_216	Fill in the rules first
+n35_218	Rename
+n35_219	Apply rename
+n35_222	Elimination text draft
+n35_223	Faction
+n35_224	Capital
+n35_225	Conqueror
+n35_226	Characters
+n35_228	Screen preview
+n35_229	Nothing runs off the screen
+n35_232	Text tools
+n35_233	Neutral city captured
+n35_234	Captured by an enemy
+n35_235	Recaptured
+n35_236	Captured by an ally
+n35_237	We lost it
+n35_238	Beijing,Shanghai,Guangzhou
+n35_239	Blue
+n35_240	Regex, may be empty, e.g. China|ASEAN
+n35_241	Trigger-name regex, may be empty
+n35_243	One message per line; works out how long each should stay and when it should start
+n35_244	Every change here is previewed first and can be undone with “Undo last”. Fullwidth conversion only touches punctuation right next to Chinese characters (decimal points and times like 12:30 are left alone).
+n35_245	Punctuation
+n35_246	Fix fullwidth punctuation
+n35_249	No punctuation needs changing
+n35_250	Check punctuation (pairs / trailing commas)
+n35_251	Report templates
+n35_252	Batch-generate capture announcements by event type (already wrapped at 30 characters, fullwidth punctuation). Copy into a trigger's globalMessage.
+n35_253	Event
+n35_254	Cities (comma-separated)
+n35_255	Report
+n35_256	Export / import text (CSV)
+n35_257	Exports every message (filterable by faction / trigger name). Edit in a spreadsheet and import it back; only changed entries are touched.
+n35_258	Text contains
+n35_259	Trigger name
+n35_260	No changed entries
+n35_261	Import text
+n35_263	Multi-language text pack
+n35_264	Export a two-column “source / translation” CSV; after translating, import it with a language code and it becomes properties like globalMessage_en (the game picks one by the player's language).
+n35_265	Language code
+n35_266	Export translation template
+n35_267	Import translations
+n35_268	No translations found (column 4 is empty)
+n35_271	Show coverage
+n35_273	Placeholders {A} {C} {O}
+n35_274	For placeholders like {A} in text: lists how often each is used and flags the ones with no value (the game would show a literal {A}).
+n35_275	Variables (name=value, comma-separated)
+n35_276	Check placeholders
+n35_277	Placeholder
+n35_278	Example
+n35_279	Auto-schedule delays
+n35_280	Calculate
+n35_281	Stay
+n35_283	No content
+n35_284	Forces
+n35_285	No units could be placed
+n35_290	Carrier group
+n35_291	Destroyer fleet
+n35_292	Battleship fleet
+n35_293	Patrol boat squadron
+n35_294	The force table counts units per team by category and can be compared with a reference map (Europe) category by category. The placement tool only uses cells where the unit can stand and honestly reports what did not fit.
+n35_295	Force table
+n35_296	Compared with the reference map (per-team average)
+n35_297	Category
+n35_298	This map
+n35_299	Reference
+n35_300	Verdict
+n35_301	Pick reference map (optional)
+n35_302	Forces near each city
+n35_303	Factories
+n35_304	Troops
+n35_305	Total
+n35_306	Radius (cells)
+n35_307	Unit budget and heat
+n35_308	Preset objects
+n35_311	Force distribution unevenness
+n35_314	Check mod unit names
+n35_315	Place forces by strength tier
+n35_316	On the left, one “team: tier” per line; on the right, JSON saying what each tier places around every city.
+n35_317	Place forces
+n35_318	Fleets / factory rows
+n35_319	Click to place a fleet
+n35_320	Click the sea where the fleet goes
+n35_321	Click to place a row of 3 factories
+n35_322	Click the centre of the factory row
+n35_323	Force batch tools
+n35_324	No area drawn yet
+n35_325	Unit name
+n35_326	empty = all teams
+n35_327	Start/end not set yet
+n35_328	Units are only placed on cells where they can stand (land units not in water, ships only on water); anything that does not fit is reported. Every step is previewed first and the map only changes after you confirm; you can “Undo last”.
+n35_329	Place units inside a box
+n35_330	Draw box
+n35_331	Click one corner of the area
+n35_332	Click the opposite corner
+n35_333	Draw a box first
+n35_334	Nothing fits in this area (wrong terrain or too crowded)
+n35_337	Original unit
+n35_338	No matching units
+n35_339	Travel-time estimate
+n35_340	Speeds are rough guesses (cells/second) and have not been checked in the game — good only for comparing which side is faster. Land units follow a walkable path, air units fly straight, ships follow water.
+n35_341	Click start
+n35_342	Click end
+n35_343	Estimate
+n35_344	Click start and end first
+n35_348	Cannot compute: 
+n35_349	Trigger authoring
+n35_351	Hold all cities for N minutes
+n35_352	Elimination chain
+n35_353	Phase announcement
+n35_354	Reinforcement waves
+n35_355	Pick position
+n35_356	Click the map
+n35_358	Write triggers in shorthand, one per line, or generate them from a template. Everything is format-checked before insertion; duplicate names are rejected to avoid broken references.
+n35_359	Insert shorthand
+n35_362	Export as shorthand
+n35_363	Download triggers JSON
+n35_364	Import triggers JSON
+n35_365	Import JSON
+n35_369	Import triggers
+n35_370	Normalise property order
+n35_373	Already in the normalised order
+n35_374	Merge suggestions
+n35_376	No adjacent detection areas that clearly could be merged.
+n35_377	Bulk-edit property
+n35_378	Filter
+n35_379	Filter syntax is the same as the command-line find, e.g. type=unitDetect team=3 name~^占. Leave the value empty to delete the property.
+n35_380	No triggers match
+n35_381	Generate and insert
+n35_384	City / faction tables
+n35_388	Press “Apply” to write changes back to the map. Teams without a team_info cannot be edited here (create a “Team settings” trigger on the Triggers page first).
+n35_389	Read
+n35_390	Apply city table
+n35_391	City table unchanged
+n35_394	Apply faction table
+n35_395	Faction table unchanged
+n35_397	Zones and lat/lon
+n35_398	The browser refused storage; zones only last for this session
+n35_399	Zone name, e.g. Xinjiang
+n35_400	No named zones yet. Click “Draw zone”, then click two opposite corners on the map.
+n35_401	Box
+n35_402	Del
+n35_403	Named zones are stored in this browser (by map name) and are not written into the map file. Use them to count units and cities inside an area.
+n35_404	Lat/lon ↔ cell
+n35_405	Map extent lon0,lat0,lon1,lat1
+n35_406	Click the map to see lat/lon and scale
+n35_407	Click anywhere
+n35_412	Changes and project
+n35_413	After “Record current as baseline”, each “Compare with baseline” lists how many triggers / units / terrain cells / texts changed. The baseline is stored in this browser.
+n35_414	Record current as baseline
+n35_415	Baseline recorded
+n35_416	Compare with baseline
+n35_417	No baseline yet — click “Record current as baseline” first
+n35_418	Added: 
+n35_419	Changed (first 5):
+n35_420	Team colour advice
+n35_421	No recommended plan
+n35_422	The browser refused storage; rules only last for this session
+n35_423	View and rules
+n35_424	Overlay off
+n35_425	Strait width
+n35_426	Shallow-only links
+n35_427	Force heat
+n35_428	Named zones
+n35_429	Terrain diff vs baseline
+n35_430	Map overlays
+n35_431	Drawn straight onto the map and stay on after you close the toolbox. They recompute automatically after terrain edits.
+n35_432	No units with a team in this map.
+n35_433	Show / hide units by team
+n35_434	Display only — the map is not changed. Handy for looking at one faction's forces on their own.
+n35_435	Show all
+n35_436	Max characters per line
+n35_437	Max lines per message
+n35_438	Deep-water band at least (cells, 0 = off)
+n35_439	Small island area ≤ (cells)
+n35_440	Widest river (cells)
+n35_441	Opening check length (s)
+n35_442	Naval clearance (cells)
+n35_443	Map area budget (cells)
+n35_444	comma-separated
+n35_445	Rules format is fine.
+n35_446	Rules saved; the delivery check will use them
+n35_447	Project rules (rules.json)
+n35_448	The delivery, text and terrain checks all follow this. Leave blank / default to use the built-in thresholds.
+n35_449	Team count
+n35_450	Forbidden terrain classes
+n35_451	Forbidden tile gids
+n35_452	Forbidden units
+n35_453	Banned words
+n35_454	Shallow water walkable for land units
+n35_455	Export rules.json
+n35_456	Import rules.json
+n35_457	Not valid JSON:
+n35_458	Imported; reopen the toolbox for it to take effect
+n35_459	Restore defaults
+n35_460	Cleared; reopen the toolbox to restore defaults
+n35_461	Undo last
+n35_462	Restored to before the last toolbox change
+n35_463	RWKit 3.5 toolbox
+n35_464	Show/hide units by team
+n35_465	Strait width (red = too narrow)
+n35_470	 places where two landmasses are joined only by shallow water (land units can walk across). The orange rings mark the contact points.
+n35_471	No landmasses joined only by shallow water.
+n35_473	 units (redder = denser).
+n35_475	No named zones yet (Toolbox → Zones and lat/lon → Draw zone).
+n35_476	No baseline yet — first click “Record current as baseline” in Toolbox → Changes and project
+n35_482	Terrain is identical to the baseline.
+n35_483	Unknown overlay 
+n35_484	Deletes the units in the area. Note: you cannot pick a unit type — every unit in the area (of the matching team) is removed, so draw the box tightly.
+n35_485	Rotate
+n35_486	Turns the units in the area to a heading. dir is an angle (0 = facing right, anticlockwise, 360 = one full turn); the compass below can be clicked directly.
+n35_487	Heading (angle)
+n35_488	Tutorial: clockwise rotation to the right in degrees, 360 = full turn. The compass is estimated as “east = 0, clockwise”; not checked in the game
+n35_489	Fall
+n35_490	Units in the area fall (the fall type from the tutorial). Check the exact effect in the game.
+n35_491	Sends the units in the area to a target point. “Unload on arrival” only matters for transport vehicles; it does nothing if there are none in the area.
+n35_492	Lock AI difficulty
+n35_493	-2 very easy … 3 impossible; very large values crash the game
+n35_494	AI mode
+n35_495	survival = survival-wave enemies
+n35_496	Camera pan (unusable)
+n35_497	The tutorial says camera_pan cannot be used in custom maps and has no effect. Use “Start camera” (camera_start) instead.
+n35_498	Red
+n35_499	Purple
+n35_500	The browser refused storage; tags only last for this session
+n35_501	Toolbox: pre-delivery check, terrain connectivity, text, forces, shorthand and templates, city/faction tables, change log (same as command-line rwkit 3.5)
+n35_502	Toolbox
+n35_503	Quality kit: format / references / text / placement / connectivity / opening spam (same as command-line rwkit)
+n35_504	Check
+n35_505	Value (13s / 13000 / 3); empty = delete this property
+n35_506	Selected
+n35_507	Select everything in the list (
+n35_508	Select some triggers first
+n35_509	Cannot read that time. Write 13s or 13000 (milliseconds, at most 10 minutes)
+n35_510	Changed
+n35_512	Apply to selected
+n35_513	Colour tag (stored in this browser only)
+n35_514	Tag selected
+n35_515	Groups by the part of the name before the first “_”; click a group name to fold it
+n35_516	✓ Grouped
+n35_517	Group
+n35_518	Multi-select: click cards to tick them and edit team / delay / tag for many triggers at once
+n35_519	✓ Multi-select
+n35_520	Multi-select
+n35_522	No fog
+n35_523	none (old spelling; use NONE)
+n35_524	loseCondition was removed in game 1.15 and has no effect.
+n35_525	Copy all of this trigger's properties (not name or area) so they can be pasted onto another trigger
+n35_527	<small>properties</small>
+n35_528	Paste the copied properties onto this trigger (same-name properties are overwritten)
+n35_529	Nothing copied yet
+n35_530	Paste properties
+n35_531	<small>paste</small>
+n35_534	Pick position on map
+n35_535	A white dashed box on the map shows the opening view (its size is a guess and has not been checked in the game)
+n35_536	Who references me
+n35_538	Very easy
+n35_539	Easy
+n35_540	Medium
+n35_541	Hard
+n35_542	Very hard
+n35_543	Impossible
+n35_544	(not locked)
+n35_547	(default)
+n35_548	survival (survival enemies)
+n35_549	East
+n35_550	South-east
+n35_551	South
+n35_552	South-west
+n35_553	West
+n35_554	North-west
+n35_555	North
+n35_556	North-east
+n35_557	Angle
+n35_559	Each row is one enemy wave. <b>Gap</b> is the time since the previous wave (min:sec); <b>enemies</b> are written “count unit”, separated by commas, e.g. <code>5 tank, 2 heavyTank</code>.
+n35_560	View preview (size is a guess; the game decides)
+n35_563	Calculating overlay…
+n35_564	RWKit toolbox…
+n35_565	Pre-delivery check, terrain connectivity (shallow links / straits / small islands / circumnavigation), text, forces, trigger shorthand and templates, city/faction tables, change log
+n35_566	toolbox delivery check strait island text fullwidth punctuation forces shorthand template city table faction table changes zone lat lon rwkit
+n35_567	Connectivity map

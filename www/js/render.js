@@ -24,6 +24,7 @@ export class Renderer {
     this.pending = false;
     this.overlay = null;          // 编辑器提供的覆盖绘制
     this.tint = null;             // {kind, fn(i)->uint32 RGBA, opacity}
+    this.hideTeams = null;        // Set<队伍号>：这些队伍的单位不画（3.5 工具箱「视图」）
     this.reference = null;        // 描图参考图 {img, opacity, x, y, w, h}（地图像素坐标）
     this.dimOthers = false;       // 非当前层变暗
     this.activeLayer = null;      // 'ground' | 'items' | 'units'
@@ -399,6 +400,7 @@ export class Renderer {
         const x = +(o.attrs.x || 0), y = +(o.attrs.y || 0);
         const w = +(o.attrs.width || 0), h = +(o.attrs.height || 0);
         const gid = o.attrs.gid ? (+o.attrs.gid & 0x1fffffff) : 0;
+        if (this.hideTeams && o !== sel && objProp(o, 'unit') !== undefined && this.hideTeams.has(+objProp(o, 'team'))) continue;   // 3.5：按队伍隐藏单位
         if (gid) {
           const unit = objProp(o, 'unit') || '';
           if (small && unit !== 'commandCenter' && o !== sel) continue;
@@ -435,10 +437,19 @@ export class Renderer {
           if (s.x > this.cw + 20 || s.y > this.ch + 20 || s.x + sw < -20 || s.y + sh < -40) continue;
           const kind = o.attrs.type || '';
           const color = (o.attrs.name || '').toLowerCase() === 'map_info' ? '255,200,0' : this.ed.triggerColor ? this.ed.triggerColor(o) : '120,200,255';
-          ctx.fillStyle = `rgba(${color},0.12)`; ctx.fillRect(s.x, s.y, sw, sh);
-          ctx.strokeStyle = o === sel ? '#fff' : `rgba(${color},0.95)`;
+          // 3.5：AI 区域一眼分辨——禁止调动=红色虚线、允许充分使用=绿色虚线；开局镜头画一个“视野示意框”
+          const aiCol = kind === 'disable_unit_ai' ? '229,72,77' : kind === 'ai_allow_full_use' ? '45,164,78' : null, c2 = aiCol || color;
+          ctx.fillStyle = `rgba(${c2},${aiCol ? 0.26 : 0.12})`; ctx.fillRect(s.x, s.y, sw, sh);
+          ctx.strokeStyle = o === sel ? '#fff' : `rgba(${c2},0.95)`;
           ctx.lineWidth = o === sel ? 2 : 1.5;
+          if (aiCol) ctx.setLineDash([6, 4]);
           ctx.strokeRect(s.x, s.y, sw, sh);
+          if (aiCol) ctx.setLineDash([]);
+          if (kind === 'camera_start') {
+            const zt = +((o.props.find((q) => q.name === 'zoomTo') || {}).value) || 1, vw = (64 / zt) * m.tw * v.z, vh = (36 / zt) * m.tw * v.z, cx = s.x + sw / 2, cy = s.y + sh / 2;
+            ctx.save(); ctx.setLineDash([8, 5]); ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 1.5; ctx.strokeRect(cx - vw / 2, cy - vh / 2, vw, vh); ctx.setLineDash([]);
+            ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.font = '11px system-ui, sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('视野示意（大小是估的，以游戏为准）', cx - vw / 2 + 4, cy - vh / 2 + 3); ctx.restore();
+          }
           ctx.fillStyle = `rgba(${color},1)`;
           ctx.font = '12px system-ui, sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
           if (kind === 'mapText') {

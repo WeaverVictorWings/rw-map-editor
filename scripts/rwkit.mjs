@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // RWKit CLI:node scripts/rwkit.mjs <命令> ...   无需浏览器/编辑器服务
 import fs from 'node:fs'; import path from 'node:path'; import { fileURLToPath } from 'node:url';
+import { run as run35, NAMES35, USAGE35 } from './cli35.mjs';
 const K = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'kit');
 const L = (f) => import(path.join(K, f));
 const [cmd, ...rest] = process.argv.slice(2);
@@ -161,4 +162,5 @@ if (cmd === 'lint') {
 } else if (cmd === 'strait') { const X = await L('more.js'), G = await L('guard.js'); const r = X.carveStrait(fs.readFileSync(pos[0], 'utf8'), flags.name, flags.bbox.split(',').map(Number)); G.safeWrite(flags.o || pos[0].replace(/\.tmx$/, '.strait.tmx'), r.text, { overwrite: !!flags.force }); console.log(`已开凿 ${flags.name}:(${r.a}) → (${r.b})`);
 } else if (cmd === 'straits') { const X = await L('more.js'); Object.entries(X.STRAITS).forEach(([k, v]) => console.log(k, JSON.stringify(v)));
 } else if (cmd === 'perf-family') { (await L('more.js')).perfByFamily(await load(pos[0])).slice(0, 15).forEach((e) => console.log(String(e.pct).padStart(5) + '%', String(e.count).padStart(5), e.family));
-} else console.log(usage);
+} else if (NAMES35.includes(cmd)) { await run35(cmd, pos, flags, K);
+} else console.log(usage + USAGE35);

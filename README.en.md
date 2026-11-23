@@ -20,6 +20,7 @@ A free, unofficial editor for **Rusted Warfare**: a **map editor** and a **mod e
 - Triggers are "when ... then ..." cards, no property names to remember.
 - Press **Playable?** to check the map; most problems can be fixed in one tap.
 - Random generation, image to map and a guided wizard get you a playable map in minutes.
+- A **Toolbox** on the Triggers panel: a one-page red/yellow/green pre-delivery check, terrain connectivity (shallow-only links / strait width / small islands / circumnavigation), river and ridge drawing, text and force tools, trigger shorthand, city / faction tables. The same code runs on the command line: `node scripts/rwkit.mjs check map.tmx`.
 
 **Mods**
 - Open a `.rwmod` and edit units with forms instead of raw ini.
