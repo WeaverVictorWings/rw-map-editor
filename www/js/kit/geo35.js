@@ -70,6 +70,20 @@ export function shallowOnlyLinks(model, { minArea = 200, maxLinks = 40 } = {}) {
 }
 function findCell(lab, id, W, H, bb) { for (let y = bb[1]; y <= bb[3]; y++) for (let x = bb[0]; x <= bb[2]; x++) if (lab[y * W + x] === id) return y * W + x; return 0; }
 
+// 把"只靠浅水相连"的通道里的浅水格改成深水(只动浅水格,干地不动);一轮不够就扩大半径再来,最多 4 轮
+export function cutShallowLinks(model, { minArea = 200, radius = 3, maxRounds = 4 } = {}) {
+  const gid = findGids(model).water; if (!gid) throw new Error('找不到深水图块');
+  const { width: W, height: H } = model; const d = groundData(model), it = model.layers.items ? Uint32Array.from(model.layers.items.data) : null;
+  let cut = 0, rounds = 0, links = shallowOnlyLinks(model, { minArea });
+  const view = () => ({ ...model, layers: { ...model.layers, ground: { ...model.layers.ground, data: d }, ...(it ? { items: { ...model.layers.items, data: it } } : {}) } });
+  for (; rounds < maxRounds && links.length; rounds++) {
+    const P = passability(view());
+    for (const l of links) { const [ax, ay] = l.at, r = radius + rounds; for (let y = ay - r; y <= ay + r; y++) for (let x = ax - r; x <= ax + r; x++) { if (x < 0 || y < 0 || x >= W || y >= H) continue; const k = y * W + x; if ((P[k] & LAND) && (P[k] & NAVAL)) { d[k] = gid; if (it) it[k] = 0; cut++; } } }
+    links = shallowOnlyLinks(view(), { minArea });
+  }
+  return { data: d, items: it, cut, rounds, left: links };
+}
+
 // ---------- C52 海峡/分隔带宽度 ----------
 // 对"可走（陆+浅水）块"两两求最近距离；返回每对相邻块的最窄处、深水带宽度
 export function gapReport(model, { minGap = 12, minArea = 200, minDeep = 0 } = {}) {
@@ -103,6 +117,49 @@ export function widenGap(model, g, { width = 12 } = {}) {
   const nx = (bx - ax) / n, ny = (by - ay) / n; let cut = 0, r = Math.ceil(width / 2) + 2;
   for (let y = Math.floor(my) - r * 2; y <= my + r * 2; y++) for (let x = Math.floor(mx) - r * 2; x <= mx + r * 2; x++) { if (x < 0 || y < 0 || x >= W || y >= H) continue; const along = (x - mx) * nx + (y - my) * ny; if (Math.abs(along) <= width / 2) { const perp = Math.abs(-(x - mx) * ny + (y - my) * nx); if (perp <= Math.max(g.gap, 4) + r) { if (d[y * W + x] !== gid) { d[y * W + x] = gid; cut++; } } } }
   return { data: d, cut };
+}
+
+// 逐圈削岸线:3.5.0 的 widenGap 只在最窄点挖一个口,两岸别处仍然很窄;这个函数改成"两岸各削掉最近的两圈",
+// 一轮后最窄处至少 +2,循环到所有相邻块的间距 ≥ minGap。单位/建筑所在格不削(可能因此达不到,返回 left 里列出)。
+export function erodeGaps(model, { minGap = 12, minArea = 200, maxRounds = 16, maxCells = 40000, protect = 1 } = {}) {
+  const gid = findGids(model).water; if (!gid) throw new Error('找不到深水图块');
+  const { width: W, height: H } = model;
+  const d = groundData(model), it = model.layers.items ? Uint32Array.from(model.layers.items.data) : null;
+  const keep = new Uint8Array(W * H);
+  for (const u of unitsOf(model)) { const [cx, cy] = cellOf(model, u); for (let dy = -protect; dy <= protect; dy++) for (let dx = -protect; dx <= protect; dx++) { const x = cx + dx, y = cy + dy; if (x >= 0 && y >= 0 && x < W && y < H) keep[y * W + x] = 1; } }
+  const view = () => ({ ...model, layers: { ...model.layers, ground: { ...model.layers.ground, data: d }, ...(it ? { items: { ...model.layers.items, data: it } } : {}) } });
+  let removed = 0, rounds = 0, left = [];
+  const dist = new Int16Array(W * H), q = new Int32Array(W * H), touched = [];
+  const bfs = (K, id, bb, lim) => { // 从块 id 的格子向外 8 邻域扩 lim 步,返回访问到的格子列表(dist 里是步数)
+    let t = 0; for (let y = bb[1]; y <= bb[3]; y++) for (let x = bb[0]; x <= bb[2]; x++) { const k = y * W + x; if (K.lab[k] === id) { dist[k] = 0; q[t++] = k; } }
+    touched.length = 0; for (let h = 0; h < t; h++) { const k = q[h], x = k % W, y = (k / W) | 0; touched.push(k); if (dist[k] >= lim) continue;
+      for (const [dx, dy] of D8) { const X = x + dx, Y = y + dy; if (X < 0 || Y < 0 || X >= W || Y >= H) continue; const j = Y * W + X; if (dist[j] === -1) { dist[j] = dist[k] + 1; q[t++] = j; } } }
+  };
+  dist.fill(-1);
+  for (; rounds < maxRounds; rounds++) {
+    const m = view(), rep = gapReport(m, { minGap, minArea }), bad = rep.pairs.filter((p) => p.gap < minGap);
+    if (!bad.length) { left = []; break; }
+    const K = labelComps(flagMask(passability(m), LAND), W, H, { conn: 8, min: minArea });
+    const kill = new Uint8Array(W * H); let any = 0; left = [];
+    for (const g of bad) {
+      const A = K.lab[g.from[1] * W + g.from[0]], B = K.lab[g.to[1] * W + g.to[0]]; if (A < 0 || B < 0) continue;
+      const ca = K.comps.find((c) => c.id === A), cb = K.comps.find((c) => c.id === B), r = g.gap + 2;
+      for (const [me, other, cm] of [[A, B, cb], [B, A, ca]]) { // 从对面块出发,标出本块里 dist<r 的格子
+        const mine = me === A ? ca : cb, pad = r + 1, bb = [Math.max(0, cm.bbox[0] - 0), Math.max(0, cm.bbox[1] - 0), Math.min(W - 1, cm.bbox[2]), Math.min(H - 1, cm.bbox[3])];
+        // 只取对面块里离本块外框 pad 之内的格子当种子,避免对整块大陆做全图 BFS
+        const sb = [Math.max(bb[0], mine.bbox[0] - pad), Math.max(bb[1], mine.bbox[1] - pad), Math.min(bb[2], mine.bbox[2] + pad), Math.min(bb[3], mine.bbox[3] + pad)];
+        if (sb[0] > sb[2] || sb[1] > sb[3]) continue;
+        bfs(K, other, sb, r);
+        for (const k of touched) { if (K.lab[k] === me && dist[k] > 0 && dist[k] < r) { if (keep[k]) { if (!left.some((l) => l.at[0] === k % W && l.at[1] === ((k / W) | 0))) left.push({ at: [k % W, (k / W) | 0], why: '有单位/建筑' }); } else { kill[k] = 1; } } }
+        for (const k of touched) dist[k] = -1;
+      }
+    }
+    let n = 0; for (let i = 0; i < W * H; i++) if (kill[i]) { d[i] = gid; if (it) it[i] = 0; n++; }
+    removed += n; any = n;
+    if (!any || removed > maxCells) { rounds++; break; }
+  }
+  const finalRep = gapReport(view(), { minGap, minArea }).pairs.filter((p) => p.gap < minGap);
+  return { data: d, items: it, removed, rounds, remaining: finalRep, left, capped: removed > maxCells };
 }
 
 // ---------- C53 零碎小岛 ----------

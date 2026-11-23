@@ -6,7 +6,7 @@ const K = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'kit');
 const L = (f) => import(path.join(K, f));
 const [cmd, ...rest] = process.argv.slice(2);
 try { fs.mkdirSync('.rwkit', { recursive: true }); fs.appendFileSync('.rwkit/log.txt', `${new Date().toISOString()} ${process.argv.slice(2).join(' ')}\n`); } catch {} const flags = {}, pos = [];
-for (let i = 0; i < rest.length; i++) { const a = rest[i]; if (a.startsWith('--') || a === '-o') { const k = a.replace(/^-+/, ''); flags[k] = rest[i + 1] && !rest[i + 1].startsWith('--') ? rest[++i] : true; } else pos.push(a); }
+for (let i = 0; i < rest.length; i++) { const a = rest[i]; if (a.startsWith('--') || a === '-o') { const k = a.replace(/^-+/, ''); flags[k] = rest[i + 1] && !rest[i + 1].startsWith('--') && rest[i + 1] !== '-o' ? rest[++i] : true; } else pos.push(a); }
 const usage = `RWKit 用法:
   lint <map.tmx> [--rules rules.json] [--json]   全套质检(触发器/文本/站位/连通/队伍/规则/陈旧输出)
   scen <map.tmx> --city <编号或检测名> [--team N] [--kill 5] [--cap 40] [--fail 1]   跑一次夺城场景,打印战报

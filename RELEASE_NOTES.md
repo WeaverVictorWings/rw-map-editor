@@ -1,3 +1,28 @@
+## 铁锈地图编辑器 3.5.1
+
+**下载**
+- 安卓：`rw-map-editor.apk`（可直接覆盖安装）。电脑：`rw-map-editor-web.zip`，解压后双击 `Start-Editor.bat`。
+
+**这一版：修 3.5.0 里在真实大图上发现的问题**
+- 「开凿海峡」（`widen-gaps`）原先只在最窄点挖一个口，两岸别处仍然很窄；改成两岸逐圈削岸线，直到相邻陆块间距达标（单位所在格不削，削不动的会列出来）。
+- 新增 `shallow-links --cut`：把「只靠浅水相连」的通道里的浅水改成深水。
+- 修命令行：`--remove -o 文件` 这类「开关 + -o」会把 `-o` 当成开关的值、输出文件名被吞掉。
+- 新增出图收尾脚本 `tools/mapgen/postfix_msgs.mjs`：半角标点→全角、连播的半句并成整句、超 30 字行断开、结尾逗号改句号、去掉 loseCondition。
+- 全部没有在真实游戏里验证。
+
+---
+
+## Rusted Warfare Map Editor 3.5.1 (English)
+
+**Fixes found on real large maps**
+- `widen-gaps` used to dig a single notch at the narrowest point; it now erodes both coasts ring by ring until neighbouring landmasses are far enough apart (cells with units are left alone and reported).
+- New `shallow-links --cut` turns the shallow cells of a shallow-only link into deep water.
+- CLI: `--remove -o file` no longer swallows `-o` as the flag's value.
+- New post-processing script `tools/mapgen/postfix_msgs.mjs` (full-width punctuation, merge split sentences, 30-char line wrap, trailing commas, drop loseCondition).
+- Not verified in the real game.
+
+---
+
 ## 铁锈地图编辑器 3.5.0
 
 **下载**
