@@ -1,0 +1,1 @@
+{"teams": 20, "mapSize": [1103,1059], "forbidClasses": ["lava", "tree", "forest"], "text": {"lineMax": 45, "linesMax": 14, "banned": ["新势力"]}, "openMsgMax": 40, "minDist": 6, "ignore": []}

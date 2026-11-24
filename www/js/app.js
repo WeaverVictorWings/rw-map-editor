@@ -27,7 +27,12 @@ function rgbaOf(css, a) {
   const n = parseInt(s.slice(1), 16);
   return ((a << 24) | (((n) & 255) << 16) | (((n >> 8) & 255) << 8) | ((n >> 16) & 255)) >>> 0;
 }
-let ovTimer = 0;
+let ovTimer = 0, bigHinted = null;
+// 大图保护：≥100 万格（低端手机吃力）时提一次醒，并建议关掉重的显示项
+function bigMapHint() {
+  const m = ed.map; if (!m) return; const n = m.width * m.height; if (n < 1e6 || bigHinted === m) return; bigHinted = m;
+  toast(`这张图 ${m.width}×${m.height}（${(n / 1e4).toFixed(0)} 万格）。手机上可能卡顿：少开叠加层，大范围修改请分几次做，导出前先保存一份。`, 9000);
+}
 async function setOverlay(kind) {
   A.overlayKind = kind;
   if (!ed.map || kind === 'none') { rend.setTint(null); A.refresh('modes', 'dock'); return; }
@@ -39,6 +44,10 @@ async function setOverlay(kind) {
     if (!A.report) A.report = await busy('正在计算各队地盘…', async () => balanceReport(ed, 30));
     const own = A.report.owner, cols = A.report.teams.map((t) => rgbaOf(teamColor(t), 105));
     rend.setTint({ kind, fn: (i) => (own[i] >= 0 ? cols[own[i]] : 0), opacity: 1 });
+  } else if (kind.startsWith('k35-')) {
+    const m = await import('./overlay35.js');
+    try { const r = await busy('正在计算叠加层…', async () => m.tintFor(kind, { minGap: A.settings.minGap35 || 12 })); rend.setTint({ kind, fn: r.fn, opacity: 1 }); toast(r.note, 7000); }
+    catch (e) { A.overlayKind = 'none'; rend.setTint(null); toast(e.message, 6000); }
   } else if (kind === 'connect') {
     const m = await import('./geo.js'); const fn = await busy('正在分析连通块…', async () => m.connectTint());
     rend.setTint({ kind, fn, opacity: 1 });
@@ -66,6 +75,7 @@ function onEditorEvent(ev) {
     // 尺寸可能变了（撤销整图操作、缩放）
     if (rend.map === ed.map) { rend.clearCaches(); rend.buildColors(); rend.buildOverview(); rend.pools = ed.poolTiles(); mini.rebuild(); }
     A.report = null; A.symDiff = null;
+    bigMapHint();
     if (ed.selection || ed.floating) { ed.selection = null; if (ed.floating) A.hooks.cancelFloat(); A.hooks.renderSelbar && A.hooks.renderSelbar(); }
     A.refresh();
     return;

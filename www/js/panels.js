@@ -144,7 +144,7 @@ export function renderModes() {
     nav.append(h('div', { class: 'mbspacer' }));
     const quick = h('div', { class: 'quick' },
       h('span', { class: 'qlabel' }, '对称'), segmented([['none', '无'], ['lr', '左右'], ['tb', '上下'], ['rot', '中心'], ['quad', '四向']], ed.sym, (v) => { ed.sym = v; rend.request(); A.refresh('dock'); A.hooks.coach && A.hooks.coach('sym'); }), helpBtn('sym'),
-      h('span', { class: 'qlabel', style: 'margin-left:8px' }, '叠加'), select([['none', '无'], ['land', '陆军通行'], ['naval', '海军通行'], ['hover', '悬浮通行'], ['build', '可建造'], ['territory', '各队地盘'], ['symdiff', '对称差异'], ['connect', '连通图']], A.overlayKind, (v) => A.hooks.setOverlay(v)), helpBtn('overlay'),
+      h('span', { class: 'qlabel', style: 'margin-left:8px' }, '叠加'), select([['none', '无'], ['land', '陆军通行'], ['naval', '海军通行'], ['hover', '悬浮通行'], ['build', '可建造'], ['territory', '各队地盘'], ['symdiff', '对称差异'], ['connect', '连通图'], ['k35-gap', '海峡宽度（红=过窄）'], ['k35-shallow', '仅浅水连通处'], ['k35-heat', '兵力热力'], ['k35-zones', '命名区域'], ['k35-diff', '与基准的地形差异']], A.overlayKind, (v) => A.hooks.setOverlay(v)), helpBtn('overlay'),
       h('button', { class: 'ib', title: '其他层变暗', style: A.settings.dim ? 'color:var(--accent2)' : '', onclick: () => A.hooks.toggleDim(), html: icon('dim') }),
       h('button', { class: 'ib', title: '网格', style: A.settings.grid ? 'color:var(--accent2)' : '', onclick: () => A.hooks.toggleGrid(), html: icon('grid') }));
     nav.append(quick);
@@ -508,7 +508,7 @@ function dockLayers(body) {
   body.append(sec('图层', null, rows,
     toggle('其他层变暗（突出当前模式在改的东西）', A.settings.dim, () => A.hooks.toggleDim()),
     toggle('显示网格', A.settings.grid, () => A.hooks.toggleGrid())));
-  body.append(sec('叠加图', 'overlay', select([['none', '不叠加'], ['land', '陆军通行'], ['naval', '海军通行'], ['hover', '悬浮通行'], ['build', '可建造区域'], ['territory', '各队地盘'], ['symdiff', '对称差异'], ['connect', '连通图']], A.overlayKind, (v) => A.hooks.setOverlay(v))));
+  body.append(sec('叠加图', 'overlay', select([['none', '不叠加'], ['land', '陆军通行'], ['naval', '海军通行'], ['hover', '悬浮通行'], ['build', '可建造区域'], ['territory', '各队地盘'], ['symdiff', '对称差异'], ['connect', '连通图'], ['k35-gap', '海峡宽度（红=过窄）'], ['k35-shallow', '仅浅水连通处'], ['k35-heat', '兵力热力'], ['k35-zones', '命名区域'], ['k35-diff', '与基准的地形差异']], A.overlayKind, (v) => A.hooks.setOverlay(v))));
   body.append(sec('描图参考图', 'trace', rend.reference
     ? h('div', { class: 'row' }, toggle('显示', rend.reference.visible !== false, (v) => { rend.reference.visible = v; rend.request(); }), h('button', { onclick: () => D.traceDialog() }, '调整…'))
     : h('button', { onclick: () => D.traceDialog(), html: icon('trace') + ' 选一张参考图…' })));

@@ -1,3 +1,60 @@
+## 铁锈地图编辑器 3.5.1
+
+**下载**
+- 安卓：`rw-map-editor.apk`（可直接覆盖安装）。电脑：`rw-map-editor-web.zip`，解压后双击 `Start-Editor.bat`。
+
+**这一版：修 3.5.0 里在真实大图上发现的问题**
+- 「开凿海峡」（`widen-gaps`）原先只在最窄点挖一个口，两岸别处仍然很窄；改成两岸逐圈削岸线，直到相邻陆块间距达标（单位所在格不削，削不动的会列出来）。
+- 新增 `shallow-links --cut`：把「只靠浅水相连」的通道里的浅水改成深水。
+- 修命令行：`--remove -o 文件` 这类「开关 + -o」会把 `-o` 当成开关的值、输出文件名被吞掉。
+- 新增出图收尾脚本 `tools/mapgen/postfix_msgs.mjs`：半角标点→全角、连播的半句并成整句、超 30 字行断开、结尾逗号改句号、去掉 loseCondition。
+- 全部没有在真实游戏里验证。
+
+---
+
+## Rusted Warfare Map Editor 3.5.1 (English)
+
+**Fixes found on real large maps**
+- `widen-gaps` used to dig a single notch at the narrowest point; it now erodes both coasts ring by ring until neighbouring landmasses are far enough apart (cells with units are left alone and reported).
+- New `shallow-links --cut` turns the shallow cells of a shallow-only link into deep water.
+- CLI: `--remove -o file` no longer swallows `-o` as the flag's value.
+- New post-processing script `tools/mapgen/postfix_msgs.mjs` (full-width punctuation, merge split sentences, 30-char line wrap, trailing commas, drop loseCondition).
+- Not verified in the real game.
+
+---
+
+## 铁锈地图编辑器 3.5.0
+
+**下载**
+- 安卓：`rw-map-editor.apk`（可直接覆盖安装）。电脑：`rw-map-editor-web.zip`，解压后双击 `Start-Editor.bat`。
+
+**这一版：交付前自己就能把关**
+- 触发器面板新增「工具箱」：一页红黄绿的交付检查，地形连通（浅水相连的陆块、海峡宽度、小岛、环绕、河流）、文本（全角标点、断句、覆灭文本草稿、开场压缩）、兵力（对照表、按档放兵、舰队）、触发器速记语法与模板、城市/势力表。
+- 画河、画山脉（自动留山口）、岛链、区域放大、地貌贴花；高程栅格与国界导入。
+- 地图叠加层：海峡宽度、仅浅水连通处、兵力热力、命名区域；按队伍显示/隐藏单位。
+- 触发器列表：分组折叠、多选批量改、颜色标签。
+- 全部没有在真实游戏里验证；逐条完成情况见 docs/ROADMAP-3.5.md。
+
+完整说明见 CHANGELOG.md。
+
+---
+
+## Rusted Warfare Map Editor 3.5.0 (English)
+
+**Download**
+- Android: `rw-map-editor.apk` (installs over the old version). PC: `rw-map-editor-web.zip`, unzip and double-click `Start-Editor.bat`.
+
+**Check your own map before you hand it over**
+- A new “Toolbox” on the Triggers panel: a one-page red/yellow/green delivery check; terrain connectivity (shallow-only links, strait width, small islands, circumnavigation, rivers); text tools (fullwidth punctuation, sentence breaks, elimination-text drafts, opening compression); forces (comparison table, placement by tier, fleets); trigger shorthand and templates; city / faction tables.
+- Draw rivers, mountain ridges (with passes), island chains, regional zoom and terrain decals; import elevation rasters and country borders.
+- Map overlays: strait width, shallow-only links, force heat, named zones; show / hide units by team.
+- Trigger list: group folding, multi-select bulk edit, colour tags.
+- None of it has been verified in the real game; see docs/ROADMAP-3.5.md for the per-item status.
+
+See CHANGELOG.md for details.
+
+---
+
 ## 铁锈地图编辑器 3.2.0
 
 **下载**
@@ -95,7 +152,7 @@ Full details in CHANGELOG.md.
 **Easier to start, easier to trust**
 - New users get a simple interface by default (advanced features are still found with Ctrl+K) and a three-step first-run guide.
 - New: “Add a ring around resource pools” and “Re-lay out spawns” — preview first, one undo step.
-- New: “Where is my data”, one-tap feedback that copies diagnostics, and a check after loading that warns if something cannot be kept as it was.
+- New: “Where is my data”， one-tap feedback that copies diagnostics, and a check after loading that warns if something cannot be kept as it was.
 - “Continue editing” on the start screen and a refreshed look.
 
 Full details in CHANGELOG.md.

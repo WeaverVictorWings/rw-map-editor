@@ -13,10 +13,14 @@ import { icon } from './icons.js';
 import { HELP, helpBtn } from './help.js';
 
 const ed = A.ed, rend = A.rend;
+// 3.5：属性说明表/单位库（kit/schema35.js,与命令行共用）；加载完成前用不到就先不显示
+let S35 = null; import('./kit/schema35.js').then((m) => { S35 = m; }).catch(() => {});
+const propTip = (p) => (S35 && S35.PROP_DOC[p] ? S35.PROP_DOC[p][1] : '');
+const propCn = (p) => (S35 && S35.PROP_DOC[p] ? S35.PROP_DOC[p][0] : '');
 const TW = 20;
 
 // ---------------- 类型定义 ----------------
-// 字段：[属性名, 中文, 种类, 是否必填, 说明]
+// 字段：[属性名， 中文， 种类， 是否必填， 说明]
 const COMMON_TEAM = ['team', '队伍', 'teamOpt', false, '不选表示所有队伍'];
 export const CATS = {
   cond: { cn: '条件', color: '88,166,255' },
@@ -36,8 +40,15 @@ export const TYPES = {
   basic: { cn: '中继 / 计时', cat: 'logic', icon: 'clock', desc: '本身不做事。用来当计时器（配合“延迟”）或者把几个条件合成一个（与 / 或）。', fields: [] },
   unitAdd: { cn: '刷兵', cat: 'act', icon: 'plus', area: 'center', desc: '在区域中心生成单位。',
     fields: [['spawnUnits', '生成哪些单位', 'units', true], ['team', '属于哪个队', 'team', true]] },
-  unitRemove: { cn: '删除单位', cat: 'act', icon: 'del', area: 'rect', desc: '删除区域里的单位。',
+  unitRemove: { cn: '删除单位', cat: 'act', icon: 'del', area: 'rect', desc: '删除区域里的单位。注意：它不能指定单位类型，区域里（符合队伍的）所有单位都会删掉，框要画紧。',
     fields: [COMMON_TEAM, ['onlyIfEmpty', '只删空的运输单位', 'bool']] },
+  set_team: { cn: '改单位队伍', cat: 'act', icon: 'units', area: 'rect', desc: '把区域里「所有」单位（不分原来属于谁）改成指定队伍，血量等状态是否保留请在游戏里确认。框要画紧，别把别队的兵一起圈进去。',
+    fields: [['team', '改成哪个队', 'team', true]] },
+  disable_unit_ai: { cn: '禁止 AI 调动', cat: 'act', icon: 'del', area: 'rect', desc: '禁止 AI 驱动区域里的单位移动（工厂照常生产）。', fields: [] },
+  ai_allow_full_use: { cn: '允许 AI 充分使用', cat: 'act', icon: 'units', area: 'rect', desc: '允许 AI 充分使用区域里的单位。', fields: [] },
+  rotate: { cn: '转向', cat: 'act', icon: 'fit', area: 'rect', desc: '让区域里的单位转到某个朝向。dir 是角度（0=朝右，逆时针，360=一圈）；下面有罗盘可以直接点。',
+    fields: [COMMON_TEAM, ['dir', '朝向（角度）', 'compass', true, '教程：向右（顺时针）旋转的角度，360=一圈。罗盘按「东=0、顺时针」估算，游戏内未核对']] },
+  fall: { cn: '坠落', cat: 'act', icon: 'del', area: 'rect', desc: '区域里的单位坠落（教程里的 fall 类型）。具体效果请在游戏里确认。', fields: [COMMON_TEAM] },
   changeCredits: { cn: '改资金', cat: 'act', icon: 'coin', desc: '给某队加钱、扣钱或直接设成某个数。',
     fields: [['team', '队伍', 'team', true], ['add', '增加（负数为扣）', 'int'], ['set', '直接设为', 'int', false, '同时填时先“设为”再“增加”']] },
   teamTags: { cn: '队伍标签', cat: 'act', icon: 'flag', desc: '给某队加上或去掉标签，配合“标签检测”做开关。',
@@ -47,15 +58,16 @@ export const TYPES = {
   objective: { cn: '任务目标', cat: 'text', icon: 'check', desc: '任务图的目标。激活后算“完成”。配合 map_info 的胜利条件“完成所有目标”。',
     fields: [['text', '目标文字', 'text', true]] },
   moveCamera: { cn: '移动镜头', cat: 'act', icon: 'fit', area: 'center', desc: '把镜头移到区域中心（剧情用）。', fields: [] },
-  move: { cn: '移动单位', cat: 'act', icon: 'path', area: 'rect', desc: '把区域里的单位派往一个“目标点”。',
+  move: { cn: '移动单位', cat: 'act', icon: 'path', area: 'rect', desc: '把区域里的单位派往一个“目标点”。「到达后卸载」只对运输载具有用，区域里没有载具时不会有效果。',
     fields: [COMMON_TEAM, ['target', '目标点', 'point', true], ['unload', '到达后卸载', 'bool']] },
 };
 export const SPECIAL = {
   point: { cn: '目标点', cat: 'special', icon: 'spawn', desc: '给“移动单位”当目的地。名字就是它的标识。', fields: [] },
   team_info: { cn: '队伍设置', cat: 'special', icon: 'units', desc: '某队的开局资金、AI 难度等（只在开局生效一次）。',
-    fields: [['team', '队伍', 'team', true], ['credits', '开局资金', 'int'], ['allyGroup', '同盟组（单机）', 'int'], ['lockAiDifficulty', '锁定 AI 难度（-2~3）', 'int'], ['disabledAI', '关闭 AI（单机）', 'bool'], ['basicAI', '简单 AI（单机）', 'bool']] },
+    fields: [['team', '队伍', 'team', true], ['credits', '开局资金', 'int'], ['allyGroup', '同盟组（单机）', 'int'], ['lockAiDifficulty', '锁定 AI 难度', 'ailevel', false, '-2 很简单 … 3 不可能；写得过大游戏会崩溃'], ['ai', 'AI 模式', 'aimode', false, 'survival = 生存波次敌人'], ['disabledAI', '关闭 AI（单机）', 'bool'], ['basicAI', '简单 AI（单机）', 'bool']] },
 };
-const BY_NAME = { attack_point: { cn: '敌军出生点', cat: 'special', icon: 'wave', desc: '生存模式里敌人从这里出来，可以放好几个。', fields: [] },
+const BY_NAME = { camera_pan: { cn: '镜头平移（不可用）', cat: 'special', icon: 'fit', desc: '教程注明:camera_pan 不能用于自定义地图，放了也不会生效。建议改用「开局镜头」（camera_start）。', fields: [] },
+  attack_point: { cn: '敌军出生点', cat: 'special', icon: 'wave', desc: '生存模式里敌人从这里出来，可以放好几个。', fields: [] },
   camera_start: { cn: '开局镜头', cat: 'special', icon: 'fit', desc: '开局时镜头的位置。', fields: [['zoomTo', '缩放', 'text']] } };
 const TIMING = [['delay', '延迟', 'time', '开局后多久才可以触发（只算一次）'], ['warmup', '持续', 'time', '条件要连续成立这么久才算'],
   ['resetActivationAfter', '可以再次触发', 'time', '触发后过多久复位，能再次触发；不填就只触发一次'], ['repeatDelay', '重复间隔', 'time', '触发后每隔多久再做一次（不重新检查条件）']];
@@ -197,6 +209,9 @@ function actText(o) {
   switch (k) {
     case 'unitAdd': { const u = parseUnits(objProp(o, 'spawnUnits')); return `给${teamCn(t)}刷出 ${u.length ? u.map((x) => unitCn(x.name) + (x.n > 1 ? '×' + x.n : '')).join('、') : '<i>（还没选单位）</i>'}`; }
     case 'unitRemove': return `删除区域里${t === undefined ? '所有' : teamCn(t) + '的'}单位`;
+    case 'set_team': return `区域里的所有单位改成${teamCn(t)}`;
+    case 'disable_unit_ai': return '区域里的单位 AI 不再调动';
+    case 'ai_allow_full_use': return '允许 AI 充分使用区域里的单位';
     case 'changeCredits': { const s = objProp(o, 'set'), a = objProp(o, 'add'); return `${teamCn(t)}资金` + (s !== undefined ? `设为 ${s}` : '') + (a !== undefined ? (+a >= 0 ? ` +${a}` : ` ${a}`) : '') + (s === undefined && a === undefined ? '<i>（还没填数）</i>' : ''); }
     case 'teamTags': return `${teamCn(t)}` + (objProp(o, 'addTeamTags') ? `加标签「${esc(objProp(o, 'addTeamTags'))}」` : '') + (objProp(o, 'removeTeamTags') ? `去标签「${esc(objProp(o, 'removeTeamTags'))}」` : '');
     case 'mapText': return `显示文字「${esc(objProp(o, 'text') || '')}」`;
@@ -346,7 +361,13 @@ Object.assign(HELP, {
 });
 
 // ---------------- 状态 ----------------
-const S = { view: 'list', filter: '', limit: 150, cat: 'all' };
+const S = { view: 'list', filter: '', limit: 150, cat: 'all', group: false, multi: false, sel: new Set(), fold: new Set(), batchProp: 'team' };
+// 3.5：颜色标签（存在本浏览器，不写进地图）/ 按名字家族分组折叠 / 多选批量修改
+const TAG_COLORS = [['', '无'], ['#e5484d', '红'], ['#f5a524', '橙'], ['#2da44e', '绿'], ['#3b82f6', '蓝'], ['#a855f7', '紫']];
+const tagKey = () => 'rwkit35.ttags.' + (A.mapName || '');
+function getTags() { try { return JSON.parse(localStorage.getItem(tagKey()) || '{}'); } catch { return {}; } }
+function putTags(t) { try { localStorage.setItem(tagKey(), JSON.stringify(t)); } catch { toast('浏览器不让存储，标签只在这次有效'); } }
+const family = (o) => label(o).split(/[_\-\s]/)[0] || label(o);
 export function selectTrigger(o, center = true) {
   ed.selected = o;
   if (o && center) { const c = centerTile(o); const v = rend.view; const s = rend.toScreen(c.x * TW, c.y * TW); if (s.x < 40 || s.y < 40 || s.x > rend.cw - 40 || s.y > rend.ch - 40) rend.centerOn(c.x, c.y, Math.max(v.z, 0.4)); }
@@ -403,7 +424,8 @@ export function triggerPanel(body, T) {
     h('button', { onclick: () => graphView(), html: icon('rules') + ' 逻辑图' }), helpBtn('trig.graph'),
     h('button', { onclick: () => logDialog(), html: icon('log') + ' 作战日志' }),
     h('button', { onclick: () => import('./sim.js').then((m) => m.simDialog()), html: icon('clock') + ' 模拟' }),
-    h('button', { title: '质检套件:格式/引用/文本/站位/连通/开局刷屏(同命令行 rwkit)', onclick: () => import('./kitpanel.js').then((m) => m.kitDialog()), html: icon('check') + ' 质检' }),
+    h('button', { title: '工具箱：交付前检查、地形连通、文本、兵力、速记与模板、城市/势力表、变更日志（同命令行 rwkit 3.5）', onclick: () => import('./kit35ui.js').then((m) => m.toolbox()), html: icon('rules') + ' 工具箱' }),
+    h('button', { title: '质检套件：格式/引用/文本/站位/连通/开局刷屏（同命令行 rwkit）', onclick: () => import('./kitpanel.js').then((m) => m.kitDialog()), html: icon('check') + ' 质检' }),
     h('button', { class: 'ib', title: '在地图上画区域来新建', style: T === 'region' ? 'color:var(--accent2)' : '', onclick: () => { ed.tool.triggers = 'region'; A.refresh('toolbar', 'dock'); toast('在地图上拖出一个区域，然后选择触发器类型'); }, html: icon('region') })));
   const TG = trigGroup();
   const objs = TG ? TG.objects.filter((o) => kindOf(o) !== 'map_info') : [];
@@ -416,24 +438,64 @@ export function triggerPanel(body, T) {
   const list = h('div', { class: 'tlist' });
   const inp = h('input', { placeholder: `搜索 ${objs.length} 个触发器（名字、文字、单位）`, value: S.filter, oninput: (e) => { S.filter = e.target.value; S.limit = 150; fill(); } });
   const cats = segmented([['all', '全部'], ['cond', '条件'], ['act', '动作'], ['text', '文字'], ['bad', '有问题']], S.cat, (v) => { S.cat = v; fill(); });
+  const bar = h('div', {});
   const fill = () => {
     list.innerHTML = '';
-    const q = lc(S.filter);
-    let shown = 0, total = 0;
+    const q = lc(S.filter), hit = [];
     for (const o of objs) {
       const def = defOf(o);
       if (S.cat === 'bad' ? !issues.has(o) : S.cat !== 'all' && (!def || (def.cat !== S.cat && !(S.cat === 'act' && def.cat === 'logic')))) continue;
-      if (q && !(lc(label(o)) + lc(kindOf(o)) + o.props.map((p) => lc(p.value)).join(' ')).includes(q)) continue;
-      total++;
-      if (shown >= S.limit) continue;
-      shown++;
-      list.append(card(o, issues.get(o)));
+      if (q && !matchQuery(o, q)) continue;
+      hit.push(o);
     }
+    let shown = 0; const total = hit.length;
+    const put = (o) => { if (shown >= S.limit) return; shown++; list.append(card(o, issues.get(o), () => { fill(); })); };
+    if (S.group) {
+      const fam = new Map(); for (const o of hit) { const k = family(o); if (!fam.has(k)) fam.set(k, []); fam.get(k).push(o); }
+      for (const [k, arr] of [...fam].sort((a, b) => b[1].length - a[1].length)) {
+        const folded = S.fold.has(k), bad = arr.filter((o) => issues.has(o)).length;
+        list.append(h('button', { class: 'ib', style: 'width:100%;text-align:left;margin-top:6px;font-weight:600', onclick: () => { folded ? S.fold.delete(k) : S.fold.add(k); fill(); } }, (folded ? '▸ ' : '▾ ') + k + `（${arr.length}${bad ? `，${bad} 个有问题` : ''}）`));
+        if (!folded) arr.forEach(put);
+      }
+    } else hit.forEach(put);
     if (total > shown) list.append(h('button', { onclick: () => { S.limit += 300; fill(); } }, `再显示 ${Math.min(300, total - shown)} 个（共 ${total} 个）`));
     if (!total) list.append(h('div', { class: 'hint' }, '没有符合条件的触发器。'));
+    drawBar(hit);
   };
-  body.append(inp, h('div', { style: 'margin:6px 0 8px' }, cats), list);
+  const drawBar = (hit) => {
+    bar.innerHTML = '';
+    if (!S.multi) return;
+    const pick = h('select', { onchange: (e) => { S.batchProp = e.target.value; } }, ...['team', 'warmup', 'delay', 'repeatDelay', 'resetActivationAfter', 'maxUnits', 'allToActivate'].map((k) => h('option', { value: k, selected: k === S.batchProp }, k + (propCn(k) ? '（' + propCn(k) + '）' : '')))), val = h('input', { placeholder: '值（13s / 13000 / 3）；留空=删除这个属性', style: 'width:100%' });
+    const tagSel = h('select', {}, ...TAG_COLORS.map(([c, n]) => h('option', { value: c }, n)));
+    bar.append(h('div', { class: 'sec' }, h('div', { class: 'sech' }, h('h3', {}, `已选 ${[...S.sel].filter((o) => objs.includes(o)).length} 个`)),
+      h('div', { class: 'row', style: 'gap:6px;flex-wrap:wrap' }, h('button', { onclick: () => { hit.forEach((o) => S.sel.add(o)); fill(); } }, `全选当前列表（${hit.length}）`), h('button', { onclick: () => { S.sel.clear(); fill(); } }, '清空')),
+      h('div', { style: 'margin-top:6px' }, h('label', {}, '批量改属性'), pick, val, h('button', { class: 'primary', style: 'margin-top:4px', onclick: () => {
+        const list2 = [...S.sel].filter((o) => objs.includes(o)); if (!list2.length) return toast('先选几个触发器');
+        const k = pick.value; let v = val.value.trim();
+        if (v && ['warmup', 'delay', 'repeatDelay', 'resetActivationAfter'].includes(k)) { const ms = parseTime(v); if (ms === null || Number.isNaN(ms)) return toast('时间读不懂。写成 13s 或 13000（毫秒，不超过 10 分钟）', 4000); v = String(ms); }
+        edit(`批量改 ${k}`, () => { for (const o of list2) setP(o, k, v); }); toast(`已改 ${list2.length} 个触发器的 ${k}`); fill(); } }, '应用到选中项')),
+      h('div', { style: 'margin-top:6px' }, h('label', {}, '颜色标签（只存在本浏览器）'), tagSel, h('button', { style: 'margin-left:6px', onclick: () => { const t = getTags(); for (const o of S.sel) { if (tagSel.value) t[tkey(o)] = tagSel.value; else delete t[tkey(o)]; } putTags(t); fill(); } }, '给选中项打标签'))));
+  };
+  const modes = h('div', { class: 'row', style: 'gap:6px;margin:0 0 6px' },
+    h('button', { class: S.group ? 'primary' : '', title: '按名字里第一个“_”之前的部分归成一组，点组名可折叠', onclick: () => { S.group = !S.group; A.refresh('dock'); } }, S.group ? '✓ 分组' : '分组'),
+    h('button', { class: S.multi ? 'primary' : '', title: '多选：点卡片勾选，一次改多个触发器的队伍/延迟/标签', onclick: () => { S.multi = !S.multi; if (!S.multi) S.sel.clear(); A.refresh('dock'); } }, S.multi ? '✓ 多选' : '多选'));
+  body.append(inp, h('div', { style: 'margin:6px 0 8px' }, cats), modes, list, bar);
   fill();
+}
+// 搜索：普通词在名字/类型/属性值里找；也可以写 type:unitDetect team:3 ref：检测5 text：易主 id：占（多个条件同时满足）
+function matchQuery(o, q) {
+  const toks = q.split(/\s+/).filter(Boolean); const hay = lc(label(o)) + ' ' + lc(kindOf(o)) + ' ' + o.props.map((p) => lc(p.value)).join(' ');
+  return toks.every((t) => {
+    const m = t.match(/^(type|team|ref|text|id|名字|类型|队伍|引用|文字):(.*)$/);
+    if (!m) return hay.includes(t);
+    const k = { 名字: 'id', 类型: 'type', 队伍: 'team', 引用: 'ref', 文字: 'text' }[m[1]] || m[1], v = lc(m[2]);
+    if (k === 'type') return lc(kindOf(o)).includes(v);
+    if (k === 'team') return lc(objProp(o, 'team') || '') === v;
+    if (k === 'id') return lc(label(o)).includes(v);
+    if (k === 'text') return ['globalMessage', 'text', 'introText'].some((p) => lc(objProp(o, p) || '').includes(v));
+    if (k === 'ref') return LINKS.some(([p]) => links(o, p).some((r) => lc(r) === v)) || lc(label(o)) === v || ['alsoActivate', 'activatedBy', 'deactivatedBy'].some((p) => lc(objProp(o, p) || '').split(',').map((x) => x.trim()).includes(v));
+    return true;
+  });
 }
 const tplBtn = (lb, ic, fn) => h('button', { class: 'tpl', onclick: fn, html: icon(ic) + `<span>${lb}</span>` });
 function viewCenterRect() {
@@ -442,11 +504,12 @@ function viewCenterRect() {
   return { x: Math.max(0, x), y: Math.max(0, y), w: TW * 3, h: TW * 3 };
 }
 
-function card(o, iss) {
+function card(o, iss, onToggle) {
   const def = defOf(o) || { cn: kindOf(o) || '对象', cat: 'logic', icon: 'info' };
   const col = CATS[def.cat] ? CATS[def.cat].color : '170,176,190';
-  return h('button', { class: 'tcard2', style: `--tc:${col}`, onclick: () => selectTrigger(o) },
-    h('div', { class: 'th', html: icon(def.icon) + `<b>${esc(label(o))}</b><span class="ty">${def.cn}</span>` + (iss ? `<span class="tw" title="${esc(iss.map((i) => i.title).join('\n'))}">${icon('warn')}</span>` : '') }),
+  const tag = getTags()[tkey(o)], picked = S.multi && S.sel.has(o);
+  return h('button', { class: 'tcard2', style: `--tc:${col}` + (picked ? ';outline:2px solid var(--accent2,#4da3ff)' : ''), onclick: () => (S.multi ? (S.sel.has(o) ? S.sel.delete(o) : S.sel.add(o), onToggle && onToggle()) : selectTrigger(o)) },
+    h('div', { class: 'th', html: (S.multi ? `<span style="width:14px">${picked ? '☑' : '☐'}</span>` : '') + icon(def.icon) + (tag ? `<span title="标签" style="width:10px;height:10px;border-radius:50%;background:${tag};flex:none"></span>` : '') + `<b>${esc(label(o))}</b><span class="ty">${def.cn}</span>` + (iss ? `<span class="tw" title="${esc(iss.map((i) => i.title).join('\n'))}">${icon('warn')}</span>` : '') }),
     h('div', { class: 'td', html: describe(o) }));
 }
 
@@ -465,10 +528,11 @@ function mapInfoCard() {
       h('div', {}, h('label', {}, '地图类型'), select(MAP_TYPE_CN, type, (v) => set('type', v))),
       h('div', {}, h('label', {}, '胜利条件'), select(WIN_CONDITIONS, objProp(mi, 'winCondition') || '', (v) => set('winCondition', v)))),
     h('div', { class: 'grid2' },
-      h('div', {}, h('label', {}, '战争迷雾'), select([['', '按房间设置'], ['los', '视野'], ['map', '地图迷雾'], ['none', '无']], objProp(mi, 'fog') || '', (v) => set('fog', v))),
+      h('div', {}, h('label', {}, '战争迷雾'), select([['', '按房间设置'], ['los', '视野'], ['map', '地图迷雾'], ['NONE', '无迷雾']].concat(objProp(mi, 'fog') === 'none' ? [['none', 'none（旧写法，建议改成 NONE）']] : []), objProp(mi, 'fog') || '', (v) => set('fog', v))),
       h('div', {}, h('label', {}, ' '), toggle('盟友共享视野', objProp(mi, 'shareFogWithAllies') === 'true', (v) => set('shareFogWithAllies', v ? 'true' : '')))),
     h('label', {}, '开局介绍（introText）'),
     h('textarea', { rows: 2, placeholder: '开局时显示的说明文字', onchange: (e) => set('introText', e.target.value) }, objProp(mi, 'introText') || ''));
+  if (objProp(mi, 'loseCondition') !== undefined) box.append(h('div', { class: 'hint warnh', style: 'margin-top:8px' }, 'loseCondition 在游戏 1.15 起已经删除，写了也没有用。', h('button', { style: 'margin-left:8px', onclick: () => { ed.setMapInfoProp('loseCondition', ''); A.autoDirty = true; A.refresh('dock'); } }, '去掉')));
   if (type === 'survival') box.append(h('button', { style: 'margin-top:8px', onclick: () => wavesDialog(), html: icon('wave') + ' 编辑敌人波次…' }));
   return box;
 }
@@ -482,6 +546,8 @@ function editor(o) {
   const r = rectOf(o);
   wrap.append(h('div', { class: 'row', style: 'margin-bottom:8px' },
     h('button', { onclick: () => { ed.selected = null; rend.request(); A.refresh('dock'); }, html: '‹ 返回列表' }), h('span', { style: 'flex:1' }),
+    h('button', { class: 'ib', title: '复制这个触发器的全部属性（不含名字、区域），可以粘贴到别的触发器', onclick: () => { S.propClip = o.props.filter((p) => p.name !== 'id').map((p) => [p.name, p.value]); toast(`已复制 ${S.propClip.length} 个属性`); }, html: icon('copy') + '<small>属性</small>' }),
+    h('button', { class: 'ib', title: '把刚复制的属性粘贴到这个触发器（同名属性会被覆盖）', onclick: () => { if (!S.propClip || !S.propClip.length) return toast('还没有复制过属性'); edit('粘贴属性', () => { for (const [k, v] of S.propClip) setP(o, k, v); }); }, html: icon('plus') + '<small>粘贴</small>' }),
     h('button', { class: 'ib', title: '复制一份', onclick: () => duplicate(o), html: icon('copy') }),
     h('button', { class: 'ib', title: '删除', onclick: () => remove(o), html: icon('del') })));
   wrap.append(h('div', { class: 'thead', html: icon(def.icon) + `<div><b>${def.cn}</b><small>${esc(def.desc || '')}</small></div>` }));
@@ -498,11 +564,19 @@ function editor(o) {
     for (const fd of def.fields) f.append(field(o, fd));
     wrap.append(section(def.cat === 'cond' ? '条件' : '设置', null, f));
   }
+  // 3.5：不用数格子——点一下地图就把它放到那里（开局镜头/目标点/敌军出生点）
+  if (['camera_start', 'point', 'attack_point'].includes(k)) wrap.append(h('div', { class: 'row', style: 'margin:6px 0' }, h('button', { onclick: async () => {
+    const p = await pickOnMap(`点一下，把「${def.cn}」放到这里`); if (!p) return; const rr = rectOf(o);
+    commit('移动' + def.cn, (x) => { x.attrs.x = String(Math.max(0, p.tx * TW - Math.round(rr.w / 2 / TW) * TW)); x.attrs.y = String(Math.max(0, p.ty * TW - Math.round(rr.h / 2 / TW) * TW)); }); rend.request(); } }, '在地图上点位置'),
+    k === 'camera_start' ? h('small', { style: 'color:var(--dim);margin-left:6px' }, '地图上会画一个白色虚线框示意开局视野（大小是估的，没在游戏里核对）') : null));
   if (isTrigger(o)) {
     // 连接
     const lk = h('div', {});
     for (const [p, cn, tip] of LINKS) lk.append(linkRow(o, p, cn, tip));
     lk.append(toggle('全部满足（被谁激活里的都成立、而且到了延迟时间、而且条件成立）', objProp(o, 'allToActivate') === 'true', (v) => commit('改全部满足', (x) => setP(x, 'allToActivate', v))));
+    // 反向：谁在 alsoActivate 里写了我（id 配对可视化）
+    const me = lc(label(o)), refs = (trigGroup() ? trigGroup().objects : []).filter((x) => x !== o && ['alsoActivate', 'activatedBy', 'deactivatedBy'].some((p) => links(x, p).some((r) => lc(r) === me)));
+    if (refs.length) lk.append(h('div', { class: 'linkrow' }, h('label', {}, '谁引用了我', h('small', { style: 'color:var(--dim);margin-left:6px' }, `共 ${refs.length} 个，点一下跳过去`)), h('div', { class: 'chips' }, ...refs.slice(0, 40).map((x) => h('span', { class: 'chip' }, h('button', { class: 'cl', title: ['alsoActivate', 'activatedBy', 'deactivatedBy'].filter((p) => links(x, p).some((r) => lc(r) === me)).map((p) => LINKS.find((l) => l[0] === p)[1]).join('、'), onclick: () => selectTrigger(x) }, label(x)))))));
     wrap.append(section('连接', 'trig.links', lk));
     const tm = h('div', { class: 'tfields' });
     for (const [p, cn, , tip] of TIMING) tm.append(timeField(o, p, cn, tip));
@@ -544,14 +618,22 @@ function teamOptions(optional, unset = false) {
 let dlId = 0;
 function unitDatalist() {
   const id = 'units' + ++dlId;
-  const names = [...new Set([...(ed.unitNames || []), ...KNOWN_UNITS])];
-  return [id, h('datalist', { id }, names.map((n) => h('option', { value: n }, UNIT_CN[n] || '')))];
+  const names = [...new Set([...(ed.unitNames || []), ...KNOWN_UNITS, ...(S35 ? S35.UNIT_LIB.map((u) => u.id) : [])])];
+  // 单位库（教程末尾单位表）：可以按英文名或中文名搜，如输入「重型坦克」会出现 heavyTank
+  return [id, h('datalist', { id }, names.map((n) => h('option', { value: n }, (S35 && S35.UNIT_BY_ID.get(n)?.zh) || UNIT_CN[n] || '')))];
 }
 function field(o, [p, cn, kind, req, tip]) {
   const v = objProp(o, p);
   const commit = (val) => edit('修改' + cn, () => setP(o, p, val));
-  const lb = h('label', {}, cn + (req ? ' *' : ''), tip ? h('small', { style: 'color:var(--dim);margin-left:6px' }, tip) : null);
+  const lb = h('label', { title: propTip(p) || undefined }, cn + (req ? ' *' : ''), tip ? h('small', { style: 'color:var(--dim);margin-left:6px' }, tip) : null, propTip(p) ? h('span', { class: 'pdoc', title: propTip(p), style: 'cursor:help;color:var(--accent2);margin-left:4px' }, '？') : null);
   switch (kind) {
+    case 'ailevel': { const L = S35 ? S35.AI_LEVELS : [[-2, '很简单'], [-1, '简单'], [0, '中等'], [1, '困难'], [2, '很困难'], [3, '不可能']]; const bad = v !== undefined && v !== '' && !(+v >= -2 && +v <= 3); return h('div', {}, lb, select([['', '（不锁定）'], ...L.map(([n, t]) => [String(n), `${n} ${t}`])], v ?? '', (x) => commit(x)), bad ? h('div', { class: 'hint warnh' }, `现在是 ${v}：超出 -2~3,游戏可能崩溃`) : null); }
+    case 'aimode': return h('div', {}, lb, select([['', '（默认）'], ['survival', 'survival（生存敌人）']], v ?? '', (x) => commit(x)));
+    case 'compass': {
+      const names = ['东', '东南', '南', '西南', '西', '西北', '北', '东北'];
+      const cur = v !== undefined && v !== '' && !Number.isNaN(+v) ? S35 && S35.dirToCompass(+v) : null;
+      return h('div', {}, lb, h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' }, ...names.map((n) => h('button', { class: cur === n ? 'primary' : '', onclick: () => commit(String(S35 ? S35.dirFromCompass(n) : 0)) }, n)), h('input', { type: 'number', step: 'any', value: v ?? '', style: 'width:84px', placeholder: '角度', onchange: (e) => commit(e.target.value.trim()) })));
+    }
     case 'bool': return toggle(cn, v === 'true', (x) => commit(x));
     case 'int': return h('div', {}, lb, h('input', { type: 'number', value: v ?? '', onchange: (e) => commit(e.target.value.trim()) }));
     case 'team': case 'teamOpt': return h('div', {}, lb, select(teamOptions(kind === 'teamOpt', v === undefined), v ?? '', (x) => commit(x)));
@@ -593,8 +675,11 @@ function timeField(o, p, cn, tip) {
   const unit = select([['s', '秒'], ['ms', '毫秒']], unitIsS ? 's' : 'ms', () => save());
   const save = () => edit('修改' + cn, () => setP(o, p, num.value === '' ? '' : num.value + unit.value));
   num.addEventListener('change', save);
+  const hint = h('small', { style: 'color:var(--dim);margin-left:6px' });
+  const upd = () => { if (num.value === '') { hint.textContent = ''; return; } const q = +num.value * (unit.value === 's' ? 1000 : 1); hint.textContent = `= ${Math.round(q)} 毫秒${q >= 60000 ? `（${(q / 60000).toFixed(1)} 分钟）` : ''}${unit.value === 'ms' && q >= 1000 ? ' ← 纯数字是毫秒，13000 才是 13 秒' : ''}`; };
+  num.addEventListener('input', upd); unit.addEventListener('change', upd); upd();
   unit.style.width = 'auto';
-  return h('div', {}, h('label', {}, cn, h('small', { style: 'color:var(--dim);margin-left:6px' }, tip)), h('div', { class: 'row', style: 'flex-wrap:nowrap' }, num, unit, Number.isNaN(ms) ? h('span', { style: 'color:var(--err)', title: v }, '格式错') : null));
+  return h('div', {}, h('label', { title: propTip(p) || undefined }, cn, h('small', { style: 'color:var(--dim);margin-left:6px' }, tip), hint), h('div', { class: 'row', style: 'flex-wrap:nowrap' }, num, unit, Number.isNaN(ms) ? h('span', { style: 'color:var(--err)', title: v }, '格式错') : null));
 }
 function unitsEditor(o, p) {
   const list = parseUnits(objProp(o, p));
@@ -762,7 +847,7 @@ async function wavesDialog() {
   const box = h('div', {});
   const draw = () => {
     box.innerHTML = '';
-    box.append(h('div', { class: 'hint', html: '每一行是一波敌人。<b>间隔</b>是离上一波多久（分:秒）；<b>敌人</b>写“数量 单位名”，多个用逗号隔开，例如 <code>5 tank, 2 heavyTank</code>。' }));
+    box.append(h('div', { class: 'hint', html: '每一行是一波敌人。<b>间隔</b>是离上一波多久（分：秒）；<b>敌人</b>写“数量 单位名”，多个用逗号隔开，例如 <code>5 tank, 2 heavyTank</code>。' }));
     const tb = h('table', { class: 'rep' }, h('tr', {}, h('th', {}, '#'), h('th', {}, '间隔'), h('th', {}, '标题'), h('th', {}, '敌人'), h('th', {}, '打完算赢'), h('th', {}, '')));
     list.forEach((w, i) => tb.append(h('tr', {}, h('td', {}, i + 1),
       h('td', {}, h('input', { value: w.gap, style: 'width:64px', oninput: (e) => { w.gap = e.target.value.trim(); } })),

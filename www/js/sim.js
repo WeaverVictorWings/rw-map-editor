@@ -550,6 +550,14 @@ function applyActions(sim, t, tMs) {
       out.push({ type: 'unitRemove', text: `删掉区域里${team === null ? '所有' : teamCn(team) + '的'}单位 ${n} 个` });
       break;
     }
+    case 'set_team': {
+      if (team === null) { out.push({ type: 'set_team', text: '改单位队伍（没填 team，游戏里会出错）' }); break; }
+      let n = 0; const r = rectOf(o);
+      for (const u of sim.units) if (inRect(r, u) && u.team !== team) { u.team = team; n++; }
+      if (n) rebuildCounts(sim);
+      out.push({ type: 'set_team', text: `区域里 ${n} 个单位改成${teamCn(team)}` });
+      break;
+    }
     case 'changeCredits': {
       if (team === null) { out.push({ type: 'changeCredits', text: '改资金（没填队伍）' }); break; }
       let v = sim.credits.has(team) ? sim.credits.get(team) : 0;

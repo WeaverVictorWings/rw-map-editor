@@ -14,7 +14,7 @@ export function fillPools(text, { unit = 'extractorT1', radius = 10, fallbackTea
   const re = /(<objectgroup\s+[^>]*name="UnitObjects"[^>]*>[\s\S]*?)(<\/objectgroup>)/; if (!re.test(text)) throw new Error('找不到 UnitObjects 组'); return { text: text.replace(re, (_, a, b) => a + add.join('') + b), added: add.length, skipped };
 }
 // 删除单位:unitRe 匹配单位名,可限定队伍;返回删除数。(用于"删某类建筑再按规则重新分配")
-export function removeUnits(text, { unitRe, teams = null }) { let n = 0; const out = text.replace(/<object\s+([^>]*?)>(?:(?!<\/object>)[\s\S])*?<\/object>/g, (all) => { const u = all.match(/name="unit" value="([^"]*)"/); if (!u || !unitRe.test(unesc(u[1]))) return all; const t = all.match(/name="team" value="(-?\d+)"/); if (teams && !(t && teams.includes(+t[1]))) return all; n++; return ''; }); return { text: out, removed: n }; }
+export function removeUnits(text, { unitRe, teams = null }) { let n = 0; const out = text.replace(/<object\s+([^>]*?)(?:\/>|>(?:(?!<\/object>)[\s\S])*?<\/object>)/g, (all) => { const u = all.match(/name="unit" value="([^"]*)"/); if (!u || !unitRe.test(unesc(u[1]))) return all; const t = all.match(/name="team" value="(-?\d+)"/); if (teams && !(t && teams.includes(+t[1]))) return all; n++; return ''; }); return { text: out, removed: n }; }
 // 按配额表给各队补建筑:quota {队伍:{unit:数量}} 放在该队指挥中心周围环带内;accept(x,y) 判定格子是否可放
 export function placeQuota(text, quota, { accept, rand, minD = 3, maxD = 10, nameOf } = {}) {
   const model = parseTmx(text); let maxId = 0; for (const m of text.matchAll(/<object\s+[^>]*?\bid="(\d+)"/g)) maxId = Math.max(maxId, +m[1]);

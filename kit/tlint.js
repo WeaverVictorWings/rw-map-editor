@@ -21,6 +21,8 @@ export function lintTriggers(model, opt = {}) {
       const e = V[kind]?.(String(v)); if (e) add('error', 'G03', `${k}:${e}`, o);
     }
     if (P.team !== undefined && /^-?\d+$/.test(P.team)) { const t = +P.team; if (t < -2) add('error', 'G06', `team=${t} 非法`, o); if (opt.teamCount && t >= opt.teamCount) add('error', 'G06', `team=${t} 超出地图队伍数 ${opt.teamCount}`, o); }
+    if (ty === 'set_team' && P.team === undefined) add('error', 'G11', 'set_team 没写 team:游戏读取 team 时会出错(整数,0=1号队)', o);
+    if (ty === 'set_team' && o.w * o.h > 40 * 40 * 400) add('warn', 'G11', `set_team 的框很大(${o.w}×${o.h}):区域里不分队伍的所有单位都会被改队,框要画紧`, o);
     if (AREA_TYPES.has(ty) && (o.w <= 0 || o.h <= 0)) add('error', 'G05', `${o.type} 面积为 0,永远检测不到任何东西`, o);
     if (o.x < -200 && AREA_TYPES.has(ty)) add('warn', 'G10', `检测区放在地图外(x=${o.x})`, o);
     if (AREA_TYPES.has(ty) && (o.x + o.w < 0 || o.y + o.h < 0 || o.x > W || o.y > H)) add('warn', 'G10', `检测区完全在地图外`, o);

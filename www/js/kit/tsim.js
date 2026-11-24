@@ -7,7 +7,7 @@ const L = (v) => String(v || '').split(',').map((s) => s.trim()).filter(Boolean)
 const has = (v) => v !== undefined && v !== '';
 export class Sim {
   constructor(model) {
-    this.ts = triggersOf(model).filter((o) => ['unitdetect', 'unitadd', 'unitremove', 'basic', 'maptext', 'changecredits'].includes(o.type.toLowerCase())).map((o) => {
+    this.ts = triggersOf(model).filter((o) => ['unitdetect', 'unitadd', 'unitremove', 'basic', 'maptext', 'changecredits', 'set_team'].includes(o.type.toLowerCase())).map((o) => {
       const p = o.props; const t = { o, name: trigKey(o), type: o.type.toLowerCase(), x: o.x, y: o.y, w: o.w, h: o.h, p, ab: L(p.activatedBy).concat(L(p.whenActivatedIds)), db: L(p.deactivatedBy), all: /^true$/i.test(p.allToActivate || ''), delay: tms(p.delay), warm: tms(p.warmup) || 0, reset: tms(p.resetActivationAfter), rep: tms(p.repeatDelay), team: has(p.team) ? +p.team : null, msg: p.globalMessage, active: false, last: -1e12, since: null, fires: 0 };
       t.gate = t.delay === null; return t;
     });
@@ -16,7 +16,14 @@ export class Sim {
     this.units = unitsOf(model).filter((o) => o.props.unit).map((o) => ({ type: o.props.unit, team: +(o.props.team ?? 0), x: o.x + 10, y: o.y + 10 }));
     this.log = []; this.now = 0; this.spawnFail = 0; this.spawned = new Map(); this.credits = new Map();
   }
-  count(t) { const ut = t.p.unitType || ''; let n = 0; for (const u of this.units) { if (ut && u.type !== ut) continue; if (t.team !== null && u.team !== t.team) continue; if (t.x <= u.x && u.x < t.x + t.w && t.y <= u.y && u.y < t.y + t.h) n++; } return n; }
+  // 空间索引:按 200px 格子分桶(只按位置,队伍在查询时看,所以换队不需要重建);单位增删时按数组引用/长度判断重建
+  _index() { if (this._ia === this.units && this._il === this.units.length) return this._ix; const C = 200, m = new Map(); for (const u of this.units) { const k = Math.floor(u.x / C) * 100003 + Math.floor(u.y / C); let b = m.get(k); if (!b) m.set(k, (b = [])); b.push(u); } this._ia = this.units; this._il = this.units.length; return (this._ix = { C, m }); }
+  count(t) {
+    const ut = t.p.unitType || ''; let n = 0; const C = 200, cx0 = Math.floor(t.x / C), cx1 = Math.floor((t.x + t.w) / C), cy0 = Math.floor(t.y / C), cy1 = Math.floor((t.y + t.h) / C);
+    const inb = (u) => { if (ut && u.type !== ut) return false; if (t.team !== null && u.team !== t.team) return false; return t.x <= u.x && u.x < t.x + t.w && t.y <= u.y && u.y < t.y + t.h; };
+    if ((cx1 - cx0 + 1) * (cy1 - cy0 + 1) > this.units.length / 2) { for (const u of this.units) if (inb(u)) n++; return n; }
+    const ix = this._index(); for (let cx = cx0; cx <= cx1; cx++) for (let cy = cy0; cy <= cy1; cy++) { const b = ix.m.get(cx * 100003 + cy); if (b) for (const u of b) if (inb(u)) n++; } return n;
+  }
   src(t) {
     let ok = 0, bad = 0;
     if (!t.gate) { if (this.now >= t.delay) { ok++; t.gate = true; } else bad++; }
@@ -41,7 +48,13 @@ export class Sim {
       this.units = this.units.filter((u) => !((tm === null || u.team === tm) && t.x <= u.x && u.x < t.x + t.w && t.y <= u.y && u.y < t.y + t.h));
       this.log.push({ t: this.now / 1000, name: t.name, msg: `<<删除 ${before - this.units.length} 个单位(team ${tm === null ? '全部' : tm})>>` });
     }
-    if (t.type === 'changecredits') this.credits.set(t.team, (this.credits.get(t.team) || 0) + +(t.p.add || 0));
+    if (t.type === 'set_team') {   // 区域内「所有」单位(不分原属队伍)改成 team;没写 team 游戏里会出错
+      if (!has(t.p.team)) { this.log.push({ t: this.now / 1000, name: t.name, msg: '<<set_team 没写 team>>' }); return; }
+      const tm = +t.p.team; let n = 0;
+      for (const u of this.units) if (t.x <= u.x && u.x < t.x + t.w && t.y <= u.y && u.y < t.y + t.h && u.team !== tm) { u.team = tm; n++; }
+      this.log.push({ t: this.now / 1000, name: t.name, msg: `<<区域内 ${n} 个单位改成 team ${tm}>>` });
+    }
+    if (t.type === 'changecredits') { if (has(t.p.set)) this.credits.set(t.team, +t.p.set); this.credits.set(t.team, (this.credits.get(t.team) || 0) + +(t.p.add || 0)); }
   }
   step() {
     for (const t of this.ts) {

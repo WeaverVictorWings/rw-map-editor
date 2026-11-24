@@ -318,8 +318,10 @@ function secBox(u, s) {
   const row = (key, label, type, help, val) => {
     let inp;
     const set = (v) => { snap(u); setVal(u.ini, s.name, key, v); if (key === 'name' || key === 'displayText' || key === 'price' || key === 'maxHp' || key === 'moveSpeed') fillListSoft(); updStand(); };
-    if (type === 'b') inp = select([['', '—'], ['true', '是'], ['false', '否']], val || '', set);
-    else if (type.startsWith('e:')) inp = select([['', '—']].concat(type.slice(2).split('|')), val || '', set);
+    // 当前值不在选项里（比如条件表达式）时，补一个「原值」选项，避免下拉框看起来像空的
+    const withCur = (opts) => (val && !opts.some((o) => String(Array.isArray(o) ? o[0] : o) === String(val)) ? opts.concat([[val, val + '（原值）']]) : opts);
+    if (type === 'b') inp = select(withCur([['', '—'], ['true', '是'], ['false', '否']]), val || '', set);
+    else if (type.startsWith('e:')) inp = select(withCur([['', '—']].concat(type.slice(2).split('|'))), val || '', set);
     else inp = h('input', { type: 'text', inputmode: type === 'n' ? 'decimal' : 'text', value: val || '', translate: 'no', title: help, onchange: (e) => set(e.target.value.trim()) });
     if (/\.(ogg|wav|mp3)\s*$/i.test(val || '') && mod.has(val, u.file)) inp = h('div', { style: 'display:flex;gap:4px' }, inp, h('button', { class: 'ib', title: '试听', onclick: () => import('./modtools4.js').then((m) => m.playAudio(mod, val, u.file)) }, '▶'));
     return [h('label', { title: help }, label + (help ? ' ⓘ' : '')), inp];

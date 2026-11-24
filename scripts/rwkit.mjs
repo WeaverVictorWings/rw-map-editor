@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 // RWKit CLI:node scripts/rwkit.mjs <命令> ...   无需浏览器/编辑器服务
 import fs from 'node:fs'; import path from 'node:path'; import { fileURLToPath } from 'node:url';
+import { run as run35, NAMES35, USAGE35 } from './cli35.mjs';
 const K = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'kit');
 const L = (f) => import(path.join(K, f));
 const [cmd, ...rest] = process.argv.slice(2);
 try { fs.mkdirSync('.rwkit', { recursive: true }); fs.appendFileSync('.rwkit/log.txt', `${new Date().toISOString()} ${process.argv.slice(2).join(' ')}\n`); } catch {} const flags = {}, pos = [];
-for (let i = 0; i < rest.length; i++) { const a = rest[i]; if (a.startsWith('--') || a === '-o') { const k = a.replace(/^-+/, ''); flags[k] = rest[i + 1] && !rest[i + 1].startsWith('--') ? rest[++i] : true; } else pos.push(a); }
+for (let i = 0; i < rest.length; i++) { const a = rest[i]; if (a.startsWith('--') || a === '-o') { const k = a.replace(/^-+/, ''); flags[k] = rest[i + 1] && !rest[i + 1].startsWith('--') && rest[i + 1] !== '-o' ? rest[++i] : true; } else pos.push(a); }
 const usage = `RWKit 用法:
   lint <map.tmx> [--rules rules.json] [--json]   全套质检(触发器/文本/站位/连通/队伍/规则/陈旧输出)
   scen <map.tmx> --city <编号或检测名> [--team N] [--kill 5] [--cap 40] [--fail 1]   跑一次夺城场景,打印战报
@@ -161,4 +162,5 @@ if (cmd === 'lint') {
 } else if (cmd === 'strait') { const X = await L('more.js'), G = await L('guard.js'); const r = X.carveStrait(fs.readFileSync(pos[0], 'utf8'), flags.name, flags.bbox.split(',').map(Number)); G.safeWrite(flags.o || pos[0].replace(/\.tmx$/, '.strait.tmx'), r.text, { overwrite: !!flags.force }); console.log(`已开凿 ${flags.name}:(${r.a}) → (${r.b})`);
 } else if (cmd === 'straits') { const X = await L('more.js'); Object.entries(X.STRAITS).forEach(([k, v]) => console.log(k, JSON.stringify(v)));
 } else if (cmd === 'perf-family') { (await L('more.js')).perfByFamily(await load(pos[0])).slice(0, 15).forEach((e) => console.log(String(e.pct).padStart(5) + '%', String(e.count).padStart(5), e.family));
-} else console.log(usage);
+} else if (NAMES35.includes(cmd)) { await run35(cmd, pos, flags, K);
+} else console.log(usage + USAGE35);
