@@ -154,3 +154,4 @@
 2026-11-22T15:15:50.354Z scen /home/claude/wg/out/大亚洲战争_v0.4.tmx --city 30 --fail 1
 2026-11-22T15:16:18.760Z scen /home/claude/wg/out2/美国内战_v75.tmx --city 20 --fail 1
 2026-11-23T05:18:10.094Z 
+2026-11-24T14:55:13.090Z small-islands /tmp/v35cli_in.tmx --remove -o /tmp/v35cli_out.tmx
