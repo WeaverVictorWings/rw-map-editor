@@ -155,3 +155,16 @@
 2026-11-22T15:16:18.760Z scen /home/claude/wg/out2/美国内战_v75.tmx --city 20 --fail 1
 2026-11-23T05:18:10.094Z 
 2026-11-24T14:55:13.090Z small-islands /tmp/v35cli_in.tmx --remove -o /tmp/v35cli_out.tmx
+2026-11-25T17:52:11.080Z lint /home/claude/wg/out3/大亚洲战争_v0.7.tmx
+2026-11-25T17:52:27.345Z lint /home/claude/wg/out3/大亚洲战争_v0.7.tmx
+2026-11-25T17:52:32.910Z lint /home/claude/wg/out/大亚洲战争_v0.6.tmx
+2026-11-25T17:53:13.520Z lint /home/claude/wg/out3/大亚洲战争_v0.7.tmx --rules /home/claude/wg/rules_asia3.json
+2026-11-25T17:53:22.209Z open /home/claude/wg/out3/大亚洲战争_v0.7.tmx
+2026-11-25T17:53:23.019Z scen /home/claude/wg/out3/大亚洲战争_v0.7.tmx --city 0 --fail 1
+2026-11-25T17:53:25.264Z scen /home/claude/wg/out3/大亚洲战争_v0.7.tmx --city 7 --fail 1
+2026-11-25T17:53:27.603Z scen /home/claude/wg/out3/大亚洲战争_v0.7.tmx --city 60 --fail 1
+2026-11-25T17:56:01.786Z lint /home/claude/wg/out3/美国内战_v77.tmx --rules /home/claude/wg/rules_us74.json
+2026-11-25T17:56:39.384Z lint /home/claude/wg/out3/大亚洲战争_v0.7.tmx --rules /home/claude/wg/rules_asia3.json
+2026-11-25T17:56:44.939Z lint /home/claude/wg/out3/美国内战_v77.tmx --rules /home/claude/wg/rules_us74.json
+2026-11-25T17:56:57.671Z open /home/claude/wg/out3/美国内战_v77.tmx
+2026-11-25T17:56:58.363Z scen /home/claude/wg/out3/美国内战_v77.tmx --city 10 --fail 1
