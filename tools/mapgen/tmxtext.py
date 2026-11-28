@@ -37,8 +37,15 @@ def fw(t):
     return ''.join(out)
 
 
-def reflow(text, width=28, maxw=30):
-    """把一段话重排成若干行:先按句子,再按分句填满;一行不超过 maxw,尽量接近 width。"""
+WIDTH, MAXW = 28, 30   # 行宽目标 / 上限,调用方可改
+
+
+def reflow(text, width=None, maxw=None):
+    width = width or WIDTH; maxw = maxw or MAXW
+    """把一段话重排成若干行:先按句子,再按分句填满;一行不超过 maxw,尽量接近 width。
+    文本里的显式换行当作段落分隔,各段分别排(调用方要整段重排就先自己去掉换行)。"""
+    if '\n' in text.strip('\n'):
+        return '\n'.join(reflow(x, width, maxw) for x in text.split('\n') if x.strip())
     t = fw(text.replace('\n', ''))
     if not t:
         return ''
@@ -206,7 +213,24 @@ class Tmx:
         self.by[newname] = o
         return o
 
-    def chain(self, names, texts, color=None, first_warm=None):
+    def add(self, name, typ, x, y, w=20, h=20, props=None, after=None):
+        """新建一个对象,插在 after(对象)后面;不给 after 就插在最后一个触发器后面"""
+        seg = '<object name="%s" type="%s" id="%d" x="%s" y="%s" width="%s" height="%s"><properties>%s</properties></object>' % (
+            name, typ, self.nextid, x, y, w, h,
+            ''.join('<property name="%s" value="%s"/>' % (k, _esc(str(v))) for k, v in (props or {}).items()))
+        self.nextid += 1
+        o = Obj(seg)
+        if after is None:
+            after = [p for p in self.parts if isinstance(p, Obj) and re.search(r'type="(unitAdd|unitDetect|basic|mapText|maptext|unitRemove|changeCredits)"', p.seg)][-1]
+        i = self.parts.index(after)
+        self.parts.insert(i + 1, '\n'); self.parts.insert(i + 2, o)
+        self.by[name] = o
+        return o
+
+    def kill(self, name):
+        o = self.by.pop(name); o.dead = True
+
+    def chain(self, names, texts, color=None, first_warm=None, gap=None):
         """names: 现有的一串消息触发器(按播放顺序);texts: 新文本列表。多退少补。
         后面的触发器等待时间 = 前一条的阅读时间(按字数)。链尾的被引用者改接到新的链尾。"""
         objs = [self.msg(n) for n in names]
@@ -238,7 +262,7 @@ class Tmx:
                 o.set('globalMessage_textColor', color)
             if i > 0:
                 o.set('activatedBy', objs[i - 1].name)
-                o.set('warmup', f'{secs_for(texts[i - 1])}s')
+                o.set('warmup', gap or f'{secs_for(texts[i - 1])}s')
                 if o.get('allToActivate') is not None:
                     o.delete('allToActivate')
             elif first_warm:
