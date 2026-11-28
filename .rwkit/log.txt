@@ -201,3 +201,5 @@
 2026-11-28T06:11:57.225Z lint /home/claude/w8/out/美国内战_v78.tmx --rules /home/claude/wg/rules_us74.json
 2026-11-28T06:12:02.578Z lint /home/claude/w8/out/美国内战_v78.tmx --rules /home/claude/wg/rules_us74.json
 2026-11-28T06:12:44.268Z lint /home/claude/w8/out/美国内战_v78.tmx --rules /home/claude/wg/rules_us74.json
+2026-11-28T14:36:47.006Z lint /home/claude/w8/out/大亚洲战争_v0.8.tmx --rules /home/claude/wg/rules_asia3.json
+2026-11-28T14:36:52.194Z open /home/claude/w8/out/大亚洲战争_v0.8.tmx
